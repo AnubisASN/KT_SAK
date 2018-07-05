@@ -1,4 +1,4 @@
-package com.anubis.extension_function
+package com.anubis.module_iva
 
 import android.app.ActivityManager
 import android.content.Context
@@ -7,18 +7,21 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.preference.*
+import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+//import com.zhouwei.blurlibrary.EasyBlur
 import java.util.ArrayList
 
 
 /**
  * 作者 ： AnubisASN   on 2017/7/3 16:23.
  * 邮箱 ： anubisasn@gmail.com ( anubisasn@qq.com )
- * 主页 ： www.anubisasn.me
  *  QQ :  773506352   ( 441666482 )
  */
 
@@ -48,22 +51,23 @@ fun eLog(str: String, TAG: String = "TAG") {
 /**
  * 系统数据文件存储扩展----------------------------------------------------------------------
  */
-fun Context.eSetSystemSharedPreferences(appName: String, key: String, str: Any) {
-    val sharedPreferences = getSharedPreferences(appName, Context.MODE_PRIVATE)
+fun Context.eSetSystemSharedPreferences(key: Any, str: Any) {
+    val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+    val key = key.toString()
     val editor = sharedPreferences.edit()
-    if (str is Boolean){
+    if (str is Boolean) {
         editor.putBoolean(key, str)
         return
     }
-    if (str is Float){
+    if (str is Float) {
         editor.putFloat(key, str)
         return
     }
-    if (str is Int){
+    if (str is Int) {
         editor.putInt(key, str)
         return
     }
-    if (str is Long ){
+    if (str is Long) {
         editor.putLong(key, str)
         return
     }
@@ -71,15 +75,15 @@ fun Context.eSetSystemSharedPreferences(appName: String, key: String, str: Any) 
     editor.commit()
 }
 
-//数据文件读取扩展
-fun Context.eGetSystemSharedPreferences(appName: String, key: String): String {
-    val sharedPreferences = getSharedPreferences(appName, Context.MODE_PRIVATE)
-    return sharedPreferences.getString(key, "")
+//系统数据文件读取扩展
+fun Context.eGetSystemSharedPreferences(key: Any): String {
+    val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+    return sharedPreferences.getString(key.toString(), "")
 
 }
 
-fun Context.eGetSystemSharedPreferences(appName: String, key: String, value: String): String {
-    val sharedPreferences = getSharedPreferences(appName, Context.MODE_PRIVATE)
+fun Context.eGetSystemSharedPreferences(key: String, value: String): String {
+    val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
     return sharedPreferences.getString(key, value)
 
 }
@@ -108,9 +112,9 @@ fun Context.eGetUserSharedPreferences(userID: Int, key: String, value: String): 
 }
 
 //首选项数据文件读取扩展
-fun Context.eGetDefaultSharedPreferences(key: String): String {
+fun Context.eGetDefaultSharedPreferences(key: Any): String {
     var sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-    return sharedPref.getString(key, "")
+    return sharedPref.getString(key.toString(), "")
 }
 
 
@@ -136,12 +140,12 @@ fun Context.eGetDefaultSharedPreferences(key: String, type: Any): Any {
 /**
  * String Json解析扩展--------------------------------------------------------------------
  */
-fun eGetJsonObject(json: String, resultKey: String) =JSONObject(json).getString(resultKey)
+fun eGetJsonObject(json: String, resultKey: String) = JSONObject(json).getString(resultKey)
 
 //Array Json解析扩展
-fun eGetJsonArray(json: String, resultKey: String, i: Int) =JSONObject(json).getJSONArray(resultKey).getJSONObject(i).toString()
+fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).getJSONArray(resultKey).getJSONObject(i).toString()
 
-fun eGetJsonArray(json: String, resultKey: String) =JSONObject(json).getJSONArray(resultKey)
+fun eGetJsonArray(json: String, resultKey: String) = JSONObject(json).getJSONArray(resultKey)
 
 
 /**
@@ -272,10 +276,11 @@ fun eGetNumber(str: String): Int {
     val m = p.matcher(str)
     return (m.replaceAll("").trim { it <= ' ' }).toInt()
 }
+
 //IP格式判断
-fun eIsIP(ip:String):Boolean{
-    val regIP:String= "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$"
-    return  Pattern.compile(regIP).matcher(ip).matches()
+fun eIsIP(ip: String): Boolean {
+    val regIP: String = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\.(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$"
+    return Pattern.compile(regIP).matcher(ip).matches()
 }
 
 //电话格式判断
@@ -319,6 +324,68 @@ fun Context.eSummaryModify(group: PreferenceGroup) {
             }
         }
     }
+}
+
+
+/**
+ * 图片文件工具类-----------------------------------------------
+ */
+//Bitmap释放
+fun eGcBitmap(bitmap: Bitmap?) {
+    var bitmap = bitmap
+    if (bitmap != null && !bitmap.isRecycled) {
+        bitmap.recycle() // 回收图片所占的内存
+        bitmap = null
+        System.gc() // 提醒系统及时回收
+    }
+}
+
+//Bitmap转Base64工具
+fun eBitmapToBase64(bitmap: Bitmap?): String? {
+
+    // 要返回的字符串
+    var reslut: String? = null
+
+    var baos: ByteArrayOutputStream? = null
+
+    try {
+
+        if (bitmap != null) {
+
+            baos = ByteArrayOutputStream()
+            /**
+             * 压缩只对保存有效果bitmap还是原来的大小
+             */
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos)
+
+            baos.flush()
+            baos.close()
+            // 转换为字节数组
+            val byteArray = baos.toByteArray()
+
+            // 转换为字符串
+            reslut = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        } else {
+            return null
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+    } finally {
+
+        try {
+            baos?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+    }
+    return reslut
+}
+
+//Base64转Bitmap工具
+fun eBase64ToBitmap(base64String: String): Bitmap {
+    val decode = Base64.decode(base64String, Base64.DEFAULT)
+    return BitmapFactory.decodeByteArray(decode, 0, decode.size)
 }
 
 //Summary动态刷新
