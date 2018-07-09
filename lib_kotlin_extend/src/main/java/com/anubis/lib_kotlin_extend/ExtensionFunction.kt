@@ -1,12 +1,19 @@
-package com.anubis.module_iva
+package com.anubis.kt_extends
 
+import android.Manifest
+import android.app.Activity
 import android.app.ActivityManager
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.preference.*
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.util.Base64
 import android.util.Log
 import android.widget.Toast
@@ -36,103 +43,99 @@ fun Context.eShowTip(str: CharSequence, i: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, str, i).show()
 }
 
-fun Context.eShowTip(th: Context, str: CharSequence, i: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(th, str, i).show()
-}
-
 /**
  * Log.v扩展函数------------------------------------------------------------------------
  */
 
-fun eLog(str: String, TAG: String = "TAG") {
+fun Activity.eLog( str: String,TAG: String = "TAG") {
+    Log.i(TAG, "$localClassName--：$str\n ")
+}
+
+fun eLog(str: String,TAG: String = "TAG") {
     Log.i(TAG, "$str\n ")
+}
+
+fun Activity.eLogE(str: String,TAG: String = "TAG") {
+    Log.e(TAG, "$localClassName--：$str\n ")
+}
+
+fun eLogE(str: String,TAG: String = "TAG") {
+    Log.e(TAG, "$str\n ")
 }
 
 /**
  * 系统数据文件存储扩展----------------------------------------------------------------------
  */
-fun Context.eSetSystemSharedPreferences(key: Any, str: Any) {
+fun Context.eSetSystemSharedPreferences(key: Any, value: Any): Boolean {
     val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
     val key = key.toString()
     val editor = sharedPreferences.edit()
-    if (str is Boolean) {
-        editor.putBoolean(key, str)
-        return
+    when (value) {
+        is String -> editor.putString(key, value)
+        is Boolean -> editor.putBoolean(key, value)
+        is Float -> editor.putFloat(key, value)
+        is Int -> editor.putInt(key, value)
+        is Long -> editor.putLong(key, value)
     }
-    if (str is Float) {
-        editor.putFloat(key, str)
-        return
-    }
-    if (str is Int) {
-        editor.putInt(key, str)
-        return
-    }
-    if (str is Long) {
-        editor.putLong(key, str)
-        return
-    }
-    editor.putString(key, str.toString())
-    editor.commit()
+    editor.putString(key, value.toString())
+    return editor.commit()
 }
 
 //系统数据文件读取扩展
-fun Context.eGetSystemSharedPreferences(key: Any): String {
+fun Context.eGetSystemSharedPreferences(key: String, value: Any): Any {
     val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
-    return sharedPreferences.getString(key.toString(), "")
-
-}
-
-fun Context.eGetSystemSharedPreferences(key: String, value: String): String {
-    val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
-    return sharedPreferences.getString(key, value)
+    return when (value) {
+        is String -> sharedPreferences.getString(key, value)
+        is Boolean -> sharedPreferences.getBoolean(key, value)
+        is Float -> sharedPreferences.getFloat(key, value)
+        is Int -> sharedPreferences.getInt(key, value)
+        is Long -> sharedPreferences.getLong(key, value)
+        else -> sharedPreferences.getString(key, value as String?)
+    }
 
 }
 
 /**
  * 用户数据文件存储扩展----------------------------------------------------------------------
  */
-fun Context.eSetUserPutSharedPreferences(userID: Int, key: String, str: Any) {
-    val sharedPreferences = getSharedPreferences(userID.toString(), Context.MODE_PRIVATE)
+fun Context.eSetUserPutSharedPreferences(userID: String, key: String, value: Any): Boolean {
+    val sharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()
-    editor.putString(key, str.toString())
-    editor.commit()
+    when (value) {
+        is String -> editor.putString(key, value)
+        is Boolean -> editor.putBoolean(key, value)
+        is Float -> editor.putFloat(key, value)
+        is Int -> editor.putInt(key, value)
+        is Long -> editor.putLong(key, value)
+    }
+    editor.putString(key, value.toString())
+    return editor.commit()
 }
 
-//数据文件读取扩展
-fun Context.eGetUserSharedPreferences(userID: Int, key: String): String {
+//用户文件数据读取扩展
+fun Context.eGetUserSharedPreferences(userID: Int, key: String, value: Any): Any {
     val sharedPreferences = getSharedPreferences(userID.toString(), Context.MODE_PRIVATE)
-    return sharedPreferences.getString(key, "")
-
-}
-
-fun Context.eGetUserSharedPreferences(userID: Int, key: String, value: String): String {
-    val sharedPreferences = getSharedPreferences(userID.toString(), Context.MODE_PRIVATE)
-    return sharedPreferences.getString(key, value)
+    return when (value) {
+        is String -> sharedPreferences.getString(key, value)
+        is Boolean -> sharedPreferences.getBoolean(key, value)
+        is Float -> sharedPreferences.getFloat(key, value)
+        is Int -> sharedPreferences.getInt(key, value)
+        is Long -> sharedPreferences.getLong(key, value)
+        else -> sharedPreferences.getString(key, value as String?)
+    }
 
 }
 
 //首选项数据文件读取扩展
-fun Context.eGetDefaultSharedPreferences(key: Any): String {
+fun Context.eGetDefaultSharedPreferences(key: String, value: Any): Any {
     var sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-    return sharedPref.getString(key.toString(), "")
-}
-
-
-fun Context.eGetDefaultSharedPreferences(key: String, type: Any): Any {
-    var sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-    when (type) {
-        is String -> {
-            return sharedPref.getString(key, "")
-        }
-        is Boolean -> {
-            return sharedPref.getBoolean(key, true)
-        }
-        is Int -> {
-            return sharedPref.getInt(key, 0)
-        }
-        else -> {
-            return "数据类型错误！"
-        }
+    return when (value) {
+        is String -> sharedPref.getString(key, value)
+        is Boolean -> sharedPref.getBoolean(key, value)
+        is Float -> sharedPref.getFloat(key, value)
+        is Int -> sharedPref.getInt(key, value)
+        is Long -> sharedPref.getLong(key, value)
+        else -> sharedPref.getString(key, value as String?)
     }
 }
 
@@ -164,6 +167,9 @@ fun Bundle.eSetMessage(Sign: String, Message: Any) = when (Message) {
     is Float -> putFloat(Sign, Message)
     is Boolean -> putBoolean(Sign, Message)
     is Char -> putChar(Sign, Message)
+    is Byte -> putByte(Sign, Message)
+    is ArrayList<*> -> putStringArrayList(Sign, Message as ArrayList<String>)
+    is IntArray -> putIntArray(Sign, Message)
     else -> {
     }
 }
@@ -179,6 +185,7 @@ fun Bundle.eSetMessage(Sign: String, Message: Any) = when (Message) {
 //            .policy(EasyBlur.BlurPolicy.FAST_BLUR)//使用fastBlur
 //            .blur()
 //}
+
 
 /**
  * 本地应用遍历
@@ -198,7 +205,7 @@ fun Context.eGetLocalApps(appName: String): String? {
             PackageName = packageName
             return PackageName
         }
-        PackageName = "NO"
+        PackageName =null
     }
     return PackageName
 }
@@ -223,25 +230,27 @@ fun eGetNumberPeriod(str: String, start: Any, end: Any): String {
             0
         }
     }
-    return if (Str.length === 0) "" else Str.substring(Start, End).trim()
+    return if (Str.isEmpty()) "" else Str.substring(Start, End).trim()
 }
 
 /**
  * 状态判断-----------------------------------------------------------------------------------
  */
-//AppLiCation判断
-fun Context.isAppRunningForeground(context: Context): Boolean {
+//AppLication运行判断
+
+fun Context.isAppRunningForeground(packageName: String): Boolean {
+
     val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     val runningAppProcessInfoList = activityManager.runningAppProcesses ?: return false
     for (processInfo in runningAppProcessInfoList) {
-        if (processInfo.processName == context.packageName && processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+        if (processInfo.processName == packageName && processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
             return true
         }
     }
     return false
 }
 
-//Activity判断
+//Activity运行判断
 fun Context.eActivityWhetherWorked(className: String): Boolean {
     val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     val list = am.getRunningTasks(1)
@@ -255,7 +264,7 @@ fun Context.eActivityWhetherWorked(className: String): Boolean {
 }
 
 
-//服务判断
+//服务运行判断
 fun Context.eServiceWhetherWorked(className: String): Boolean {
     val myManager = this.applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     val runningService = myManager.getRunningServices(30) as ArrayList<ActivityManager.RunningServiceInfo>
@@ -285,7 +294,7 @@ fun eIsIP(ip: String): Boolean {
 
 //电话格式判断
 fun eIsPhoneNumber(number: Any): Boolean {
-    val regExp: String = "^((13[0-9])|(15[^4,\\D])|(18[0,1,5-9])|(17[6，7,8]))\\d{8}$"
+    val regExp: String = "^((13[0-9])|(15[^[4,5],\\D])|(16[^6,\\D])|(18[0,1,5-9])|(17[6,7,8]))\\d{8}$"
     val p: Pattern = Pattern.compile(regExp)
     val m: Matcher = p?.matcher(number.toString())
     return m.find()
@@ -328,7 +337,7 @@ fun Context.eSummaryModify(group: PreferenceGroup) {
 
 
 /**
- * 图片文件工具类-----------------------------------------------
+ * 图片文件工具类------------------------------------------------------------
  */
 //Bitmap释放
 fun eGcBitmap(bitmap: Bitmap?) {
@@ -342,27 +351,16 @@ fun eGcBitmap(bitmap: Bitmap?) {
 
 //Bitmap转Base64工具
 fun eBitmapToBase64(bitmap: Bitmap?): String? {
-
-    // 要返回的字符串
-    var reslut: String? = null
-
     var baos: ByteArrayOutputStream? = null
-
+    var reslut:String?=null
     try {
-
         if (bitmap != null) {
-
             baos = ByteArrayOutputStream()
-            /**
-             * 压缩只对保存有效果bitmap还是原来的大小
-             */
             bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos)
-
             baos.flush()
             baos.close()
             // 转换为字节数组
             val byteArray = baos.toByteArray()
-
             // 转换为字符串
             reslut = Base64.encodeToString(byteArray, Base64.DEFAULT)
         } else {
@@ -371,7 +369,6 @@ fun eBitmapToBase64(bitmap: Bitmap?): String? {
     } catch (e: IOException) {
         e.printStackTrace()
     } finally {
-
         try {
             baos?.close()
         } catch (e: IOException) {
@@ -393,3 +390,42 @@ fun eBase64ToBitmap(base64String: String): Bitmap {
 //    if(p is EditTextPreference) p.summary =newValue.toString()
 //    return true
 //}
+
+
+/**
+ * 运行权限扩展---------------------------------------------------------------
+ */
+
+private fun Activity.eSetPermissions(permissionsArray: Array<String>) {
+    val permissionsList = ArrayList<String>()
+
+    for (permission in permissionsArray) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsList.add(permission)
+        }
+
+    }
+    if (!permissionsList.isEmpty()) {//未授予的权限为空，表示都授予了
+        ActivityCompat.requestPermissions(this, permissionsList.toArray(arrayOfNulls<String>(permissionsList.size)), 1)
+    }
+
+}
+
+fun Activity.eSetOnRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray, isPermissionsOKHint: String = "", isPermissionsNoHint: String = "") {
+    when (requestCode) {
+        1 -> for (i in permissions.indices) {
+            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                if (isPermissionsOKHint.isEmpty()) {
+                    eShowTip(isPermissionsOKHint)
+                }
+
+            } else {
+                if (isPermissionsNoHint.isEmpty()) {
+                    eShowTip(isPermissionsNoHint)
+                }
+            }
+        }
+    }
+}
+
+

@@ -2,7 +2,8 @@ package com.anubis.kt_extend
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.anubis.extension_function.eLog
+import com.anubis.kt_extends.eLog
+import com.anubis.kt_extends.eSetSystemSharedPreferences
 
 class MainActivity : AppCompatActivity() {
 
