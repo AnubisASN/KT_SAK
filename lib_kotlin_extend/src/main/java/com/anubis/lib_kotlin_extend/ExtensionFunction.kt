@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.preference.*
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.startActivity
 import android.util.Base64
 import android.util.Log
 import android.widget.Toast
@@ -35,28 +36,28 @@ import java.util.ArrayList
 /**
  * Toamst扩展函数-----------------------------------------------------------------------
  */
-fun Context.eShowTip(str: CharSequence, i: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(this, str, i).show()
+fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(this, str.toString(), i).show()
 }
 
 /**
  * Log.v扩展函数------------------------------------------------------------------------
  */
 
-fun Activity.eLog( str: String,TAG: String = "TAG") {
-    Log.i(TAG, "$localClassName--：$str\n ")
+fun Activity.eLog( str: Any,TAG: String = "TAG") {
+    Log.i(TAG, "$localClassName--：${str.toString()}\n ")
 }
 
-fun eLog(str: String,TAG: String = "TAG") {
-    Log.i(TAG, "$str\n ")
+fun eLog(str: Any,TAG: String = "TAG") {
+    Log.i(TAG, "${str.toString()}\n ")
 }
 
-fun Activity.eLogE(str: String,TAG: String = "TAG") {
-    Log.e(TAG, "$localClassName--：$str\n ")
+fun Activity.eLogE(str: Any,TAG: String = "TAG") {
+    Log.e(TAG, "$localClassName--：${str.toString()}\n ")
 }
 
-fun eLogE(str: String,TAG: String = "TAG") {
-    Log.e(TAG, "$str\n ")
+fun eLogE(str: Any,TAG: String = "TAG") {
+    Log.e(TAG, "${str.toString()}\n ")
 }
 
 /**
@@ -81,8 +82,8 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any): Boolean {
 fun Context.eGetSystemSharedPreferences(key: String, value: Any=""): Any {
     val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
     return when (value) {
-        is String -> sharedPreferences.getString(key, value)
-        is Boolean -> sharedPreferences.getBoolean(key, value)
+        is String -> sharedPreferences.getString(key, value).toString()
+        is Boolean -> sharedPreferences.getBoolean(key, value) as Boolean
         is Float -> sharedPreferences.getFloat(key, value)
         is Int -> sharedPreferences.getInt(key, value)
         is Long -> sharedPreferences.getLong(key, value)
@@ -231,8 +232,16 @@ fun eGetNumberPeriod(str: String, start: Any, end: Any): String {
 /**
  * 状态判断-----------------------------------------------------------------------------------
  */
-//AppLication运行判断
+fun Activity.eAppRestart(){
+    val LaunchIntent =packageManager.getLaunchIntentForPackage(application.packageName)
+    LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    startActivity(LaunchIntent)
+}
 
+
+
+
+//AppLication运行判断
 fun Context.isAppRunningForeground(packageName: String): Boolean {
 
     val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
@@ -379,12 +388,6 @@ fun eBase64ToBitmap(base64String: String): Bitmap {
     val decode = Base64.decode(base64String, Base64.DEFAULT)
     return BitmapFactory.decodeByteArray(decode, 0, decode.size)
 }
-
-//Summary动态刷新
-//override fun onPreferenceChange(p: Preference, newValue: Any): Boolean {
-//    if(p is EditTextPreference) p.summary =newValue.toString()
-//    return true
-//}
 
 
 /**

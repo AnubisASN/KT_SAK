@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/lib_kotlin_extend" />
+            <option value="$PROJECT_DIR$/module_TTS" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
