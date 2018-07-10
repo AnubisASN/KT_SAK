@@ -1,9 +1,7 @@
 package com.anubis.kt_extends
 
-import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,7 +11,6 @@ import android.os.Bundle
 import android.preference.*
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.Base64
 import android.util.Log
 import android.widget.Toast
@@ -22,7 +19,6 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-//import com.zhouwei.blurlibrary.EasyBlur
 import java.util.ArrayList
 
 
@@ -82,7 +78,7 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any): Boolean {
 }
 
 //系统数据文件读取扩展
-fun Context.eGetSystemSharedPreferences(key: String, value: Any): Any {
+fun Context.eGetSystemSharedPreferences(key: String, value: Any=""): Any {
     val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
     return when (value) {
         is String -> sharedPreferences.getString(key, value)
@@ -113,7 +109,7 @@ fun Context.eSetUserPutSharedPreferences(userID: String, key: String, value: Any
 }
 
 //用户文件数据读取扩展
-fun Context.eGetUserSharedPreferences(userID: Int, key: String, value: Any): Any {
+fun Context.eGetUserSharedPreferences(userID: Int, key: String, value: Any=""): Any {
     val sharedPreferences = getSharedPreferences(userID.toString(), Context.MODE_PRIVATE)
     return when (value) {
         is String -> sharedPreferences.getString(key, value)
@@ -127,7 +123,7 @@ fun Context.eGetUserSharedPreferences(userID: Int, key: String, value: Any): Any
 }
 
 //首选项数据文件读取扩展
-fun Context.eGetDefaultSharedPreferences(key: String, value: Any): Any {
+fun Context.eGetDefaultSharedPreferences(key: String, value: Any=""): Any {
     var sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
     return when (value) {
         is String -> sharedPref.getString(key, value)
@@ -161,7 +157,7 @@ fun Intent.eGetMessage(Sign: String): String = getStringExtra(Sign)
 /**
  * Intent Set 捆绑传递扩展-------------------------------------------------------------------------
  */
-fun Bundle.eSetMessage(Sign: String, Message: Any) = when (Message) {
+fun Bundle.eSetMessage(Sign: String, Message: Any="") = when (Message) {
     is String -> putString(Sign, Message)
     is Int -> putInt(Sign, Message)
     is Float -> putFloat(Sign, Message)
@@ -214,7 +210,6 @@ fun Context.eGetLocalApps(appName: String): String? {
  * 数值段获取----------------------------------------------------------
  */
 fun eGetNumberPeriod(str: String, start: Any, end: Any): String {
-
     val Str = str.trim()
     val Start: Int = when (start) {
         is Int -> start
@@ -410,7 +405,7 @@ private fun Activity.eSetPermissions(permissionsArray: Array<String>) {
     }
 
 }
-
+//显示授权设置
 fun Activity.eSetOnRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray, isPermissionsOKHint: String = "", isPermissionsNoHint: String = "") {
     when (requestCode) {
         1 -> for (i in permissions.indices) {
