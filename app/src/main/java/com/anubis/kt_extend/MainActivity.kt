@@ -1,8 +1,11 @@
 package com.anubis.kt_extend
 
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.*
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import com.anubis.kt_extend.R.id.btTTS
+import com.anubis.module_tts.Bean.voiceModel
 import com.anubis.module_tts.TTS
 import  kotlinx.android.synthetic.main.activity_main.*
 
@@ -13,7 +16,6 @@ class MainActivity : AppCompatActivity() {
     private val MSG_STATE_TTS_SPEAK_OVER = 0
     private val MSG_STATE_TTS_SPEAK_START = 1
 
-    private var TTS: TTS? = null
     private var mHandler: Handler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,13 +27,15 @@ class MainActivity : AppCompatActivity() {
                 handleMSG(msg!!)
             }
         }
-        TTS = TTS(this, mHandler as Handler)
 
+        TTS.initTTS(this, mHandler as Handler)
+        TTS.setParams(voiceModel.MALE)
     }
 
     fun TestClick(v: View) {
         when (v.id) {
-            btTTS.id -> TTS?.speak("句斤斤计较斤斤计较")
+            btTTS.id -> TTS!!.speak("句斤斤计较斤斤计较")
+            set.id->TTS.setParams(voiceModel.EMOTIONAL_MALE)
         }
     }
 

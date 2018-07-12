@@ -17,4 +17,14 @@
         tools:layout_editor_absoluteX="108dp"
         tools:layout_editor_absoluteY="63dp"
         tools:ignore="MissingConstraints"/>
+
+    <Button
+        android:id="@+id/set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set"
+        android:onClick="TestClick"
+        tools:layout_editor_absoluteX="56dp"
+        tools:layout_editor_absoluteY="156dp"
+        tools:ignore="MissingConstraints"/>
 </android.support.constraint.ConstraintLayout>

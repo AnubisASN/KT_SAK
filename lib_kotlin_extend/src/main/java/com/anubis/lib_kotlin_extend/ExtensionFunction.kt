@@ -44,19 +44,19 @@ fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
  * Log.v扩展函数------------------------------------------------------------------------
  */
 
-fun Activity.eLog( str: Any,TAG: String = "TAG") {
+fun Activity.eLog(str: Any, TAG: String = "TAG") {
     Log.i(TAG, "$localClassName--：${str.toString()}\n ")
 }
 
-fun eLog(str: Any,TAG: String = "TAG") {
+fun eLog(str: Any, TAG: String = "TAG") {
     Log.i(TAG, "${str.toString()}\n ")
 }
 
-fun Activity.eLogE(str: Any,TAG: String = "TAG") {
+fun Activity.eLogE(str: Any, TAG: String = "TAG") {
     Log.e(TAG, "$localClassName--：${str.toString()}\n ")
 }
 
-fun eLogE(str: Any,TAG: String = "TAG") {
+fun eLogE(str: Any, TAG: String = "TAG") {
     Log.e(TAG, "${str.toString()}\n ")
 }
 
@@ -79,7 +79,7 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any): Boolean {
 }
 
 //系统数据文件读取扩展
-fun Context.eGetSystemSharedPreferences(key: String, value: Any=""): Any {
+fun Context.eGetSystemSharedPreferences(key: String, value: Any = ""): Any {
     val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
     return when (value) {
         is String -> sharedPreferences.getString(key, value).toString()
@@ -110,7 +110,7 @@ fun Context.eSetUserPutSharedPreferences(userID: String, key: String, value: Any
 }
 
 //用户文件数据读取扩展
-fun Context.eGetUserSharedPreferences(userID: Int, key: String, value: Any=""): Any {
+fun Context.eGetUserSharedPreferences(userID: Int, key: String, value: Any = ""): Any {
     val sharedPreferences = getSharedPreferences(userID.toString(), Context.MODE_PRIVATE)
     return when (value) {
         is String -> sharedPreferences.getString(key, value)
@@ -123,8 +123,22 @@ fun Context.eGetUserSharedPreferences(userID: Int, key: String, value: Any=""): 
 
 }
 
+//首选项数据文件写入扩展
+fun Context.eSetDefaultSharedPreferences(key: String, value: Any = ""): Any {
+    val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+    val edit=sharedPref.edit()
+    return when (value) {
+        is String -> sharedPref.getString(key, value)
+        is Boolean -> sharedPref.getBoolean(key, value)
+        is Float -> sharedPref.getFloat(key, value)
+        is Int -> sharedPref.getInt(key, value)
+        is Long -> sharedPref.getLong(key, value)
+        else -> sharedPref.getString(key, value as String?)
+    }
+}
+
 //首选项数据文件读取扩展
-fun Context.eGetDefaultSharedPreferences(key: String, value: Any=""): Any {
+fun Context.eGetDefaultSharedPreferences(key: String, value: Any = ""): Any {
     var sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
     return when (value) {
         is String -> sharedPref.getString(key, value)
@@ -158,7 +172,7 @@ fun Intent.eGetMessage(Sign: String): String = getStringExtra(Sign)
 /**
  * Intent Set 捆绑传递扩展-------------------------------------------------------------------------
  */
-fun Bundle.eSetMessage(Sign: String, Message: Any="") = when (Message) {
+fun Bundle.eSetMessage(Sign: String, Message: Any = "") = when (Message) {
     is String -> putString(Sign, Message)
     is Int -> putInt(Sign, Message)
     is Float -> putFloat(Sign, Message)
@@ -202,7 +216,7 @@ fun Context.eGetLocalApps(appName: String): String? {
             PackageName = packageName
             return PackageName
         }
-        PackageName =null
+        PackageName = null
     }
     return PackageName
 }
@@ -232,13 +246,11 @@ fun eGetNumberPeriod(str: String, start: Any, end: Any): String {
 /**
  * 状态判断-----------------------------------------------------------------------------------
  */
-fun Activity.eAppRestart(){
-    val LaunchIntent =packageManager.getLaunchIntentForPackage(application.packageName)
+fun Activity.eAppRestart() {
+    val LaunchIntent = packageManager.getLaunchIntentForPackage(application.packageName)
     LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
     startActivity(LaunchIntent)
 }
-
-
 
 
 //AppLication运行判断
@@ -268,7 +280,7 @@ fun Context.eActivityWhetherWorked(className: String): Boolean {
 }
 
 
-//服务运行判断
+//服务运行判断 com.anubis.iva.Service.IVAService
 fun Context.eServiceWhetherWorked(className: String): Boolean {
     val myManager = this.applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     val runningService = myManager.getRunningServices(30) as ArrayList<ActivityManager.RunningServiceInfo>
@@ -356,7 +368,7 @@ fun eGcBitmap(bitmap: Bitmap?) {
 //Bitmap转Base64工具
 fun eBitmapToBase64(bitmap: Bitmap?): String? {
     var baos: ByteArrayOutputStream? = null
-    var reslut:String?=null
+    var reslut: String? = null
     try {
         if (bitmap != null) {
             baos = ByteArrayOutputStream()
@@ -408,6 +420,7 @@ private fun Activity.eSetPermissions(permissionsArray: Array<String>) {
     }
 
 }
+
 //显示授权设置
 fun Activity.eSetOnRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray, isPermissionsOKHint: String = "", isPermissionsNoHint: String = "") {
     when (requestCode) {
