@@ -3,7 +3,6 @@
  */
 package com.anubis.module_tts
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Handler
 import android.util.Log
@@ -35,7 +34,7 @@ import java.util.*
 object TTS {
     // ================== 初始化参数设置开始 ==========================
     private var mActivity: Activity? = null
-    private  var mHandler:Handler?=null
+    private var mHandler: Handler? = null
     // TtsMode.MIX; 离在线融合，在线优先； TtsMode.ONLINE 纯在线； 没有纯离线
     private var ttsMode = TtsMode.MIX
     // 离线发音选择，VOICE_FEMALE即为离线女声发音。
@@ -64,7 +63,8 @@ object TTS {
     // MIX_MODE_HIGH_SPEED_SYNTHESIZE, 2G 3G 4G wifi状态下使用在线，其它状态离线。在线状态下，请求超时1.2s自动转离线
     // 离线资源文件， 从assets目录中复制到临时目录，需要在initTTs方法前完成
     // 声学模型文件路径 (离线引擎使用), 请确认下面两个文件存在
-    private val params: HashMap<String, String> get() {
+    private val params: HashMap<String, String>
+        get() {
             val params = HashMap<String, String>()
             eLog("设置在线发声音人:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model"))
 //设置本地发音人
@@ -110,31 +110,32 @@ object TTS {
     }
 
 
-    fun initTTS(activity: Activity, mHandler: Handler) {
-        this.mActivity=activity
-        this.mHandler=mHandler
+    fun initTTS(activity: Activity, mHandler: Handler) :TTS{
+        this.mActivity = activity
+        this.mHandler = mHandler
         initialTts()
         var mode = mActivity?.eGetSystemSharedPreferences("set_tts_load_model").toString() ?: "Y"
         eLog("mode:" + mode)
         voiceModel(mode)
+        return this
+    }
 
+    fun setParams(voiceMode: voiceModel = voiceModel.CHILDREN, volume: Int = 9, speed: Int = 5, pitch: Int = 5) {
+        val mode = when (voiceMode) {
+            voiceModel.FEMALE -> "F"
+            voiceModel.MALE -> "M"
+            voiceModel.EMOTIONAL_MALE -> "X"
+            voiceModel.CHILDREN -> "Y"
+        }
+        mActivity!!.eSetSystemSharedPreferences("set_tts_load_model", mode)
+        mActivity!!.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
+        mActivity!!.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
+        mActivity!!.eSetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString())
+        eLog("sss:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model", mode) +
+                mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString()) +
+                mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED", speed.toString()) +
+                mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString()))
     }
-fun setParams(voiceMode: voiceModel=voiceModel.CHILDREN, volume:Int=9, speed:Int=5, pitch:Int=5){
-    val mode=when(voiceMode){
-        voiceModel.FEMALE->"F"
-        voiceModel.MALE->"M"
-        voiceModel.EMOTIONAL_MALE->"X"
-        voiceModel.CHILDREN->"Y"
-    }
-    mActivity!!.eSetSystemSharedPreferences("set_tts_load_model", mode)
-    mActivity!!.eSetSystemSharedPreferences("set_PARAM_VOLUME",volume.toString())
-    mActivity!!.eSetSystemSharedPreferences("set_PARAM_SPEED",speed.toString())
-    mActivity!!.eSetSystemSharedPreferences("set_PARAM_PITCH",pitch.toString())
-    eLog("sss:"+ mActivity!!.eGetSystemSharedPreferences("set_tts_load_model", mode)+
-            mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME",volume.toString())+
-    mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED",speed.toString())+
-    mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH",pitch.toString()))
-}
 
 
     /**
