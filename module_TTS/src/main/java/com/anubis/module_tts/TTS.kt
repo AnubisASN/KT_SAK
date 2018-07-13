@@ -4,6 +4,7 @@
 package com.anubis.module_tts
 
 import android.app.Activity
+import android.app.Application
 import android.os.Handler
 import android.util.Log
 import android.util.Pair
@@ -33,7 +34,7 @@ import java.util.*
 //(val mActivity: Context, val mHandler: Handler)
 object TTS {
     // ================== 初始化参数设置开始 ==========================
-    private var mActivity: Activity? = null
+    private var mActivity: Application? = null
     private var mHandler: Handler? = null
     // TtsMode.MIX; 离在线融合，在线优先； TtsMode.ONLINE 纯在线； 没有纯离线
     private var ttsMode = TtsMode.MIX
@@ -110,17 +111,19 @@ object TTS {
     }
 
 
-    fun initTTS(activity: Activity, mHandler: Handler) :TTS{
+    fun initTTS(activity: Application, mHandler: Handler) :TTS{
         this.mActivity = activity
         this.mHandler = mHandler
+        eLog("TTS初始化")
         initialTts()
         var mode = mActivity?.eGetSystemSharedPreferences("set_tts_load_model").toString() ?: "Y"
         eLog("mode:" + mode)
         voiceModel(mode)
+
         return this
     }
 
-    fun setParams(voiceMode: voiceModel = voiceModel.CHILDREN, volume: Int = 9, speed: Int = 5, pitch: Int = 5) {
+    fun setParams(voiceMode: voiceModel = voiceModel.CHILDREN, volume: Int = 9, speed: Int = 5, pitch: Int = 5):TTS {
         val mode = when (voiceMode) {
             voiceModel.FEMALE -> "F"
             voiceModel.MALE -> "M"
@@ -135,6 +138,7 @@ object TTS {
                 mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString()) +
                 mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED", speed.toString()) +
                 mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString()))
+        return  this
     }
 
 
@@ -163,7 +167,6 @@ object TTS {
 
         synthesizer = NonBlockSyntherizer(mActivity!!, initConfig, mHandler!!) // 此处可以改为MySyntherizer 了解调用过程
     }
-
 
     private fun createOfflineResource(voiceType: String): OfflineResource? {
         var offlineResource: OfflineResource? = null

@@ -5,34 +5,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TTS.MainActivity"
-    android:orientation="vertical"
-    android:gravity="center"
-    >
-
+    tools:context=".TTS.Test1">
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button22"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:onClick="mainClick"
+        android:onClick="testClick"
         android:text="初始化发音"
         />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/button33"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:onClick="mainClick"
+        android:onClick="testClick"
         android:text="切换发音人并发音"
-/>
+        />
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/button44"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:onClick="mainClick"
+        android:onClick="testClick"
         android:text="切换界面"
         />
 </LinearLayout>

@@ -406,7 +406,7 @@ fun eBase64ToBitmap(base64String: String): Bitmap {
  * 运行权限扩展---------------------------------------------------------------
  */
 
-private fun Activity.eSetPermissions(permissionsArray: Array<String>) {
+ fun Activity.eSetPermissions(permissionsArray: Array<String>,requestCode:Int=1) {
     val permissionsList = ArrayList<String>()
 
     for (permission in permissionsArray) {
