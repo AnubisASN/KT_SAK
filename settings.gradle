@@ -1,1 +1,1 @@
-include ':app', ':lib_kotlin_extend','module_TTS'
+include ':app', ':lib_kotlin_extend', ':module_Gorge','module_TTS'

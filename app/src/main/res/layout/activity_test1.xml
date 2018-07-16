@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="testClick"
-        android:text="切换发音人并发音"
+        android:text="串口测试"
         />
     <Button
         android:id="@+id/button44"

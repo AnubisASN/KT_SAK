@@ -12,6 +12,7 @@ import android.preference.*
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.startActivity
+import android.text.TextUtils.indexOf
 import android.util.Base64
 import android.util.Log
 import android.widget.Toast
@@ -21,6 +22,7 @@ import java.io.IOException
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import java.util.ArrayList
+import kotlin.experimental.and
 
 
 /**
@@ -355,6 +357,43 @@ fun Context.eSummaryModify(group: PreferenceGroup) {
 /**
  * 图片文件工具类------------------------------------------------------------
  */
+fun hexStringToBytes(hexString: String?): ByteArray? {
+    var hexString = hexString
+    if (hexString == null || hexString == "") {
+        return null
+    }
+    hexString = hexString.toUpperCase()
+    val length = hexString.length / 2
+    val hexChars = hexString.toCharArray()
+    val d = ByteArray(length)
+    for (i in 0 until length) {
+        val pos = i * 2
+        d[i] = (charToByte(hexChars[pos]).toInt() shl 4 or charToByte(hexChars[pos + 1]).toInt()).toByte()
+    }
+    return d
+}
+private fun charToByte(c: Char): Byte {
+    return indexOf("0123456789ABCDEF",c).toByte()
+}
+
+
+
+fun bytesToHexString(src: ByteArray?, lenth: Int): String? {
+    val stringBuilder = StringBuilder("")
+    if (src == null || src.size <= 0) {
+        return null
+    }
+    for (i in 0 until lenth) {
+        val v = src[i] and 0xFF.toByte()
+        val hv = Integer.toHexString(v.toInt())
+        if (hv.length < 2) {
+            stringBuilder.append(0)
+        }
+        stringBuilder.append(hv)
+    }
+    return stringBuilder.toString()
+}
+
 //Bitmap释放
 fun eGcBitmap(bitmap: Bitmap?) {
     var bitmap = bitmap
@@ -437,6 +476,7 @@ fun Activity.eSetOnRequestPermissionsResult(requestCode: Int, permissions: Array
             }
         }
     }
+
 }
 
 

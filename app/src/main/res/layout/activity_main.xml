@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="mainClick"
-        android:text="切换发音人并发音"
+        android:text="发音人切记调用"
 />
     <Button
         android:id="@+id/button4"
