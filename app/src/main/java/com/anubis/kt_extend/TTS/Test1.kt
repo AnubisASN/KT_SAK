@@ -7,13 +7,8 @@ import android.os.Bundle
 import android.view.View
 
 import com.anubis.kt_extend.R
-import com.anubis.kt_extend.R.id.*
 import com.anubis.kt_extend.app
-import com.anubis.module_gorge.gorgeMessage
-import com.anubis.module_tts.Bean.voiceModel
-import com.anubis.module_tts.TTS
-import com.anubis.module_tts.TTS.setParams
-import kotlinx.android.synthetic.main.activity_main.*
+import com.anubis.module_gorge.eGorgeMessage
 import java.io.OutputStream
 
 class Test1 : AppCompatActivity() {
@@ -28,7 +23,7 @@ class Test1 : AppCompatActivity() {
     fun testClick(v: View) {
         when (v.id) {
             R.id.button22-> app().get()!!.mTTS!!.speak("初始化调用")
-            R.id.button33 -> gorgeMessage().getInit(this).MSG()
+            R.id.button33 -> eGorgeMessage().getInit(this).MSG()
             R.id.button44 -> startActivity(Intent(this, MainActivity::class.java))
         }
     }

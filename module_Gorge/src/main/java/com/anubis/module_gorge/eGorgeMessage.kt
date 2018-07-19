@@ -1,16 +1,12 @@
 package com.anubis.module_gorge
 
 import android.app.Activity
-import android.graphics.Bitmap
 import android.media.MediaPlayer
-import android.os.Bundle
 import android.util.Log
-import android.view.View
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.hexStringToBytes
 import com.anubis.module_gorge.Utils.LockerPortInterface
 import com.anubis.module_gorge.Utils.LockerSerialportUtil
-import com.anubis.module_gorge.Utils.LockerSerialportUtil.Companion.init
 import java.io.OutputStream
 import java.util.concurrent.TimeoutException
 
@@ -29,7 +25,7 @@ import java.util.concurrent.TimeoutException
  *Router :  /'Module'/'Function'
  *类说明：
  */
-class gorgeMessage : LockerPortInterface{
+class eGorgeMessage : LockerPortInterface{
     private var PATH2: String? = null //串口名称         RS485开门方式
     private var BAUDRATE: Int? = null            //波特率
     private var outputStream: OutputStream? = null     //发送串口的输出流
@@ -37,14 +33,14 @@ class gorgeMessage : LockerPortInterface{
     private var activity: Activity? = null
 
     private companion object {
-        var init: gorgeMessage? = null
+        var init: eGorgeMessage? = null
     }
 
     init {
-        init = this@gorgeMessage
+        init = this@eGorgeMessage
     }
 @Throws(TimeoutException::class)
-    fun getInit(mAcitvity: Activity, mPATH2: String = "/dev/ttyUSB0", BAUDRATE: Int = 9600): gorgeMessage {
+    fun getInit(mAcitvity: Activity, mPATH2: String = "/dev/ttyUSB0", BAUDRATE: Int = 9600): eGorgeMessage {
         activity = mAcitvity
         PATH2 = mPATH2
         this.BAUDRATE = BAUDRATE

@@ -3,7 +3,6 @@
  */
 package com.anubis.module_tts
 
-import android.app.Activity
 import android.app.Application
 import android.os.Handler
 import android.util.Log
@@ -32,7 +31,7 @@ import java.util.*
  * 根据网络状况优先走在线，在线时访问服务器失败后转为离线。
  */
 //(val mActivity: Context, val mHandler: Handler)
-object TTS {
+object eTTS {
     // ================== 初始化参数设置开始 ==========================
     private var mActivity: Application? = null
     private var mHandler: Handler? = null
@@ -111,7 +110,7 @@ object TTS {
     }
 
 
-    fun initTTS(activity: Application, mHandler: Handler) :TTS{
+    fun initTTS(activity: Application, mHandler: Handler) :eTTS{
         this.mActivity = activity
         this.mHandler = mHandler
         eLog("TTS初始化")
@@ -123,7 +122,7 @@ object TTS {
         return this
     }
 
-    fun setParams(voiceMode: voiceModel = voiceModel.CHILDREN, volume: Int = 9, speed: Int = 5, pitch: Int = 5):TTS {
+    fun setParams(voiceMode: voiceModel = voiceModel.CHILDREN, volume: Int = 9, speed: Int = 5, pitch: Int = 5):eTTS {
         val mode = when (voiceMode) {
             voiceModel.FEMALE -> "F"
             voiceModel.MALE -> "M"
@@ -243,8 +242,8 @@ object TTS {
     }
 
 //    companion object {
-//        private val TAG = "TTS"
-//        private var initTTS: TTS? = null
+//        private val TAG = "eTTS"
+//        private var initTTS: eTTS? = null
 //        fun getTTS() = initTTS
 //    }
 

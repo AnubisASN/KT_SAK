@@ -3,7 +3,7 @@ package com.anubis.kt_extend
 import android.app.Application
 import android.os.Handler
 import android.os.Message
-import com.anubis.module_tts.TTS
+import com.anubis.module_tts.eTTS
 
 /**
  * Author  ： AnubisASN   on 18-7-12 下午10:52.
@@ -21,7 +21,7 @@ import com.anubis.module_tts.TTS
  * 类说明：
  */
 class app : Application() {
-    var mTTS: TTS? = null
+    var mTTS: eTTS? = null
     var mHandler: Handler? = null
 companion object {
     var init: app? = null
@@ -35,7 +35,7 @@ companion object {
                 handleMSG(msg!!)
             }
         }
-        mTTS = TTS.initTTS(this, mHandler as Handler)
+        mTTS = eTTS.initTTS(this, mHandler as Handler)
     }
     fun get() = init
     fun handleMSG(msg: Message) {

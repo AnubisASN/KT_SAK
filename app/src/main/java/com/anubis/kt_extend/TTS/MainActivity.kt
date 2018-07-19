@@ -7,19 +7,19 @@ import android.view.View
 
 import com.anubis.kt_extend.R
 import com.anubis.kt_extend.app
-import com.anubis.module_gorge.gorgeMessage
+import com.anubis.module_gorge.eGorgeMessage
 import com.anubis.module_tts.Bean.voiceModel
-import com.anubis.module_tts.TTS
+import com.anubis.module_tts.eTTS
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : Activity() {
-    var TTS: TTS? = null
-    var gorge: gorgeMessage?=null
+    var TTS: eTTS? = null
+    var mEGorge: eGorgeMessage?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         TTS = app().get()!!.mTTS
-         gorge = gorgeMessage().getInit(this)
+         mEGorge = eGorgeMessage().getInit(this)
     }
 
     fun mainClick(v: View) {
