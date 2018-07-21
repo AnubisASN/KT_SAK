@@ -48,16 +48,16 @@ fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
  * Log i e扩展函数------------------------------------------------------------------------
  */
 
-fun Activity.eLog(str: Any, TAG: String = "TAG") {
-    Log.i(TAG, "$localClassName--：${str.toString()}\n ")
+fun Activity?.eLog(str: Any, TAG: String = "TAG") {
+    Log.i(TAG, "${this?.localClassName?:"eLog"}-：${str.toString()}\n ")
 }
 
 fun eLog(str: Any, TAG: String = "TAG") {
-    Log.i(TAG, "${str.toString()}\n ")
+    Log.i(TAG, "$${str.toString()}\n ")
 }
 
-fun Activity.eLogE(str: Any, TAG: String = "TAG") {
-    Log.e(TAG, "$localClassName--：${str.toString()}\n ")
+fun Activity?.eLogE(str: Any, TAG: String = "TAG") {
+    Log.e(TAG, "${this?.localClassName?:"eLogE"}-：${str.toString()}\n ")
 }
 
 fun eLogE(str: Any, TAG: String = "TAG") {
@@ -69,18 +69,21 @@ fun eLogE(str: Any, TAG: String = "TAG") {
  */
 
 var clickTime: Long = 0
-fun Activity.eSetKeyDownExit(keyCode: Int,time:Long=2000) {
-    if (keyCode == KeyEvent.KEYCODE_BACK) {
-        if (System.currentTimeMillis() - clickTime > time) {
-            eShowTip("重复此操作退出")
-            clickTime = System.currentTimeMillis()
-        } else {
-            this.finish()
-            System.exit(0)
-        }
-        return
+
+fun Activity.eSetKeyDownExit(keyCode: Int, time: Long = 2000, hint: String = "再按一次退出", exitHint: String = "APP已退出") = if (keyCode == KeyEvent.KEYCODE_BACK)
+    if (System.currentTimeMillis() - clickTime > time) {
+        eShowTip(hint)
+        clickTime = System.currentTimeMillis()
+        false
+    } else {
+        this.eShowTip(exitHint)
+        this.finish()
+        System.exit(0)
+        true
     }
-}
+else
+    false
+
 
 /**
  * SharedPreferences数据文件存储扩展----------------------------------------------------------------------
