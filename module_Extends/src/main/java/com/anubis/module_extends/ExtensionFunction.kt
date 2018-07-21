@@ -2,6 +2,7 @@ package com.anubis.kt_extends
 
 import android.app.Activity
 import android.app.ActivityManager
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,10 +12,10 @@ import android.os.Bundle
 import android.preference.*
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.startActivity
 import android.text.TextUtils.indexOf
 import android.util.Base64
 import android.util.Log
+import android.view.KeyEvent
 import android.widget.Toast
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -38,12 +39,13 @@ import kotlin.experimental.and
 /**
  * Toamst扩展函数-----------------------------------------------------------------------
  */
+
 fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, str.toString(), i).show()
 }
 
 /**
- * Log.v扩展函数------------------------------------------------------------------------
+ * Log i e扩展函数------------------------------------------------------------------------
  */
 
 fun Activity.eLog(str: Any, TAG: String = "TAG") {
@@ -63,8 +65,27 @@ fun eLogE(str: Any, TAG: String = "TAG") {
 }
 
 /**
- * 系统数据文件存储扩展----------------------------------------------------------------------
+ * KeyDownExit事件监听------------------------------------------------------------------------------------
  */
+
+var clickTime: Long = 0
+fun Activity.eSetKeyDownExit(keyCode: Int,time:Long=2000) {
+    if (keyCode == KeyEvent.KEYCODE_BACK) {
+        if (System.currentTimeMillis() - clickTime > time) {
+            eShowTip("重复此操作退出")
+            clickTime = System.currentTimeMillis()
+        } else {
+            this.finish()
+            System.exit(0)
+        }
+        return
+    }
+}
+
+/**
+ * SharedPreferences数据文件存储扩展----------------------------------------------------------------------
+ */
+//系统数据文件存储扩展
 fun Context.eSetSystemSharedPreferences(key: Any, value: Any): Boolean {
     val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
     val key = key.toString()
@@ -80,7 +101,7 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any): Boolean {
     return editor.commit()
 }
 
-//系统数据文件读取扩展
+//系统数据文件存储读取扩展
 fun Context.eGetSystemSharedPreferences(key: String, value: Any = ""): Any {
     val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
     return when (value) {
@@ -94,9 +115,7 @@ fun Context.eGetSystemSharedPreferences(key: String, value: Any = ""): Any {
 
 }
 
-/**
- * 用户数据文件存储扩展----------------------------------------------------------------------
- */
+//用户文件数据存储扩展
 fun Context.eSetUserPutSharedPreferences(userID: String, key: String, value: Any): Boolean {
     val sharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()
@@ -125,10 +144,10 @@ fun Context.eGetUserSharedPreferences(userID: Int, key: String, value: Any = "")
 
 }
 
-//首选项数据文件写入扩展
+//首选项数据文件存储扩展
 fun Context.eSetDefaultSharedPreferences(key: String, value: Any = ""): Any {
     val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-    val edit=sharedPref.edit()
+    val edit = sharedPref.edit()
     return when (value) {
         is String -> sharedPref.getString(key, value)
         is Boolean -> sharedPref.getBoolean(key, value)
@@ -357,42 +376,6 @@ fun Context.eSummaryModify(group: PreferenceGroup) {
 /**
  * 图片文件工具类------------------------------------------------------------
  */
-fun hexStringToBytes(hexString: String?): ByteArray? {
-    var hexString = hexString
-    if (hexString == null || hexString == "") {
-        return null
-    }
-    hexString = hexString.toUpperCase()
-    val length = hexString.length / 2
-    val hexChars = hexString.toCharArray()
-    val d = ByteArray(length)
-    for (i in 0 until length) {
-        val pos = i * 2
-        d[i] = (charToByte(hexChars[pos]).toInt() shl 4 or charToByte(hexChars[pos + 1]).toInt()).toByte()
-    }
-    return d
-}
-private fun charToByte(c: Char): Byte {
-    return indexOf("0123456789ABCDEF",c).toByte()
-}
-
-
-
-fun bytesToHexString(src: ByteArray?, lenth: Int): String? {
-    val stringBuilder = StringBuilder("")
-    if (src == null || src.size <= 0) {
-        return null
-    }
-    for (i in 0 until lenth) {
-        val v = src[i] and 0xFF.toByte()
-        val hv = Integer.toHexString(v.toInt())
-        if (hv.length < 2) {
-            stringBuilder.append(0)
-        }
-        stringBuilder.append(hv)
-    }
-    return stringBuilder.toString()
-}
 
 //Bitmap释放
 fun eGcBitmap(bitmap: Bitmap?) {
@@ -440,12 +423,48 @@ fun eBase64ToBitmap(base64String: String): Bitmap {
     return BitmapFactory.decodeByteArray(decode, 0, decode.size)
 }
 
+//十六进制字符串转字节
+fun eGetHexStringToBytes(hexString: String?): ByteArray? {
+    var hexString = hexString
+    if (hexString == null || hexString == "") {
+        return null
+    }
+    hexString = hexString.toUpperCase()
+    val length = hexString.length / 2
+    val hexChars = hexString.toCharArray()
+    val d = ByteArray(length)
+    for (i in 0 until length) {
+        val pos = i * 2
+        d[i] = (eGetCharToByte(hexChars[pos]).toInt() shl 4 or eGetCharToByte(hexChars[pos + 1]).toInt()).toByte()
+    }
+    return d
+}
+
+//字符转字节
+fun eGetCharToByte(c: Char) = indexOf("0123456789ABCDEF", c).toByte()
+
+fun bytesToHexString(src: ByteArray?, lenth: Int): String? {
+    val stringBuilder = StringBuilder("")
+    if (src == null || src.size <= 0) {
+        return null
+    }
+    for (i in 0 until lenth) {
+        val v = src[i] and 0xFF.toByte()
+        val hv = Integer.toHexString(v.toInt())
+        if (hv.length < 2) {
+            stringBuilder.append(0)
+        }
+        stringBuilder.append(hv)
+    }
+    return stringBuilder.toString()
+}
+
 
 /**
  * 运行权限扩展---------------------------------------------------------------
  */
 
- fun Activity.eSetPermissions(permissionsArray: Array<String>,requestCode:Int=1) {
+fun Activity.eSetPermissions(permissionsArray: Array<String>, requestCode: Int = 1) {
     val permissionsList = ArrayList<String>()
 
     for (permission in permissionsArray) {
@@ -476,7 +495,38 @@ fun Activity.eSetOnRequestPermissionsResult(requestCode: Int, permissions: Array
             }
         }
     }
-
 }
 
+/**
+ * 服务意图扩展------------------------------------------------
+ */
+
+//开机自启
+fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, className: Any? = null) {
+    if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+        val pm = myApplication.packageManager
+        val packName = intent.resolveActivityInfo(pm, 0).toString()
+        if (className != null) {
+            val cls = when (className) {
+                is String -> Class.forName(className)
+                is Class<*> -> className
+                else -> Class.forName(packName)
+            }
+            val startServiceIntent = Intent(context, cls::class.java)
+            startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(startServiceIntent)
+        }
+    }
+}
+///**
+// * 反射机制动态加载扩展----------------------------------------------------------
+// */
+////获取 加载类
+//fun eGetClass(packageName: String) = Class.forName(packageName)
+////获取 实例化类
+//fun eGetClassInstance(cls:Class<Any>)=cls.newInstance()
+////调用方法
+//fun  eInvokeMethod(cls:Class<Any>,methodName:String)={
+//    cls.getDeclaredMethod(methodName,String::class.java)
+//}
 

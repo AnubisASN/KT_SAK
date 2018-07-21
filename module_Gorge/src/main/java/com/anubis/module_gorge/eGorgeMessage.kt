@@ -3,8 +3,8 @@ package com.anubis.module_gorge
 import android.app.Activity
 import android.media.MediaPlayer
 import android.util.Log
+import com.anubis.kt_extends.eGetHexStringToBytes
 import com.anubis.kt_extends.eLogE
-import com.anubis.kt_extends.hexStringToBytes
 import com.anubis.module_gorge.Utils.LockerPortInterface
 import com.anubis.module_gorge.Utils.LockerSerialportUtil
 import java.io.OutputStream
@@ -102,7 +102,7 @@ class eGorgeMessage : LockerPortInterface{
         if (outputStream == null) {
             return
         }
-        outputStream!!.write(hexStringToBytes(msg))
+        outputStream!!.write(eGetHexStringToBytes(msg))
 
         if (msg.startsWith("daad") || msg.startsWith("DAAD") || msg.startsWith("0105000") && msg !== "010500000000CDCA") {
             playVoice(R.raw.open_success, false)

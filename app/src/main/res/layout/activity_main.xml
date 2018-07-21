@@ -35,4 +35,12 @@
         android:onClick="mainClick"
         android:text="切换界面"
         />
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:onClick="mainClick"
+        android:text="动态加载"
+        />
 </LinearLayout>
