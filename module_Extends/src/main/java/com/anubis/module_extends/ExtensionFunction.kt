@@ -70,20 +70,22 @@ fun eLogE(str: Any, TAG: String = "TAG") {
 
 var clickTime: Long = 0
 
-fun Activity.eSetKeyDownExit(keyCode: Int, time: Long = 2000, hint: String = "再按一次退出", exitHint: String = "APP已退出") = if (keyCode == KeyEvent.KEYCODE_BACK)
-    if (System.currentTimeMillis() - clickTime > time) {
-        eShowTip(hint)
-        clickTime = System.currentTimeMillis()
-        false
-    } else {
-        this.eShowTip(exitHint)
-        this.finish()
-        System.exit(0)
-        true
+fun Activity.eSetKeyDownExit(keyCode: Int, time: Long = 2000, hint: String = "再按一次退出", exitHint: String = "APP已退出") :Boolean{
+    return  if (keyCode == KeyEvent.KEYCODE_BACK){
+        if (System.currentTimeMillis() - com.anubis.kt_extends.clickTime > time) {
+            eShowTip(hint)
+            com.anubis.kt_extends.clickTime = System.currentTimeMillis()
+            false
+        } else {
+            this.eShowTip(exitHint)
+            this.finish()
+            System.exit(0)
+            true
+        }
     }
-else
-    false
-
+    else
+        false
+}
 
 /**
  * SharedPreferences数据文件存储扩展----------------------------------------------------------------------
@@ -507,9 +509,11 @@ fun Activity.eSetOnRequestPermissionsResult(requestCode: Int, permissions: Array
 //开机自启
 fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, className: Any? = null) {
     if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+        eLog("myApplication$myApplication")
         val pm = myApplication.packageManager
-        val packName = intent.resolveActivityInfo(pm, 0).toString()
+        eLog("pm$pm")
         if (className != null) {
+            val packName = intent.resolveActivityInfo(pm, 0).toString()
             val cls = when (className) {
                 is String -> Class.forName(className)
                 is Class<*> -> className
