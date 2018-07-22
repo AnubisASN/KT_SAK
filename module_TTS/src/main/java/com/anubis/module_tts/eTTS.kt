@@ -11,6 +11,7 @@ import com.anubis.kt_extends.eGetSystemSharedPreferences
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eSetSystemSharedPreferences
+import com.anubis.module_tts.Bean.PARAM_MIX_MODE
 import com.anubis.module_tts.Bean.voiceModel
 
 import com.anubis.module_tts.control.InitConfig
@@ -84,7 +85,8 @@ object eTTS {
             params[SpeechSynthesizer.PARAM_SPEED] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED").toString() ?: "5"
             // 设置合成的语调，0-9 ，默认 5
             params[SpeechSynthesizer.PARAM_PITCH] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH").toString() ?: "5"
-            params[SpeechSynthesizer.PARAM_MIX_MODE] = SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI
+//            params[SpeechSynthesizer.PARAM_MIX_MODE] = SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI
+            params[SpeechSynthesizer.PARAM_MIX_MODE] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_MIX_MODE").toString() ?: SpeechSynthesizer.MIX_MODE_DEFAULT
             val offlineResource = createOfflineResource(offlineVoice)
             if (offlineResource == null) {
                 eLogE("offlineResource==null")
@@ -122,7 +124,7 @@ object eTTS {
         return this
     }
 
-    fun setParams(voiceMode: voiceModel = voiceModel.CHILDREN, volume: Int = 9, speed: Int = 5, pitch: Int = 5):eTTS {
+    fun setParams(voiceMode: voiceModel = voiceModel.CHILDREN, paramMixMode: PARAM_MIX_MODE = PARAM_MIX_MODE.MIX_MODE_DEFAULT, volume: Int = 9, speed: Int = 5, pitch: Int = 5):eTTS {
         val mode = when (voiceMode) {
             voiceModel.FEMALE -> "F"
             voiceModel.MALE -> "M"
@@ -133,6 +135,7 @@ object eTTS {
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString())
+        mActivity!!.eSetSystemSharedPreferences("set_PARAM_MIX_MODE", paramMixMode.toString())
         eLog("sss:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model", mode) +
                 mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString()) +
                 mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED", speed.toString()) +
