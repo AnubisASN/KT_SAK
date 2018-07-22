@@ -67,19 +67,24 @@ fun eLogE(str: Any, TAG: String = "TAG") {
 /**
  * KeyDownExit事件监听------------------------------------------------------------------------------------
  */
-
-var clickTime: Long = 0
-
-fun Activity.eSetKeyDownExit(keyCode: Int, time: Long = 2000, hint: String = "再按一次退出", exitHint: String = "APP已退出") :Boolean{
+private var clickTime: Long = 0
+fun Activity.eSetKeyDownExit(keyCode: Int, time: Long = 2000, hint: String = "再按一次退出", exitHint: String = "APP已退出",systemExit:Boolean=true,activityList:ArrayList<Activity>?=null) :Boolean{
     return  if (keyCode == KeyEvent.KEYCODE_BACK){
         if (System.currentTimeMillis() - com.anubis.kt_extends.clickTime > time) {
             eShowTip(hint)
             com.anubis.kt_extends.clickTime = System.currentTimeMillis()
             false
         } else {
+            if(activityList!=null){
+                for (Activity in activityList){
+                    Activity.finish()
+                }
+            }
             this.eShowTip(exitHint)
             this.finish()
-            System.exit(0)
+            if(systemExit){
+                System.exit(0)
+            }
             true
         }
     }

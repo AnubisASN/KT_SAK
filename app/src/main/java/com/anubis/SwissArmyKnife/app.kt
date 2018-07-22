@@ -1,5 +1,6 @@
 package com.anubis.SwissArmyKnife
 
+import android.app.Activity
 import android.app.Application
 import android.os.Handler
 import android.os.Message
@@ -24,6 +25,7 @@ import com.anubis.module_tts.eTTS
 class app : Application() {
     var mTTS: eTTS? = null
     var mHandler: Handler? = null
+    var mActivityList:ArrayList<Activity>?=null
     companion object {
         var init: app? = null
     }

@@ -23,6 +23,7 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        app().get()?.mActivityList?.add(this)
         TTS = app().get()!!.mTTS
         mEGorge = eGorgeMessage().getInit(this)
     }
@@ -32,7 +33,7 @@ class MainActivity : Activity() {
             R.id.button2  -> TTS!!.speak("初始化调用")
           R.id.button3-> TTS!!.setParams(voiceModel.CHILDREN).speak("发音人切换调用")
             R.id.button4 -> startActivity(Intent(this, Test1::class.java))
-            R.id.button5 -> reflection("com.anubis.kt_extend.Reflection.Reflection")
+            R.id.button5 -> reflection("com.anubis.SwissArmyKnife.Reflection.Reflection")
         }
     }
 
