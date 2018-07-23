@@ -38,7 +38,7 @@ class Test1 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test1)
-        app().get()?.mActivityList?.add(this)
+        app().get()?.getActivity()!!.add(this)
     }
     fun testClick(v: View) {
         when (v.id) {
@@ -49,7 +49,7 @@ class Test1 : AppCompatActivity() {
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         eLog(keyCode)
-        return  eSetKeyDownExit(keyCode)
+        return  eSetKeyDownExit(keyCode,app().get()!!.getActivity(),false,exitHint = "完成退出")
     }
 
 }

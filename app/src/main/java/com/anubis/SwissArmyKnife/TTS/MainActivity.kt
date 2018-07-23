@@ -23,7 +23,7 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        app().get()?.mActivityList?.add(this)
+        app().get()?.getActivity()!!.add(this)
         TTS = app().get()!!.mTTS
         mEGorge = eGorgeMessage().getInit(this)
     }
@@ -45,7 +45,8 @@ class MainActivity : Activity() {
         method.invoke(clsInstance, this, "00115492654+")
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        return  eSetKeyDownExit(keyCode)
+        eLog("size"+app().get()?.getActivity()!!.size)
+        return  eSetKeyDownExit(keyCode,app().get()?.getActivity(),false,exitHint = "完成退出")
     }
 
 

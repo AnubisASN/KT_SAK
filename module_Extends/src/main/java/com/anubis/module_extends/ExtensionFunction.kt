@@ -53,7 +53,7 @@ fun Activity?.eLog(str: Any, TAG: String = "TAG") {
 }
 
 fun eLog(str: Any, TAG: String = "TAG") {
-    Log.i(TAG, "$${str.toString()}\n ")
+    Log.i(TAG, "eLog:${str.toString()}\n ")
 }
 
 fun Activity?.eLogE(str: Any, TAG: String = "TAG") {
@@ -61,14 +61,14 @@ fun Activity?.eLogE(str: Any, TAG: String = "TAG") {
 }
 
 fun eLogE(str: Any, TAG: String = "TAG") {
-    Log.e(TAG, "${str.toString()}\n ")
+    Log.e(TAG, "eLogE:${str.toString()}\n ")
 }
 
 /**
  * KeyDownExit事件监听------------------------------------------------------------------------------------
  */
 private var clickTime: Long = 0
-fun Activity.eSetKeyDownExit(keyCode: Int, time: Long = 2000, hint: String = "再按一次退出", exitHint: String = "APP已退出",systemExit:Boolean=true,activityList:ArrayList<Activity>?=null) :Boolean{
+fun Activity.eSetKeyDownExit(keyCode: Int,activityList:ArrayList<Activity>?=null,systemExit:Boolean=true, hint: String = "再按一次退出", exitHint: String = "APP已退出" ,time: Long = 2000) :Boolean{
     return  if (keyCode == KeyEvent.KEYCODE_BACK){
         if (System.currentTimeMillis() - com.anubis.kt_extends.clickTime > time) {
             eShowTip(hint)
@@ -76,8 +76,8 @@ fun Activity.eSetKeyDownExit(keyCode: Int, time: Long = 2000, hint: String = "�
             false
         } else {
             if(activityList!=null){
-                for (Activity in activityList){
-                    Activity.finish()
+                for (activity in activityList){
+                    activity.finish()
                 }
             }
             this.eShowTip(exitHint)
@@ -514,9 +514,7 @@ fun Activity.eSetOnRequestPermissionsResult(requestCode: Int, permissions: Array
 //开机自启
 fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, className: Any? = null) {
     if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-        eLog("myApplication$myApplication")
         val pm = myApplication.packageManager
-        eLog("pm$pm")
         if (className != null) {
             val packName = intent.resolveActivityInfo(pm, 0).toString()
             val cls = when (className) {
@@ -530,6 +528,8 @@ fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, c
         }
     }
 }
+
+
 ///**
 // * 反射机制动态加载扩展----------------------------------------------------------
 // */

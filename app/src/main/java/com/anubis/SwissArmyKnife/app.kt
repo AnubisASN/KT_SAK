@@ -25,13 +25,16 @@ import com.anubis.module_tts.eTTS
 class app : Application() {
     var mTTS: eTTS? = null
     var mHandler: Handler? = null
-    var mActivityList:ArrayList<Activity>?=null
+
     companion object {
         var init: app? = null
+        var mActivityList: ArrayList<Activity>? = null
     }
+
     override fun onCreate() {
         super.onCreate()
         init = this
+        mActivityList=ArrayList()
         mHandler = object : Handler() {
             override fun handleMessage(msg: Message?) {
                 super.handleMessage(msg)
@@ -40,8 +43,8 @@ class app : Application() {
         }
         mTTS = eTTS.initTTS(this, mHandler as Handler)
     }
-    fun get() = init
-    fun handleMSG(msg: Message) {
 
-    }
+    fun get() = init
+    fun handleMSG(msg: Message) {}
+    fun getActivity() = mActivityList
 }
