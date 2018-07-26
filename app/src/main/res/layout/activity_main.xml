@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TTS.MainActivity"
+    tools:context=".MainActivity"
     android:orientation="vertical"
     android:gravity="center"
     >
@@ -43,4 +43,27 @@
         android:onClick="mainClick"
         android:text="动态加载"
         />
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:onClick="mainClick"
+        android:text="AecFaceFT人脸跟踪模块"
+        />
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:onClick="mainClick"
+        android:text="AecFaceFT人脸跟踪模块（Intent跳转）"
+        />    <Button
+    android:id="@+id/button8"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:onClick="mainClick"
+    android:text="AecFaceFT人脸跟踪模块（动态加载跳转）"
+    />
 </LinearLayout>

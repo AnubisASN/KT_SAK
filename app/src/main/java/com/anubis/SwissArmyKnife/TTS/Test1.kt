@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import android.view.View
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
+import com.anubis.SwissArmyKnife.MainActivity
 import com.anubis.SwissArmyKnife.R
 import com.anubis.SwissArmyKnife.app
 import com.anubis.kt_extends.eLog
@@ -29,7 +32,7 @@ import java.io.OutputStream
  *说明：
  */
 
-
+@Route(path = "/app/Test1")
 class Test1 : AppCompatActivity() {
     private var PATH2: String? = null //串口名称         RS485开门方式
     private var BAUDRATE: Int? = null            //波特率
@@ -45,6 +48,7 @@ class Test1 : AppCompatActivity() {
             R.id.button22-> app().get()!!.mTTS!!.speak("初始化调用")
             R.id.button33 -> eGorgeMessage().getInit(this).MSG()
             R.id.button44 -> startActivity(Intent(this, MainActivity::class.java))
+            R.id.button55 ->       ARouter.getInstance().build("/face/arcFace").navigation()
         }
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {

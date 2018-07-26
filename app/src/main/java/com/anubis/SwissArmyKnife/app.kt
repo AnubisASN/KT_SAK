@@ -4,6 +4,9 @@ import android.app.Activity
 import android.app.Application
 import android.os.Handler
 import android.os.Message
+import com.alibaba.android.arouter.launcher.ARouter
+import com.anubis.SwissArmyKnife.app.Companion.init
+import com.anubis.SwissArmyKnife.app.Companion.mActivityList
 import com.anubis.module_tts.eTTS
 
 /**
@@ -33,7 +36,10 @@ class app : Application() {
 
     override fun onCreate() {
         super.onCreate()
+         ARouter.openLog()
+        ARouter.openDebug()
         init = this
+        ARouter.init(init)
         mActivityList=ArrayList()
         mHandler = object : Handler() {
             override fun handleMessage(msg: Message?) {

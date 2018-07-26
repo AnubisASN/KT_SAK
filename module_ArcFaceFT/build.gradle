@@ -1,24 +1,28 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-
 android {
     compileSdkVersion 28
+
+
+
     defaultConfig {
-        applicationId "com.anubis.SwissArmyKnife"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        //路由转发
+        sourceSets.main {
+            jniLibs.srcDirs = ['libs']
+        }
 //        javaCompileOptions {
 //            annotationProcessorOptions {
-//                arguments = [ moduleName : project.getName() ]
+//                arguments = [moduleName: project.getName()]
 //            }
 //        }
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -34,11 +38,12 @@ kapt {
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':module_ArcFaceFT')
+    implementation 'com.guo.android_extend:android-extend:1.0.5'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation project(':module_Extends')
-    implementation project(':module_TTS')
-    implementation project(':module_Gorge')
-    implementation project(':module_Reflection')
     kapt 'com.alibaba:arouter-compiler:1.1.4'
-
+    implementation files('libs/facetracking.jar')
+}
+repositories {
+    mavenCentral()
 }

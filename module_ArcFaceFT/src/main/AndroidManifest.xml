@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.anubis.module_arcfaceft">
+
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".eArcFaceFTActivity"/>
+        <activity android:name=".MainTest"/>
+        <activity android:name=".face">
+        </activity>
+    </application>
+
+</manifest>

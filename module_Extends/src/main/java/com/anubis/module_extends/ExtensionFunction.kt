@@ -474,7 +474,7 @@ fun bytesToHexString(src: ByteArray?, lenth: Int): String? {
  * 运行权限扩展---------------------------------------------------------------
  */
 
-fun Activity.eSetPermissions(permissionsArray: Array<String>, requestCode: Int = 1) {
+fun Activity.eSetPermissions(permissionsArray: Array<out String>, requestCode: Int = 1) {
     val permissionsList = ArrayList<String>()
 
     for (permission in permissionsArray) {
@@ -489,6 +489,7 @@ fun Activity.eSetPermissions(permissionsArray: Array<String>, requestCode: Int =
 
 }
 
+
 //显示授权设置
 fun Activity.eSetOnRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray, isPermissionsOKHint: String = "", isPermissionsNoHint: String = "") {
     when (requestCode) {
@@ -497,7 +498,6 @@ fun Activity.eSetOnRequestPermissionsResult(requestCode: Int, permissions: Array
                 if (isPermissionsOKHint.isEmpty()) {
                     eShowTip(isPermissionsOKHint)
                 }
-
             } else {
                 if (isPermissionsNoHint.isEmpty()) {
                     eShowTip(isPermissionsNoHint)
@@ -512,10 +512,13 @@ fun Activity.eSetOnRequestPermissionsResult(requestCode: Int, permissions: Array
  */
 
 //开机自启
+var  isSetAutoBoot=true
 fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, className: Any? = null) {
     if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+        eLog("开机启动","SAK")
         val pm = myApplication.packageManager
-        if (className != null) {
+        if (className != null && isSetAutoBoot) {
+            isSetAutoBoot=false
             val packName = intent.resolveActivityInfo(pm, 0).toString()
             val cls = when (className) {
                 is String -> Class.forName(className)

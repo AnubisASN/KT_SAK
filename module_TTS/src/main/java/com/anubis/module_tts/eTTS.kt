@@ -11,7 +11,7 @@ import com.anubis.kt_extends.eGetSystemSharedPreferences
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eSetSystemSharedPreferences
-import com.anubis.module_tts.Bean.ParamMixMode
+import com.anubis.module_tts.Bean.paramMixMode
 import com.anubis.module_tts.Bean.voiceModel
 
 import com.anubis.module_tts.control.InitConfig
@@ -19,11 +19,11 @@ import com.anubis.module_tts.control.MySyntherizer
 import com.anubis.module_tts.control.NonBlockSyntherizer
 import com.anubis.module_tts.listener.UiMessageListener
 import com.baidu.tts.chainofresponsibility.logger.LoggerProxy
-import com.baidu.tts.client.SpeechSynthesizer
 import com.baidu.tts.client.TtsMode
 
 import java.io.IOException
 import com.anubis.module_tts.util.OfflineResource
+import com.baidu.tts.client.SpeechSynthesizer
 import com.baidu.tts.client.SpeechSynthesizer.PARAM_MIX_MODE
 import java.util.*
 
@@ -125,7 +125,7 @@ object eTTS {
         return this
     }
 
-    fun setParams(voiceMode: voiceModel = voiceModel.CHILDREN, paramMixMode: ParamMixMode =ParamMixMode.MIX_MODE_DEFAULT, volume: Int = 9, speed: Int = 5, pitch: Int = 5):eTTS {
+    fun setParams(voiceMode: voiceModel = voiceModel.CHILDREN, paramMixMode: paramMixMode =com.anubis.module_tts.Bean.paramMixMode.MIX_MODE_DEFAULT, volume: Int = 9, speed: Int = 5, pitch: Int = 5):eTTS {
         val mode = when (voiceMode) {
             voiceModel.FEMALE -> "F"
             voiceModel.MALE -> "M"

@@ -5,6 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".TTS.Test1">
     <Button
         android:id="@+id/button22"
@@ -24,11 +26,19 @@
         android:text="串口测试"
         />
     <Button
-        android:id="@+id/button44"
+    android:id="@+id/button44"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:onClick="testClick"
+    android:text="切换界面"
+    />
+    <Button
+        android:id="@+id/button55"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="testClick"
-        android:text="切换界面"
+        android:text="路由转发跳转"
         />
 </LinearLayout>
