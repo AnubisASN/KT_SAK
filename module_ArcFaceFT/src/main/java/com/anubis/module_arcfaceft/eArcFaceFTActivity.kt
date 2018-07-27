@@ -1,5 +1,6 @@
 package com.anubis.module_arcfaceft
 
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.ImageFormat
 import android.graphics.Rect
@@ -10,6 +11,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.anubis.kt_extends.eGetPhoneBitmap
 import com.arcsoft.facetracking.AFT_FSDKEngine
 import com.arcsoft.facetracking.AFT_FSDKFace
 import com.arcsoft.facetracking.AFT_FSDKVersion
@@ -45,8 +47,9 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     private var mCameraID: Int = 1
     private var mCameraRotate: Int = 0
     private var mCameraMirror: Boolean = false
-    var mImageNV21: ByteArray? = null
+    private  var mImageNV21: ByteArray? = null
     var mFaceNum: Int = 0
+    var mBitmap: Bitmap? = null
     private var mAFT_FSDKFace: AFT_FSDKFace? = null
 
     fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
@@ -96,18 +99,22 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     override fun startPreviewImmediately(): Boolean {
         return true
     }
-
     override fun onPreview(data: ByteArray, width: Int, height: Int, format: Int, timestamp: Long): Any {
         val err = engine.AFT_FSDK_FaceFeatureDetect(data, width, height, AFT_FSDKEngine.CP_PAF_NV21, mFaceResult)
         Log.d(TAG, "AFT_FSDK_FaceFeatureDetect =" + err.code)
         Log.d(TAG, "Face=" + mFaceResult.size)
         mFaceNum = mFaceResult.size
-        if (mFaceNum == 0) {
+        if (mFaceNum != 0 && mImageNV21 != null) {
+            val size = mCamera!!.parameters.previewSize
+            mBitmap = eGetPhoneBitmap(mImageNV21!!,size.width, size.height, mCameraID)
+        }
+        if (mFaceNum==0){
             mImageNV21 = null
         }
         for (face in mFaceResult) {
             Log.d(TAG, "Face:" + face.toString())
         }
+
         if (mImageNV21 == null) {
             if (!mFaceResult.isEmpty()) {
                 mAFT_FSDKFace = mFaceResult[0].clone()
@@ -119,7 +126,6 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
         for (i in mFaceResult.indices) {
             rects[i] = Rect(mFaceResult.get(i).getRect());
         }
-
         //clear mFaceResult.
         mFaceResult.clear()
         //return the rects for render.

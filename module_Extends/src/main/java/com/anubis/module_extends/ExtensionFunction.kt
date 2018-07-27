@@ -6,8 +6,8 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.*
+import android.hardware.Camera
 import android.os.Bundle
 import android.preference.*
 import android.support.v4.app.ActivityCompat
@@ -16,6 +16,7 @@ import android.text.TextUtils.indexOf
 import android.util.Base64
 import android.util.Log
 import android.view.KeyEvent
+import android.view.View
 import android.widget.Toast
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -49,7 +50,7 @@ fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
  */
 
 fun Activity?.eLog(str: Any, TAG: String = "TAG") {
-    Log.i(TAG, "${this?.localClassName?:"eLog"}-：${str.toString()}\n ")
+    Log.i(TAG, "${this?.localClassName ?: "eLog"}-：${str.toString()}\n ")
 }
 
 fun eLog(str: Any, TAG: String = "TAG") {
@@ -57,7 +58,7 @@ fun eLog(str: Any, TAG: String = "TAG") {
 }
 
 fun Activity?.eLogE(str: Any, TAG: String = "TAG") {
-    Log.e(TAG, "${this?.localClassName?:"eLogE"}-：${str.toString()}\n ")
+    Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：${str.toString()}\n ")
 }
 
 fun eLogE(str: Any, TAG: String = "TAG") {
@@ -68,27 +69,27 @@ fun eLogE(str: Any, TAG: String = "TAG") {
  * KeyDownExit事件监听------------------------------------------------------------------------------------
  */
 private var clickTime: Long = 0
-fun Activity.eSetKeyDownExit(keyCode: Int,activityList:ArrayList<Activity>?=null,systemExit:Boolean=true, hint: String = "再按一次退出", exitHint: String = "APP已退出" ,time: Long = 2000) :Boolean{
-    return  if (keyCode == KeyEvent.KEYCODE_BACK){
+
+fun Activity.eSetKeyDownExit(keyCode: Int, activityList: ArrayList<Activity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", time: Long = 2000): Boolean {
+    return if (keyCode == KeyEvent.KEYCODE_BACK) {
         if (System.currentTimeMillis() - com.anubis.kt_extends.clickTime > time) {
             eShowTip(hint)
             com.anubis.kt_extends.clickTime = System.currentTimeMillis()
             false
         } else {
-            if(activityList!=null){
-                for (activity in activityList){
+            if (activityList != null) {
+                for (activity in activityList) {
                     activity.finish()
                 }
             }
             this.eShowTip(exitHint)
             this.finish()
-            if(systemExit){
+            if (systemExit) {
                 System.exit(0)
             }
             true
         }
-    }
-    else
+    } else
         false
 }
 
@@ -433,6 +434,35 @@ fun eBase64ToBitmap(base64String: String): Bitmap {
     return BitmapFactory.decodeByteArray(decode, 0, decode.size)
 }
 
+ fun eGetPhoneBitmap(mImageNV21: ByteArray, width: Int, height: Int, mCameraID: Int = 1): Bitmap? {
+     var mBitmap:Bitmap?=null
+     if (mImageNV21!=null){
+
+
+         val image = YuvImage(mImageNV21, ImageFormat.NV21, width, height, null)
+         val stream = ByteArrayOutputStream()
+         image.compressToJpeg(Rect(0, 0, width, height), 80, stream)
+         val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
+          mBitmap = rotateMyBitmap(bmp)
+         stream.close()
+         eGcBitmap(bmp)
+     }
+    return mBitmap
+}
+
+fun rotateMyBitmap(bmp: Bitmap, mCameraID: Int = 1): Bitmap {
+    //*****旋转一下
+    var matrix = Matrix()
+    if (mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+        matrix.postRotate(270f)
+    } else {
+        matrix.postRotate(90f)
+    }
+    var nbmp2 = Bitmap.createBitmap(bmp, 0, 0, bmp.width, bmp.height, matrix, true)
+    return nbmp2
+
+}
+
 //十六进制字符串转字节
 fun eGetHexStringToBytes(hexString: String?): ByteArray? {
     var hexString = hexString
@@ -512,13 +542,14 @@ fun Activity.eSetOnRequestPermissionsResult(requestCode: Int, permissions: Array
  */
 
 //开机自启
-var  isSetAutoBoot=true
+var isSetAutoBoot = true
+
 fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, className: Any? = null) {
     if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-        eLog("开机启动","SAK")
+        eLog("开机启动", "SAK")
         val pm = myApplication.packageManager
         if (className != null && isSetAutoBoot) {
-            isSetAutoBoot=false
+            isSetAutoBoot = false
             val packName = intent.resolveActivityInfo(pm, 0).toString()
             val cls = when (className) {
                 is String -> Class.forName(className)
