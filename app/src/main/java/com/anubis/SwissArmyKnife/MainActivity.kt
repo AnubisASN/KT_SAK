@@ -3,7 +3,9 @@ package com.anubis.SwissArmyKnife
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Bundle
+import android.speech.tts.Voice
 import android.support.v4.app.ActivityCompat
 import android.view.KeyEvent
 import android.view.View
@@ -14,21 +16,23 @@ import com.anubis.kt_extends.eSetOnRequestPermissionsResult
 import com.anubis.kt_extends.eSetPermissions
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
 import com.anubis.module_gorge.eGorgeMessage
-import com.anubis.module_tts.Bean.paramMixMode
-import com.anubis.module_tts.Bean.voiceModel
 import com.anubis.module_tts.eTTS
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.module_arcfaceft.face
+import com.anubis.module_tts.Bean.*
+import com.anubis.module_tts.eTTS.setParams
 import com.tencent.bugly.crashreport.CrashReport
 
 
 class MainActivity : Activity() {
     var TTS: eTTS? = null
+    var APP:app?=null
     var mEGorge: eGorgeMessage? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         eSetPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA))
+        APP=app().get()
         app().get()?.getActivity()!!.add(this)
         TTS = app().get()!!.mTTS
         mEGorge = eGorgeMessage().getInit(this)
@@ -36,8 +40,8 @@ class MainActivity : Activity() {
 
     fun mainClick(v: View) {
         when (v.id) {
-            R.id.button2 -> TTS!!.speak("初始化调用")
-            R.id.button3 -> TTS!!.setParams(voiceModel.CHILDREN, paramMixMode.MIX_MODE_HIGH_SPEED_NETWORK).speak("发音人切换,网络优先调用")
+            R.id.button2 -> eTTS.initTTS(APP!!,APP!!.mHandler!!).setParams().speak("初始化调用")
+            R.id.button3 -> eTTS.initTTS(APP!!, APP!!.mHandler!!, TTSMode.MIX, VoiceModel.EMOTIONAL_MALE).setParams( ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK).speak("发音人切换,网络优先调用")
             R.id.button4 -> {
                 ARouter.getInstance().build("/app/Test1").navigation()
                 // startActivity(Intent(this, Test1::class.java))

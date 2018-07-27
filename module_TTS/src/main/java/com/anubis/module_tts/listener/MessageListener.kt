@@ -3,6 +3,7 @@ package com.anubis.module_tts.listener
 import android.util.Log
 
 import com.anubis.module_tts.control.MainHandlerConstant
+import com.anubis.module_tts.eTTS
 import com.baidu.tts.client.SpeechError
 import com.baidu.tts.client.SpeechSynthesizerListener
 
@@ -65,6 +66,7 @@ open class MessageListener : SpeechSynthesizerListener, MainHandlerConstant {
      * @param utteranceId
      */
     override fun onSpeechFinish(utteranceId: String) {
+            eTTS.ttsDestroy()
         sendMessage("播放结束回调, 序列号:" + utteranceId,MSG_TYPE_TTS,MSG_STATE_TTS_SPEAK_OVER)
     }
 

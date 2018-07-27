@@ -14,6 +14,10 @@ import com.anubis.SwissArmyKnife.app
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eSetKeyDownExit
 import com.anubis.module_gorge.eGorgeMessage
+import com.anubis.module_tts.Bean.ParamMixMode
+import com.anubis.module_tts.Bean.TTSMode
+import com.anubis.module_tts.Bean.VoiceModel
+import com.anubis.module_tts.eTTS
 import java.io.OutputStream
 
 /**
@@ -45,7 +49,7 @@ class Test1 : AppCompatActivity() {
     }
     fun testClick(v: View) {
         when (v.id) {
-            R.id.button22-> app().get()!!.mTTS!!.speak("初始化调用")
+            R.id.button22->  eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE, VoiceModel.MALE).setParams( ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK).speak("发音人切换,网络优先调用")
             R.id.button33 -> eGorgeMessage().getInit(this).MSG()
             R.id.button44 -> startActivity(Intent(this, MainActivity::class.java))
             R.id.button55 ->       ARouter.getInstance().build("/face/arcFace").navigation()

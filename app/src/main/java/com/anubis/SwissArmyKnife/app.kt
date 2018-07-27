@@ -50,7 +50,6 @@ class app : Application() {
                 handleMSG(msg!!)
             }
         }
-        mTTS = eTTS.initTTS(this, mHandler as Handler)
     }
 
     fun get() = init

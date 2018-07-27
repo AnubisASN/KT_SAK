@@ -11,8 +11,9 @@ import com.anubis.kt_extends.eGetSystemSharedPreferences
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eSetSystemSharedPreferences
-import com.anubis.module_tts.Bean.paramMixMode
-import com.anubis.module_tts.Bean.voiceModel
+import com.anubis.module_tts.Bean.ParamMixMode
+import com.anubis.module_tts.Bean.TTSMode
+import com.anubis.module_tts.Bean.VoiceModel
 
 import com.anubis.module_tts.control.InitConfig
 import com.anubis.module_tts.control.MySyntherizer
@@ -37,6 +38,7 @@ object eTTS {
     // ================== 初始化参数设置开始 ==========================
     private var mActivity: Application? = null
     private var mHandler: Handler? = null
+    private var TTS: Unit? = null
     // TtsMode.MIX; 离在线融合，在线优先； TtsMode.ONLINE 纯在线； 没有纯离线
     private var ttsMode = TtsMode.MIX
     // 离线发音选择，VOICE_FEMALE即为离线女声发音。
@@ -104,7 +106,7 @@ object eTTS {
     map["离线度逍遥"] = OfflineResource.VOICE_DUXY
     map["离线度丫丫"] = OfflineResource.VOICE_DUYY
      */
-    private fun voiceModel(mode: String) {
+    private fun VoiceModel(mode: String) {
         offlineVoice = mode
         val offlineResource = createOfflineResource(offlineVoice)
 //        toPrint("切换离线语音：" + offlineResource!!.modelFilename!!)
@@ -113,35 +115,35 @@ object eTTS {
     }
 
 
-    fun initTTS(activity: Application, mHandler: Handler) :eTTS{
+    fun initTTS(activity: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN): eTTS {
+        val mode = when (voiceMode) {
+            VoiceModel.FEMALE -> "F"
+            VoiceModel.MALE -> "M"
+            VoiceModel.EMOTIONAL_MALE -> "X"
+            VoiceModel.CHILDREN -> "Y"
+        }
+        activity.eSetSystemSharedPreferences("set_tts_load_model", mode)
         this.mActivity = activity
         this.mHandler = mHandler
-        eLog("TTS初始化")
-        initialTts()
-        var mode = mActivity?.eGetSystemSharedPreferences("set_tts_load_model").toString() ?: "Y"
-        eLog("mode:" + mode)
-        voiceModel(mode)
-
+        this.ttsMode = if (ttsMode == TTSMode.MIX) TtsMode.MIX else TtsMode.ONLINE
+        if (TTS == null) {
+            initialTts()
+        }
         return this
     }
 
-    fun setParams(voiceMode: voiceModel = voiceModel.CHILDREN, paramMixMode: paramMixMode =com.anubis.module_tts.Bean.paramMixMode.MIX_MODE_DEFAULT, volume: Int = 9, speed: Int = 5, pitch: Int = 5):eTTS {
-        val mode = when (voiceMode) {
-            voiceModel.FEMALE -> "F"
-            voiceModel.MALE -> "M"
-            voiceModel.EMOTIONAL_MALE -> "X"
-            voiceModel.CHILDREN -> "Y"
-        }
-        mActivity!!.eSetSystemSharedPreferences("set_tts_load_model", mode)
+    fun setParams(ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_DEFAULT, volume: Int = 9, speed: Int = 5, pitch: Int = 5): eTTS {
+
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString())
-        mActivity!!.eSetSystemSharedPreferences("set_PARAM_MIX_MODE", paramMixMode.toString())
+        mActivity!!.eSetSystemSharedPreferences("set_PARAM_MIX_MODE", ParamMixMode.toString())
 //        eLog("sss:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model", mode) +
 //                mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString()) +
 //                mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED", speed.toString()) +
 //                mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString()))
-        return  this
+
+        return this
     }
 
 
@@ -241,7 +243,8 @@ object eTTS {
     }
 
     fun ttsDestroy() {
-        synthesizer!!.release()
+        synthesizer?.release()
+        TTS = null
         eLog("TTS释放资源成功")
     }
 

@@ -15,15 +15,18 @@ package com.anubis.module_tts.Bean
  *Router :  /'Module'/'Function'
  *类说明：
  */
-  enum class  voiceModel{
+  enum class  VoiceModel{
     FEMALE,MALE,EMOTIONAL_MALE,CHILDREN
 //    map["离线女声"] = OfflineResource.VOICE_FEMALE
 //    map["离线男声"] = OfflineResource.VOICE_MALE
 //    map["离线度逍遥"] = OfflineResource.VOICE_DUXY
 //    map["离线度丫丫"] = OfflineResource.VOICE_DUYY
 }
-enum class paramMixMode{
+enum class ParamMixMode{
   MIX_MODE_DEFAULT,MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI,MIX_MODE_HIGH_SPEED_NETWORK,MIX_MODE_HIGH_SPEED_SYNTHESIZE
+}
+enum class TTSMode{
+MIX,ONLINE
 }
 // MIX_MODE_DEFAULT 默认 ，wifi状态下使用在线，非wifi离线。在线状态下，请求超时6s自动转离线
 // MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI wifi状态下使用在线，非wifi离线。在线状态下， 请求超时1.2s自动转离线
