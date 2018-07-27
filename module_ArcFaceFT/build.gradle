@@ -2,6 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'bugly'
+
+bugly {
+    appId = 'b09c07bbd4' // 注册时分配的App ID
+    appKey = 'e072827c-b121-45c0-bc3e-dba56579fabb' // 注册时分配的App Key
+    debug=true
+}
 android {
     compileSdkVersion 28
 

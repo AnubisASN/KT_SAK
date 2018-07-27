@@ -32,7 +32,6 @@ class MainActivity : Activity() {
         app().get()?.getActivity()!!.add(this)
         TTS = app().get()!!.mTTS
         mEGorge = eGorgeMessage().getInit(this)
-        CrashReport.initCrashReport(getApplicationContext(), "47d98f44ec", false)
     }
 
     fun mainClick(v: View) {

@@ -8,7 +8,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eGcBitmap
 import com.anubis.kt_extends.eGetPhoneBitmap
 import com.anubis.kt_extends.eLog
-import com.anubis.module_arcfaceft.R.id.*
 import kotlinx.android.synthetic.main.activity_camera.*
 
 /**
@@ -34,7 +33,6 @@ class  face: Activity(){
         setContentView(R.layout.activity_camera)
       val camera=  eArcFaceFTActivity.init(findViewById(R.id.glsurfaceView),findViewById(R.id.surfaceView))
         mRunnable= Runnable {
-            eLog("${camera.mFaceNum}--$")
             if (camera.mFaceNum!=0 ){
                 imageView.setImageBitmap(camera.mBitmap)
             }

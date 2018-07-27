@@ -61,8 +61,6 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
         mSurfaceView!!.setOnCameraListener(this)
         mSurfaceView!!.setupGLSurafceView(mGLSurfaceView, true, mCameraMirror, mCameraRotate)
         mSurfaceView!!.debug_print_fps(true, false)
-
-
         var err = engine.AFT_FSDK_InitialFaceEngine(appid, ft_key, AFT_FSDKEngine.AFT_OPF_0_HIGHER_EXT, 16, 5)
         Log.d(TAG, "AFT_FSDK_InitialFaceEngine =" + err.code)
         err = engine.AFT_FSDK_GetVersion(version)

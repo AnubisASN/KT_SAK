@@ -2,7 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'bugly'
 
+bugly {
+    appId = '47d98f44ec' // 注册时分配的App ID
+    appKey = '67d6bd08-71ba-4b1e-b739-6ddb4d8fa1ec' // 注册时分配的App Key
+    debug=true
+}
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -38,7 +44,6 @@ dependencies {
     implementation project(':module_Extends')
     implementation project(':module_TTS')
     implementation project(':module_Gorge')
-    implementation project(':module_Reflection')
     kapt 'com.alibaba:arouter-compiler:1.1.4'
 
 }

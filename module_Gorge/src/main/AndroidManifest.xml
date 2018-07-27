@@ -1,5 +1,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.anubis.module_gorge">
+    <!--Bugly-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
 
+    <!--<application-->
+        <!--android:allowBackup="true"-->
+        <!--android:supportsRtl="true">-->
+        <!--&lt;!&ndash; 配置APP ID &ndash;&gt;-->
+        <!--<meta-data-->
+            <!--android:name="BUGLY_APPID"-->
+            <!--android:value="87b639d94e"/>-->
+        <!--&lt;!&ndash; 配置Bugly调试模式（true或者false）&ndash;&gt;-->
+        <!--<meta-data-->
+            <!--android:name="BUGLY_ENABLE_DEBUG"-->
+            <!--android:value="true"/>-->
+    <!--</application>-->
 </manifest>
 

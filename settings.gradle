@@ -1,1 +1,1 @@
-include ':app','module_ArcFaceFT','module_Extends','module_Gorge','module_Reflection','module_TTS'
+include ':app',':module_Extends',':module_Gorge',':module_TTS',':module_ArcFaceFT'

@@ -8,6 +8,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.SwissArmyKnife.app.Companion.init
 import com.anubis.SwissArmyKnife.app.Companion.mActivityList
 import com.anubis.module_tts.eTTS
+import com.tencent.bugly.crashreport.CrashReport
 
 /**
  * Author  ： AnubisASN   on 2018-07-21 17:03.
@@ -36,7 +37,9 @@ class app : Application() {
 
     override fun onCreate() {
         super.onCreate()
-         ARouter.openLog()
+        CrashReport.initCrashReport(applicationContext, "47d98f44ec", false)
+        CrashReport.initCrashReport(applicationContext)
+        ARouter.openLog()
         ARouter.openDebug()
         init = this
         ARouter.init(init)

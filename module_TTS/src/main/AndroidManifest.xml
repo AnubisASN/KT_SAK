@@ -4,9 +4,6 @@
           android:versionCode="1"
           android:versionName="1.0">
 
-    <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="23"/>
     <!-- 集成时请添加下列权限 -->
     <!-- 测试完成后，您自己的appId appKey secretKeyTTSActivityvity 和 MiniActivity 中修改 -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -17,9 +14,24 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
+    <!--Bugly-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
     <application android:theme="@style/AppTheme">
 
+        <!-- 配置APP ID -->
+        <!--<meta-data-->
+            <!--android:name="BUGLY_APPID"-->
+            <!--android:value="ae625cc87e"/>-->
+        <!--&lt;!&ndash; 配置Bugly调试模式（true或者false）&ndash;&gt;-->
+        <!--<meta-data-->
+            <!--android:name="BUGLY_ENABLE_DEBUG"-->
+            <!--android:value="true"/>-->
     </application>
 
 </manifest>
+
+
