@@ -102,8 +102,6 @@ object eTTS {
 //        val result = synthesizer!!.loadModel(offlineResource!!.modelFilename.toString(), offlineResource!!.textFilename.toString())
 //        checkResult(result, "loadModel")
     }
-
-
     fun initTTS(activity: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode =com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK): eTTS {
         val mode = when (voiceMode) {
             VoiceModel.FEMALE -> "F"
