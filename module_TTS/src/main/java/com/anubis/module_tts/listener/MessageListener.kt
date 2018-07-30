@@ -1,6 +1,7 @@
 package com.anubis.module_tts.listener
 
 import android.util.Log
+import com.anubis.kt_extends.eLog
 
 import com.anubis.module_tts.control.MainHandlerConstant
 import com.anubis.module_tts.eTTS
@@ -57,7 +58,7 @@ open class MessageListener : SpeechSynthesizerListener, MainHandlerConstant {
      * @param progress    如合成“百度语音问题”这6个字， progress肯定是从0开始，到6结束。 但progress无法保证和合成到第几个字对应。
      */
     override fun onSpeechProgressChanged(utteranceId: String, progress: Int) {
-        //  Log.i(TAG, "播放进度回调, progress：" + progress + ";序列号:" + utteranceId );
+          eLog( "播放进度回调, progress：" + progress + ";序列号:" + utteranceId );
     }
 
     /**
@@ -66,8 +67,8 @@ open class MessageListener : SpeechSynthesizerListener, MainHandlerConstant {
      * @param utteranceId
      */
     override fun onSpeechFinish(utteranceId: String) {
-            eTTS.ttsDestroy()
         sendMessage("播放结束回调, 序列号:" + utteranceId,MSG_TYPE_TTS,MSG_STATE_TTS_SPEAK_OVER)
+        eLog("播放结束")
     }
 
     /**

@@ -34,22 +34,21 @@ class MainActivity : Activity() {
         eSetPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA))
         APP=app().get()
         app().get()?.getActivity()!!.add(this)
-        TTS = app().get()!!.mTTS
+        TTS= eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
         mEGorge = eGorgeMessage().getInit(this)
     }
 
     fun mainClick(v: View) {
         when (v.id) {
-            R.id.button2 -> eTTS.initTTS(APP!!,APP!!.mHandler!!).setParams().speak("初始化调用")
-            R.id.button3 -> eTTS.initTTS(APP!!, APP!!.mHandler!!, TTSMode.MIX, VoiceModel.EMOTIONAL_MALE).setParams( ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK).speak("发音人切换,网络优先调用")
+            R.id.button2 -> TTS!!.setParams().speak("初始化调用")
+            R.id.button3 -> TTS!!.setParams( VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
             R.id.button4 -> {
                 ARouter.getInstance().build("/app/Test1").navigation()
                 // startActivity(Intent(this, Test1::class.java))
             }
-
             R.id.button5 -> reflection("com.anubis.SwissArmyKnife.Reflection.Reflection")
             R.id.button6 -> {
-                eLog("点击了")
+//                eLog("点击了")
 //                FaceFT.startDetector(this)
 //                startFace("com.anubis.module_arcfaceft.eArcFaceFTActivity")
                 ARouter.getInstance().build("/face/arcFace").navigation()

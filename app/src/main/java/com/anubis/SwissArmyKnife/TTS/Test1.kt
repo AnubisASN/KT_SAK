@@ -18,6 +18,7 @@ import com.anubis.module_tts.Bean.ParamMixMode
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
+import com.anubis.module_tts.eTTS.setParams
 import java.io.OutputStream
 
 /**
@@ -42,17 +43,19 @@ class Test1 : AppCompatActivity() {
     private var BAUDRATE: Int? = null            //波特率
     private var outputStream: OutputStream? = null     //发送串口的输出流
     private var mp: MediaPlayer? = null
+    private  var TTS:eTTS?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test1)
+        TTS= eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE, VoiceModel.MALE, ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK)
         app().get()?.getActivity()!!.add(this)
     }
     fun testClick(v: View) {
         when (v.id) {
-            R.id.button22->  eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE, VoiceModel.MALE).setParams( ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK).speak("发音人切换,网络优先调用")
+            R.id.button22-> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
             R.id.button33 -> eGorgeMessage().getInit(this).MSG()
             R.id.button44 -> startActivity(Intent(this, MainActivity::class.java))
-            R.id.button55 ->       ARouter.getInstance().build("/face/arcFace").navigation()
+            R.id.button55 -> ARouter.getInstance().build("/face/arcFace").navigation()
         }
     }
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {

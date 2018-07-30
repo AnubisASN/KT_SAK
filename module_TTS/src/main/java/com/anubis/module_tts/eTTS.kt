@@ -5,7 +5,6 @@ package com.anubis.module_tts
 
 import android.app.Application
 import android.os.Handler
-import android.util.Log
 import android.util.Pair
 import com.anubis.kt_extends.eGetSystemSharedPreferences
 import com.anubis.kt_extends.eLog
@@ -25,7 +24,6 @@ import com.baidu.tts.client.TtsMode
 import java.io.IOException
 import com.anubis.module_tts.util.OfflineResource
 import com.baidu.tts.client.SpeechSynthesizer
-import com.baidu.tts.client.SpeechSynthesizer.PARAM_MIX_MODE
 import java.util.*
 
 
@@ -45,15 +43,8 @@ object eTTS {
     // assets目录下bd_etts_common_speech_m15_mand_eng_high_am-mix_v3.0.0_20170505.dat为离线男声模型；
     // assets目录下bd_etts_common_speech_f7_mand_eng_high_am-mix_v3.0.0_20170512.dat为离线女声模型
     private var offlineVoice = OfflineResource.VOICE_DUYY
-
-    /**
-     * ====================================TTS设置====================================
-     */
-    // ===============初始化参数设置完毕，更多合成参数请至getParams()方法中设置 =================
-    // 主控制类，所有合成控制方法从这个类开始
     private var synthesizer: MySyntherizer? = null
-
-
+    private val params: HashMap<String, String>
     /**
      * 合成的参数，可以初始化时填写，也可以在合成前设置。
      *
@@ -67,7 +58,6 @@ object eTTS {
     // MIX_MODE_HIGH_SPEED_SYNTHESIZE, 2G 3G 4G wifi状态下使用在线，其它状态离线。在线状态下，请求超时1.2s自动转离线
     // 离线资源文件， 从assets目录中复制到临时目录，需要在initTTs方法前完成
     // 声学模型文件路径 (离线引擎使用), 请确认下面两个文件存在
-    private val params: HashMap<String, String>
         get() {
             val params = HashMap<String, String>()
             eLog("设置在线发声音人:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model"))
@@ -81,15 +71,14 @@ object eTTS {
                     "4"
                 }
             }
-
-            //            设置合成的音量，0-9 ，默认 9
+            // 设置合成的音量，0-9 ，默认 9
             params[SpeechSynthesizer.PARAM_VOLUME] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME").toString() ?: "9"
             // 设置合成的语速，0-9 ，默认 5
             params[SpeechSynthesizer.PARAM_SPEED] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED").toString() ?: "5"
             // 设置合成的语调，0-9 ，默认 5
             params[SpeechSynthesizer.PARAM_PITCH] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH").toString() ?: "5"
 //            params[SpeechSynthesizer.PARAM_MIX_MODE] = SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI
-            params[SpeechSynthesizer.PARAM_MIX_MODE] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_MIX_MODE").toString() ?: SpeechSynthesizer.MIX_MODE_DEFAULT
+            params[SpeechSynthesizer.PARAM_MIX_MODE] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_MIX_MODE").toString() ?: SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE
             val offlineResource = createOfflineResource(offlineVoice)
             if (offlineResource == null) {
                 eLogE("offlineResource==null")
@@ -109,13 +98,13 @@ object eTTS {
     private fun VoiceModel(mode: String) {
         offlineVoice = mode
         val offlineResource = createOfflineResource(offlineVoice)
-//        toPrint("切换离线语音：" + offlineResource!!.modelFilename!!)
+//        eLog("切换离线语音：" + offlineResource!!.modelFilename!!)
 //        val result = synthesizer!!.loadModel(offlineResource!!.modelFilename.toString(), offlineResource!!.textFilename.toString())
 //        checkResult(result, "loadModel")
     }
 
 
-    fun initTTS(activity: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN): eTTS {
+    fun initTTS(activity: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode =com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK): eTTS {
         val mode = when (voiceMode) {
             VoiceModel.FEMALE -> "F"
             VoiceModel.MALE -> "M"
@@ -123,34 +112,37 @@ object eTTS {
             VoiceModel.CHILDREN -> "Y"
         }
         activity.eSetSystemSharedPreferences("set_tts_load_model", mode)
+        activity.eSetSystemSharedPreferences("set_PARAM_MIX_MODE",ParamMixMode)
         this.mActivity = activity
         this.mHandler = mHandler
         this.ttsMode = if (ttsMode == TTSMode.MIX) TtsMode.MIX else TtsMode.ONLINE
-        if (TTS == null) {
+        try {
+            initialTts()
+        } catch (e: Exception) {
+            ttsDestroy()
             initialTts()
         }
         return this
     }
 
-    fun setParams(ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_DEFAULT, volume: Int = 9, speed: Int = 5, pitch: Int = 5): eTTS {
-
+    fun setParams(voiceMode: VoiceModel = VoiceModel.CHILDREN, volume: Int = 9, speed: Int = 5, pitch: Int = 5): eTTS {
+        val mode = when (voiceMode) {
+            VoiceModel.FEMALE -> "F"
+            VoiceModel.MALE -> "M"
+            VoiceModel.EMOTIONAL_MALE -> "X"
+            VoiceModel.CHILDREN -> "Y"
+        }
+        eTTS.VoiceModel(mode)
+        mActivity!!.eSetSystemSharedPreferences("set_tts_load_model", mode)
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString())
-        mActivity!!.eSetSystemSharedPreferences("set_PARAM_MIX_MODE", ParamMixMode.toString())
-//        eLog("sss:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model", mode) +
-//                mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString()) +
-//                mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED", speed.toString()) +
-//                mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString()))
-
         return this
     }
 
 
     /**
      * 初始化引擎，需要的参数均在InitConfig类里
-     *
-     *
      * DEMO中提供了3个SpeechSynthesizerListener的实现
      * MessageListener 仅仅用log.i记录日志，在logcat中可以看见
      * UiMessageListener 在MessageListener的基础上，对handler发送消息，实现UI的文字更新
@@ -160,16 +152,9 @@ object eTTS {
         LoggerProxy.printable(true) // 日志打印在logcat中
         // 设置初始化参数
         // 此处可以改为 含有您业务逻辑的SpeechSynthesizerListener的实现类
-
         val listener = UiMessageListener(mHandler)
-
         val params = params
-
-        /**
-         * 初始化设置模块
-         */
         val initConfig = InitConfig(ttsMode, params, listener)
-
         synthesizer = NonBlockSyntherizer(mActivity!!, initConfig, mHandler!!) // 此处可以改为MySyntherizer 了解调用过程
     }
 
@@ -180,14 +165,10 @@ object eTTS {
         } catch (e: IOException) {
             // IO 错误自行处理
             e.printStackTrace()
-            toPrint("【error】:copy files from assets failed." + e.message)
+            eLog("【error】:copy files from assets failed." + e.message)
         }
 
         return offlineResource
-    }
-
-    private fun toPrint(s: String) {
-        Log.i("TAG", s)
     }
     // ================== 调用方法 ==========================
     /**
@@ -209,7 +190,6 @@ object eTTS {
         val result = synthesizer!!.batchSpeak(texts)
         checkResult(result, "batchSpeak")
     }
-
     /**
      * 暂停播放。仅调用speak后生效
      */
@@ -217,7 +197,6 @@ object eTTS {
         val result = synthesizer!!.pause()
         checkResult(result, "pause")
     }
-
     /**
      * 继续播放。仅调用speak后生效，调用pause生效
      */
@@ -225,7 +204,6 @@ object eTTS {
         val result = synthesizer!!.resume()
         checkResult(result, "resume")
     }
-
     /**
      * 停止合成引擎。即停止播放，合成，清空内部合成队列。
      */
@@ -233,25 +211,16 @@ object eTTS {
         val result = synthesizer!!.stop()
         checkResult(result, "stop")
     }
-
     // ================== ============= ==========================
     //检查回调方法
     private fun checkResult(result: Int, method: String) {
         if (result != 0) {
-            toPrint("error code :$result method:$method, 错误码文档:http://yuyin.baidu.com/docs/tts/122 ")
+            eLog("error code :$result method:$method, 错误码文档:http://yuyin.baidu.com/docs/tts/122 ")
         }
     }
-
     fun ttsDestroy() {
         synthesizer?.release()
         TTS = null
         eLog("TTS释放资源成功")
     }
-
-//    companion object {
-//        private val TAG = "eTTS"
-//        private var initTTS: eTTS? = null
-//        fun getTTS() = initTTS
-//    }
-
 }
