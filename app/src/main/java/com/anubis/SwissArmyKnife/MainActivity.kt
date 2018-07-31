@@ -8,14 +8,11 @@ import android.support.v4.app.ActivityCompat
 import android.view.KeyEvent
 import android.view.View
 
-import com.anubis.kt_extends.eLog
-import com.anubis.kt_extends.eSetKeyDownExit
-import com.anubis.kt_extends.eSetOnRequestPermissionsResult
-import com.anubis.kt_extends.eSetPermissions
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
 import com.anubis.module_gorge.eGorgeMessage
 import com.anubis.module_tts.eTTS
 import com.alibaba.android.arouter.launcher.ARouter
+import com.anubis.kt_extends.*
 import com.anubis.module_tts.Bean.*
 
 
@@ -32,7 +29,6 @@ class MainActivity : Activity() {
         TTS= eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
         mEGorge = eGorgeMessage().getInit(this)
     }
-
     fun mainClick(v: View) {
         when (v.id) {
             R.id.button2 -> TTS!!.setParams().speak("初始化调用")
@@ -51,7 +47,7 @@ class MainActivity : Activity() {
             R.id.button7 -> {
 //                FaceFT.startDetector(this)
 //                startFace("com.anubis.module_arcfaceft.eArcFaceFTActivity")
-                startActivity(Intent(this, face::class.java))
+//                startActivity(Intent(this, face::class.java))
             }
             R.id.button8 -> {
 //                FaceFT.startDetector(this)

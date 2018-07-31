@@ -3,11 +3,17 @@ package com.anubis.kt_extends
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
+import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.*
 import android.hardware.Camera
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.os.Build
 import android.os.Bundle
 import android.preference.*
 import android.support.v4.app.ActivityCompat
@@ -16,14 +22,17 @@ import android.text.TextUtils.indexOf
 import android.util.Base64
 import android.util.Log
 import android.view.KeyEvent
-import android.view.View
 import android.widget.Toast
+import com.lzy.imagepicker.ImagePicker
+import com.lzy.imagepicker.loader.ImageLoader
+import com.lzy.imagepicker.view.CropImageView
+import com.tencent.bugly.proguard.p
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
-import java.io.IOException
+import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import java.util.ArrayList
 import kotlin.experimental.and
 
 
@@ -278,6 +287,7 @@ fun eGetNumberPeriod(str: String, start: Any, end: Any): String {
 /**
  * 状态判断-----------------------------------------------------------------------------------
  */
+//APP重启
 fun Activity.eAppRestart() {
     val LaunchIntent = packageManager.getLaunchIntentForPackage(application.packageName)
     LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -286,8 +296,7 @@ fun Activity.eAppRestart() {
 
 
 //AppLication运行判断
-fun Context.isAppRunningForeground(packageName: String): Boolean {
-
+fun Context.eIsAppRunningForeground(packageName: String): Boolean {
     val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     val runningAppProcessInfoList = activityManager.runningAppProcesses ?: return false
     for (processInfo in runningAppProcessInfoList) {
@@ -311,6 +320,23 @@ fun Context.eActivityWhetherWorked(className: String): Boolean {
     return false
 }
 
+//判断某一个类是否存在任务栈里面
+fun Context.esExistMainActivity(activity: Class<*>): Boolean {
+    val intent = Intent(this, activity)
+    val cmpName = intent.resolveActivity(packageManager)
+    var flag = false
+    if (cmpName != null) { // 说明系统中存在这个activity
+        val am: ActivityManager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val taskInfoList = am.getRunningTasks(10) //获取从栈顶开始往下查找的10个activity
+        for (taskInfo in taskInfoList) {
+            if (taskInfo.baseActivity == cmpName) { // 说明它已经启动了
+                flag = true
+                break //跳出循环，优化效率
+            }
+        }
+    }
+    return flag
+}
 
 //服务运行判断 com.anubis.iva.Service.IVAService
 fun Context.eServiceWhetherWorked(className: String): Boolean {
@@ -322,6 +348,20 @@ fun Context.eServiceWhetherWorked(className: String): Boolean {
         }
     }
     return false
+}
+
+//判断软件是否安装
+fun eIsInstall(packageName: String, mContext: Context): Boolean {
+    var packageInfo: PackageInfo? = null
+    try {
+        packageInfo = mContext.packageManager.getPackageInfo(
+                packageName, 0)
+
+    } catch (e: PackageManager.NameNotFoundException) {
+        packageInfo = null
+        e.printStackTrace()
+    }
+    return packageInfo != null
 }
 
 /**
@@ -383,10 +423,210 @@ fun Context.eSummaryModify(group: PreferenceGroup) {
     }
 }
 
+/**
+ * 获取系统信息------------------------------------------------------------
+ */
+//获取当前星期
+fun eGetCurrentWeek() = when (Calendar.getInstance().get(Calendar.DAY_OF_WEEK).toString()) {
+    "1" -> "星期天"
+    "2" -> "星期一"
+    "3" -> "星期二"
+    "4" -> "星期三"
+    "5" -> "星期四"
+    "6" -> "星期五"
+    "7" -> "星期六"
+    else -> "发生错误"
+}
+
+//获取当前时间   (yyyy-MM-dd HH:mm:ss)
+fun eGetCurrentTime(format: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(format).format(Date())
+
+//获取时间戳转格式时间
+fun eGetCuoFormatTime(dateCuo: Long, format: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(format).format(Date(dateCuo))
+
+// 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+fun eGetDpToPx(context: Context, dpValue: Float) = (dpValue * context.resources.displayMetrics.density + 0.5f).toInt()
+
+//获取系统的名称
+fun eGetSysVersionName() = Build.MODEL
+
+//获取系统的SDK版本
+fun eGetSysSDKVersion() = Build.VERSION.SDK
+
+//获取系统的无线电固件版本
+fun eGetRadioVersion() = Build.RADIO
+
+//获得显示
+fun eGetDisPlay() = Build.DISPLAY
+
+//判断是否为中文
+fun eIsChinese(c: Char) = c.toInt() >= 0x4E00 && c.toInt() <= 0x9FA5// 根据字节码判断
+
+//判断是否有英文
+fun eHasEglish(chars: CharArray): Boolean {
+    for (i in chars.indices) {
+        if (chars[i].toInt() >= 97 && chars[i].toInt() <= 122) {
+            return true
+        }
+    }
+    return false
+}
+
+/**
+ * @param endDate 上次更新时间
+ * @param nowDate 当前时间
+ * @return 天数
+ */
+fun eGetDatePoor(nowDate: Date, endDate: Date, type: String = "hour"): Long {
+    val nd = (1000 * 24 * 60 * 60).toLong()
+    val nh = (1000 * 60 * 60).toLong()
+    val nm = (1000 * 60).toLong()
+    val ns = 1000;
+    // 获得两个时间的毫秒时间差异
+    val diff = nowDate.time - endDate.time
+    return when (type) {
+        "day" -> diff / nd
+        "hour" -> diff % nd / nh
+        "min" -> diff % nd % nh / nm
+        "second" -> diff % nd % nh % nm / ns
+        else -> diff % nd / nh
+    }
+}
+
+// 判断是否有网
+fun eIsNetworkAvailable(context: Context): Boolean {
+    // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    // 获取NetworkInfo对象
+    val networkInfo = connectivityManager.allNetworkInfo
+    if (networkInfo != null && networkInfo.isNotEmpty()) {
+        for (i in networkInfo.indices) {
+            // 判断当前网络状态是否为连接状态
+            if (networkInfo[i].state == NetworkInfo.State.CONNECTED) {
+                return true
+            }
+        }
+    }
+    return false
+}
+
+//检测网络是否可用
+fun eIsNetworkOnline(): Boolean {
+    try {
+        val ipProcess = Runtime.getRuntime().exec("ping -c 1 114.114.114.114")
+        val exitValue = ipProcess.waitFor()
+        return exitValue == 0
+    } catch (e: IOException) {
+        e.printStackTrace()
+    } catch (e: InterruptedException) {
+        e.printStackTrace()
+    }
+    return false
+}
+
+//计算数据大小
+fun eGetFormatSize(size: Long) = when {
+    size < 1 -> "0 K/s"
+    size in 1..1023 -> size.toString() + " K/s"
+    1024 < size -> (size / 1024).toString() + " M/s"
+    else -> "0 K/s"
+}
+
+// 测试PING延迟
+fun eGetNetDelayTime(): String {
+    var delay = String()
+    var p: Process? = null
+    try {
+        p = Runtime.getRuntime().exec("/system/bin/ping -c 4 " + "www.baidu.com")
+        val buf = BufferedReader(InputStreamReader(p!!.inputStream))
+        var str = String()
+        while ((buf.readLine()).apply { str = this } != null) {
+            if (str.contains("avg")) {
+                val i = str.indexOf("/", 20)
+                val j = str.indexOf(".", i)
+                delay = str.substring(i + 1, j)
+            }
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return delay
+}
+
+// 获取屏幕密度，宽高
+fun eGetDensityWidthHeight(mContext: Context): Array<Any> {
+    val resources = mContext.resources
+    val dm = resources.displayMetrics
+    val density = dm.density
+    val width = dm.widthPixels
+    val height = dm.heightPixels
+    return arrayOf(density, width, height)
+}
+
+
+// 打开蓝牙
+fun Context.eOpenBluetooth(bel_name: String) {
+    val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    if (mBluetoothAdapter == null) {
+        eShowTip("该设备不支持蓝牙")
+    } else {
+        if (mBluetoothAdapter.isEnabled) {
+            mBluetoothAdapter.name = bel_name
+            eSetDiscoverableTimeout()
+        } else {
+            mBluetoothAdapter.enable()
+            eShowTip("已打开蓝牙")
+        }
+    }
+}
+
+//关闭蓝牙
+fun Context.eCloseBluetooth() {
+    val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    if (mBluetoothAdapter == null) {
+        eShowTip("该设备不支持蓝牙")
+    } else {
+        if (!mBluetoothAdapter.isEnabled) {
+            mBluetoothAdapter.disable()
+            eShowTip("已关闭蓝牙")
+        }
+    }
+}
+
+//设置开放检测
+fun eSetDiscoverableTimeout(timeout: Int = 0) {
+    val adapter = BluetoothAdapter.getDefaultAdapter()
+    try {
+        val setDiscoverableTimeout = BluetoothAdapter::class.java.getMethod("setDiscoverableTimeout", Int::class.javaPrimitiveType)
+        setDiscoverableTimeout.isAccessible = true
+        val setScanMode = BluetoothAdapter::class.java.getMethod("setScanMode", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
+        setScanMode.isAccessible = true
+        setDiscoverableTimeout.invoke(adapter, timeout)
+        setScanMode.invoke(adapter, BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE, timeout)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+
+}
 
 /**
  * 图片文件工具类------------------------------------------------------------
  */
+//图片选择
+fun eGetInitImageLoader(i: Int, imageLoader: ImageLoader): ImagePicker {
+    val imagePicker = ImagePicker.getInstance()
+    imagePicker.imageLoader = imageLoader  //设置图片加载器
+    imagePicker.isShowCamera = true  //显示拍照按钮
+    imagePicker.isCrop = true        //允许裁剪（单选才有效）
+    imagePicker.isSaveRectangle = true //是否按矩形区域保存
+    imagePicker.selectLimit = i    //选中数量限制
+    imagePicker.style = CropImageView.Style.RECTANGLE  //裁剪框的形状
+    imagePicker.focusWidth = 800   //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+    imagePicker.focusHeight = 800  //裁剪框的高度。单位像素（圆形自动取宽高最小值）
+    imagePicker.outPutX = 1000//保存文件的宽度。单位像素
+    imagePicker.outPutY = 1000//保存文件的高度。单位像素
+    return imagePicker
+}
 
 //Bitmap释放
 fun eGcBitmap(bitmap: Bitmap?) {
@@ -434,23 +674,22 @@ fun eBase64ToBitmap(base64String: String): Bitmap {
     return BitmapFactory.decodeByteArray(decode, 0, decode.size)
 }
 
- fun eGetPhoneBitmap(mImageNV21: ByteArray, width: Int, height: Int, mCameraID: Int = 1): Bitmap? {
-     var mBitmap:Bitmap?=null
-     if (mImageNV21!=null){
-
-
-         val image = YuvImage(mImageNV21, ImageFormat.NV21, width, height, null)
-         val stream = ByteArrayOutputStream()
-         image.compressToJpeg(Rect(0, 0, width, height), 80, stream)
-         val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
-          mBitmap = rotateMyBitmap(bmp)
-         stream.close()
-         eGcBitmap(bmp)
-     }
+//获取预览图
+fun eGetPhoneBitmap(mImageNV21: ByteArray, width: Int, height: Int, mCameraID: Int = 1): Bitmap? {
+    var mBitmap: Bitmap? = null
+    if (mImageNV21 != null) {
+        val image = YuvImage(mImageNV21, ImageFormat.NV21, width, height, null)
+        val stream = ByteArrayOutputStream()
+        image.compressToJpeg(Rect(0, 0, width, height), 80, stream)
+        val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
+        mBitmap = eRotateMyBitmap(bmp)
+        stream.close()
+        eGcBitmap(bmp)
+    }
     return mBitmap
 }
 
-fun rotateMyBitmap(bmp: Bitmap, mCameraID: Int = 1): Bitmap {
+fun eRotateMyBitmap(bmp: Bitmap, mCameraID: Int = 1): Bitmap {
     //*****旋转一下
     var matrix = Matrix()
     if (mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT) {
@@ -483,7 +722,7 @@ fun eGetHexStringToBytes(hexString: String?): ByteArray? {
 //字符转字节
 fun eGetCharToByte(c: Char) = indexOf("0123456789ABCDEF", c).toByte()
 
-fun bytesToHexString(src: ByteArray?, lenth: Int): String? {
+fun eBytesToHexString(src: ByteArray?, lenth: Int): String? {
     val stringBuilder = StringBuilder("")
     if (src == null || src.size <= 0) {
         return null
@@ -499,6 +738,32 @@ fun bytesToHexString(src: ByteArray?, lenth: Int): String? {
     return stringBuilder.toString()
 }
 
+/**
+ * @param inputStream 输入流
+ * @return 获取文件的内容
+ */
+fun eGetInputStreamContent(inputStream: InputStream): String {
+    var inputStreamReader: InputStreamReader? = null
+    try {
+        inputStreamReader = InputStreamReader(inputStream, "gbk")
+    } catch (e1: UnsupportedEncodingException) {
+        e1.printStackTrace()
+    }
+
+    val reader = BufferedReader(inputStreamReader!!)
+    val sb = StringBuffer("")
+    var line: String = ""
+    try {
+        while ((reader.readLine().apply { line = this }) != null) {
+            sb.append(line)
+            sb.append("\n")
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+
+    return sb.toString()
+}
 
 /**
  * 运行权限扩展---------------------------------------------------------------
@@ -563,8 +828,107 @@ fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, c
     }
 }
 
+/**
+ * Android运行linux命令
+ */
+  object RootCmd {
+    private var TAG = "RootCmd";
+    private var mHaveRoot = false;
+    /**
+     *   判断机器Android是否已经root，即是否获取root权限
+     */
+     fun  haveRoot():Boolean {
+        if (!mHaveRoot) {
+            var ret = execRootCmdSilent ("echo test"); // 通过执行测试命令来检测
+            if (ret != -1) {
+                Log.i(TAG, "have root!");
+                mHaveRoot = true;
+            } else {
+                Log.i(TAG, "not root!");
+            }
+        } else {
+            Log.i(TAG, "mHaveRoot = true, have root!");
+        }
+        return mHaveRoot;
+    }
 
+    /**
+     * 执行命令并且输出结果
+     */
+    public fun  execRootCmd( cmd:String):String {
+        var result = "";
+       var  dos:DataOutputStream? = null
+        var dis:DataInputStream ?= null
 
+        try {
+            var p = Runtime . getRuntime ().exec("su");// 经过Root处理的android系统即有su命令
+            dos =  DataOutputStream (p.getOutputStream());
+            dis =  DataInputStream (p.getInputStream());
+
+            Log.i(TAG, cmd);
+            dos.writeBytes(cmd + "\n");
+            dos.flush();
+            dos.writeBytes("exit\n");
+            dos.flush();
+            var line = "";
+            while (( dis.readLine()).apply { line=this } != null) {
+                Log.d("result", line);
+                result += line;
+            }
+            p.waitFor();
+        } catch ( e:Exception) {
+            e.printStackTrace();
+        } finally {
+            if (dos != null) {
+                try {
+                    dos.close();
+                } catch ( e:IOException) {
+                    e.printStackTrace();
+                }
+            }
+            if (dis != null) {
+                try {
+                    dis.close();
+                } catch ( e:IOException) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 执行命令但不关注结果输出
+     */
+    public fun execRootCmdSilent( cmd:String):Int {
+        var result = - 1;
+       var  dos:DataOutputStream? = null;
+
+        try {
+            var p = Runtime . getRuntime ().exec("su");
+            dos =  DataOutputStream (p.getOutputStream());
+
+            Log.i(TAG, cmd);
+            dos.writeBytes(cmd + "\n");
+            dos.flush();
+            dos.writeBytes("exit\n");
+            dos.flush();
+            p.waitFor();
+            result = p.exitValue();
+        } catch ( e:Exception) {
+            e.printStackTrace();
+        } finally {
+            if (dos != null) {
+                try {
+                    dos.close();
+                } catch ( e:IOException) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+}
 ///**
 // * 反射机制动态加载扩展----------------------------------------------------------
 // */
