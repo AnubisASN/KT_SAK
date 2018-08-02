@@ -37,6 +37,11 @@ dependencies {
     api 'com.android.support:appcompat-v7:28.0.0-alpha3'
     //Kotlin版本
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //Anko
+    api "org.jetbrains.anko:anko-sdk15:0.9.1" // So here it's 15 too
+    api "org.jetbrains.anko:anko-appcompat-v7:0.9.1"
+    api "org.jetbrains.anko:anko-design:0.9.1"
+    api "org.jetbrains.anko:anko-recyclerview-v7:0.9.1"
     //Junit测试
     testApi'junit:junit:4.12'
     androidTestApi 'com.android.support.test:runner:1.0.2'

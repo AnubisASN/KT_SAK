@@ -27,6 +27,7 @@ import com.lzy.imagepicker.ImagePicker
 import com.lzy.imagepicker.loader.ImageLoader
 import com.lzy.imagepicker.view.CropImageView
 import com.tencent.bugly.proguard.p
+import org.jetbrains.anko.activityManager
 import org.json.JSONObject
 import java.io.*
 import java.text.SimpleDateFormat
@@ -34,6 +35,7 @@ import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.experimental.and
+import kotlin.math.log
 
 
 /**
@@ -285,7 +287,7 @@ fun eGetNumberPeriod(str: String, start: Any, end: Any): String {
 }
 
 /**
- * 状态判断-----------------------------------------------------------------------------------
+ * 系统状态判断-----------------------------------------------------------------------------------
  */
 //APP重启
 fun Activity.eAppRestart() {
@@ -319,9 +321,11 @@ fun Context.eActivityWhetherWorked(className: String): Boolean {
     }
     return false
 }
+//获取当前显示的Activity
+fun Context.eGetShowActivity()= activityManager.getRunningTasks(1)[0].topActivity
 
 //判断某一个类是否存在任务栈里面
-fun Context.esExistMainActivity(activity: Class<*>): Boolean {
+fun Context.eIsExistMainActivity(activity: Class<*>): Boolean {
     val intent = Intent(this, activity)
     val cmpName = intent.resolveActivity(packageManager)
     var flag = false
@@ -536,12 +540,20 @@ fun eGetFormatSize(size: Long) = when {
 fun eGetNetDelayTime(): String {
     var delay = String()
     var p: Process? = null
+    var output = ""
     try {
         p = Runtime.getRuntime().exec("/system/bin/ping -c 4 " + "www.baidu.com")
+        eLog("p$p")
+        eLog("inputStream${p.inputStream}")
+        eLog("InputStreamReader${InputStreamReader(p.inputStream)}")
         val buf = BufferedReader(InputStreamReader(p!!.inputStream))
-        var str = String()
-        while ((buf.readLine()).apply { str = this } != null) {
-            if (str.contains("avg")) {
+        eLog("BufferedReader$buf")
+        var str: String? = ""
+        while (str != null) {
+            str = buf.readLine()
+            eLog("str$str")
+            output += str
+            if (output.contains("avg")) {
                 val i = str.indexOf("/", 20)
                 val j = str.indexOf(".", i)
                 delay = str.substring(i + 1, j)
@@ -563,51 +575,52 @@ fun eGetDensityWidthHeight(mContext: Context): Array<Any> {
     return arrayOf(density, width, height)
 }
 
-
-// 打开蓝牙
-fun Context.eOpenBluetooth(bel_name: String) {
-    val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-    if (mBluetoothAdapter == null) {
-        eShowTip("该设备不支持蓝牙")
-    } else {
-        if (mBluetoothAdapter.isEnabled) {
-            mBluetoothAdapter.name = bel_name
-            eSetDiscoverableTimeout()
+object eBluetooth {
+    // 打开蓝牙
+    fun eOpenBluetooth(bel_name: String, context: Context) {
+        val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (mBluetoothAdapter == null) {
+            context.eShowTip("该设备不支持蓝牙")
         } else {
-            mBluetoothAdapter.enable()
-            eShowTip("已打开蓝牙")
+            if (mBluetoothAdapter.isEnabled) {
+                mBluetoothAdapter.name = bel_name
+                eSetDiscoverableTimeout()
+            } else {
+                mBluetoothAdapter.enable()
+                context.eShowTip("已打开蓝牙")
+            }
+        }
+    }
+
+    //关闭蓝牙
+    fun eCloseBluetooth(context: Context) {
+        val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (mBluetoothAdapter == null) {
+            context.eShowTip("该设备不支持蓝牙")
+        } else {
+            if (!mBluetoothAdapter.isEnabled) {
+                mBluetoothAdapter.disable()
+                context.eShowTip("已关闭蓝牙")
+            }
+        }
+    }
+
+    //设置开放检测
+    fun eSetDiscoverableTimeout(timeout: Int = 0) {
+        val adapter = BluetoothAdapter.getDefaultAdapter()
+        try {
+            val setDiscoverableTimeout = BluetoothAdapter::class.java.getMethod("setDiscoverableTimeout", Int::class.javaPrimitiveType)
+            setDiscoverableTimeout.isAccessible = true
+            val setScanMode = BluetoothAdapter::class.java.getMethod("setScanMode", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
+            setScanMode.isAccessible = true
+            setDiscoverableTimeout.invoke(adapter, timeout)
+            setScanMode.invoke(adapter, BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE, timeout)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
 
-//关闭蓝牙
-fun Context.eCloseBluetooth() {
-    val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-    if (mBluetoothAdapter == null) {
-        eShowTip("该设备不支持蓝牙")
-    } else {
-        if (!mBluetoothAdapter.isEnabled) {
-            mBluetoothAdapter.disable()
-            eShowTip("已关闭蓝牙")
-        }
-    }
-}
-
-//设置开放检测
-fun eSetDiscoverableTimeout(timeout: Int = 0) {
-    val adapter = BluetoothAdapter.getDefaultAdapter()
-    try {
-        val setDiscoverableTimeout = BluetoothAdapter::class.java.getMethod("setDiscoverableTimeout", Int::class.javaPrimitiveType)
-        setDiscoverableTimeout.isAccessible = true
-        val setScanMode = BluetoothAdapter::class.java.getMethod("setScanMode", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
-        setScanMode.isAccessible = true
-        setDiscoverableTimeout.invoke(adapter, timeout)
-        setScanMode.invoke(adapter, BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE, timeout)
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-
-}
 
 /**
  * 图片文件工具类------------------------------------------------------------
@@ -738,32 +751,6 @@ fun eBytesToHexString(src: ByteArray?, lenth: Int): String? {
     return stringBuilder.toString()
 }
 
-/**
- * @param inputStream 输入流
- * @return 获取文件的内容
- */
-fun eGetInputStreamContent(inputStream: InputStream): String {
-    var inputStreamReader: InputStreamReader? = null
-    try {
-        inputStreamReader = InputStreamReader(inputStream, "gbk")
-    } catch (e1: UnsupportedEncodingException) {
-        e1.printStackTrace()
-    }
-
-    val reader = BufferedReader(inputStreamReader!!)
-    val sb = StringBuffer("")
-    var line: String = ""
-    try {
-        while ((reader.readLine().apply { line = this }) != null) {
-            sb.append(line)
-            sb.append("\n")
-        }
-    } catch (e: IOException) {
-        e.printStackTrace()
-    }
-
-    return sb.toString()
-}
 
 /**
  * 运行权限扩展---------------------------------------------------------------
@@ -816,6 +803,7 @@ fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, c
         if (className != null && isSetAutoBoot) {
             isSetAutoBoot = false
             val packName = intent.resolveActivityInfo(pm, 0).toString()
+            eLog("packName:$packName")
             val cls = when (className) {
                 is String -> Class.forName(className)
                 is Class<*> -> className
@@ -831,104 +819,106 @@ fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, c
 /**
  * Android运行linux命令
  */
-  object RootCmd {
-    private var TAG = "RootCmd";
-    private var mHaveRoot = false;
-    /**
-     *   判断机器Android是否已经root，即是否获取root权限
-     */
-     fun  haveRoot():Boolean {
-        if (!mHaveRoot) {
-            var ret = execRootCmdSilent ("echo test"); // 通过执行测试命令来检测
-            if (ret != -1) {
-                Log.i(TAG, "have root!");
-                mHaveRoot = true;
-            } else {
-                Log.i(TAG, "not root!");
-            }
-        } else {
-            Log.i(TAG, "mHaveRoot = true, have root!");
+
+fun Process.eText(): String {
+    var output = ""
+    //  输出 Shell 执行的结果
+    val inputStream = this.inputStream
+    val isr = InputStreamReader(inputStream)
+    val reader = BufferedReader(isr)
+    var line: String? = ""
+    while (true) {
+        line = reader.readLine() ?: break
+        output+=line+"\n"
+        eLog(line)
+    }
+    return output
+}
+
+object eExecShell {
+
+    //判断是否有Root权限
+    fun eHaveRoot(): Boolean {
+        var isRoot = true
+        try {
+            Runtime.getRuntime().exec("su").toString()
+        } catch (e: Exception) {
+            isRoot = false
         }
-        return mHaveRoot;
+        return isRoot
     }
 
-    /**
-     * 执行命令并且输出结果
-     */
-    public fun  execRootCmd( cmd:String):String {
-        var result = "";
-       var  dos:DataOutputStream? = null
-        var dis:DataInputStream ?= null
-
+    //执行命令并且输出结果
+    public fun eExecShell(shell: String): String {
+        var result = ""
+        var dos: DataOutputStream? = null
+        var dis: DataInputStream? = null
         try {
-            var p = Runtime . getRuntime ().exec("su");// 经过Root处理的android系统即有su命令
-            dos =  DataOutputStream (p.getOutputStream());
-            dis =  DataInputStream (p.getInputStream());
-
-            Log.i(TAG, cmd);
-            dos.writeBytes(cmd + "\n");
-            dos.flush();
-            dos.writeBytes("exit\n");
-            dos.flush();
-            var line = "";
-            while (( dis.readLine()).apply { line=this } != null) {
-                Log.d("result", line);
-                result += line;
+            var p = Runtime.getRuntime().exec("su")// 经过Root处理的android系统即有su命令
+            dos = DataOutputStream(p.outputStream)
+            dis = DataInputStream(p.inputStream)
+            eLog(shell)
+            dos.writeBytes(shell + "\n")
+            dos.flush()
+            dos.writeBytes("exit\n")
+            dos.flush()
+            var line: String? = ""
+            while ((dis.readLine()).apply { line=this} != null) {
+                result += line + "\n"
             }
-            p.waitFor();
-        } catch ( e:Exception) {
-            e.printStackTrace();
+            p.waitFor()
+        } catch (e: Exception) {
+            e.printStackTrace()
         } finally {
             if (dos != null) {
                 try {
-                    dos.close();
-                } catch ( e:IOException) {
-                    e.printStackTrace();
+                    dos.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
             }
             if (dis != null) {
                 try {
-                    dis.close();
-                } catch ( e:IOException) {
-                    e.printStackTrace();
+                    dis.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
             }
         }
-        return result;
+        return result
     }
 
-    /**
-     * 执行命令但不关注结果输出
-     */
-    public fun execRootCmdSilent( cmd:String):Int {
-        var result = - 1;
-       var  dos:DataOutputStream? = null;
+    //执行命令但不关注结果输出
+    public fun eExecShellSilent(shell: String): Int {
+        var result = -1;
+        var dos: DataOutputStream? = null
 
         try {
-            var p = Runtime . getRuntime ().exec("su");
-            dos =  DataOutputStream (p.getOutputStream());
-
-            Log.i(TAG, cmd);
-            dos.writeBytes(cmd + "\n");
-            dos.flush();
-            dos.writeBytes("exit\n");
-            dos.flush();
-            p.waitFor();
-            result = p.exitValue();
-        } catch ( e:Exception) {
-            e.printStackTrace();
+            var p = Runtime.getRuntime().exec("su")
+            dos = DataOutputStream(p.outputStream)
+            eLog(shell)
+            dos.writeBytes(shell + "\n")
+            dos.flush()
+            dos.writeBytes("exit\n")
+            dos.flush()
+            p.waitFor()
+            result = p.exitValue()
+        } catch (e: Exception) {
+            e.printStackTrace()
         } finally {
             if (dos != null) {
                 try {
-                    dos.close();
-                } catch ( e:IOException) {
-                    e.printStackTrace();
+                    dos.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
             }
         }
-        return result;
+        return result
     }
 }
+
+
 ///**
 // * 反射机制动态加载扩展----------------------------------------------------------
 // */

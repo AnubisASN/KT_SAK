@@ -11,6 +11,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.SwissArmyKnife.MainActivity
 import com.anubis.SwissArmyKnife.R
 import com.anubis.SwissArmyKnife.app
+import com.anubis.kt_extends.eGetShowActivity
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eSetKeyDownExit
 import com.anubis.module_gorge.eGorgeMessage
@@ -47,8 +48,9 @@ class Test1 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test1)
-        TTS= eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE, VoiceModel.MALE, ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK)
+        TTS= eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX, VoiceModel.MALE, ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK)
         app().get()?.getActivity()!!.add(this)
+       eLog( eGetShowActivity())
     }
     fun testClick(v: View) {
         when (v.id) {

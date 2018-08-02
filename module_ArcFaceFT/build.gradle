@@ -44,12 +44,12 @@ kapt {
     }
 }
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.guo.android_extend:android-extend:1.0.5'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api 'com.guo.android_extend:android-extend:1.0.5'
+    api 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation project(':module_Extends')
     kapt 'com.alibaba:arouter-compiler:1.1.4'
-    implementation files('libs/facetracking.jar')
+    api files('libs/facetracking.jar')
 }
 repositories {
     mavenCentral()
