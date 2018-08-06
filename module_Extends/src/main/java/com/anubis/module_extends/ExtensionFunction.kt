@@ -321,8 +321,9 @@ fun Context.eActivityWhetherWorked(className: String): Boolean {
     }
     return false
 }
+
 //获取当前显示的Activity
-fun Context.eGetShowActivity()= activityManager.getRunningTasks(1)[0].topActivity
+fun Context.eGetShowActivity() = activityManager.getRunningTasks(1)[0].topActivity
 
 //判断某一个类是否存在任务栈里面
 fun Context.eIsExistMainActivity(activity: Class<*>): Boolean {
@@ -756,17 +757,19 @@ fun eBytesToHexString(src: ByteArray?, lenth: Int): String? {
  * 运行权限扩展---------------------------------------------------------------
  */
 
-fun Activity.eSetPermissions(permissionsArray: Array<out String>, requestCode: Int = 1) {
+fun Activity.eSetPermissions(permissionsArray: Array<out String>, requestCode: Int = 1): Boolean {
     val permissionsList = ArrayList<String>()
-
     for (permission in permissionsArray) {
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
             permissionsList.add(permission)
         }
-
     }
-    if (!permissionsList.isEmpty()) {//未授予的权限为空，表示都授予了
+    return if (permissionsList.isEmpty()) {
+        //未授予的权限为空，表示都授予了
+        true
+    } else {
         ActivityCompat.requestPermissions(this, permissionsList.toArray(arrayOfNulls<String>(permissionsList.size)), 1)
+        false
     }
 
 }
@@ -829,7 +832,7 @@ fun Process.eText(): String {
     var line: String? = ""
     while (true) {
         line = reader.readLine() ?: break
-        output+=line+"\n"
+        output += line + "\n"
         eLog(line)
     }
     return output
@@ -863,7 +866,7 @@ object eExecShell {
             dos.writeBytes("exit\n")
             dos.flush()
             var line: String? = ""
-            while ((dis.readLine()).apply { line=this} != null) {
+            while ((dis.readLine()).apply { line = this } != null) {
                 result += line + "\n"
             }
             p.waitFor()
