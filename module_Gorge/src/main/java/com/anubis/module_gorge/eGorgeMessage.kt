@@ -2,6 +2,7 @@ package com.anubis.module_gorge
 
 import android.app.Activity
 import android.media.MediaPlayer
+import android.os.Handler
 import android.util.Log
 import com.anubis.kt_extends.eGetHexStringToBytes
 import com.anubis.kt_extends.eLogE
@@ -25,12 +26,13 @@ import java.util.concurrent.TimeoutException
  *Router :  /'Module'/'Function'
  *类说明：
  */
-class eGorgeMessage : LockerPortInterface{
+class eGorgeMessage : LockerPortInterface {
     private var PATH2: String? = null //串口名称         RS485开门方式
     private var BAUDRATE: Int? = null            //波特率
     private var outputStream: OutputStream? = null     //发送串口的输出流
     private var mp: MediaPlayer? = null
     private var activity: Activity? = null
+    var Result: Boolean = false
 
     private companion object {
         var init: eGorgeMessage? = null
@@ -39,24 +41,26 @@ class eGorgeMessage : LockerPortInterface{
     init {
         init = this@eGorgeMessage
     }
-@Throws(TimeoutException::class)
+
+    @Throws(TimeoutException::class)
     fun getInit(mAcitvity: Activity, mPATH2: String = "/dev/ttyUSB0", BAUDRATE: Int = 9600): eGorgeMessage {
         activity = mAcitvity
         PATH2 = mPATH2
         this.BAUDRATE = BAUDRATE
         return init!!
     }
-@Throws(Exception::class)
-    fun MSG(msg: String = "DAAD014400DBBD"){
-        Thread(Runnable {
-            try {
+    @Throws(Exception::class)
+    fun MSG(msg: String = "DAAD014400DBBD"):Boolean {
+//        Thread(Runnable {
+//            try {
                 openPort2()
                 sendParams2(msg)
                 closePort()
-            } catch (e: Exception) {
-                eLogE("MyException：$e")
-            }
-        }).start()
+//            } catch (e: Exception) {
+//                eLogE("MyException：$e")
+//            }
+//        }).start()
+        return  Result
     }
 
 //            bt_daad.id -> {
@@ -105,7 +109,8 @@ class eGorgeMessage : LockerPortInterface{
         outputStream!!.write(eGetHexStringToBytes(msg))
 
         if (msg.startsWith("daad") || msg.startsWith("DAAD") || msg.startsWith("0105000") && msg !== "010500000000CDCA") {
-            playVoice(R.raw.open_success, false)
+//            playVoice(R.raw.open_success, false)
+            Result=true
         }
 
     }

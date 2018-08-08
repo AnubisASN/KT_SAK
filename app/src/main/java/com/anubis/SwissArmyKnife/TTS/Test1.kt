@@ -44,25 +44,30 @@ class Test1 : AppCompatActivity() {
     private var BAUDRATE: Int? = null            //波特率
     private var outputStream: OutputStream? = null     //发送串口的输出流
     private var mp: MediaPlayer? = null
-    private  var TTS:eTTS?=null
+    private var TTS: eTTS? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test1)
-        TTS= eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX, VoiceModel.MALE, ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK)
+        TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX, VoiceModel.MALE, ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK)
         app().get()?.getActivity()!!.add(this)
-       eLog( eGetShowActivity())
+        eLog(eGetShowActivity())
     }
+
     fun testClick(v: View) {
         when (v.id) {
-            R.id.button22-> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
-            R.id.button33 -> eGorgeMessage().getInit(this).MSG()
+            R.id.button22 -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
+            R.id.button33 -> {
+                val state = eGorgeMessage().getInit(this).MSG()
+                eLog("串口状态："+state)
+            }
             R.id.button44 -> startActivity(Intent(this, MainActivity::class.java))
             R.id.button55 -> ARouter.getInstance().build("/face/arcFace").navigation()
         }
     }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         eLog(keyCode)
-        return  eSetKeyDownExit(keyCode,app().get()!!.getActivity(),false,exitHint = "完成退出")
+        return eSetKeyDownExit(keyCode, app().get()!!.getActivity(), false, exitHint = "完成退出")
     }
 
 }

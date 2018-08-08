@@ -11,6 +11,7 @@ import android.content.Context
 import android.util.Log
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_gorge.R
+import com.anubis.module_gorge.eGorgeMessage
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -83,6 +84,7 @@ class LockerSerialportUtil private constructor(private val path: String, private
             }
             ct!!.registerReceiver(m_Receiver2, filter)
         }
+
         @Throws(Exception::class)
         override fun onReceive(context: Context, intent: Intent) {
             Log.i(TAG, "enter  onReceive")
@@ -90,7 +92,7 @@ class LockerSerialportUtil private constructor(private val path: String, private
             if (action == Intent.ACTION_SCREEN_ON) { // 屏幕开启后打开串口
                 Log.i(TAG, "recevied  ACTION_SCREEN_ON ")
                 if (boxPort == null) {
-                        boxPort = SerialPort(File(path), baudrate, 0)
+                    boxPort = SerialPort(File(path), baudrate, 0)
                 }
             }
 
@@ -209,13 +211,11 @@ class LockerSerialportUtil private constructor(private val path: String, private
             e.printStackTrace()
             DisplayError(mContext, R.string.error_unknown)
             mContext!!.sendBroadcast(Intent("open_fail"))
-
         } catch (e: InvalidParameterException) {
             e.printStackTrace()
             DisplayError(mContext, R.string.error_configuration)
             mContext!!.sendBroadcast(Intent("open_fail"))
         }
-
     }
 
     companion object {

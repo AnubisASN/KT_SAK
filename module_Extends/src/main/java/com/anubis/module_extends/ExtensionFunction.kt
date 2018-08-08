@@ -128,7 +128,7 @@ fun Context.eGetSystemSharedPreferences(key: String, value: Any = ""): Any {
     val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
     return when (value) {
         is String -> sharedPreferences.getString(key, value).toString()
-        is Boolean -> sharedPreferences.getBoolean(key, value) as Boolean
+        is Boolean -> sharedPreferences.getBoolean(key, value)
         is Float -> sharedPreferences.getFloat(key, value)
         is Int -> sharedPreferences.getInt(key, value)
         is Long -> sharedPreferences.getLong(key, value)
