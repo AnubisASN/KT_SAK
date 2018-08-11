@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 28
@@ -25,7 +26,10 @@ android {
 }
 
 dependencies {
-    api fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':module_Extends')
-    api files('libs/jxl.jar')
+    implementation files('libs/jxl.jar')
+}
+repositories {
+    mavenCentral()
 }

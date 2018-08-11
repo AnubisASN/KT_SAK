@@ -150,6 +150,13 @@
                 android:onClick="mainClick"
                 android:text="得到当前显示的activity"
                 />
+            <Button
+                android:id="@+id/button16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="mainClick"
+                android:text="创建列表"
+                />
         </LinearLayout>
     </ScrollView>
 

@@ -3,36 +3,28 @@ package com.anubis.SwissArmyKnife
 import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
-import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageInfo
-import android.content.pm.PackageManager.GET_UNINSTALLED_PACKAGES
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.view.KeyEvent
 import android.view.View
-import android.widget.EditText
-import android.widget.TextView
-
-import com.anubis.module_arcfaceft.eArcFaceFTActivity
-import com.anubis.module_gorge.eGorgeMessage
-import com.anubis.module_tts.eTTS
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.SwissArmyKnife.R.id.edit
 import com.anubis.kt_extends.*
-import com.anubis.module_tts.Bean.*
+import com.anubis.module_arcfaceft.eArcFaceFTActivity
+import com.anubis.module_gorge.eGorgeMessage
+import com.anubis.module_tts.Bean.TTSMode
+import com.anubis.module_tts.Bean.VoiceModel
+import com.anubis.module_tts.eTTS
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.custom.async
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
-import kotlin.math.log
-import android.widget.TextView.OnEditorActionListener
-import com.anubis.SwissArmyKnife.R.id.async
-import org.jetbrains.anko.activityManager
-import org.jetbrains.anko.custom.async
 
 
 class MainActivity : Activity() {
@@ -42,9 +34,10 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-      val s=  eSetPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA))
+        val s = eSetPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA))
         eLog("ssss:$s")
         APP = app().get()
+//        startService(Intent(this,MyService::class.java))
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
         mEGorge = eGorgeMessage().getInit(this)
@@ -60,7 +53,6 @@ class MainActivity : Activity() {
         getInfo()
         eLog(eGetShowActivity())
     }
-
 
     fun getInfo() {
         eLog("packageName:$packageName---CPU:${Build.CPU_ABI}")
@@ -85,7 +77,7 @@ class MainActivity : Activity() {
                 if (edit.text.toString().trim().isEmpty()) {
                     eLog(Runtime.getRuntime().exec("ls").eText())
                 } else {
-                    eLog("Shell:\n"+eExecShell.eExecShell (edit.text.toString()))
+                    eLog("Shell:\n" + eExecShell.eExecShell(edit.text.toString()))
                 }
             }
             R.id.button10 -> eShowTip(eExecShell.eHaveRoot())
@@ -114,14 +106,19 @@ class MainActivity : Activity() {
             }
             R.id.button13 -> eLog("Ping:" + eGetNetDelayTime())
             R.id.button14 -> {
-                val acs=PackageInfo().activities
-                for (a in acs){
-                    eLog("a:"+a.toString())
+                val acs = PackageInfo().activities
+                for (a in acs) {
+                    eLog("a:" + a.toString())
                 }
                 eLog(ActivityInfo().name)
-               eLog("ac"+ intent.resolveActivityInfo(packageManager,0))
+                eLog("ac" + intent.resolveActivityInfo(packageManager, 0))
             }
-            R.id.button15-> eLog(eGetShowActivity())
+            R.id.button15 -> eLog(eGetShowActivity())
+            R.id.button16 ->{
+//                val da= dataTest("s","ss")
+//                eExportExcel(this, arrayOf("1","2"), mutableListOf(da,da))
+            }
+//                ExportExcel(this, arrayOf("1","2"), mutableListOf(dataTest("s", "ss")), "列表测试", "列表测试", "列表测试1")
         }
     }
 
@@ -149,7 +146,7 @@ class MainActivity : Activity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-     eSetOnRequestPermissionsResult(requestCode, permissions, grantResults)
+        eSetOnRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode != 1) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
@@ -171,6 +168,7 @@ class MainActivity : Activity() {
 
 
 }
+
 
 
 

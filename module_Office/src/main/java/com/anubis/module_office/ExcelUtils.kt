@@ -1,26 +1,15 @@
-package com.anubis.sxk_quickmark.Excel
+package com.anubis.module_office
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
-
-
+import com.anubis.kt_extends.eShowTip
+import jxl.Workbook
+import jxl.WorkbookSettings
+import jxl.write.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
-import java.util.ArrayList
 
-import jxl.Workbook
-import jxl.WorkbookSettings
-import jxl.format.Colour
-import jxl.write.Label
-import jxl.write.WritableCell
-import jxl.write.WritableCellFormat
-import jxl.write.WritableFont
-import jxl.write.WritableSheet
-import jxl.write.WritableWorkbook
-import jxl.write.WriteException
 
 
 /**
@@ -39,7 +28,7 @@ import jxl.write.WriteException
  * Router :  /'Module'/'Function'
  * 说明：
  */
-object ExcelUtils {
+internal object ExcelUtils {
     var arial14font: WritableFont? = null
     var arial14format: WritableCellFormat? = null
     var arial10font: WritableFont? = null
@@ -85,7 +74,7 @@ object ExcelUtils {
      * @param fileName
      * @param colName
      */
-    fun initExcel(fileName: String, colName: Array<String>) {
+    fun initExcel(fileName: String, colName: Array<String>,sheetName:String) {
         format()
         var workbook: WritableWorkbook? = null
         try {
@@ -94,13 +83,13 @@ object ExcelUtils {
                 file.createNewFile()
             }
             workbook = Workbook.createWorkbook(file)
-            val sheet = workbook!!.createSheet("成绩表", 0)
+            val sheet = workbook!!.createSheet(sheetName, 0)
             //创建标题栏
             sheet.addCell(Label(0, 0, fileName, arial14format) as WritableCell)
             for (col in colName.indices) {
                 sheet.addCell(Label(col, 0, colName[col], arial10format))
             }
-            sheet.setRowView(0, 340) //设置行高
+            sheet.setRowView(0, 350) //设置行高
 
             workbook.write()
         } catch (e: Exception) {
@@ -118,7 +107,8 @@ object ExcelUtils {
     }
 
     fun <T> writeObjListToExcel(objList: List<T>?, fileName: String, c: Context) {
-        if (objList != null && objList.size > 0) {
+        val hint = fileName.split("/")
+        if (objList != null && objList.isNotEmpty()) {
             var writebook: WritableWorkbook? = null
             var `in`: InputStream? = null
             try {
@@ -146,7 +136,7 @@ object ExcelUtils {
                 }
 
                 writebook.write()
-                Toast.makeText(c, "导出到手机存储中文件夹Record成功", Toast.LENGTH_SHORT).show()
+                c.eShowTip("导出到手机存储中文件夹${hint[hint.size - 1]}成功")
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {

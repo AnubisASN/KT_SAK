@@ -1,10 +1,10 @@
-package com.anubis.SwissArmyKnife;
+package com.anubis.SwissArmyKnife
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 
-import com.anubis.kt_extends.ExtensionFunctionKt;
+import com.anubis.kt_extends.*
 
 /**
  * Author  ： AnubisASN   on 2018-07-23 9:12.
@@ -21,9 +21,8 @@ import com.anubis.kt_extends.ExtensionFunctionKt;
  * Router :  /'Module'/'Function'
  * 说明：
  */
-public class StartServiceReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        ExtensionFunctionKt.eSetAutoBoot(new app().get(),context,intent,null);
+class StartServiceReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        eSetAutoBoot(app().get()!!, context, intent, null)
     }
 }

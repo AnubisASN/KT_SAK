@@ -19,9 +19,9 @@
     <application
         android:name=".app"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
@@ -35,7 +35,13 @@
         <activity android:name=".TTS.Test1"
             android:launchMode="singleTask">
         </activity>
+        <activity android:name=".Face"/>
              <!-- 开机自启动服务 -->
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:process="system"
+            />
         <receiver android:name=".StartServiceReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

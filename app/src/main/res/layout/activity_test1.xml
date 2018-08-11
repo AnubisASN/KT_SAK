@@ -41,4 +41,12 @@
         android:onClick="testClick"
         android:text="路由转发跳转"
         />
+    <Button
+        android:id="@+id/button66"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:onClick="testClick"
+        android:text="设置列表"
+        />
 </LinearLayout>

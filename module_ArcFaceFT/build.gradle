@@ -10,15 +10,12 @@ bugly {
     debug=true
 }
 android {
-    compileSdkVersion 28
-
-
-
+    compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         sourceSets.main {
             jniLibs.srcDirs = ['libs']
@@ -46,7 +43,6 @@ kapt {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     api 'com.guo.android_extend:android-extend:1.0.5'
-    api 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation project(':module_Extends')
     kapt 'com.alibaba:arouter-compiler:1.1.4'
     api files('libs/facetracking.jar')
