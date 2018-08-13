@@ -54,17 +54,16 @@ class eExportExcel(val mContext: Context, val mTitle: Array<String>, val mDatas:
     </String> */
     private val recordData: ArrayList<ArrayList<String>>
         get() {
-            val clazz = Class.forName("com.anubis.module_office.dataTest")
+//            val clazz = Class.forName("com.anubis.module_office.dataTest")
             for (i in mDatas.indices) {
                 val student = mDatas[i]
                 val clazz = student::class.java
                 val beanList = ArrayList<String>()
                 for (j in mTitle.indices) {
-                    val method  = clazz.getDeclaredMethod("getData", Array<String>::class.java)
-                    eLog("data:"+method.invoke(student).toString())
-                  val data=  method.invoke(student) as Array<String>
-                    eLog("field:" + data[j])
-                    beanList.add(data.toString())
+             // val method  = clazz.getDeclaredMethod("getData", Array<String>::class.java)
+                    val method = clazz.getMethod("getData")
+                    val data = method.invoke(student) as Array<String>
+                    beanList.add(data[j])
                 }
                 recordList.add(beanList)
             }
