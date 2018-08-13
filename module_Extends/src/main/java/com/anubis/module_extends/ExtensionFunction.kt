@@ -851,13 +851,27 @@ object eExecShell {
         return isRoot
     }
 
+    public fun eShell() {
+        val cmd = "cp /system/app/Amaze/Amaze.apk /system/app/Amaze/Amaze1.apk"//要执行的shell命令
+        try {
+            val process = Runtime.getRuntime().exec("su")
+            val os = DataOutputStream(process.outputStream)
+            os.write(cmd.toByteArray())
+            os.writeBytes("\nexit\n")
+            os.flush()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+    }
+
     //执行命令并且输出结果
     public fun eExecShell(shell: String): String {
         var result = ""
         var dos: DataOutputStream? = null
         var dis: DataInputStream? = null
         try {
-            var p = Runtime.getRuntime().exec("su")// 经过Root处理的android系统即有su命令
+            val p = Runtime.getRuntime().exec("su")// 经过Root处理的android系统即有su命令
             dos = DataOutputStream(p.outputStream)
             dis = DataInputStream(p.inputStream)
             eLog(shell)

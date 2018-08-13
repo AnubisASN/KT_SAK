@@ -10,6 +10,7 @@ import android.content.pm.PackageInfo
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import com.alibaba.android.arouter.launcher.ARouter
@@ -25,6 +26,7 @@ import org.jetbrains.anko.custom.async
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
+import java.io.IOException
 
 
 class MainActivity : Activity() {
@@ -56,8 +58,6 @@ class MainActivity : Activity() {
 
     fun getInfo() {
         eLog("packageName:$packageName---CPU:${Build.CPU_ABI}")
-
-
     }
 
 
@@ -75,12 +75,20 @@ class MainActivity : Activity() {
             }
             R.id.button9 -> {
                 if (edit.text.toString().trim().isEmpty()) {
-                    eLog(Runtime.getRuntime().exec("ls").eText())
+                try {
+                 val shell="cp /data/app/com.anubis.SwissArmyKnife-1/base.apk /data/app/com.anubis.SwissArmyKnife-1/base1.apk"
+                 val shell1="cp /storage/emulated/0/Record/记录.xls /storage/emulated/0/Record/记录1.xls"
+                    Runtime.getRuntime().exec(shell)
+                } catch (e: IOException) {
+                    Log.e("runtime", e.toString())
+                    e.printStackTrace()
+                }
                 } else {
                     eLog("Shell:\n" + eExecShell.eExecShell(edit.text.toString()))
                 }
             }
-            R.id.button10 -> eShowTip(eExecShell.eHaveRoot())
+            R.id.button10 ->  eExecShell.eShell()
+//                eShowTip(eExecShell.eHaveRoot())
             R.id.button11 -> {
                 val f = File(this.filesDir.path + "/123.txt")
                 if (f.exists()) {
