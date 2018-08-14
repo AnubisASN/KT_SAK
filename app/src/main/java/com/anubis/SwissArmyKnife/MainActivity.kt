@@ -5,55 +5,88 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.content.pm.PackageInfo
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.util.Log
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
-import com.alibaba.android.arouter.launcher.ARouter
-import com.anubis.SwissArmyKnife.R.id.edit
+import android.view.ViewGroup
+import android.widget.AdapterView
 import com.anubis.kt_extends.*
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
 import com.anubis.module_gorge.eGorgeMessage
 import com.anubis.module_tts.Bean.TTSMode
-import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
-import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.custom.async
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileReader
-import java.io.IOException
+import kotlinx.android.synthetic.main.list_edit_item.view.*
+import com.anubis.SwissArmyKnife.MainActivity.MyAdapter.setOnItemClickListener
+
+
 
 
 class MainActivity : Activity() {
-    var TTS: eTTS? = null
-    var APP: app? = null
+    private var TTS: eTTS? = null
+    private var APP: app? = null
+    private var data: Array<String>? = null
     var mEGorge: eGorgeMessage? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val s = eSetPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA))
-        eLog("ssss:$s")
         APP = app().get()
-//        startService(Intent(this,MyService::class.java))
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
         mEGorge = eGorgeMessage().getInit(this)
-        edit.setOnEditorActionListener { textView, i, keyEvent ->
-            if (i == 0) {
-                async {
-                    eLog("Shell:\n" + eExecShell.eExecShell(edit.text.toString()))
-                }
-                edit.setText("")
-            }
-            false
-        }
         getInfo()
         eLog(eGetShowActivity())
+        data = arrayOf("初始化发音", "发音人切记调用", "发音人切记调用", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（动态加载跳转）", "ROOT检测权限", "执行Shell")
+        init()
+    }
+
+    private fun init() {
+        rvList.layoutManager = LinearLayoutManager(this)
+        val myAdapter = MyAdapter(this, data!!)
+        rvList.adapter = myAdapter
+        myAdapter.setOnItemClickListener(MyAdapter.setOnItemClickListener(){
+
+        })
+    }
+
+    class MyAdapter(val mContext: Context, val mDatas: Array<String>) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
+        private var mListener: setOnItemClickListener? = null
+        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyHolder {
+            val view = LayoutInflater.from(mContext).inflate(R.layout.list_edit_item, parent, false)
+
+            return MyHolder(view)
+        }
+
+        override fun getItemCount(): Int {
+            return mDatas.size
+        }
+
+        override fun onBindViewHolder(holder: MyHolder, position: Int) {
+            if (mListener != null) {
+                holder.itemView.setOnClickListener { mListener!!.OnItemClickListener(position) }
+            }
+            holder.setData(mDatas[position])
+        }
+
+        inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            fun setData(data: String) {
+                itemView.tv_item.text = data
+                itemView.ed_item.visibility = View.GONE
+            }
+        }
+
+        fun setOnItemClickListener(mListener: setOnItemClickListener) {
+            this.mListener = mListener
+        }
+
+        interface setOnItemClickListener {
+            fun OnItemClickListener(pos: Int)
+        }
     }
 
     fun getInfo() {
@@ -61,74 +94,79 @@ class MainActivity : Activity() {
     }
 
 
-    fun mainClick(v: View) {
-        when (v.id) {
-            R.id.button2 -> TTS!!.setParams().speak("初始化调用")
-            R.id.button3 -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
-            R.id.button4 -> ARouter.getInstance().build("/app/Test1").navigation()
-            R.id.button5 -> reflection("com.anubis.SwissArmyKnife.Reflection.Reflection")
-            R.id.button6 -> ARouter.getInstance().build("/face/arcFace").navigation()
-            R.id.button7 -> startActivity(Intent(this, Face::class.java))
-            R.id.button8 -> {
-                val cls = Class.forName("com.anubis.SwissArmyKnife.Face")
-                startActivity(Intent(this, cls))
-            }
-            R.id.button9 -> {
-                if (edit.text.toString().trim().isEmpty()) {
-                try {
-                 val shell="cp /data/app/com.anubis.SwissArmyKnife-1/base.apk /data/app/com.anubis.SwissArmyKnife-1/base1.apk"
-                 val shell1="cp /storage/emulated/0/Record/记录.xls /storage/emulated/0/Record/记录1.xls"
-                    Runtime.getRuntime().exec(shell)
-                } catch (e: IOException) {
-                    Log.e("runtime", e.toString())
-                    e.printStackTrace()
-                }
-                } else {
-                    eLog("Shell:\n" + eExecShell.eExecShell(edit.text.toString()))
-                }
-            }
-            R.id.button10 ->  eExecShell.eShell()
-//                eShowTip(eExecShell.eHaveRoot())
-            R.id.button11 -> {
-                val f = File(this.filesDir.path + "/123.txt")
-                if (f.exists()) {
-                    f.writeText(edit.text.toString())
-                    eShowTip("文件写入成功")
-                } else {
-                    f.createNewFile()
-                    eShowTip("文件创建成功")
-                }
-            }
-            R.id.button12 -> {
-                val f = FileReader(this.filesDir.path + "/123.txt")
-                var out: String? = ""
-                val buf = BufferedReader(f)
-                while (true) {
-                    out = buf.readLine() ?: break
-                    eLog(out)
-                    eShowTip("buf" + out)
-
-                }
-
-//                eLog(buf.readLine())
-            }
-            R.id.button13 -> eLog("Ping:" + eGetNetDelayTime())
-            R.id.button14 -> {
-                val acs = PackageInfo().activities
-                for (a in acs) {
-                    eLog("a:" + a.toString())
-                }
-                eLog(ActivityInfo().name)
-                eLog("ac" + intent.resolveActivityInfo(packageManager, 0))
-            }
-            R.id.button15 -> eLog(eGetShowActivity())
-            R.id.button16 ->{
-//                val da= dataTest("s","ss")
-//                eExportExcel(this, arrayOf("1","2"), mutableListOf(da,da))
-            }
-//                ExportExcel(this, arrayOf("1","2"), mutableListOf(dataTest("s", "ss")), "列表测试", "列表测试", "列表测试1")
-        }
-    }
+//    fun mainClick(v: View) {
+//        when (v.id) {
+//            R.id.button2 -> TTS!!.setParams().speak("初始化调用")
+//            R.id.button3 -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
+//            R.id.button4 -> ARouter.getInstance().build("/app/Test1").navigation()
+//            R.id.button5 -> reflection("com.anubis.SwissArmyKnife.Reflection.Reflection")
+//            R.id.button6 -> ARouter.getInstance().build("/face/arcFace").navigation()
+//            R.id.button7 -> startActivity(Intent(this, Face::class.java))
+//            R.id.button8 -> {
+//                val cls = Class.forName("com.anubis.SwissArmyKnife.Face")
+//                startActivity(Intent(this, cls))
+//            }
+//            R.id.button9 -> {
+//                if (edit.text.toString().trim().isEmpty()) {
+//                try {
+//                 val shell="cp /data/app/com.anubis.SwissArmyKnife-1/base.apk /data/app/com.anubis.SwissArmyKnife-1/base1.apk"
+//                 val shell1="cp /storage/emulated/0/Record/记录.xls /storage/emulated/0/Record/记录1.xls"
+//                    Runtime.getRuntime().exec(shell)
+//                } catch (e: IOException) {
+//                    Log.e("runtime", e.toString())
+//                    e.printStackTrace()
+//                }
+//                } else {
+//                    eLog("Shell:\n" + eExecShell.eExecShell(edit.text.toString()))
+//                }
+//            }
+//            R.id.button10 ->  eExecShell.eShell()
+////                eShowTip(eExecShell.eHaveRoot())
+//            R.id.button11 -> {
+//                val f = File(this.filesDir.path + "/123.txt")
+//                if (f.exists()) {
+//                    f.writeText(edit.text.toString())
+//                    eShowTip("文件写入成功")
+//                } else {
+//                    f.createNewFile()
+//                    eShowTip("文件创建成功")
+//                }
+//            }
+//            R.id.button12 -> {
+//                val f = FileReader(this.filesDir.path + "/123.txt")
+//                var out: String? = ""
+//                val buf = BufferedReader(f)
+//                while (true) {
+//                    out = buf.readLine() ?: break
+//                    eLog(out)
+//                    eShowTip("buf" + out)
+//
+//                }
+//
+////                eLog(buf.readLine())
+//            }
+//            R.id.button13 -> eLog("Ping:" + eGetNetDelayTime())
+//            R.id.button14 -> {
+//                val acs = PackageInfo().activities
+//                for (a in acs) {
+//                    eLog("a:" + a.toString())
+//                }
+//                eLog(ActivityInfo().name)
+//                eLog("ac" + intent.resolveActivityInfo(packageManager, 0))
+//            }
+//            R.id.button15 -> eLog(eGetShowActivity())
+//            R.id.button16 ->{
+////                val da= dataTest("s","ss")
+////                eExportExcel(this, arrayOf("1","2"), mutableListOf(da,da))
+//            }
+//            R.id.button17->{
+//                SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(eGetCurrentTime())-etTime
+//
+//
+//            }
+////                ExportExcel(this, arrayOf("1","2"), mutableListOf(dataTest("s", "ss")), "列表测试", "列表测试", "列表测试1")
+//        }
+//    }
 
     fun Context.esExistMainActivity(activity: Class<*>): Boolean {
         val intent = Intent(this, activity)

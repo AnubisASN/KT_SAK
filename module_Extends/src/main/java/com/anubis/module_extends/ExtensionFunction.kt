@@ -428,6 +428,28 @@ fun Context.eSummaryModify(group: PreferenceGroup) {
     }
 }
 
+
+
+/**
+ * @param endDate 上次更新时间
+ * @param nowDate 当前时间
+ * @return 天数
+ */
+fun eGetTimePoor(nowDate: Date, endDate: Date, type: String = "hour"): Long {
+    val nd = (1000 * 24 * 60 * 60).toLong()
+    val nh = (1000 * 60 * 60).toLong()
+    val nm = (1000 * 60).toLong()
+    val ns = 1000
+    // 获得两个时间的毫秒时间差异
+    val diff = nowDate.time - endDate.time
+    return when (type) {
+        "day" -> diff / nd
+        "hour" -> diff % nd / nh
+        "min" -> diff % nd % nh / nm
+        "second" -> diff % nd % nh % nm / ns
+        else -> diff % nd / nh
+    }
+}
 /**
  * 获取系统信息------------------------------------------------------------
  */
@@ -477,26 +499,6 @@ fun eHasEglish(chars: CharArray): Boolean {
     return false
 }
 
-/**
- * @param endDate 上次更新时间
- * @param nowDate 当前时间
- * @return 天数
- */
-fun eGetDatePoor(nowDate: Date, endDate: Date, type: String = "hour"): Long {
-    val nd = (1000 * 24 * 60 * 60).toLong()
-    val nh = (1000 * 60 * 60).toLong()
-    val nm = (1000 * 60).toLong()
-    val ns = 1000;
-    // 获得两个时间的毫秒时间差异
-    val diff = nowDate.time - endDate.time
-    return when (type) {
-        "day" -> diff / nd
-        "hour" -> diff % nd / nh
-        "min" -> diff % nd % nh / nm
-        "second" -> diff % nd % nh % nm / ns
-        else -> diff % nd / nh
-    }
-}
 
 // 判断是否有网
 fun eIsNetworkAvailable(context: Context): Boolean {
