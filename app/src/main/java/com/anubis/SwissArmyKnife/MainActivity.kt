@@ -15,6 +15,8 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ScrollView
+import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.kt_extends.*
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
@@ -24,6 +26,7 @@ import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import kotlinx.android.synthetic.main.activity_main.*
+
 class MainActivity : Activity() {
     private var TTS: eTTS? = null
     private var APP: app? = null
@@ -39,7 +42,7 @@ class MainActivity : Activity() {
         mEGorge = eGorgeMessage().getInit(this)
         getInfo()
         eLog(eGetShowActivity())
-        data = arrayOf("初始化发音", "发音人切换调用", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（动态加载跳转）", "ROOT权限检测", "执行Shell1")
+        data = arrayOf("初始化发音", "发音人切换调用", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（路由转发跳转）", "ROOT权限检测", "执行Shell1")
         init()
     }
 
@@ -52,17 +55,22 @@ class MainActivity : Activity() {
                     data!!.indexOf("发音人切换调用") -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
                     data!!.indexOf("动态加载") -> reflection("com.anubis.SwissArmyKnife.MainActivity")
                     data!!.indexOf("AecFaceFT人脸跟踪模块（Intent跳转）") -> startActivity(Intent(this@MainActivity, Face::class.java))
-                    data!!.indexOf("AecFaceFT人脸跟踪模块（动态加载跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
-                    data!!.indexOf("ROOT权限检测") -> tv_Hint.append("ROOT权限检测:${eExecShell.eHaveRoot()}\n")
+                    data!!.indexOf("AecFaceFT人脸跟踪模块（路由转发跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
+                    data!!.indexOf("ROOT权限检测") -> Hint("ROOT权限检测:${eExecShell.eHaveRoot()}")
                     data!!.indexOf("执行Shell1") -> if (MSG.isNotEmpty()) {
-                        tv_Hint.append("Shell:\n" + eExecShell.eExecShell(MSG) + "\n")
+                        Hint("Shell:\n" + eExecShell.eExecShell(MSG))
                     }
                 }
-
             }
         }
         val myAdapter = MyAdapter(this, data!!, callback)
         rvList.adapter = myAdapter
+    }
+
+    private fun Hint(str: String) {
+        tv_Hint.append("$str\n\n")
+        sv_Hint.fullScroll(ScrollView.FOCUS_DOWN)
+
     }
 
     class MyAdapter(val mContext: Context, val mDatas: Array<String>, val mCallbacks: ICallBack) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
@@ -144,13 +152,13 @@ class MainActivity : Activity() {
     fun reflection(packName: String) {
         val cls = Class.forName(packName)
         val clsInstance = cls.newInstance()
-        val method = cls.getDeclaredMethod("ShowTip",String::class.java)
-        tv_Hint.append("获得所有方法:${cls.declaredMethods}--获得方法传入类型：${method.parameterTypes}")
-        method.invoke(clsInstance, this, "类动态加载")
+        val method = cls.getDeclaredMethod("ShowTip", Activity::class.java, String::class.java)
+        Hint("获得所有方法:${cls.declaredMethods}--获得方法传入类型：${method.parameterTypes}")
+        method.invoke(clsInstance, this@MainActivity, "类动态加载")
     }
 
-   private fun ShowTip(msg: String) {
-        eShowTip(msg)
+    private fun ShowTip(mActivity: Activity, msg: String) {
+        Toast.makeText(mActivity, msg, Toast.LENGTH_LONG).show()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
