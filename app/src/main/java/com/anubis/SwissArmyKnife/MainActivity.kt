@@ -10,24 +10,20 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Printer
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import com.anubis.SwissArmyKnife.Adapter.MyAdapter
+import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.kt_extends.*
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
 import com.anubis.module_gorge.eGorgeMessage
 import com.anubis.module_tts.Bean.TTSMode
+import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
 import kotlinx.android.synthetic.main.list_edit_item.view.*
-import com.anubis.SwissArmyKnife.R.id.rvList
-import com.tencent.bugly.proguard.v
 import kotlinx.android.synthetic.main.activity_main.*
-
-
 class MainActivity : Activity() {
     private var TTS: eTTS? = null
     private var APP: app? = null
@@ -43,41 +39,36 @@ class MainActivity : Activity() {
         mEGorge = eGorgeMessage().getInit(this)
         getInfo()
         eLog(eGetShowActivity())
-        data = arrayOf("初始化发音", "发音人切记调用", "发音人切记调用", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（动态加载跳转）", "ROOT检测权限", "执行Shell1")
+        data = arrayOf("初始化发音", "发音人切换调用", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（动态加载跳转）", "ROOT权限检测", "执行Shell1")
         init()
     }
 
     private fun init() {
         rvList.layoutManager = LinearLayoutManager(this)
-        val myAdapter = MyAdapter(this, data!!)
-        rvList.adapter = myAdapter
+        val callback = object : ICallBack {
+            override fun CallResult(view: View, itmeID: Int, MSG: String) {
+                when (itmeID) {
+                    data!!.indexOf("初始化发音") -> TTS!!.setParams().speak("初始化发音调用")
+                    data!!.indexOf("发音人切换调用") -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
+                    data!!.indexOf("动态加载") -> reflection("com.anubis.SwissArmyKnife.MainActivity")
+                    data!!.indexOf("AecFaceFT人脸跟踪模块（Intent跳转）") -> startActivity(Intent(this@MainActivity, Face::class.java))
+                    data!!.indexOf("AecFaceFT人脸跟踪模块（动态加载跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
+                    data!!.indexOf("ROOT权限检测") -> tv_Hint.append("ROOT权限检测:${eExecShell.eHaveRoot()}\n")
+                    data!!.indexOf("执行Shell1") -> if (MSG.isNotEmpty()) {
+                        tv_Hint.append("Shell:\n" + eExecShell.eExecShell(MSG) + "\n")
+                    }
+                }
 
-    }
-
-    inner class People {
-
-        internal var printer = Printer()
-
-        /*
-   * 同步回调
-   */
-     //   fun goToPrintSyn(callback: Callback, text: String) {
-     //       printer.print(callback, text)
-     //   }
-
-        /*
-   * 异步回调
-   */
-        fun goToPrintASyn(callback: Callback, text: String) {
-            Thread(Runnable { printer.print(callback, text) }).start()
+            }
         }
+        val myAdapter = MyAdapter(this, data!!, callback)
+        rvList.adapter = myAdapter
     }
 
-    class MyAdapter(val mContext: Context, val mDatas: Array<String>) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
+    class MyAdapter(val mContext: Context, val mDatas: Array<String>, val mCallbacks: ICallBack) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
         var mPosition: Int? = null
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyHolder {
             val view = LayoutInflater.from(mContext).inflate(R.layout.list_edit_item, parent, false)
-
             return MyHolder(view)
         }
 
@@ -89,18 +80,16 @@ class MainActivity : Activity() {
             mPosition = position
             holder.setData(mDatas[position])
             holder.itemView.bt_item.setOnClickListener {
-                var editContext: String = ""
+                var editContext = ""
                 if (it.tag == "1") {
                     editContext = holder.itemView.ed_item.text.toString()
                 }
-                mContext.eShowTip("itID:--$position--输入内容：$editContext")
+                mCallbacks.CallResult(it, position, editContext)
             }
 
         }
 
-        interface Callback {
-            fun Result(mes:String)
-        }
+
         inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             fun setData(data: String) {
                 itemView.ed_item.visibility = View.GONE
@@ -120,80 +109,6 @@ class MainActivity : Activity() {
         eLog("packageName:$packageName---CPU:${Build.CPU_ABI}")
     }
 
-
-//    fun mainClick(v: View) {
-//        when (v.id) {
-//            R.id.button2 -> TTS!!.setParams().speak("初始化调用")
-//            R.id.button3 -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
-//            R.id.button4 -> ARouter.getInstance().build("/app/Test1").navigation()
-//            R.id.button5 -> reflection("com.anubis.SwissArmyKnife.Reflection.Reflection")
-//            R.id.button6 -> ARouter.getInstance().build("/face/arcFace").navigation()
-//            R.id.button7 -> startActivity(Intent(this, Face::class.java))
-//            R.id.button8 -> {
-//                val cls = Class.forName("com.anubis.SwissArmyKnife.Face")
-//                startActivity(Intent(this, cls))
-//            }
-//            R.id.button9 -> {
-//                if (edit.text.toString().trim().isEmpty()) {
-//                try {
-//                 val shell="cp /data/app/com.anubis.SwissArmyKnife-1/base.apk /data/app/com.anubis.SwissArmyKnife-1/base1.apk"
-//                 val shell1="cp /storage/emulated/0/Record/记录.xls /storage/emulated/0/Record/记录1.xls"
-//                    Runtime.getRuntime().exec(shell)
-//                } catch (e: IOException) {
-//                    Log.e("runtime", e.toString())
-//                    e.printStackTrace()
-//                }
-//                } else {
-//                    eLog("Shell:\n" + eExecShell.eExecShell(edit.text.toString()))
-//                }
-//            }
-//            R.id.button10 ->  eExecShell.eShell()
-////                eShowTip(eExecShell.eHaveRoot())
-//            R.id.button11 -> {
-//                val f = File(this.filesDir.path + "/123.txt")
-//                if (f.exists()) {
-//                    f.writeText(edit.text.toString())
-//                    eShowTip("文件写入成功")
-//                } else {
-//                    f.createNewFile()
-//                    eShowTip("文件创建成功")
-//                }
-//            }
-//            R.id.button12 -> {
-//                val f = FileReader(this.filesDir.path + "/123.txt")
-//                var out: String? = ""
-//                val buf = BufferedReader(f)
-//                while (true) {
-//                    out = buf.readLine() ?: break
-//                    eLog(out)
-//                    eShowTip("buf" + out)
-//
-//                }
-//
-////                eLog(buf.readLine())
-//            }
-//            R.id.button13 -> eLog("Ping:" + eGetNetDelayTime())
-//            R.id.button14 -> {
-//                val acs = PackageInfo().activities
-//                for (a in acs) {
-//                    eLog("a:" + a.toString())
-//                }
-//                eLog(ActivityInfo().name)
-//                eLog("ac" + intent.resolveActivityInfo(packageManager, 0))
-//            }
-//            R.id.button15 -> eLog(eGetShowActivity())
-//            R.id.button16 ->{
-////                val da= dataTest("s","ss")
-////                eExportExcel(this, arrayOf("1","2"), mutableListOf(da,da))
-//            }
-//            R.id.button17->{
-//                SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(eGetCurrentTime())-etTime
-//
-//
-//            }
-////                ExportExcel(this, arrayOf("1","2"), mutableListOf(dataTest("s", "ss")), "列表测试", "列表测试", "列表测试1")
-//        }
-//    }
 
     fun Context.esExistMainActivity(activity: Class<*>): Boolean {
         val intent = Intent(this, activity)
@@ -229,14 +144,22 @@ class MainActivity : Activity() {
     fun reflection(packName: String) {
         val cls = Class.forName(packName)
         val clsInstance = cls.newInstance()
-        val method = cls.getDeclaredMethod("toastr", Activity::class.java, String::class.java)
-        eLog("获得所有方法${cls.declaredMethods}--获得方法传入类型：${method.parameterTypes}")
-        method.invoke(clsInstance, this, "00115492654+")
+        val method = cls.getDeclaredMethod("ShowTip",String::class.java)
+        tv_Hint.append("获得所有方法:${cls.declaredMethods}--获得方法传入类型：${method.parameterTypes}")
+        method.invoke(clsInstance, this, "类动态加载")
+    }
+
+   private fun ShowTip(msg: String) {
+        eShowTip(msg)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         eLog("size" + app().get()?.getActivity()!!.size)
         return eSetKeyDownExit(keyCode, app().get()?.getActivity(), false, exitHint = "完成退出")
+    }
+
+    interface ICallBack {
+        fun CallResult(view: View, numID: Int, MSG: String)
     }
 
 

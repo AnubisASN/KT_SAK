@@ -22,7 +22,7 @@
         android:layout_weight="0.4"
         android:layout_height="0dp">
         <TextView
-            android:id="@+id/tvHint"
+            android:id="@+id/tv_Hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </ScrollView>

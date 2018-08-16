@@ -39,7 +39,6 @@ class  Face: Activity(){
                 imageView.setImageBitmap(camera.mBitmap)
             }
             Handler().postDelayed(mRunnable,1000)
-            eLog("屏幕-width:"+displayMetrics.widthPixels+"height:"+displayMetrics.heightPixels+"------"+camera.mAFT_FSDKFace?.rect.toString(),"FACE")
         }
         Handler().postDelayed(mRunnable,1000)
     }
