@@ -8,156 +8,192 @@
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity"
+    android:weightSum="1"
     >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"/>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
+        android:layout_weight="0.4"
+        android:layout_height="0dp">
+        <TextView
+            android:id="@+id/tvHint"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:onClick="mainClick"
-                android:text="初始化发音"
-                />
-
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:onClick="mainClick"
-                android:text="发音人切记调用"
-                />
-
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:onClick="mainClick"
-                android:text="切换界面"
-                />
-
-            <Button
-                android:id="@+id/button5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:onClick="mainClick"
-                android:text="动态加载"
-                />
-
-            <Button
-                android:id="@+id/button6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:onClick="mainClick"
-                android:text="AecFaceFT人脸跟踪模块"
-                />
-
-            <Button
-                android:id="@+id/button7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:onClick="mainClick"
-                android:text="AecFaceFT人脸跟踪模块（Intent跳转）"
-                />
-
-            <Button
-                android:id="@+id/button8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:onClick="mainClick"
-                android:text="AecFaceFT人脸跟踪模块（动态加载跳转）"
-                />
-
-            <Button
-                android:id="@+id/button10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="mainClick"
-                android:text="检测权限"
-                />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-
-                <EditText
-                    android:id="@+id/edit"
-                    android:layout_width="257dp"
-                    android:layout_height="100dp"
-                    />
-
-                <Button
-                    android:id="@+id/button9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:onClick="mainClick"
-                    android:text="执行Shell"
-                    />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/button11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="mainClick"
-                android:text="写文件"
-                />
-
-            <Button
-                android:id="@+id/button12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="mainClick"
-                android:text="读文件"
-                />
-
-            <Button
-                android:id="@+id/button13"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="mainClick"
-                android:text="获取延迟"
-                />
-            <Button
-                android:id="@+id/button14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="mainClick"
-                android:text="获取全部Activity"
-                />
-            <Button
-                android:id="@+id/button15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="mainClick"
-                android:text="得到当前显示的activity"
-                />
-            <Button
-                android:id="@+id/button16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="mainClick"
-                android:text="创建列表"
-                />
-        </LinearLayout>
+            android:layout_height="wrap_content"/>
     </ScrollView>
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="vertical">-->
+
+            <!--<Button-->
+                <!--android:id="@+id/button2"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="初始化发音"-->
+                <!--/>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/button3"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="发音人切记调用"-->
+                <!--/>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/button4"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="切换界面"-->
+                <!--/>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/button5"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="动态加载"-->
+                <!--/>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/button6"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="AecFaceFT人脸跟踪模块"-->
+                <!--/>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/button7"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="AecFaceFT人脸跟踪模块（Intent跳转）"-->
+                <!--/>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/button8"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="AecFaceFT人脸跟踪模块（动态加载跳转）"-->
+                <!--/>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/button10"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="检测权限"-->
+                <!--/>-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:gravity="center"-->
+                <!--&gt;-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/edit"-->
+                    <!--android:layout_width="257dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--/>-->
+
+                <!--<Button-->
+                    <!--android:id="@+id/button9"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="10dp"-->
+                    <!--android:onClick="mainClick"-->
+                    <!--android:text="执行Shell"-->
+                    <!--/>-->
+            <!--</LinearLayout>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/button11"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="写文件"-->
+                <!--/>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/button12"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="读文件"-->
+                <!--/>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/button13"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="获取延迟"-->
+                <!--/>-->
+            <!--<Button-->
+                <!--android:id="@+id/button14"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="获取全部Activity"-->
+                <!--/>-->
+            <!--<Button-->
+                <!--android:id="@+id/button15"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="得到当前显示的activity"-->
+                <!--/>-->
+            <!--<Button-->
+                <!--android:id="@+id/button16"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:onClick="mainClick"-->
+                <!--android:text="创建列表"-->
+                <!--/>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/etTime"-->
+                    <!--android:layout_width="265dp"-->
+                    <!--android:layout_height="wrap_content"/>-->
+                <!--<Button-->
+                    <!--android:id="@+id/button17"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:onClick="mainClick"-->
+                    <!--android:text="时间差"-->
+                    <!--/>-->
+
+            <!--</LinearLayout>-->
+
+        <!--</LinearLayout>-->
+    <!--</ScrollView>-->
 
 </LinearLayout>

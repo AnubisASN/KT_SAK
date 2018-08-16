@@ -15,14 +15,14 @@
     <EditText
         android:id="@+id/ed_item"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_weight="0.7"/>
 
     <Button
-        android:id="@+id/tv_item"
+        android:id="@+id/bt_item"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:layout_weight="0.3"/>
 

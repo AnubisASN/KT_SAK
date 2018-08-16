@@ -428,6 +428,28 @@ fun Context.eSummaryModify(group: PreferenceGroup) {
     }
 }
 
+
+
+/**
+ * @param endDate 上次更新时间
+ * @param nowDate 当前时间
+ * @return 天数
+ */
+fun eGetTimePoor(nowDate: Date, endDate: Date, type: String = "hour"): Long {
+    val nd = (1000 * 24 * 60 * 60).toLong()
+    val nh = (1000 * 60 * 60).toLong()
+    val nm = (1000 * 60).toLong()
+    val ns = 1000
+    // 获得两个时间的毫秒时间差异
+    val diff = nowDate.time - endDate.time
+    return when (type) {
+        "day" -> diff / nd
+        "hour" -> diff % nd / nh
+        "min" -> diff % nd % nh / nm
+        "second" -> diff % nd % nh % nm / ns
+        else -> diff % nd / nh
+    }
+}
 /**
  * 获取系统信息------------------------------------------------------------
  */
@@ -477,26 +499,6 @@ fun eHasEglish(chars: CharArray): Boolean {
     return false
 }
 
-/**
- * @param endDate 上次更新时间
- * @param nowDate 当前时间
- * @return 天数
- */
-fun eGetDatePoor(nowDate: Date, endDate: Date, type: String = "hour"): Long {
-    val nd = (1000 * 24 * 60 * 60).toLong()
-    val nh = (1000 * 60 * 60).toLong()
-    val nm = (1000 * 60).toLong()
-    val ns = 1000;
-    // 获得两个时间的毫秒时间差异
-    val diff = nowDate.time - endDate.time
-    return when (type) {
-        "day" -> diff / nd
-        "hour" -> diff % nd / nh
-        "min" -> diff % nd % nh / nm
-        "second" -> diff % nd % nh % nm / ns
-        else -> diff % nd / nh
-    }
-}
 
 // 判断是否有网
 fun eIsNetworkAvailable(context: Context): Boolean {
@@ -689,12 +691,12 @@ fun eBase64ToBitmap(base64String: String): Bitmap {
 }
 
 //获取预览图
-fun eGetPhoneBitmap(mImageNV21: ByteArray, width: Int, height: Int, mCameraID: Int = 1): Bitmap? {
+fun eGetPhoneBitmap(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect=Rect(0, 0, width, height),mCameraID: Int = 1): Bitmap? {
     var mBitmap: Bitmap? = null
     if (mImageNV21 != null) {
         val image = YuvImage(mImageNV21, ImageFormat.NV21, width, height, null)
         val stream = ByteArrayOutputStream()
-        image.compressToJpeg(Rect(0, 0, width, height), 80, stream)
+        image.compressToJpeg(rect, 80, stream)
         val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
         mBitmap = eRotateMyBitmap(bmp)
         stream.close()
