@@ -35,7 +35,7 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val s = eSetPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA))
+        eSetPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA))
         APP = app().get()
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
@@ -169,12 +169,4 @@ class MainActivity : Activity() {
     interface ICallBack {
         fun CallResult(view: View, numID: Int, MSG: String)
     }
-
-
 }
-
-
-
-
-
-

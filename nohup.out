@@ -1,0 +1,24 @@
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/home/anubis/.AndroidStudio3.1/config/plugins/jr-android-ide-studio/lib/jr-android-ide-studio.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/super/Studio/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorStaticBinder]
+22:32:25.647 WARN  [fi] Reading license failed: java.io.FileNotFoundException: File '/home/anubis/.jrebel-android/jrebel-android.lic' does not exist
+22:32:25.649 WARN  [fi] Reading license failed: java.io.FileNotFoundException: File '/home/anubis/.jrebel-android/jrebel-android-dedicated.lic' does not exist
+Security framework of XStream not initialized, XStream is probably vulnerable.
+Error: Failure publishing analytics, unable to connect to server
+Error: 连接超时 (Connection timed out)
+八月 15, 2018 10:59:30 下午 io.grpc.internal.ManagedChannelImpl <init>
+信息: [ManagedChannelImpl@4b9ef0d6] Created with target directaddress:///io.grpc.inprocess.InProcessSocketAddress@6c17e603
+八月 15, 2018 10:59:33 下午 io.grpc.internal.ManagedChannelImpl <init>
+信息: [ManagedChannelImpl@64b8dff6] Created with target localhost:36767
+八月 15, 2018 10:59:33 下午 io.grpc.internal.ManagedChannelImpl <init>
+信息: [ManagedChannelImpl@1cf1c57f] Created with target directaddress:///io.grpc.inprocess.InProcessSocketAddress@32b979e1
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/home/anubis/.AndroidStudio3.1/config/plugins/jr-android-ide-studio/lib/jr-android-ide-studio.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/super/Studio/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorStaticBinder]
+23:05:42.029 WARN  [fi] Reading license failed: java.io.FileNotFoundException: File '/home/anubis/.jrebel-android/jrebel-android.lic' does not exist
+23:05:42.031 WARN  [fi] Reading license failed: java.io.FileNotFoundException: File '/home/anubis/.jrebel-android/jrebel-android-dedicated.lic' does not exist
+Security framework of XStream not initialized, XStream is probably vulnerable.
