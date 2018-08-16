@@ -8,6 +8,7 @@ import com.anubis.SwissArmyKnife.R.id.imageView
 import com.anubis.kt_extends.eLog
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
 import kotlinx.android.synthetic.main.activity_camera.*
+import org.jetbrains.anko.displayMetrics
 
 
 /**
@@ -31,13 +32,14 @@ class  Face: Activity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
-      val camera=  eArcFaceFTActivity.init(findViewById(R.id.glsurfaceView),findViewById(R.id.surfaceView))
+      val camera=  eArcFaceFTActivity.init(findViewById(R.id.glsurfaceView),findViewById(R.id.surfaceView),true)
         mRunnable= Runnable {
             eLog("${camera.mFaceNum}--$")
             if (camera.mFaceNum!=0 ){
                 imageView.setImageBitmap(camera.mBitmap)
             }
             Handler().postDelayed(mRunnable,1000)
+            eLog("屏幕-width:"+displayMetrics.widthPixels+"height:"+displayMetrics.heightPixels+"------"+camera.mAFT_FSDKFace?.rect.toString(),"FACE")
         }
         Handler().postDelayed(mRunnable,1000)
     }

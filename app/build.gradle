@@ -46,4 +46,8 @@ dependencies {
     implementation project(':module_Gorge')
     kapt 'com.alibaba:arouter-compiler:1.1.4'
     implementation project(':module_Office')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

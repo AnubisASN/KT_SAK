@@ -691,12 +691,12 @@ fun eBase64ToBitmap(base64String: String): Bitmap {
 }
 
 //获取预览图
-fun eGetPhoneBitmap(mImageNV21: ByteArray, width: Int, height: Int, mCameraID: Int = 1): Bitmap? {
+fun eGetPhoneBitmap(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect=Rect(0, 0, width, height),mCameraID: Int = 1): Bitmap? {
     var mBitmap: Bitmap? = null
     if (mImageNV21 != null) {
         val image = YuvImage(mImageNV21, ImageFormat.NV21, width, height, null)
         val stream = ByteArrayOutputStream()
-        image.compressToJpeg(Rect(0, 0, width, height), 80, stream)
+        image.compressToJpeg(rect, 80, stream)
         val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
         mBitmap = eRotateMyBitmap(bmp)
         stream.close()

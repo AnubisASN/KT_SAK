@@ -12,6 +12,8 @@ import android.view.MotionEvent
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eGetPhoneBitmap
+import com.anubis.kt_extends.eLog
+import com.anubis.kt_extends.eLogE
 import com.arcsoft.facetracking.AFT_FSDKEngine
 import com.arcsoft.facetracking.AFT_FSDKFace
 import com.arcsoft.facetracking.AFT_FSDKVersion
@@ -47,14 +49,15 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     private var mCameraID: Int = 1
     private var mCameraRotate: Int = 0
     private var mCameraMirror: Boolean = false
-    private  var mImageNV21: ByteArray? = null
+    private var mImageNV21: ByteArray? = null
     var mFaceNum: Int = 0
     var mBitmap: Bitmap? = null
-    private var mAFT_FSDKFace: AFT_FSDKFace? = null
-
-    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
+    var mAFT_FSDKFace: AFT_FSDKFace? = null
+    private var isReturmFaceBitmap=false
+    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, isReturmFaceBitmap: Boolean = false, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
         mGLSurfaceView = GLSurfaceView
         mSurfaceView = SurfaceView
+        this.isReturmFaceBitmap=isReturmFaceBitmap
         mCameraID = if (cameraId == 0) Camera.CameraInfo.CAMERA_FACING_BACK else Camera.CameraInfo.CAMERA_FACING_FRONT
         mCameraRotate = if (cameraId == 0) 90 else 270
         mCameraMirror = cameraId != 0
@@ -97,16 +100,36 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     override fun startPreviewImmediately(): Boolean {
         return true
     }
+
     override fun onPreview(data: ByteArray, width: Int, height: Int, format: Int, timestamp: Long): Any {
         val err = engine.AFT_FSDK_FaceFeatureDetect(data, width, height, AFT_FSDKEngine.CP_PAF_NV21, mFaceResult)
         Log.d(TAG, "AFT_FSDK_FaceFeatureDetect =" + err.code)
         Log.d(TAG, "Face=" + mFaceResult.size)
+        eLog("width:" + mCamera!!.parameters.previewSize.width + "----height" + mCamera!!.parameters.previewSize.height)
         mFaceNum = mFaceResult.size
         if (mFaceNum != 0 && mImageNV21 != null) {
             val size = mCamera!!.parameters.previewSize
-            mBitmap = eGetPhoneBitmap(mImageNV21!!,size.width, size.height, mCameraID)
+            if (isReturmFaceBitmap) {
+                try {
+                    val left = mAFT_FSDKFace!!.rect.left - 50
+                    val top = mAFT_FSDKFace!!.rect.top - 50
+                    val right = mAFT_FSDKFace!!.rect.right + 50
+                    val bottom = mAFT_FSDKFace!!.rect.bottom + 50
+                    mBitmap = eGetPhoneBitmap(mImageNV21!!, size.width, size.height, Rect(if (left < 0) 1 else left,
+                            if (top<0) 1 else top ,
+                            if (right>size.width)size.width-1 else right ,
+                            if (bottom>size.height)size.height-1 else bottom
+                    ))
+                } catch (e: Exception) {
+                    mBitmap = eGetPhoneBitmap(mImageNV21!!, size.width, size.height)
+                    eLogE("矩阵截取失败$e")
+                }
+            }else{
+                mBitmap = eGetPhoneBitmap(mImageNV21!!, size.width, size.height)
+            }
+
         }
-        if (mFaceNum==0){
+        if (mFaceNum == 0) {
             mImageNV21 = null
         }
         for (face in mFaceResult) {

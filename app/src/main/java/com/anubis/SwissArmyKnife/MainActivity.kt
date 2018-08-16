@@ -10,20 +10,22 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Printer
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import com.anubis.SwissArmyKnife.Adapter.MyAdapter
 import com.anubis.kt_extends.*
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
 import com.anubis.module_gorge.eGorgeMessage
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.eTTS
 import kotlinx.android.synthetic.main.list_edit_item.view.*
-import com.anubis.SwissArmyKnife.MainActivity.MyAdapter.setOnItemClickListener
-
-
+import com.anubis.SwissArmyKnife.R.id.rvList
+import com.tencent.bugly.proguard.v
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : Activity() {
@@ -41,7 +43,7 @@ class MainActivity : Activity() {
         mEGorge = eGorgeMessage().getInit(this)
         getInfo()
         eLog(eGetShowActivity())
-        data = arrayOf("初始化发音", "发音人切记调用", "发音人切记调用", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（动态加载跳转）", "ROOT检测权限", "执行Shell")
+        data = arrayOf("初始化发音", "发音人切记调用", "发音人切记调用", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（动态加载跳转）", "ROOT检测权限", "执行Shell1")
         init()
     }
 
@@ -49,13 +51,30 @@ class MainActivity : Activity() {
         rvList.layoutManager = LinearLayoutManager(this)
         val myAdapter = MyAdapter(this, data!!)
         rvList.adapter = myAdapter
-        myAdapter.setOnItemClickListener(MyAdapter.setOnItemClickListener(){
 
-        })
+    }
+
+    inner class People {
+
+        internal var printer = Printer()
+
+        /*
+   * 同步回调
+   */
+     //   fun goToPrintSyn(callback: Callback, text: String) {
+     //       printer.print(callback, text)
+     //   }
+
+        /*
+   * 异步回调
+   */
+        fun goToPrintASyn(callback: Callback, text: String) {
+            Thread(Runnable { printer.print(callback, text) }).start()
+        }
     }
 
     class MyAdapter(val mContext: Context, val mDatas: Array<String>) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
-        private var mListener: setOnItemClickListener? = null
+        var mPosition: Int? = null
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyHolder {
             val view = LayoutInflater.from(mContext).inflate(R.layout.list_edit_item, parent, false)
 
@@ -67,26 +86,34 @@ class MainActivity : Activity() {
         }
 
         override fun onBindViewHolder(holder: MyHolder, position: Int) {
-            if (mListener != null) {
-                holder.itemView.setOnClickListener { mListener!!.OnItemClickListener(position) }
-            }
+            mPosition = position
             holder.setData(mDatas[position])
+            holder.itemView.bt_item.setOnClickListener {
+                var editContext: String = ""
+                if (it.tag == "1") {
+                    editContext = holder.itemView.ed_item.text.toString()
+                }
+                mContext.eShowTip("itID:--$position--输入内容：$editContext")
+            }
+
         }
 
+        interface Callback {
+            fun Result(mes:String)
+        }
         inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             fun setData(data: String) {
-                itemView.tv_item.text = data
                 itemView.ed_item.visibility = View.GONE
+                if (data.last().toString() == "1") {
+                    itemView.ed_item.visibility = View.VISIBLE
+                    itemView.bt_item.tag = "1"
+                }
+                itemView.bt_item.text = data
+
             }
         }
 
-        fun setOnItemClickListener(mListener: setOnItemClickListener) {
-            this.mListener = mListener
-        }
 
-        interface setOnItemClickListener {
-            fun OnItemClickListener(pos: Int)
-        }
     }
 
     fun getInfo() {

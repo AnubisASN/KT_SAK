@@ -30,6 +30,7 @@ android {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':module_Extends')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {
     mavenCentral()
