@@ -79,13 +79,13 @@ fun eLogE(str: Any, TAG: String = "TAG") {
 /**
  * KeyDownExit事件监听------------------------------------------------------------------------------------
  */
-private var clickTime: Long = 0
+private var Time: Long = 0
 
-fun Activity.eSetKeyDownExit(keyCode: Int, activityList: ArrayList<Activity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", time: Long = 2000): Boolean {
+fun Activity.eSetKeyDownExit(keyCode: Int, activityList: ArrayList<Activity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", ClickTime: Long = 2000): Boolean {
     return if (keyCode == KeyEvent.KEYCODE_BACK) {
-        if (System.currentTimeMillis() - com.anubis.kt_extends.clickTime > time) {
+        if (System.currentTimeMillis() - Time > ClickTime) {
             eShowTip(hint)
-            com.anubis.kt_extends.clickTime = System.currentTimeMillis()
+            com.anubis.kt_extends.Time = System.currentTimeMillis()
             false
         } else {
             if (activityList != null) {
@@ -704,7 +704,7 @@ fun eGetPhoneBitmap(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect=R
     }
     return mBitmap
 }
-
+//图片选择
 fun eRotateMyBitmap(bmp: Bitmap, mCameraID: Int = 1): Bitmap {
     //*****旋转一下
     var matrix = Matrix()

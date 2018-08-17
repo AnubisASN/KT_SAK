@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -18,20 +19,30 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
+import com.anubis.SwissArmyKnife.R.id.*
 import com.anubis.kt_extends.*
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
 import com.anubis.module_gorge.eGorgeMessage
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
+import com.tencent.bugly.proguard.t
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.onClick
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
 
 class MainActivity : Activity() {
     private var TTS: eTTS? = null
     private var APP: app? = null
+    private var filePath = ""
+    private var file: File? = null
     private var data: Array<String>? = null
     var mEGorge: eGorgeMessage? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,11 +53,22 @@ class MainActivity : Activity() {
         mEGorge = eGorgeMessage().getInit(this)
         getInfo()
         eLog(eGetShowActivity())
-        data = arrayOf("初始化发音", "发音人切换调用", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（路由转发跳转）", "ROOT权限检测", "执行Shell1")
+        data = arrayOf("初始化发音", "发音人切换调用", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（路由转发跳转）", "ROOT权限检测", "执行Shell1","修改为系统APP1","清除记录")
         init()
-    }
 
+    }
+    private  var Time: Long = 0
     private fun init() {
+        filePath = this.filesDir.path + "SAK_Record.txt"
+        file = File(filePath)
+        if (file!!.exists()) {
+            Handler().post {
+                val buf = BufferedReader(FileReader(filePath))
+                  Hint(buf.readText())
+            }
+        } else {
+            file!!.createNewFile()
+        }
         rvList.layoutManager = LinearLayoutManager(this)
         val callback = object : ICallBack {
             override fun CallResult(view: View, itmeID: Int, MSG: String) {
@@ -60,18 +82,46 @@ class MainActivity : Activity() {
                     data!!.indexOf("执行Shell1") -> if (MSG.isNotEmpty()) {
                         Hint("Shell:\n" + eExecShell.eExecShell(MSG))
                     }
+                    data!!.indexOf("修改为系统APP1")->{
+                        if(MSG.isNotEmpty()){
+                            val shell="cp -r /data/app/$MSG* /system/priv*"
+                            Hint("自定义修改为系统APP:"+eExecShell.eExecShell(shell))
+                            Hint("Shell:$shell")
+                        }else{
+                            val shell=" cp -r /data/app/$packageName* /system/priv*"
+                            Hint("修改为系统APP:"+eExecShell.eExecShell(shell))
+                            Hint("Shell:$shell")
+                        }
+                     Handler().postDelayed(Runnable {
+                         val shell=" rm -rf /data/app/$packageName*"
+                         Hint("删除数据遗留:"+eExecShell.eExecShell(shell))
+                         Hint("Shell:$shell")
+                         eShowTip("请重启设备")
+                     },2000)
+                    }
+                    data!!.indexOf("清除记录")-> {
+                        if (System.currentTimeMillis() - Time > 1000) {
+                            Time = System.currentTimeMillis()
+                        } else {
+                            tv_Hint.text=""
+                            file!!.writeText("")
+                            eShowTip("记录已清除")
+                        }
+                    }
                 }
             }
         }
         val myAdapter = MyAdapter(this, data!!, callback)
         rvList.adapter = myAdapter
+        eExecShell.eExecShell("mount -o remount,rw rootfs /system/ ")
     }
 
     private fun Hint(str: String) {
-        tv_Hint.append("$str\n\n")
+        val Str = "${eGetCurrentTime("MM-dd HH:mm")}： $str\n\n\n"
+        tv_Hint.append(Str)
         sv_Hint.fullScroll(ScrollView.FOCUS_DOWN)
-
     }
+
 
     class MyAdapter(val mContext: Context, val mDatas: Array<String>, val mCallbacks: ICallBack) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
         var mPosition: Int? = null
@@ -165,8 +215,14 @@ class MainActivity : Activity() {
         eLog("size" + app().get()?.getActivity()!!.size)
         return eSetKeyDownExit(keyCode, app().get()?.getActivity(), false, exitHint = "完成退出")
     }
-
+    override fun onDestroy() {
+        if (tv_Hint.text.isNotEmpty()) {
+            file!!.writeText(tv_Hint.text.toString())
+        }
+        super.onDestroy()
+    }
     interface ICallBack {
         fun CallResult(view: View, numID: Int, MSG: String)
     }
+
 }
