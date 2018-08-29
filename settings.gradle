@@ -1,1 +1,1 @@
-include ':app',':module_Extends',':module_Gorge',':module_TTS',':module_ArcFaceFT', ':module_Office'
+include ':app',':module_Extends', ':module_PortMSG',':module_TTS',':module_ArcFaceFT', ':module_Office', ':module_GreenDao'

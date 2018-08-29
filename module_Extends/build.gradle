@@ -57,7 +57,8 @@ dependencies {
     api 'com.tencent.bugly:crashreport:2.6.6.1'
     //ImagePicker
     api 'com.lzy.widget:imagepicker:0.5.4'
-
+    //GFreenDao
+    api 'org.greenrobot:greendao:3.2.2' // add library
 }
 repositories {
     mavenCentral()

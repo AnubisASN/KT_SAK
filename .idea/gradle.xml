@@ -5,15 +5,16 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../Files/Gradle/gradle-4.6" />
+        <option name="gradleHome" value="$PROJECT_DIR$/../../../Gradle/gradle-4.5" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/module_ArcFaceFT" />
             <option value="$PROJECT_DIR$/module_Extends" />
-            <option value="$PROJECT_DIR$/module_Gorge" />
+            <option value="$PROJECT_DIR$/module_GreenDao" />
             <option value="$PROJECT_DIR$/module_Office" />
+            <option value="$PROJECT_DIR$/module_PortMSG" />
             <option value="$PROJECT_DIR$/module_TTS" />
           </set>
         </option>

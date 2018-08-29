@@ -45,8 +45,9 @@ dependencies {
     implementation project(':module_ArcFaceFT')
     implementation project(':module_Extends')
     implementation project(':module_TTS')
-    implementation project(':module_Gorge')
+    implementation project(':module_PortMSG')
     implementation project(':module_Office')
+
 }
 repositories {
     mavenCentral()

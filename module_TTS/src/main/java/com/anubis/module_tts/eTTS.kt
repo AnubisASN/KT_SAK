@@ -26,6 +26,24 @@ import com.anubis.module_tts.util.OfflineResource
 import com.baidu.tts.client.SpeechSynthesizer
 import java.util.*
 
+/**
+ * 说明：语音合成封装开发库
+ * @初始化方法：initTTS()
+ * @param activity: Application；应用程序
+ * @param mHandler: Handler；语音合成消息回调
+ * @param ttsMode: TTSMode；语音合成模式（在线离线）
+ * @param voiceMode: VoiceModel;语音合成模型
+ * @Param MixMode: ParamMixMode;语音合成流程
+ * @return: eTTS
+ * @参数设置方法：setParams()
+ * @param voiceMode: VoiceModel;语音合成模型
+ * @param volume: Int;设置音量
+ * @param speed: Int;设置速度
+ * @param pitch: Int;设置语调
+ * @return:eTTS
+ * @语音合成：speak（）
+ * @param text:String;合成内容
+ */
 
 /**
  * 合成demo。含在线和离线，没有纯离线功能。
@@ -102,16 +120,16 @@ object eTTS {
 //        val result = synthesizer!!.loadModel(offlineResource!!.modelFilename.toString(), offlineResource!!.textFilename.toString())
 //        checkResult(result, "loadModel")
     }
-    fun initTTS(activity: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode =com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK): eTTS {
+    fun initTTS(mApplication: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode =com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK): eTTS {
         val mode = when (voiceMode) {
             VoiceModel.FEMALE -> "F"
             VoiceModel.MALE -> "M"
             VoiceModel.EMOTIONAL_MALE -> "X"
             VoiceModel.CHILDREN -> "Y"
         }
-        activity.eSetSystemSharedPreferences("set_tts_load_model", mode)
-        activity.eSetSystemSharedPreferences("set_PARAM_MIX_MODE",ParamMixMode)
-        this.mActivity = activity
+        mApplication.eSetSystemSharedPreferences("set_tts_load_model", mode)
+        mApplication.eSetSystemSharedPreferences("set_PARAM_MIX_MODE",ParamMixMode)
+        this.mActivity = mApplication
         this.mHandler = mHandler
         this.ttsMode = if (ttsMode == TTSMode.MIX) TtsMode.MIX else TtsMode.ONLINE
         try {
@@ -174,7 +192,7 @@ object eTTS {
      * 获取音频流的方式见SaveFileActivity及FileSaveListener
      * 需要合成的文本text的长度不能超过1024个GBK字节。
      */
-    public fun speak(text: String) {
+     fun speak(text: String) {
         val result = synthesizer?.speak(text)
         if (result != null) {
             checkResult(result, "speak")
@@ -184,28 +202,28 @@ object eTTS {
     /**
      * 批量播放
      */
-    public fun batchSpeak(texts: ArrayList<Pair<String, String>>) {
+     fun batchSpeak(texts: ArrayList<Pair<String, String>>) {
         val result = synthesizer!!.batchSpeak(texts)
         checkResult(result, "batchSpeak")
     }
     /**
      * 暂停播放。仅调用speak后生效
      */
-    public fun pause() {
+     fun pause() {
         val result = synthesizer!!.pause()
         checkResult(result, "pause")
     }
     /**
      * 继续播放。仅调用speak后生效，调用pause生效
      */
-    public fun resume() {
+     fun resume() {
         val result = synthesizer!!.resume()
         checkResult(result, "resume")
     }
     /**
      * 停止合成引擎。即停止播放，合成，清空内部合成队列。
      */
-    public fun stop() {
+     fun stop() {
         val result = synthesizer!!.stop()
         checkResult(result, "stop")
     }

@@ -11,7 +11,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.anubis.kt_extends.eGetPhoneBitmap
+import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.arcsoft.facetracking.AFT_FSDKEngine
@@ -27,8 +27,31 @@ import com.guo.android_extend.widget.CameraSurfaceView.OnCameraListener
 import kotlin.collections.ArrayList
 
 /**
- * Created by gqj3375 on 2017/4/28.
- */
+ * Author  ： AnubisASN   on 2018-07-23 9:12.
+ * E-mail  ： anubisasn@gmail.com ( anubisasn@qq.com )
+ * Q Q： 773506352
+ * 命名规则定义：
+ * Module :  module_'ModuleName'
+ * Library :  lib_'LibraryName'
+ * Package :  'PackageName'_'Module'
+ * Class :  'Mark'_'Function'_'Tier'
+ * Layout :  'Module'_'Function'
+ * Resource :  'Module'_'ResourceName'_'Mark'
+ * /+Id :  'LoayoutName'_'Widget'+FunctionName
+ * Router :  /'Module'/'Function'
+ * 说明：人脸跟踪封装开发库
+ * @初始化方法：init(){}
+ * @param GLSurfaceView ：CameraGLSurfaceView；相机视图
+ * @param urfaceView：CameraSurfaceView；表面视图
+ * @param isReturmFaceBitmap：Boolean=false; 返回人脸矩阵截图
+ * @param cameraId: Int = 1;相机前后镜头
+ * @param onClickCameraSwitch: View? = null；点击控件切换
+ * @return: eArcFaceFTActivity {
+ *                       mFaceNum: Int;人脸数
+ *                       mBitmap: Bitmap；人脸BitMap图片
+ *                       mAFT_FSDKFace: AFT_FSDKFace；人脸信息集
+ *                              }
+*/
 object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     private val TAG = "TAG"
     private val appid = "EDqqPgtie4x6yQvqH2gfCRkcyq4H3RPYFxa9btSu7kX1"
@@ -53,6 +76,7 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     var mBitmap: Bitmap? = null
     var mAFT_FSDKFace: AFT_FSDKFace? = null
     private var isReturmFaceBitmap = false
+
     fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, isReturmFaceBitmap: Boolean = false, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
         mGLSurfaceView = GLSurfaceView
         mSurfaceView = SurfaceView
@@ -114,17 +138,17 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
                     val top = mAFT_FSDKFace!!.rect.top - 50
                     val right = mAFT_FSDKFace!!.rect.right + 50
                     val bottom = mAFT_FSDKFace!!.rect.bottom + 50
-                    mBitmap = eGetPhoneBitmap(mImageNV21!!, size.width, size.height, Rect(if (left < 0) 1 else left,
+                    mBitmap = eBitmap.eGetPhoneBitmap(mImageNV21!!, size.width, size.height, Rect(if (left < 0) 1 else left,
                             if (top < 0) 1 else top,
                             if (right > size.width) size.width - 1 else right,
                             if (bottom > size.height) size.height - 1 else bottom
                     ))
                 } catch (e: Exception) {
-                    mBitmap = eGetPhoneBitmap(mImageNV21!!, size.width, size.height)
+                    mBitmap = eBitmap.eGetPhoneBitmap(mImageNV21!!, size.width, size.height)
                     eLogE("矩阵截取失败$e")
                 }
             } else {
-                mBitmap = eGetPhoneBitmap(mImageNV21!!, size.width, size.height)
+                mBitmap = eBitmap.eGetPhoneBitmap(mImageNV21!!, size.width, size.height)
             }
 
         }
