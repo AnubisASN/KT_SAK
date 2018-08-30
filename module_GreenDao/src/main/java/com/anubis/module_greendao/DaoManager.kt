@@ -1,11 +1,11 @@
 package com.anubis.module_greendao
 
 import android.content.Context
-import modlue_greendao.Gen.DaoMaster
-import modlue_greendao.Gen.DaoSession
-
-import org.greenrobot.greendao.query.QueryBuilder
-
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
+import com.anubis.module_greendao.Gen.DaoMaster
+import java.lang.reflect.Modifier
+import java.util.*
 
 /**
  * Author  ： AnubisASN   on 2018-08-07 11:49.
@@ -23,50 +23,69 @@ import org.greenrobot.greendao.query.QueryBuilder
  * Router :  /'Module'/'Function'
  * 说明：
  */
-internal class DaoManager {
+internal class DaoManager(val context: Context, val greenDaoClassName: String, val DB_NAME: String) {
+    private var sDaoMaster: Any? = null
+    private var sDaoSession: Any? = null
+    private var sHelper: Any? = null
 
-    private var context: Context? = null
 
-    val DaoMaster=Class.forName("com.anubis.modlue_greendao.Gen.DaoMaster")
+    init {
+//        sDaoMaster = Class.forName("$greenDaoClassName.DaoMaster")
+//        sDaoSession = Class.forName("$greenDaoClassName.DaoSession")
+        val clzzs = Class.forName("$greenDaoClassName.DaoMaster").declaredClasses
+        for (cls in clzzs!!) {
+            val mod = cls.modifiers
+            val modifier = Modifier.toString(mod)
+            if (modifier.contains("static")) {
+                sHelper = cls
+                print(cls.name + "\n")
+            }
+        }
+    }
 
     /**
      * 判断是否有存在数据库，如果没有则创建
      * @return
      */
-    val daoMaster: DaoMaster
+    private val daoMaster: Any
         get() {
             if (sDaoMaster == null) {
-                val helper = DaoMaster.DevOpenHelper(context, DB_NAME, null)
-                sDaoMaster = DaoMaster(helper.getWritableDatabase())
+
+//                val helper = Class.forName("$greenDaoClassName.DaoMaster\$DevOpenHelper").getDeclaredConstructor(Context::class.java, String::class.java, SQLiteDatabase.CursorFactory::class.java).newInstance(context, DB_NAME, null)
+
+                val helper= DaoMaster.DevOpenHelper(context, DB_NAME, null)
+             val mh=   helper.writableDatabase
+//                val mHelper = helper::class.java.getMethod("getWritableDatabase").invoke(SQLiteOpenHelper)
+//                helper::class.java.getMethod("getWritableDatabase").invoke(helper)
+//                sDaoMaster = DaoMaster(helper.getWritableDatabase())
+                sDaoMaster =Class.forName("$greenDaoClassName.DaoSession")!!::class.java.getDeclaredConstructor(SQLiteDatabase::class.java).newInstance(helper::class.java.getMethod("getWritableDatabase").invoke(mh))
             }
-            return sDaoMaster
+            return sDaoMaster!!
         }
+
 
     /**
      * 完成对数据库的添加、删除、修改、查询操作，仅仅是一个接口
      * @return
      */
-    val daoSession: DaoSession
+    val daoSession: Any
         get() {
             if (sDaoSession == null) {
                 if (sDaoMaster == null) {
                     sDaoMaster = daoMaster
                 }
-                sDaoSession = sDaoMaster!!.newSession()
+                sDaoSession = Class.forName("$greenDaoClassName.DaoMaster").getMethod("newSession").invoke(sDaoMaster)
             }
-            return sDaoSession
+            return sDaoSession!!
         }
 
-    fun init(context: Context) {
-        this.context = context
-    }
 
     /**
      * 打开输出日志，默认关闭
      */
     fun setDebug() {
-        QueryBuilder.LOG_SQL = true
-        QueryBuilder.LOG_VALUES = true
+//        QueryBuilder.LOG_SQL = true
+//        QueryBuilder.LOG_VALUES = true
     }
 
     /**
@@ -79,31 +98,17 @@ internal class DaoManager {
 
     fun closeHelper() {
         if (sHelper != null) {
-            sHelper!!.close()
+            (sHelper as Class<*>).getMethod("close").invoke(sHelper)
             sHelper = null
         }
     }
 
     fun closeDaoSession() {
         if (sDaoSession != null) {
-            sDaoSession!!.clear()
+            (sDaoSession as Class<*>).getMethod("clear").invoke(sDaoSession)
             sDaoSession = null
         }
     }
 
-    companion object {
-        private val TAG = DaoManager::class.java.simpleName
-        private val DB_NAME = "greendaotest"
-
-        //多线程中要被共享的使用volatile关键字修饰
-        /**
-         * 单例模式获得操作数据库对象
-         * @return
-         */
-        @Volatile
-        val instance = DaoManager()
-        private var sDaoMaster: DaoMaster? = null
-        private var sHelper: DaoMaster.DevOpenHelper? = null
-        private var sDaoSession: DaoSession? = null
-    }
 }
+

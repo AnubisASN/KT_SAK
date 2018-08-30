@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'bugly'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 bugly {
     appId = '47d98f44ec' // 注册时分配的App ID
@@ -31,7 +32,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    greendao {
+        schemaVersion 1 //数据库版本号
+        daoPackage 'com.anubis.modlue_greendao.Gen' //自动生成的工具类的包名
+        targetGenDir 'src/main/java' //生成文件的路径
+    }
 }
 kapt {
     arguments {
@@ -47,7 +52,7 @@ dependencies {
     implementation project(':module_TTS')
     implementation project(':module_PortMSG')
     implementation project(':module_Office')
-
+    implementation project(':module_GreenDao')
 }
 repositories {
     mavenCentral()

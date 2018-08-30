@@ -23,6 +23,7 @@ import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
 import com.anubis.kt_extends.eTime.eGetCurrentTime
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
+import com.anubis.module_greendao.OperationDao
 import com.anubis.module_portMSG.ePortMessage
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
@@ -131,7 +132,6 @@ class MainActivity : Activity() {
         sv_Hint.fullScroll(ScrollView.FOCUS_DOWN)
     }
 
-
     class MyAdapter(val mContext: Context, val mDatas: Array<String>, val mCallbacks: ICallBack) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
         var mPosition: Int? = null
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyHolder {
@@ -224,7 +224,7 @@ class MainActivity : Activity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         Hint("keyCode:$keyCode")
         eLog("size" + app().get()?.getActivity()!!.size)
-        return eSetKeyDownExit(this,keyCode, app().get()?.getActivity(), false, exitHint = "完成退出")
+        return eSetKeyDownExit(this, keyCode, app().get()?.getActivity(), false, exitHint = "完成退出")
     }
 
     override fun onDestroy() {
@@ -238,4 +238,5 @@ class MainActivity : Activity() {
         fun CallResult(view: View, numID: Int, MSG: String)
     }
 
+    fun greenDao() = OperationDao(this)
 }

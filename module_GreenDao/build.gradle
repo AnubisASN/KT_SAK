@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'org.greenrobot.greendao' // apply plugin
+apply plugin: 'kotlin-android'
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
@@ -18,15 +19,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    greendao {
-        schemaVersion 1 //数据库版本号
-        daoPackage 'com.anubis.modlue_greendao.Gen' //自动生成的工具类的包名
-        targetGenDir 'src/main/java' //生成文件的路径
-    }
 
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':module_Extends')
+}
+repositories {
+    mavenCentral()
 }

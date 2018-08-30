@@ -45,7 +45,7 @@ dependencies {
     api 'org.jetbrains.anko:anko-design:0.9.1'
     api 'org.jetbrains.anko:anko-recyclerview-v7:0.9.1'
     //Junit测试
-    testApi 'junit:junit:4.12'
+    api 'junit:junit:4.12'
     androidTestApi ('com.android.support.test:runner:1.0.2')
 //            {
 //        exclude group: 'com.android.support'
@@ -57,7 +57,7 @@ dependencies {
     api 'com.tencent.bugly:crashreport:2.6.6.1'
     //ImagePicker
     api 'com.lzy.widget:imagepicker:0.5.4'
-    //GFreenDao
+    //GreenDao
     api 'org.greenrobot:greendao:3.2.2' // add library
 }
 repositories {

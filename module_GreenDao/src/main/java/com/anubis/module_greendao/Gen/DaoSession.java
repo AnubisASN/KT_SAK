@@ -1,6 +1,7 @@
-package modlue_greendao.Gen;
+package com.anubis.module_greendao.Gen;
 
-import com.anubis.sxk_facedetection.dataBean.ExcelDao;
+
+import com.anubis.module_greendao.Data;
 
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.AbstractDaoSession;
@@ -14,33 +15,33 @@ import java.util.Map;
 
 /**
  * {@inheritDoc}
- * 
+ *
  * @see AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig excelDaoDaoConfig;
+    private final DaoConfig dataDaoConfig;
 
-    private final ExcelDaoDao excelDaoDao;
+    private final DataDao dataDao;
 
     public DaoSession(Database db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
         super(db);
 
-        excelDaoDaoConfig = daoConfigMap.get(ExcelDaoDao.class).clone();
-        excelDaoDaoConfig.initIdentityScope(type);
+        dataDaoConfig = daoConfigMap.get(DataDao.class).clone();
+        dataDaoConfig.initIdentityScope(type);
 
-        excelDaoDao = new ExcelDaoDao(excelDaoDaoConfig, this);
+        dataDao = new DataDao(dataDaoConfig, this);
 
-        registerDao(ExcelDao.class, excelDaoDao);
+        registerDao(Data.class, dataDao);
     }
-    
+
     public void clear() {
-        excelDaoDaoConfig.clearIdentityScope();
+        dataDaoConfig.clearIdentityScope();
     }
 
-    public ExcelDaoDao getExcelDaoDao() {
-        return excelDaoDao;
+    public DataDao getDataDao() {
+        return dataDao;
     }
 
 }
