@@ -18,12 +18,13 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
+import com.anubis.SwissArmyKnife.GreenDao.Data
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
 import com.anubis.kt_extends.eTime.eGetCurrentTime
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
-import com.anubis.module_greendao.OperationDao
+import com.anubis.module_greendao.eOperationDao
 import com.anubis.module_portMSG.ePortMessage
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
@@ -50,7 +51,7 @@ class MainActivity : Activity() {
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
         getInfo()
-        data = arrayOf("初始化发音", "发音人切换调用", "串口通信1", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（路由转发跳转）", "ROOT权限检测", "执行Shell1", "修改为系统APP1", "正则匹配1", "清除记录")
+        data = arrayOf("初始化发音", "发音人切换调用", "串口通信1", "数据库插入","数据库查询","数据库删除","动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（路由转发跳转）", "ROOT权限检测", "执行Shell1", "修改为系统APP1", "正则匹配1", "清除记录")
         init()
     }
 
@@ -73,6 +74,12 @@ class MainActivity : Activity() {
                     data!!.indexOf("初始化发音") -> TTS!!.setParams().speak("初始化发音调用")
                     data!!.indexOf("发音人切换调用") -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
                     data!!.indexOf("串口通信1") -> Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, MSG).MSG())
+                    data!!.indexOf("数据库插入")->Hint("数据库插入：${eOperationDao(this@MainActivity).insertUser(Data("00000","11111"))}")
+                    data!!.indexOf("数据库查询")->Hint("数据库查询:"+eOperationDao(this@MainActivity).queryAllUser(Data()).size )
+                    data!!.indexOf("数据库删除")->
+//                        Hint("数据库操作测试:${OperationDao(this@MainActivity).insertUser(Data("00000","11111")::class.java)}")
+                        Hint("数据库删除：${eOperationDao(this@MainActivity).deleteAll(Data("",""))}")
+
                     data!!.indexOf("动态加载") -> reflection("com.anubis.SwissArmyKnife.MainActivity")
                     data!!.indexOf("AecFaceFT人脸跟踪模块（Intent跳转）") -> startActivity(Intent(this@MainActivity, Face::class.java))
                     data!!.indexOf("AecFaceFT人脸跟踪模块（路由转发跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
@@ -238,5 +245,4 @@ class MainActivity : Activity() {
         fun CallResult(view: View, numID: Int, MSG: String)
     }
 
-    fun greenDao() = OperationDao(this)
 }
