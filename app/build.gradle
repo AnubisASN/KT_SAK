@@ -4,7 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'bugly'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
-
+apply plugin: 'com.github.dcendents.android-maven'
+group='com.github.abcdqianlei1990'
 bugly {
     appId = '47d98f44ec' // 注册时分配的App ID
     appKey = '67d6bd08-71ba-4b1e-b739-6ddb4d8fa1ec' // 注册时分配的App Key
