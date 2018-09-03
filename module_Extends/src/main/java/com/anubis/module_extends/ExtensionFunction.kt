@@ -213,9 +213,9 @@ object eJson {
 }
 
 //音频播放
-fun Context.ePlayVoice(music: Int, isLoop: Boolean = false) {
+fun ePlayVoice(context: Context,music: Int, isLoop: Boolean = false) {
     try {
-        val mp = MediaPlayer.create(this, music)//重新设置要播放的音频
+        val mp = MediaPlayer.create(context, music)//重新设置要播放的音频
         mp.isLooping = isLoop
         mp.start()//开始播放
     } catch (e: Exception) {
@@ -231,7 +231,6 @@ fun Context.ePlayVoice(music: Int, isLoop: Boolean = false) {
 object eApp {
     //开机自启
     var isSetAutoBoot = true
-
     fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, className: Any? = null) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             eLog("开机启动", "SAK")

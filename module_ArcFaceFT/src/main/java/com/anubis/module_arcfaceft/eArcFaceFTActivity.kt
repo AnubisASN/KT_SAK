@@ -5,10 +5,12 @@ import android.graphics.Color
 import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.hardware.Camera
+import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.MotionEvent
+import android.view.SurfaceView
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eBitmap
@@ -51,7 +53,7 @@ import kotlin.collections.ArrayList
  *                       mBitmap: Bitmap；人脸BitMap图片
  *                       mAFT_FSDKFace: AFT_FSDKFace；人脸信息集
  *                              }
-*/
+ */
 object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     private val TAG = "TAG"
     private val appid = "EDqqPgtie4x6yQvqH2gfCRkcyq4H3RPYFxa9btSu7kX1"
@@ -75,11 +77,15 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     var mFaceNum: Int = 0
     var mBitmap: Bitmap? = null
     var mAFT_FSDKFace: AFT_FSDKFace? = null
+    var mIsState=true
     private var isReturmFaceBitmap = false
-
-    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, isReturmFaceBitmap: Boolean = false, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
+    private var color: Int = Color.GREEN
+    private var stroke: Int = 2
+    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, color: Int = Color.GREEN, stroke: Int = 2, isReturmFaceBitmap: Boolean = false, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
         mGLSurfaceView = GLSurfaceView
         mSurfaceView = SurfaceView
+        this.color = color
+        this.stroke = stroke
         this.isReturmFaceBitmap = isReturmFaceBitmap
         mCameraID = if (cameraId == 0) Camera.CameraInfo.CAMERA_FACING_BACK else Camera.CameraInfo.CAMERA_FACING_FRONT
         mCameraRotate = if (cameraId == 0) 90 else 270
@@ -126,11 +132,14 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
 
     override fun onPreview(data: ByteArray, width: Int, height: Int, format: Int, timestamp: Long): Any {
         val err = engine.AFT_FSDK_FaceFeatureDetect(data, width, height, AFT_FSDKEngine.CP_PAF_NV21, mFaceResult)
+        if (mFaceResult.size == 0) {
+            mImageNV21 = null
+        }
         Log.d(TAG, "AFT_FSDK_FaceFeatureDetect =" + err.code)
         Log.d(TAG, "Face=" + mFaceResult.size)
-        eLog("width:" + mCamera!!.parameters.previewSize.width + "----height" + mCamera!!.parameters.previewSize.height)
         mFaceNum = mFaceResult.size
-        if (mFaceNum != 0 && mImageNV21 != null) {
+        if (mFaceNum != 0 && mImageNV21 != null && mIsState) {
+            mIsState=false
             val size = mCamera!!.parameters.previewSize
             if (isReturmFaceBitmap) {
                 try {
@@ -152,7 +161,8 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
             }
 
         }
-        if (mFaceNum == 0) {
+        if (mFaceNum == 0 || !mIsState) {
+            mIsState=true
             mImageNV21 = null
         }
         for (face in mFaceResult) {
@@ -181,7 +191,7 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     }
 
     override fun onAfterRender(data: CameraFrameData) {
-        mGLSurfaceView!!.gleS2Render.draw_rect(data.params as Array<Rect>, Color.GREEN, 2)
+        mGLSurfaceView!!.gleS2Render.draw_rect(data.params as Array<Rect>, color, stroke)
     }
 
     override fun onAutoFocus(success: Boolean, camera: Camera) {
@@ -204,5 +214,6 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
         mGLSurfaceView!!.setRenderConfig(mCameraRotate, mCameraMirror)
         mGLSurfaceView!!.gleS2Render.setViewAngle(mCameraMirror, mCameraRotate)
     }
+
 
 }

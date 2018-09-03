@@ -35,13 +35,14 @@ class  Face: Activity(){
         setContentView(R.layout.activity_camera)
         var camera: eArcFaceFTActivity?=null
         try {
-            camera = eArcFaceFTActivity.init(findViewById(R.id.glsurfaceView),findViewById(R.id.surfaceView),true)
+            camera = eArcFaceFTActivity.init(findViewById(R.id.glsurfaceView),findViewById(R.id.surfaceView),isReturmFaceBitmap = true)
         } catch (e: Exception) {
             eLogE("ArcFace:$e")
             eLog("ArcFace$e")
         }
         mRunnable= Runnable {
             eLog("${camera!!.mFaceNum}--$")
+            camera.mIsState=true
             if (camera.mFaceNum!=0 ){
                 imageView.setImageBitmap(camera.mBitmap)
             }
