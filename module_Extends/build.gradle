@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'bugly'
-
+apply plugin: 'com.github.dcendents.android-maven'
 bugly {
     appId = 'b92d0ff01b' // 注册时分配的App ID
     appKey = '8bfa8b71-a559-4ebe-be0d-0ddd62cca6c6' // 注册时分配的App Key
