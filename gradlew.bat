@@ -19,7 +19,7 @@ set DEFAULT_JVM_OPTS=
 @rem Find java.exe
 if defined JAVA_HOME goto findJavaFromJavaHome
 
-set JAVA_EXE=java.exe
+set JAVA_EXE=java.exe d
 %JAVA_EXE% -version >NUL 2>&1
 if "%ERRORLEVEL%" == "0" goto init
 
