@@ -19,8 +19,7 @@ import android.widget.ScrollView
 import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.SwissArmyKnife.GreenDao.Data
-import com.anubis.SwissArmyKnife.R.id.sv_Hint
-import com.anubis.SwissArmyKnife.R.id.tv_Hint
+import com.anubis.SwissArmyKnife.R.id.*
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eApp.eAppRestart
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
@@ -55,19 +54,10 @@ class MainActivity : Activity() {
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
         getInfo()
-        data = arrayOf("初始化发音", "发音人切换调用", "串口通信1", "数据库插入", "数据库查询", "数据库删除", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（路由转发跳转）", "APP重启","APP重启0", "ROOT权限检测", "执行Shell1", "修改为系统APP1", "正则匹配1", "清除记录")
+        data = arrayOf("初始化发音", "发音人切换调用", "串口通信1", "数据库插入", "数据库查询", "数据库删除", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（路由转发跳转）", "APP重启", "ROOT权限检测", "执行Shell1", "修改为系统APP1", "正则匹配1", "清除记录")
         init()
     }
 
-    private fun appRestart() {
-        for (activity in APP!!.getActivity()!!) {
-            activity.finish()
-        }
-        Handler().postDelayed({
-            val intent = packageManager.getLaunchIntentForPackage(packageName)
-            startActivity(intent)
-        }, 500)
-    }
 
     private fun init() {
         filePath = this.filesDir.path + "SAK_Record.txt"
@@ -87,7 +77,6 @@ class MainActivity : Activity() {
                     data!!.indexOf("初始化发音") -> TTS!!.setParams().speak("初始化发音调用")
                     data!!.indexOf("发音人切换调用") -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
                     data!!.indexOf("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
-                    data!!.indexOf("APP重启0") -> Hint("APP重启0:${appRestart()}")
 
                     data!!.indexOf("串口通信1") -> Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, MSG).MSG())
                     data!!.indexOf("数据库插入") -> Hint("数据库插入：${eOperationDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
