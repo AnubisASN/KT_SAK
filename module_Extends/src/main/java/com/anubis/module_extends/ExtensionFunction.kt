@@ -213,7 +213,7 @@ object eJson {
 }
 
 //音频播放
-fun ePlayVoice(context: Context,music: Int, isLoop: Boolean = false) {
+fun ePlayVoice(context: Context, music: Int, isLoop: Boolean = false) {
     try {
         val mp = MediaPlayer.create(context, music)//重新设置要播放的音频
         mp.isLooping = isLoop
@@ -231,6 +231,7 @@ fun ePlayVoice(context: Context,music: Int, isLoop: Boolean = false) {
 object eApp {
     //开机自启
     var isSetAutoBoot = true
+
     fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, className: Any? = null) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             eLog("开机启动", "SAK")
@@ -274,7 +275,13 @@ object eApp {
 
 
     //APP重启
-    fun eAppRestart(activity: Activity) {
+    fun eAppRestart(activity: Activity,activityList: ArrayList<Activity>?=null) {
+        if (activityList!=null){
+            for (av in activityList){
+                av.finish()
+            }
+        }
+        activity.finish()
         val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(activity.application.packageName)
         LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         activity.startActivity(LaunchIntent)
@@ -955,13 +962,15 @@ object eShell {
 /**
  * 反射机制动态加载扩展---------------------------------------------------------------------------------
  */
-object  eReflection{
+object eReflection {
     ////获取 加载类
-fun eGetClass(packageName: String) = Class.forName(packageName)
+    fun eGetClass(packageName: String) = Class.forName(packageName)
+
     ////获取 实例化类
-fun eGetClassInstance(cls:Class<Any>)=cls.newInstance()
+    fun eGetClassInstance(cls: Class<Any>) = cls.newInstance()
+
     ////调用方法
-fun eInvokeMethod(cls: Class<Any>, methodName: String) = {
+    fun eInvokeMethod(cls: Class<Any>, methodName: String) = {
         cls.getDeclaredMethod(methodName, String::class.java)
     }
 }

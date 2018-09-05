@@ -81,9 +81,10 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     private var isReturmFaceBitmap = false
     private var color: Int = Color.GREEN
     private var stroke: Int = 2
-    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, color: Int = Color.GREEN, stroke: Int = 2, isReturmFaceBitmap: Boolean = false, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
+    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView,CameraState:Boolean=true, color: Int = Color.GREEN, stroke: Int = 2, isReturmFaceBitmap: Boolean = false, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
         mGLSurfaceView = GLSurfaceView
         mSurfaceView = SurfaceView
+        mIsState=CameraState
         this.color = color
         this.stroke = stroke
         this.isReturmFaceBitmap = isReturmFaceBitmap
@@ -215,5 +216,17 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
         mGLSurfaceView!!.gleS2Render.setViewAngle(mCameraMirror, mCameraRotate)
     }
 
+    fun restartCamera(){
+        mCamera?.startPreview()
+    }
+
+    fun closeCamera() {
+        if (null != mCamera) {
+            mCamera!!.setPreviewCallback(null)
+            mCamera!!.stopPreview()
+            mCamera!!.release()
+            mCamera = null
+        }
+    }
 
 }
