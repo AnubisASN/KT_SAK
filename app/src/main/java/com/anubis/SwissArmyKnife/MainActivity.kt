@@ -54,7 +54,7 @@ class MainActivity : Activity() {
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
         getInfo()
-        data = arrayOf("初始化发音", "发音人切换调用", "串口通信1", "数据库插入", "数据库查询", "数据库删除", "动态加载", "AecFaceFT人脸跟踪模块（Intent跳转）", "AecFaceFT人脸跟踪模块（路由转发跳转）", "APP重启", "ROOT权限检测", "执行Shell1", "修改为系统APP1", "正则匹配1", "清除记录")
+        data = arrayOf("初始化发音", "发音人切换调用", "串口通信1", "数据库插入", "数据库查询", "数据库删除", "动态加载", "AecFaceFT人脸跟踪模块（路由转发跳转）", "","APP重启", "ROOT权限检测", "执行Shell1", "修改为系统APP1", "正则匹配1", "清除记录")
         init()
     }
 
@@ -86,7 +86,6 @@ class MainActivity : Activity() {
                         Hint("数据库删除：${eOperationDao(this@MainActivity).deleteAll(Data("", ""))}")
 
                     data!!.indexOf("动态加载") -> reflection("com.anubis.SwissArmyKnife.MainActivity")
-                    data!!.indexOf("AecFaceFT人脸跟踪模块（Intent跳转）") -> startActivity(Intent(this@MainActivity, Face::class.java))
                     data!!.indexOf("AecFaceFT人脸跟踪模块（路由转发跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
                     data!!.indexOf("ROOT权限检测") -> Hint("ROOT权限检测:${eShell.eHaveRoot()}")
                     data!!.indexOf("执行Shell1") -> if (MSG.isNotEmpty()) {
@@ -184,34 +183,9 @@ class MainActivity : Activity() {
 
     }
 
-    fun getInfo() {
-        eLog("packageName:$packageName---CPU:${Build.CPU_ABI}")
-
-    }
 
 
-    fun Context.esExistMainActivity(activity: Class<*>): Boolean {
-        val intent = Intent(this, activity)
-        val cmpName = intent.resolveActivity(packageManager)
-        var flag = false
-        if (cmpName != null) { // 说明系统中存在这个activity
-            val am: ActivityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val taskInfoList = am.getRunningTasks(30) //获取从栈顶开始往下查找的10个activity
-            for (taskInfo in taskInfoList) {
-                eLog("$taskInfo---" + cmpName)
-                if (taskInfo.baseActivity == cmpName) { // 说明它已经启动了
-                    flag = true
-                    break //跳出循环，优化效率
-                }
-            }
-        }
-        return flag
-    }
 
-    fun startDetector() {
-        val it = Intent(this, eArcFaceFTActivity::class.java)
-        ActivityCompat.startActivityForResult(this, it, 3, null)
-    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         ePermissions.eSetOnRequestPermissionsResult(this, requestCode, permissions, grantResults)
@@ -229,9 +203,6 @@ class MainActivity : Activity() {
         method.invoke(clsInstance, this@MainActivity, "类动态加载")
     }
 
-    private fun ShowTip(mActivity: Activity, msg: String) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_LONG).show()
-    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         Hint("keyCode:$keyCode")

@@ -275,13 +275,14 @@ object eApp {
 
 
     //APP重启
-    fun eAppRestart(activity: Activity,activityList: ArrayList<Activity>?=null) {
-        if (activityList!=null){
-            for (av in activityList){
+    fun eAppRestart(activity: Activity, activityList: ArrayList<Activity>? = null) {
+        if (activityList != null) {
+            for (av in activityList) {
                 av.finish()
             }
+        } else {
+            activity.finish()
         }
-        activity.finish()
         val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(activity.application.packageName)
         LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         activity.startActivity(LaunchIntent)

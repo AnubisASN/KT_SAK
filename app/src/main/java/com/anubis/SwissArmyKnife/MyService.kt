@@ -21,7 +21,7 @@ class MyService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.i("TAG", "DaemonThread: 守护线程启动")
+        Log.i("TAG", "MyService: 守护线程启动")
         mRunnable = Runnable {
             try {
             val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager

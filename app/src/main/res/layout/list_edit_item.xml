@@ -16,14 +16,32 @@
         android:id="@+id/ed_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="0.55"/>
-
-    <Button
-        android:id="@+id/bt_item"
+        android:layout_margin="2dp"
+        android:layout_weight="0.35"/>
+    <Spinner
+        android:id="@+id/sp_item1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="0.45"/>
+        android:layout_margin="2dp"
+        android:layout_weight="0.2"
+        />
+    <Button
+        android:id="@+id/bt_item1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:layout_weight="0.15"/>
+    <Button
+        android:id="@+id/bt_item2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:layout_weight="0.15"/>
+    <Button
+        android:id="@+id/bt_item3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:layout_weight="0.15"/>
 
 </LinearLayout>
