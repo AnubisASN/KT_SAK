@@ -275,24 +275,35 @@ object eApp {
 
 
     //APP重启
-    fun eAppRestart(activity: Activity, activityList: ArrayList<Activity>? = null) {
-        if (activityList != null) {
-            for (av in activityList) {
-                av.finish()
+    fun eAppRestart(activity: Activity, activityList: ArrayList<Activity>? = null):Boolean {
+        try {
+            if (activityList != null) {
+                for (av in activityList) {
+                    av.finish()
+                }
+            } else {
+                activity.finish()
             }
-        } else {
-            activity.finish()
+            val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(activity.application.packageName)
+            LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            activity.startActivity(LaunchIntent)
+            return true
+        } catch (e: Exception) {
+            return false
         }
-        val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(activity.application.packageName)
-        LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        activity.startActivity(LaunchIntent)
+
     }
 
     //    APP包名启动
-    fun eAppStart(activity: Activity, packageName: String? = null) {
-        val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(packageName ?: activity.packageName)
-        LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        activity.startActivity(LaunchIntent)
+    fun eAppStart(activity: Activity, packageName: String? = null):Boolean {
+        try {
+            val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(packageName ?: activity.packageName)
+            LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            activity.startActivity(LaunchIntent)
+            return true
+        } catch (e: Exception) {
+            return false
+        }
     }
 
     //App运行判断
