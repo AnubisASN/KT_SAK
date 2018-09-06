@@ -11,11 +11,14 @@ import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils.split
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsSpinner
 import android.widget.ScrollView
+import android.widget.Spinner
 import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.SwissArmyKnife.GreenDao.Data
@@ -43,7 +46,7 @@ class MainActivity : Activity() {
     private var TTS: eTTS? = null
     private var filePath = ""
     private var file: File? = null
-    private var data: Array<String>? = null
+    private var datas: Array<String>? = null
     private var Time: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,11 +56,19 @@ class MainActivity : Activity() {
         APP = app().get()
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
-        getInfo()
-        data = arrayOf("初始化发音", "发音人切换调用", "串口通信1", "数据库插入", "数据库查询", "数据库删除", "动态加载", "AecFaceFT人脸跟踪模块（路由转发跳转）", "","APP重启", "ROOT权限检测", "执行Shell1", "修改为系统APP1", "正则匹配1", "清除记录")
+        datas = arrayOf("bt初始化发音_bt发音人切换调用", "et_bt串口通信", "bt数据库插入_bt数据库查询_bt数据库删除", "bt动态加载", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "btAPP重启", "et__btROOT权限检测_bt执行Shell_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
+    private fun getDigit(str: String): Int {
+        var Digit = 0
+        for (data in datas!!) {
+            if (data.indexOf(str) != -1) {
+                Digit = datas!!.indexOf(data)
+            }
+        }
+        return Digit
+    }
 
     private fun init() {
         filePath = this.filesDir.path + "SAK_Record.txt"
@@ -72,54 +83,60 @@ class MainActivity : Activity() {
         }
         rvList.layoutManager = LinearLayoutManager(this)
         val callback = object : ICallBack {
-            override fun CallResult(view: View, itmeID: Int, MSG: String) {
+            override fun CallResult(view: View, itmeID: Int, MSG: String, spinner: Spinner) {
                 when (itmeID) {
-                    data!!.indexOf("初始化发音") -> TTS!!.setParams().speak("初始化发音调用")
-                    data!!.indexOf("发音人切换调用") -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
-                    data!!.indexOf("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
-
-                    data!!.indexOf("串口通信1") -> Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, MSG).MSG())
-                    data!!.indexOf("数据库插入") -> Hint("数据库插入：${eOperationDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
-                    data!!.indexOf("数据库查询") -> Hint("数据库查询:" + eOperationDao(this@MainActivity).queryAllUser(Data()).size)
-                    data!!.indexOf("数据库删除") ->
-//                        Hint("数据库操作测试:${OperationDao(this@MainActivity).insertUser(Data("00000","11111")::class.java)}")
-                        Hint("数据库删除：${eOperationDao(this@MainActivity).deleteAll(Data("", ""))}")
-
-                    data!!.indexOf("动态加载") -> reflection("com.anubis.SwissArmyKnife.MainActivity")
-                    data!!.indexOf("AecFaceFT人脸跟踪模块（路由转发跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
-                    data!!.indexOf("ROOT权限检测") -> Hint("ROOT权限检测:${eShell.eHaveRoot()}")
-                    data!!.indexOf("执行Shell1") -> if (MSG.isNotEmpty()) {
-                        Hint("执行Shell:\n" + eExecShell(MSG))
+                    getDigit("初始化发音") -> when (view.id) {
+                        R.id.bt_item1 -> TTS!!.setParams().speak("初始化发音调用")
+                        R.id.bt_item2 -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
                     }
-                    data!!.indexOf("修改为系统APP1") -> {
-                        if (MSG.isNotEmpty()) {
-                            val shell = "cp -r /data/app/$MSG* /system/priv*"
-                            Hint("自定义修改为系统APP:" + eExecShell(shell))
-                            Hint("执行Shell:$shell")
-                        } else {
-                            var shell = " cp -r /data/app/$packageName* /system/priv*"
-                            Hint("修改为系统APP:" + eExecShell(shell))
-                            Hint("执行Shell:$shell")
-                            if (File("/data/app-lib/$packageName-1").exists()) {
-                                shell = "mv /data/app-lib/$packageName*/ /system/lib/"
-                                Hint("文件夹存在，修改lib数据:" + eExecShell(shell))
+                    getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
+
+                    getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, MSG).MSG())
+                    getDigit("数据库") -> when (view.id) {
+                        R.id.bt_item1 -> Hint("数据库插入：${eOperationDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
+                        R.id.bt_item2 -> Hint("数据库查询:" + eOperationDao(this@MainActivity).queryAllUser(Data()).size)
+                        R.id.bt_item3 -> Hint("数据库删除：${eOperationDao(this@MainActivity).deleteAll(Data("", ""))}")
+
+                    }
+
+                    getDigit("动态加载") -> reflection("com.anubis.SwissArmyKnife.MainActivity")
+                    getDigit("AecFaceFT人脸跟踪模块（路由转发跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
+                    getDigit("执行Shell") -> when (view.id) {
+                        R.id.bt_item1 -> Hint("ROOT权限检测:${eShell.eHaveRoot()}")
+                        R.id.bt_item2 -> Hint("Shell执行：${eShell.eExecShell(MSG)}")
+                        R.id.bt_item3 ->{
+                            if (MSG.isNotEmpty()) {
+                                val shell = "cp -r /datas/app/$MSG* /system/priv*"
+                                Hint("自定义修改为系统APP:" + eExecShell(shell))
                                 Hint("执行Shell:$shell")
+                            } else {
+                                var shell = " cp -r /datas/app/$packageName* /system/priv*"
+                                Hint("修改为系统APP:" + eExecShell(shell))
+                                Hint("执行Shell:$shell")
+                                if (File("/datas/app-lib/$packageName-1").exists()) {
+                                    shell = "mv /datas/app-lib/$packageName*/ /system/lib/"
+                                    Hint("文件夹存在，修改lib数据:" + eExecShell(shell))
+                                    Hint("执行Shell:$shell")
+                                }
                             }
+                            Handler().postDelayed({
+                                val shell = "chmod -R 755   /system/priv*/$MSG*"
+                                Hint("修改文件权限:" + eExecShell(shell))
+                                Hint("执行Shell:$shell")
+                            }, 2000)
+                            Handler().postDelayed({
+                                val shell = " rm -rf /datas/app/$MSG*"
+                                Hint("删除数据遗留:" + eExecShell(shell))
+                                Hint("执行Shell:$shell")
+                                eShowTip("请重启设备")
+                            }, 3500)
+
+
+
                         }
-                        Handler().postDelayed({
-                            val shell = "chmod -R 755   /system/priv*/$MSG*"
-                            Hint("修改文件权限:" + eExecShell(shell))
-                            Hint("执行Shell:$shell")
-                        }, 2000)
-                        Handler().postDelayed({
-                            val shell = " rm -rf /data/app/$MSG*"
-                            Hint("删除数据遗留:" + eExecShell(shell))
-                            Hint("执行Shell:$shell")
-                            eShowTip("请重启设备")
-                        }, 3500)
                     }
-                    data!!.indexOf("正则匹配1") -> Hint("正则匹配：/data/app/$packageName$MSG")
-                    data!!.indexOf("清除记录") -> {
+                    getDigit("正则匹配") -> Hint("正则匹配：/datas/app/$packageName$MSG")
+                    getDigit("清除记录") -> {
                         if (System.currentTimeMillis() - Time > 1000) {
                             Time = System.currentTimeMillis()
                         } else {
@@ -131,7 +148,7 @@ class MainActivity : Activity() {
                 }
             }
         }
-        val myAdapter = MyAdapter(this, data!!, callback)
+        val myAdapter = MyAdapter(this, datas!!, callback)
         rvList.adapter = myAdapter
         eExecShell("mount -o remount,rw rootfs /system/ ")
     }
@@ -154,37 +171,72 @@ class MainActivity : Activity() {
             return mDatas.size
         }
 
+        //方法执行
         override fun onBindViewHolder(holder: MyHolder, position: Int) {
             mPosition = position
             holder.setData(mDatas[position])
-            holder.itemView.bt_item.setOnClickListener {
+            holder.itemView.bt_item1.setOnClickListener {
                 var editContext = ""
-                if (it.tag == "1") {
-                    editContext = holder.itemView.ed_item.text.toString()
-                }
-                mCallbacks.CallResult(it, position, editContext)
+                editContext = holder.itemView.et_item1.text.toString()
+                mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
+            }
+            holder.itemView.bt_item2.setOnClickListener {
+                var editContext = ""
+                editContext = holder.itemView.et_item1.text.toString()
+                mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
+            }
+            holder.itemView.bt_item1.setOnClickListener {
+                var editContext = ""
+                editContext = holder.itemView.et_item1.text.toString()
+                mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
             }
 
         }
 
-
+        //界面设置 ed_    sp_  bt_x3
         inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            fun setData(data: String) {
-                itemView.ed_item.visibility = View.GONE
-                if (data.last().toString() == "1") {
-                    itemView.ed_item.visibility = View.VISIBLE
-                    itemView.bt_item.tag = "1"
-                }
-                itemView.bt_item.text = data
+            fun setData(datas: String) {
+                try {
+                    val datas = datas.split("_")
+                    var btList = ArrayList<String>()
+                    for (str in datas) {
+                        eLog("split:$str")
+                        when (str.substring(0, 2)) {
+                            "et" -> itemView.et_item1.visibility = View.VISIBLE
+                            "sp" -> itemView.sp_item1.visibility = View.VISIBLE
+                            "bt" -> btList.add(str)
+                        }
+                    }
+                    //启动并设置button
+                    btList = btList.reversed() as ArrayList<String>
+                    for (str in btList) {
+                        when (btList.indexOf(str)) {
+                            0 -> {
+                                itemView.bt_item1.visibility = View.VISIBLE
+                                itemView.bt_item1.text = eString.eGetNumberPeriod(str,2,"MAX")
+                            }
+                            1 -> {
+                                itemView.bt_item2.visibility = View.VISIBLE
+                                itemView.bt_item2.text = eString.eGetNumberPeriod(str,2,"MAX")
+                            }
+                            2 -> {
+                                itemView.bt_item3.visibility = View.VISIBLE
+                                itemView.bt_item3.text = eString.eGetNumberPeriod(str,2,"MAX")
+                            }
+                        }
 
+                    }
+                } catch (e: Exception) {
+                    if (datas.substring(0, 2) == "bt") {
+                        itemView.bt_item1.visibility = View.VISIBLE
+                        itemView.bt_item1.text =eString.eGetNumberPeriod(datas,2,"MAX")
+                    }
+                }
             }
         }
 
 
     }
-
-
-
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -218,7 +270,7 @@ class MainActivity : Activity() {
     }
 
     interface ICallBack {
-        fun CallResult(view: View, numID: Int, MSG: String)
+        fun CallResult(view: View, numID: Int, MSG: String, spinner: Spinner)
     }
-
 }
+

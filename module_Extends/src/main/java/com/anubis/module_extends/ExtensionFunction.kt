@@ -288,6 +288,12 @@ object eApp {
         activity.startActivity(LaunchIntent)
     }
 
+    //    APP包名启动
+    fun eAppStart(activity: Activity, packageName: String? = null) {
+        val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(packageName ?: activity.packageName)
+        LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        activity.startActivity(LaunchIntent)
+    }
 
     //App运行判断
     fun eIsAppRunning(context: Context, packageName: String): Boolean {
