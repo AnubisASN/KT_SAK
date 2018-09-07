@@ -56,7 +56,7 @@ class MainActivity : Activity() {
         APP = app().get()
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
-        datas = arrayOf("bt初始化发音_bt发音人切换调用", "et_bt串口通信", "bt数据库插入_bt数据库查询_bt数据库删除", "bt动态加载", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "btAPP重启", "et__btROOT权限检测_bt执行Shell_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("bt初始化发音_bt发音人切换调用", "et_bt串口通信", "bt数据库插入_bt数据库查询_bt数据库删除", "bt动态加载", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
@@ -101,7 +101,7 @@ class MainActivity : Activity() {
 
                     getDigit("动态加载") -> reflection("com.anubis.SwissArmyKnife.MainActivity")
                     getDigit("AecFaceFT人脸跟踪模块（路由转发跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
-                    getDigit("执行Shell") -> when (view.id) {
+                    getDigit("Shell执行") -> when (view.id) {
                         R.id.bt_item1 -> Hint("ROOT权限检测:${eShell.eHaveRoot()}")
                         R.id.bt_item2 -> Hint("Shell执行：${eShell.eExecShell(MSG)}")
                         R.id.bt_item3 ->{
@@ -197,7 +197,8 @@ class MainActivity : Activity() {
         inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             fun setData(datas: String) {
                 try {
-                    val datas = datas.split("_")
+                    var datas = datas.split("_")
+//                    datas=datas.reversed()
                     var btList = ArrayList<String>()
                     for (str in datas) {
                         eLog("split:$str")
@@ -208,7 +209,6 @@ class MainActivity : Activity() {
                         }
                     }
                     //启动并设置button
-                    btList = btList.reversed() as ArrayList<String>
                     for (str in btList) {
                         when (btList.indexOf(str)) {
                             0 -> {
