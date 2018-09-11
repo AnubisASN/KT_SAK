@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/module_Office" />
             <option value="$PROJECT_DIR$/module_PortMSG" />
             <option value="$PROJECT_DIR$/module_TTS" />
+            <option value="$PROJECT_DIR$/module_WiFi" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

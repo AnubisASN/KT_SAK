@@ -5,9 +5,11 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -29,6 +31,7 @@ import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
 import com.anubis.kt_extends.eTime.eGetCurrentTime
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
+import com.anubis.module_ewifi.eWifi
 import com.anubis.module_greendao.eOperationDao
 import com.anubis.module_portMSG.ePortMessage
 import com.anubis.module_tts.Bean.TTSMode
@@ -56,7 +59,7 @@ class MainActivity : Activity() {
         APP = app().get()
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
-        datas = arrayOf("bt初始化发音_bt发音人切换调用", "et_bt串口通信", "bt数据库插入_bt数据库查询_bt数据库删除", "bt动态加载", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("bt初始化发音_bt发音人切换调用", "et_bt串口通信", "bt数据库插入_bt数据库查询_bt数据库删除", "bt动态加载", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
@@ -96,15 +99,31 @@ class MainActivity : Activity() {
                         R.id.bt_item1 -> Hint("数据库插入：${eOperationDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
                         R.id.bt_item2 -> Hint("数据库查询:" + eOperationDao(this@MainActivity).queryAllUser(Data()).size)
                         R.id.bt_item3 -> Hint("数据库删除：${eOperationDao(this@MainActivity).deleteAll(Data("", ""))}")
-
                     }
-
+                    getDigit("系统设置权限检测") -> when (view.id) {
+                        R.id.bt_item1 -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                           Hint("系统设置权限检测：${ePermissions.eSetSystemPermissions(this@MainActivity)}")
+                        } else {
+                            Hint("安卓版本低于6.0--${Build.VERSION.SDK_INT}")
+                        }
+                        R.id.bt_item2 -> {
+                            Hint("搜索WIFI:")
+                            for (wifi in eWifi.eGetScanWifi(this@MainActivity)!!) {
+                                Hint("SSID:${wifi.SSID}")
+                            }
+                        }
+                    }
+                    getDigit("热点") -> when (view.id) {
+                        R.id.bt_item1 -> Hint("创建WIFI热点0:${eWifi.eCreateWifiHotspot(this@MainActivity)}")
+                        R.id.bt_item2 -> Hint("创建WIFI热点:${eWifi.eCreateWifiHotspot(this@MainActivity)}")
+                        R.id.bt_item3 -> Hint("关闭WIFI热点：${eWifi.eCloseWifiHotspot(this@MainActivity)}")
+                    }
                     getDigit("动态加载") -> reflection("com.anubis.SwissArmyKnife.MainActivity")
                     getDigit("AecFaceFT人脸跟踪模块（路由转发跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
                     getDigit("Shell执行") -> when (view.id) {
                         R.id.bt_item1 -> Hint("ROOT权限检测:${eShell.eHaveRoot()}")
                         R.id.bt_item2 -> Hint("Shell执行：${eShell.eExecShell(MSG)}")
-                        R.id.bt_item3 ->{
+                        R.id.bt_item3 -> {
                             if (MSG.isNotEmpty()) {
                                 val shell = "cp -r /datas/app/$MSG* /system/priv*"
                                 Hint("自定义修改为系统APP:" + eExecShell(shell))
@@ -130,7 +149,6 @@ class MainActivity : Activity() {
                                 Hint("执行Shell:$shell")
                                 eShowTip("请重启设备")
                             }, 3500)
-
 
 
                         }
@@ -185,7 +203,7 @@ class MainActivity : Activity() {
                 editContext = holder.itemView.et_item1.text.toString()
                 mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
             }
-            holder.itemView.bt_item1.setOnClickListener {
+            holder.itemView.bt_item3.setOnClickListener {
                 var editContext = ""
                 editContext = holder.itemView.et_item1.text.toString()
                 mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
@@ -213,15 +231,15 @@ class MainActivity : Activity() {
                         when (btList.indexOf(str)) {
                             0 -> {
                                 itemView.bt_item1.visibility = View.VISIBLE
-                                itemView.bt_item1.text = eString.eGetNumberPeriod(str,2,"MAX")
+                                itemView.bt_item1.text = eString.eGetNumberPeriod(str, 2, "MAX")
                             }
                             1 -> {
                                 itemView.bt_item2.visibility = View.VISIBLE
-                                itemView.bt_item2.text = eString.eGetNumberPeriod(str,2,"MAX")
+                                itemView.bt_item2.text = eString.eGetNumberPeriod(str, 2, "MAX")
                             }
                             2 -> {
                                 itemView.bt_item3.visibility = View.VISIBLE
-                                itemView.bt_item3.text = eString.eGetNumberPeriod(str,2,"MAX")
+                                itemView.bt_item3.text = eString.eGetNumberPeriod(str, 2, "MAX")
                             }
                         }
 
@@ -229,7 +247,7 @@ class MainActivity : Activity() {
                 } catch (e: Exception) {
                     if (datas.substring(0, 2) == "bt") {
                         itemView.bt_item1.visibility = View.VISIBLE
-                        itemView.bt_item1.text =eString.eGetNumberPeriod(datas,2,"MAX")
+                        itemView.bt_item1.text = eString.eGetNumberPeriod(datas, 2, "MAX")
                     }
                 }
             }

@@ -14,11 +14,16 @@ import android.hardware.Camera
 import android.media.MediaPlayer
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.net.Uri
+import android.net.wifi.WifiConfiguration
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.preference.*
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.startActivity
 import android.text.TextUtils.indexOf
 import android.util.Base64
 import android.util.Log
@@ -27,11 +32,14 @@ import android.widget.Toast
 import com.lzy.imagepicker.ImagePicker
 import com.lzy.imagepicker.loader.ImageLoader
 import com.lzy.imagepicker.view.CropImageView
+import com.tencent.bugly.Bugly.enable
 import com.tencent.bugly.proguard.p
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.startActivity
 import org.json.JSONObject
 import java.io.*
+import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.Method
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -230,25 +238,14 @@ fun ePlayVoice(context: Context, music: Int, isLoop: Boolean = false) {
  */
 object eApp {
     //开机自启
-    var isSetAutoBoot = true
-
-    fun eSetAutoBoot(myApplication: Application, context: Context, intent: Intent, className: Any? = null) {
+    var isSetAutoBoot: Boolean = true
+    fun eSetAutoBoot(context: Context, intent: Intent, className: Class<*>) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            eLog("开机启动", "SAK")
-            val pm = myApplication.packageManager
-            if (className != null && isSetAutoBoot) {
-                isSetAutoBoot = false
-                val packName = intent.resolveActivityInfo(pm, 0).toString()
-                eLog("packName:$packName")
-                val cls = when (className) {
-                    is String -> Class.forName(className)
-                    is Class<*> -> className
-                    else -> Class.forName(packName)
-                }
-                val startServiceIntent = Intent(context, cls::class.java)
-                startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                context.startActivity(startServiceIntent)
-            }
+            eLog("开机启动","SAK")
+            isSetAutoBoot=false
+            val startServiceIntent = Intent(context,className)
+            startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(startServiceIntent)
         }
     }
 
@@ -275,7 +272,7 @@ object eApp {
 
 
     //APP重启
-    fun eAppRestart(activity: Activity, activityList: ArrayList<Activity>? = null):Boolean {
+    fun eAppRestart(activity: Activity, activityList: ArrayList<Activity>? = null): Boolean {
         try {
             if (activityList != null) {
                 for (av in activityList) {
@@ -295,9 +292,10 @@ object eApp {
     }
 
     //    APP包名启动
-    fun eAppStart(activity: Activity, packageName: String? = null):Boolean {
+    fun eAppStart(activity: Activity, packageName: String? = null): Boolean {
         try {
-            val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(packageName ?: activity.packageName)
+            val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(packageName
+                    ?: activity.packageName)
             LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             activity.startActivity(LaunchIntent)
             return true
@@ -855,6 +853,24 @@ object eString {
  * 运行权限扩展类--------------------------------------------------------------------------------------
  */
 object ePermissions {
+    //系统设置修改权限
+    fun eSetSystemPermissions(context: Context): Boolean {
+        var str=false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.System.canWrite(context)) {
+                val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
+                intent.data = Uri.parse("package:${context.packageName}")
+                context.startActivity(intent)
+            } else {
+                 str=Settings.System.canWrite(context)
+            }
+        }else{
+            str=true
+        }
+        return str
+    }
+
+
     //授权判断
     fun eSetPermissions(activity: Activity, permissionsArray: Array<out String>, requestCode: Int = 1): Boolean {
         val permissionsList = ArrayList<String>()

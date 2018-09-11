@@ -53,6 +53,7 @@ dependencies {
     implementation project(':module_PortMSG')
     implementation project(':module_Office')
     implementation project(':module_GreenDao')
+    implementation project(':module_WiFi')
 }
 repositories {
     mavenCentral()
