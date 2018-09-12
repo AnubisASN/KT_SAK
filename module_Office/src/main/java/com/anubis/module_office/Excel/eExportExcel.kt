@@ -47,14 +47,20 @@ class eExportExcel(val mContext: Context, val mTitle: Array<String>, val mDatas:
      * 导出excel
      * @param view
      */
-   private fun exportExcel() {
+    private fun exportExcel() {
         file = File("$sdPath/$pathName")
         makeDir(file!!)
         eLog("文件路径：" + file)
         ExcelUtils.initExcel(file!!.toString() + "/$fileName.xls", mTitle, sheetName)
         eLog("初始化成功")
-        ExcelUtils.writeObjListToExcel(recordData, "$sdPath/$pathName/$fileName.xls", mContext)
-        eLog("导出成功")
+        try {
+            ExcelUtils.writeObjListToExcel(recordData, "$sdPath/$pathName/$fileName.xls", mContext)
+            eLog("导出成功")
+        } catch (e: Exception) {
+            eLogE("数据读取错误$e \n @MethodName：getData ; @Return：Array<String> ")
+            mContext.eShowTip("数据读取错误，请在实体类中添加getData方法，详情请看Log")
+        }
+
     }
 
 
@@ -62,7 +68,7 @@ class eExportExcel(val mContext: Context, val mTitle: Array<String>, val mDatas:
      * 将数据集合 转化成ArrayList<ArrayList></ArrayList><String>>
      * @return
     </String> */
-    private val recordData: ArrayList<ArrayList<String>>
+    private val recordData: ArrayList<ArrayList<String>>?
         get() {
 //            val clazz = Class.forName("com.anubis.module_office.dataTest")
             for (i in mDatas.indices) {
@@ -71,13 +77,7 @@ class eExportExcel(val mContext: Context, val mTitle: Array<String>, val mDatas:
                 val beanList = ArrayList<String>()
                 for (j in mTitle.indices) {
                     // val method  = clazz.getDeclaredMethod("getData", Array<String>::class.java)
-                    var method: Method? = null
-                    try {
-                        method = clazz.getMethod("getData")
-                    } catch (e: Exception) {
-                        eLogE("数据读取错误$e \n @MethodName：getData ; @Return：Array<String> ")
-                        mContext.eShowTip("数据读取错误，请在实体类中添加getData方法，详情请看Log")
-                    }
+                    val method = clazz.getMethod("getData")
                     val data = method?.invoke(datas) as Array<String>
                     beanList.add(data[j])
                 }

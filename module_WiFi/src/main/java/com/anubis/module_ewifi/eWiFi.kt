@@ -43,7 +43,7 @@ import android.util.Log
 /**
  * 创建Wifi热点-------------------------------------------------------------------------------------
  */
-object eWifi {
+object eWiFi {
     private var mWifiManager: WifiManager? = null
     private var mWifiInfo: WifiInfo? = null
     //创建热点

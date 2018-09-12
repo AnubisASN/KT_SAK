@@ -21,7 +21,6 @@ import org.greenrobot.greendao.query.QueryBuilder
  * 说明：
  */
 internal class DaoManager( var context: Context,val greenDaoClassName: String,val DB_NAME:String) {
-
     private var sDaoMaster:  Any? = null
     private var sHelper: Class<*>? = null
     private var sDaoSession: Any? = null

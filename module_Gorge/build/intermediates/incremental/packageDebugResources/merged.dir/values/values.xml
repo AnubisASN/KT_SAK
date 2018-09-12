@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">module_Gorge</string>
+    <string name="error_configuration">打开串口失败:参数错误!</string>
+    <string name="error_security">打开串口失败:没有串口读/写权限!</string>
+    <string name="error_unknown">打开串口失败:未知错误!</string>
+</resources>

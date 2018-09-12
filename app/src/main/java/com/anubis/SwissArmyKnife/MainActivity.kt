@@ -31,7 +31,7 @@ import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
 import com.anubis.kt_extends.eTime.eGetCurrentTime
 import com.anubis.module_arcfaceft.eArcFaceFTActivity
-import com.anubis.module_ewifi.eWifi
+import com.anubis.module_ewifi.eWiFi
 import com.anubis.module_greendao.eOperationDao
 import com.anubis.module_portMSG.ePortMessage
 import com.anubis.module_tts.Bean.TTSMode
@@ -108,15 +108,15 @@ class MainActivity : Activity() {
                         }
                         R.id.bt_item2 -> {
                             Hint("搜索WIFI:")
-                            for (wifi in eWifi.eGetScanWifi(this@MainActivity)!!) {
+                            for (wifi in eWiFi.eGetScanWifi(this@MainActivity)!!) {
                                 Hint("SSID:${wifi.SSID}")
                             }
                         }
                     }
                     getDigit("热点") -> when (view.id) {
-                        R.id.bt_item1 -> Hint("创建WIFI热点0:${eWifi.eCreateWifiHotspot(this@MainActivity)}")
-                        R.id.bt_item2 -> Hint("创建WIFI热点:${eWifi.eCreateWifiHotspot(this@MainActivity)}")
-                        R.id.bt_item3 -> Hint("关闭WIFI热点：${eWifi.eCloseWifiHotspot(this@MainActivity)}")
+                        R.id.bt_item1 -> Hint("创建WIFI热点0:${eWiFi.eCreateWifiHotspot(this@MainActivity)}")
+                        R.id.bt_item2 -> Hint("创建WIFI热点:${eWiFi.eCreateWifiHotspot(this@MainActivity)}")
+                        R.id.bt_item3 -> Hint("关闭WIFI热点：${eWiFi.eCloseWifiHotspot(this@MainActivity)}")
                     }
                     getDigit("动态加载") -> reflection("com.anubis.SwissArmyKnife.MainActivity")
                     getDigit("AecFaceFT人脸跟踪模块（路由转发跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
