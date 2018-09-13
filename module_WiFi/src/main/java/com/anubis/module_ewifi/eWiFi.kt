@@ -73,7 +73,7 @@ object eWiFi {
                 "setWifiApEnabled", WifiConfiguration::class.java, java.lang.Boolean.TYPE)
         val enable = method.invoke(mWifiManager, config, true) as Boolean
         return if (enable) {
-            "热点已开启 SSID:$SSID \nPassword:$PSW"
+            "热点已开启\nSSID:$SSID \nPassword:$PSW"
         } else {
             "创建热点失败"
         }
