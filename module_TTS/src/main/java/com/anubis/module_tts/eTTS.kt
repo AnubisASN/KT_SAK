@@ -55,6 +55,7 @@ object eTTS {
     private var mActivity: Application? = null
     private var mHandler: Handler? = null
     private var TTS: Unit? = null
+    private var KEYS: Array<String>? = null
     // TtsMode.MIX; 离在线融合，在线优先； TtsMode.ONLINE 纯在线； 没有纯离线
     private var ttsMode = TtsMode.MIX
     // 离线发音选择，VOICE_FEMALE即为离线女声发音。
@@ -63,19 +64,19 @@ object eTTS {
     private var offlineVoice = OfflineResource.VOICE_DUYY
     private var synthesizer: MySyntherizer? = null
     private val params: HashMap<String, String>
-    /**
-     * 合成的参数，可以初始化时填写，也可以在合成前设置。
-     *
-     * @return
-     */
-    // 以下参数均为选填
-    // 该参数设置为TtsMode.MIX生效。即纯在线模式不生效。
-    // MIX_MODE_DEFAULT 默认 ，wifi状态下使用在线，非wifi离线。在线状态下，请求超时6s自动转离线
-    // MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI wifi状态下使用在线，非wifi离线。在线状态下， 请求超时1.2s自动转离线
-    // MIX_MODE_HIGH_SPEED_NETWORK ， 3G 4G wifi状态下使用在线，其它状态离线。在线状态下，请求超时1.2s自动转离线
-    // MIX_MODE_HIGH_SPEED_SYNTHESIZE, 2G 3G 4G wifi状态下使用在线，其它状态离线。在线状态下，请求超时1.2s自动转离线
-    // 离线资源文件， 从assets目录中复制到临时目录，需要在initTTs方法前完成
-    // 声学模型文件路径 (离线引擎使用), 请确认下面两个文件存在
+        /**
+         * 合成的参数，可以初始化时填写，也可以在合成前设置。
+         *
+         * @return
+         */
+        // 以下参数均为选填
+        // 该参数设置为TtsMode.MIX生效。即纯在线模式不生效。
+        // MIX_MODE_DEFAULT 默认 ，wifi状态下使用在线，非wifi离线。在线状态下，请求超时6s自动转离线
+        // MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI wifi状态下使用在线，非wifi离线。在线状态下， 请求超时1.2s自动转离线
+        // MIX_MODE_HIGH_SPEED_NETWORK ， 3G 4G wifi状态下使用在线，其它状态离线。在线状态下，请求超时1.2s自动转离线
+        // MIX_MODE_HIGH_SPEED_SYNTHESIZE, 2G 3G 4G wifi状态下使用在线，其它状态离线。在线状态下，请求超时1.2s自动转离线
+        // 离线资源文件， 从assets目录中复制到临时目录，需要在initTTs方法前完成
+        // 声学模型文件路径 (离线引擎使用), 请确认下面两个文件存在
         get() {
             val params = HashMap<String, String>()
             eLog("设置在线发声音人:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model"))
@@ -120,15 +121,18 @@ object eTTS {
 //        val result = synthesizer!!.loadModel(offlineResource!!.modelFilename.toString(), offlineResource!!.textFilename.toString())
 //        checkResult(result, "loadModel")
     }
-    fun initTTS(mApplication: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode =com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK): eTTS {
+
+    fun initTTS(mApplication: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK, AID_AKY_SKY: Array<String> = arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o")): eTTS {
+        KEYS = AID_AKY_SKY
         val mode = when (voiceMode) {
             VoiceModel.FEMALE -> "F"
             VoiceModel.MALE -> "M"
             VoiceModel.EMOTIONAL_MALE -> "X"
             VoiceModel.CHILDREN -> "Y"
         }
+        VoiceModel(mode)
         mApplication.eSetSystemSharedPreferences("set_tts_load_model", mode)
-        mApplication.eSetSystemSharedPreferences("set_PARAM_MIX_MODE",ParamMixMode)
+        mApplication.eSetSystemSharedPreferences("set_PARAM_MIX_MODE", ParamMixMode)
         this.mActivity = mApplication
         this.mHandler = mHandler
         this.ttsMode = if (ttsMode == TTSMode.MIX) TtsMode.MIX else TtsMode.ONLINE
@@ -148,7 +152,7 @@ object eTTS {
             VoiceModel.EMOTIONAL_MALE -> "X"
             VoiceModel.CHILDREN -> "Y"
         }
-        eTTS.VoiceModel(mode)
+        VoiceModel(mode)
         mActivity!!.eSetSystemSharedPreferences("set_tts_load_model", mode)
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
@@ -178,7 +182,7 @@ object eTTS {
         var offlineResource: OfflineResource? = null
         try {
             offlineResource = OfflineResource(mActivity!!, voiceType)
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             // IO 错误自行处理
             e.printStackTrace()
             eLog("【error】:copy files from assets failed." + e.message)
@@ -192,7 +196,7 @@ object eTTS {
      * 获取音频流的方式见SaveFileActivity及FileSaveListener
      * 需要合成的文本text的长度不能超过1024个GBK字节。
      */
-     fun speak(text: String) {
+    fun speak(text: String) {
         val result = synthesizer?.speak(text)
         if (result != null) {
             checkResult(result, "speak")
@@ -202,31 +206,35 @@ object eTTS {
     /**
      * 批量播放
      */
-     fun batchSpeak(texts: ArrayList<Pair<String, String>>) {
+    fun batchSpeak(texts: ArrayList<Pair<String, String>>) {
         val result = synthesizer!!.batchSpeak(texts)
         checkResult(result, "batchSpeak")
     }
+
     /**
      * 暂停播放。仅调用speak后生效
      */
-     fun pause() {
+    fun pause() {
         val result = synthesizer!!.pause()
         checkResult(result, "pause")
     }
+
     /**
      * 继续播放。仅调用speak后生效，调用pause生效
      */
-     fun resume() {
+    fun resume() {
         val result = synthesizer!!.resume()
         checkResult(result, "resume")
     }
+
     /**
      * 停止合成引擎。即停止播放，合成，清空内部合成队列。
      */
-     fun stop() {
+    fun stop() {
         val result = synthesizer!!.stop()
         checkResult(result, "stop")
     }
+
     // ================== ============= ==========================
     //检查回调方法
     private fun checkResult(result: Int, method: String) {
@@ -234,6 +242,7 @@ object eTTS {
             eLog("error code :$result method:$method, 错误码文档:http://yuyin.baidu.com/docs/tts/122 ")
         }
     }
+
     fun ttsDestroy() {
         synthesizer?.release()
         TTS = null

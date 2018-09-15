@@ -175,8 +175,8 @@ open class MySyntherizer protected constructor(protected var context: Context, p
     }
 
     open fun release() {
-        mSpeechSynthesizer!!.stop()
-        mSpeechSynthesizer!!.release()
+        mSpeechSynthesizer?.stop()
+        mSpeechSynthesizer?.release()
         mSpeechSynthesizer = null
         isInitied = false
     }

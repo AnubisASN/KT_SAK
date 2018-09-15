@@ -136,8 +136,6 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
         if (mFaceResult.size == 0) {
             mImageNV21 = null
         }
-        Log.d(TAG, "AFT_FSDK_FaceFeatureDetect =" + err.code)
-        Log.d(TAG, "Face=" + mFaceResult.size)
         mFaceNum = mFaceResult.size
         if (mFaceNum != 0 && mImageNV21 != null && mIsState) {
             mIsState=false

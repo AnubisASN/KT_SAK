@@ -58,8 +58,8 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA))
         APP = app().get()
         app().get()?.getActivity()!!.add(this)
-        TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.ONLINE)
-        datas = arrayOf("bt初始化发音_bt发音人切换调用", "et_bt串口通信", "bt数据库插入_bt数据库查询_bt数据库删除", "bt动态加载", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX,VoiceModel.MALE)
+        datas = arrayOf("bt_男声_bt初始化发音_bt发音人切换调用", "et_bt串口通信", "bt数据库插入_bt数据库查询_bt数据库删除", "bt动态加载", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
@@ -89,8 +89,9 @@ class MainActivity : Activity() {
             override fun CallResult(view: View, itmeID: Int, MSG: String, spinner: Spinner) {
                 when (itmeID) {
                     getDigit("初始化发音") -> when (view.id) {
-                        R.id.bt_item1 -> TTS!!.setParams().speak("初始化发音调用")
-                        R.id.bt_item2 -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
+                        R.id.bt_item1->TTS!!.setParams(VoiceModel.MALE).speak("发音人男生切换,网络优先调用")
+                        R.id.bt_item2 -> TTS!!.setParams().speak("初始化发音调用")
+                        R.id.bt_item3 -> TTS!!.setParams(VoiceModel.EMOTIONAL_MALE).speak("发音人切换,网络优先调用")
                     }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
 

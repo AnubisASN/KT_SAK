@@ -1,8 +1,12 @@
 package com.anubis.module_tts.control
 
 
+import com.anubis.kt_extends.eLog
+import com.anubis.module_tts.eTTS
 import com.baidu.tts.client.SpeechSynthesizerListener
 import com.baidu.tts.client.TtsMode
+import org.jetbrains.anko.custom.async
+import java.lang.reflect.Field
 
 /**
  * 合成引擎的初始化参数
@@ -15,9 +19,10 @@ class InitConfig {
     /**
      * appId appKey 和 secretKey。注意如果需要离线合成功能,请在您申请的应用中填写包名。
      */
-    val appId = "11010053"
-    val appKey = "Yv1fNRycpH0SqaIvqVhKkd9k"
-    val secretKey = "rOf0ISjaTHDAzzK3q8VP5lrfCsYEntTK"
+    val KEYS=eTTS::class.java.getDeclaredField("KEYS").apply { this.isAccessible=true }
+    val appId = (KEYS!!.get(eTTS) as Array<String>)[0]
+    val appKey = (KEYS!!.get(eTTS) as Array<String>)[1]
+    val secretKey =(KEYS!!.get(eTTS) as Array<String>)[2]
 
     /**
      * 纯在线或者离在线融合

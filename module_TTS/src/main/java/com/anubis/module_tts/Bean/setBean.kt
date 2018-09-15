@@ -17,10 +17,10 @@ package com.anubis.module_tts.Bean
  */
 enum class VoiceModel {
     FEMALE, MALE, EMOTIONAL_MALE, CHILDREN
-//    map["离线女声"] = OfflineResource.VOICE_FEMALE
-//    map["离线男声"] = OfflineResource.VOICE_MALE
-//    map["离线度逍遥"] = OfflineResource.VOICE_DUXY
-//    map["离线度丫丫"] = OfflineResource.VOICE_DUYY
+//    map["离线女声"] = OfflineResource.FEMALE
+//    map["离线男声"] = OfflineResource.MALE
+//    map["离线度逍遥"] = OfflineResource.EMOTIONAL_MALE
+//    map["离线度丫丫"] = OfflineResource.CHILDREN
 }
 
 enum class ParamMixMode {
