@@ -23,6 +23,6 @@ import com.anubis.kt_extends.*
  */
 class StartServiceReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        eApp.eSetAutoBoot( context, intent, MainActivity::class.java)
+        eApp.eSetAutoBoot(app().get()!!, context, intent, null)
     }
 }

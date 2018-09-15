@@ -78,16 +78,18 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     var mBitmap: Bitmap? = null
     var mAFT_FSDKFace: AFT_FSDKFace? = null
     var mIsState=true
-    private var isReturmFaceBitmap = false
+    private var isShearFaceBitmap = false
+    private  var shearNum=50
     private var color: Int = Color.GREEN
     private var stroke: Int = 2
-    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView,CameraState:Boolean=true, color: Int = Color.GREEN, stroke: Int = 2, isReturmFaceBitmap: Boolean = false, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
+    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView,CameraState:Boolean=true, color: Int = Color.GREEN, stroke: Int = 2, isShearFaceBitmap: Boolean = false, shearNum:Int=50,cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
         mGLSurfaceView = GLSurfaceView
         mSurfaceView = SurfaceView
         mIsState=CameraState
         this.color = color
         this.stroke = stroke
-        this.isReturmFaceBitmap = isReturmFaceBitmap
+        this.isShearFaceBitmap = isShearFaceBitmap
+        this.shearNum=shearNum
         mCameraID = if (cameraId == 0) Camera.CameraInfo.CAMERA_FACING_BACK else Camera.CameraInfo.CAMERA_FACING_FRONT
         mCameraRotate = if (cameraId == 0) 90 else 270
         mCameraMirror = cameraId != 0
@@ -140,12 +142,12 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
         if (mFaceNum != 0 && mImageNV21 != null && mIsState) {
             mIsState=false
             val size = mCamera!!.parameters.previewSize
-            if (isReturmFaceBitmap) {
+            if (isShearFaceBitmap) {
                 try {
-                    val left = mAFT_FSDKFace!!.rect.left - 50
-                    val top = mAFT_FSDKFace!!.rect.top - 50
-                    val right = mAFT_FSDKFace!!.rect.right + 50
-                    val bottom = mAFT_FSDKFace!!.rect.bottom + 50
+                    val left = mAFT_FSDKFace!!.rect.left - shearNum
+                    val top = mAFT_FSDKFace!!.rect.top - shearNum
+                    val right = mAFT_FSDKFace!!.rect.right + shearNum
+                    val bottom = mAFT_FSDKFace!!.rect.bottom + shearNum
                     mBitmap = eBitmap.eGetPhoneBitmap(mImageNV21!!, size.width, size.height, Rect(if (left < 0) 1 else left,
                             if (top < 0) 1 else top,
                             if (right > size.width) size.width - 1 else right,
