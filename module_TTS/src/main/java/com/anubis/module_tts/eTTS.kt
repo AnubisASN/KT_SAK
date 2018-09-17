@@ -31,6 +31,7 @@ import java.util.*
  * @param ttsMode: TTSMode；语音合成模式（在线离线）
  * @param voiceMode: VoiceModel;语音合成模型
  * @Param MixMode: ParamMixMode;语音合成流程
+ * @Param AID_AKY_SKY: Array<Stirng>;百度语音秘钥（离在混合模式需要）
  * @return: eTTS
  * @参数设置方法：setParams()
  * @param voiceMode: VoiceModel;语音合成模型
