@@ -35,7 +35,7 @@ class  Face: Activity(){
         setContentView(R.layout.activity_camera)
         var camera: eArcFaceFTActivity?=null
         try {
-            camera = eArcFaceFTActivity.init(findViewById(R.id.glsurfaceView),findViewById(R.id.surfaceView),isReturmFaceBitmap = true)
+            camera = eArcFaceFTActivity.init(findViewById(R.id.glsurfaceView),findViewById(R.id.surfaceView),isShearFaceBitmap = true)
         } catch (e: Exception) {
             eLogE("ArcFace:$e")
             eLog("ArcFace$e")

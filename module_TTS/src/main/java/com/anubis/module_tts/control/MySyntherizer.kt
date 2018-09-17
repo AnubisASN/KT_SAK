@@ -5,6 +5,8 @@ import android.os.Handler
 import android.os.Message
 import android.util.Log
 import android.util.Pair
+import com.anubis.kt_extends.eLogE
+import com.anubis.kt_extends.eShell
 
 import com.baidu.tts.client.SpeechSynthesizeBag
 import com.baidu.tts.client.SpeechSynthesizer
@@ -90,7 +92,7 @@ open class MySyntherizer protected constructor(protected var context: Context, p
      */
     fun speak(text: String): Int {
         Log.i(TAG, "speak text:" + text)
-        return mSpeechSynthesizer!!.speak(text)
+        return mSpeechSynthesizer?.speak(text)?:0
     }
 
     /**

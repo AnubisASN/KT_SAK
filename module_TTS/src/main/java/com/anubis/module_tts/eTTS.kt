@@ -6,10 +6,7 @@ package com.anubis.module_tts
 import android.app.Application
 import android.os.Handler
 import android.util.Pair
-import com.anubis.kt_extends.eGetSystemSharedPreferences
-import com.anubis.kt_extends.eLog
-import com.anubis.kt_extends.eLogE
-import com.anubis.kt_extends.eSetSystemSharedPreferences
+import com.anubis.kt_extends.*
 import com.anubis.module_tts.Bean.ParamMixMode
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
@@ -57,13 +54,13 @@ object eTTS {
     private var TTS: Unit? = null
     private var KEYS: Array<String>? = null
     // TtsMode.MIX; 离在线融合，在线优先； TtsMode.ONLINE 纯在线； 没有纯离线
-    private var ttsMode = TtsMode.MIX
+    private var ttsMode = TTSMode.MIX
     // 离线发音选择，VOICE_FEMALE即为离线女声发音。
     // assets目录下bd_etts_common_speech_m15_mand_eng_high_am-mix_v3.0.0_20170505.dat为离线男声模型；
     // assets目录下bd_etts_common_speech_f7_mand_eng_high_am-mix_v3.0.0_20170512.dat为离线女声模型
     private var offlineVoice = OfflineResource.VOICE_DUYY
     private var synthesizer: MySyntherizer? = null
-    private val params: HashMap<String, String>
+
         /**
          * 合成的参数，可以初始化时填写，也可以在合成前设置。
          *
@@ -77,7 +74,7 @@ object eTTS {
         // MIX_MODE_HIGH_SPEED_SYNTHESIZE, 2G 3G 4G wifi状态下使用在线，其它状态离线。在线状态下，请求超时1.2s自动转离线
         // 离线资源文件， 从assets目录中复制到临时目录，需要在initTTs方法前完成
         // 声学模型文件路径 (离线引擎使用), 请确认下面两个文件存在
-        get() {
+        private val params: HashMap<String, String> get() {
             val params = HashMap<String, String>()
             eLog("设置在线发声音人:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model"))
 //设置本地发音人
@@ -135,12 +132,13 @@ object eTTS {
         mApplication.eSetSystemSharedPreferences("set_PARAM_MIX_MODE", ParamMixMode)
         this.mActivity = mApplication
         this.mHandler = mHandler
-        this.ttsMode = if (ttsMode == TTSMode.MIX) TtsMode.MIX else TtsMode.ONLINE
+        this.ttsMode =ttsMode
         try {
-            initialTts()
+            init()
         } catch (e: Exception) {
+            eLogE("initTTS错误：$e")
             ttsDestroy()
-            initialTts()
+            init()
         }
         return this
     }
@@ -157,7 +155,7 @@ object eTTS {
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString())
-        return this
+       return initTTS(mActivity!!, mHandler!!, ttsMode,voiceMode)
     }
 
 
@@ -168,13 +166,13 @@ object eTTS {
      * UiMessageListener 在MessageListener的基础上，对handler发送消息，实现UI的文字更新
      * FileSaveListener 在UiMessageListener的基础上，使用 onSynthesizeDataArrived回调，获取音频流
      */
-    private fun initialTts() {
+    private fun init() {
         LoggerProxy.printable(true) // 日志打印在logcat中
         // 设置初始化参数
         // 此处可以改为 含有您业务逻辑的SpeechSynthesizerListener的实现类
         val listener = UiMessageListener(mHandler)
         val params = params
-        val initConfig = InitConfig(ttsMode, params, listener)
+        val initConfig = InitConfig(if (ttsMode == TTSMode.MIX) TtsMode.MIX else TtsMode.ONLINE, params, listener)
         synthesizer = NonBlockSyntherizer(mActivity!!, initConfig, mHandler!!) // 此处可以改为MySyntherizer 了解调用过程
     }
 
@@ -239,7 +237,9 @@ object eTTS {
     //检查回调方法
     private fun checkResult(result: Int, method: String) {
         if (result != 0) {
-            eLog("error code :$result method:$method, 错误码文档:http://yuyin.baidu.com/docs/tts/122 ")
+            eLogE("error code :$result method:$method, 错误码文档:http://yuyin.baidu.com/docs/tts/122 ")
+        }else{
+            eLogE("语音合成引擎还未准备就绪")
         }
     }
 
