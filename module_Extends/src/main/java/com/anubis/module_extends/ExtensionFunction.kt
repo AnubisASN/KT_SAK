@@ -107,7 +107,6 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any): Boolean {
         is Int -> editor.putInt(key, value)
         is Long -> editor.putLong(key, value)
     }
-    editor.putString(key, value.toString())
     return editor.commit()
 }
 
