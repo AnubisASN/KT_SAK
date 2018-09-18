@@ -122,7 +122,7 @@ class eOperationDao(context: Context, val greenDaoClassName: String = "com.anubi
      * @return
      */
     fun queryAllUser(user: Any): List<Any> {
-        return   daoSession!!.loadAll<Any,Any>(user::class.java as Class<Any>?) as List<Any>
+        return daoSession!!.loadAll<Any, Any>(user::class.java as Class<Any>?) as List<Any>
     }
 
     /**
@@ -130,13 +130,14 @@ class eOperationDao(context: Context, val greenDaoClassName: String = "com.anubi
      * @param key
      * @return
      */
-    fun queryUserById(key: Long,user: Any): Any {
+    fun queryUserById(key: Long, user: Any): Any {
         return daoSession!!.load(user::class.java, key)
     }
+
     /**
      * 使用native sql进行查询操作
      */
-    fun queryUserByNativeSql(sql: String, conditions: Array<String>,user: Any): List<Any> {
+    fun queryUserByNativeSql(sql: String, conditions: Array<String>, user: Any): List<Any> {
         return daoSession!!.queryRaw<Any, Any>(user::class.java as Class<Any>?, sql, *conditions)
     }
 
@@ -151,5 +152,12 @@ class eOperationDao(context: Context, val greenDaoClassName: String = "com.anubi
 //        return queryBuilder.where(DataDao.Properties.Name.eq(id)).list()
 //    }
 
+    /**
+     * 关闭数据库连接
+     * @return
+     */
+    fun closeConnection() {
+        mManager.closeConnection()
+    }
 
 }

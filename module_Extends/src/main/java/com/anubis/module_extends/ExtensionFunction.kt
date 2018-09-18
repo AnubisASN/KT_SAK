@@ -136,7 +136,6 @@ fun Context.eSetUserPutSharedPreferences(userID: String, key: String, value: Any
         is Int -> editor.putInt(key, value)
         is Long -> editor.putLong(key, value)
     }
-    editor.putString(key, value.toString())
     return editor.commit()
 }
 
