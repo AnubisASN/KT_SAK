@@ -37,6 +37,7 @@ import com.anubis.module_portMSG.ePortMessage
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
+import com.anubis.module_vncs.eVNC
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.startActivity
@@ -59,7 +60,7 @@ class MainActivity : Activity() {
         APP = app().get()
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX,VoiceModel.MALE)
-        datas = arrayOf("bt初始化发音_bt男生切换化发音_bt女声切换调用", "et_bt串口通信", "bt数据库插入_bt数据库查询_bt数据库删除", "bt动态加载", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("bt初始化发音_bt男生切换化发音_bt女声切换调用", "et_bt串口通信", "btVNC二进制文件执行","bt数据库插入_bt数据库查询_bt数据库删除", "bt动态加载", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
@@ -91,10 +92,11 @@ class MainActivity : Activity() {
                     getDigit("初始化发音") -> when (view.id) {
                         R.id.bt_item1->TTS!!.speak("初始化发音调用")
                         R.id.bt_item2 -> TTS!!.setParams(VoiceModel.MALE).apply { Handler().postDelayed({this.speak("发音人男生发音调用")},2000) }
-                        R.id.bt_item3 -> TTS!!.setParams(VoiceModel.CHILDREN).apply {Handler().postDelayed({this.speak("发音人女声发音调用")},2000)  }
+                    }
+                    getDigit("VNC")->when(view.id){
+                        R.id.bt_item1->Hint("VNC二进制文件执行:${eVNC.startVNCs(this@MainActivity)}")
                     }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
-
                     getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, MSG).MSG())
                     getDigit("数据库") -> when (view.id) {
                         R.id.bt_item1 -> Hint("数据库插入：${eOperationDao(this@MainActivity).insertUser(Data("00000", "11111"))}")

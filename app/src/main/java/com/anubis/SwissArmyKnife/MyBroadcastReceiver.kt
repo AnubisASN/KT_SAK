@@ -21,8 +21,10 @@ import com.anubis.kt_extends.*
  * Router :  /'Module'/'Function'
  * 说明：
  */
-class StartServiceReceiver : BroadcastReceiver() {
+class MyBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        eApp.eSetAutoBoot( context, intent, MainActivity::class.java)
+        eLog("接收到广播")
+        eBReceiver.eSetPowerBoot(context,intent,MainActivity::class.java)
+        eBReceiver.eSetAPPUpdateBoot(context,intent,MainActivity::class.java)
     }
 }

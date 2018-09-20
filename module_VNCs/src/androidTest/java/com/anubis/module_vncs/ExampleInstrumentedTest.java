@@ -1,4 +1,4 @@
-package com.anubis.mylibrary;
+package com.anubis.module_vncs;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.anubis.mylibrary.test", appContext.getPackageName());
+        assertEquals("com.anubis.module_vncs.test", appContext.getPackageName());
     }
 }

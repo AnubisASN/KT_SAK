@@ -22,8 +22,7 @@ import org.junit.Test
 public class TestGreenDao {
     @Test
     fun Main() {
-        val main=MainActivity().greenDao()
-        main.insertUser(Data("000","1111")::class.java)
+
 
     }
 }

@@ -1,4 +1,4 @@
-package com.anubis.mylibrary;
+package com.anubis.module_vncs;
 
 import org.junit.Test;
 

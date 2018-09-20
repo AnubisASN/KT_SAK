@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.*
@@ -96,8 +97,7 @@ fun eLogE(str: Any, TAG: String = "TAG") {
  * SharedPreferences数据文件存储扩展-------------------------------------------------------------------
  */
 //系统数据文件存储扩展
-fun Context.eSetSystemSharedPreferences(key: Any, value: Any): Boolean {
-    val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+fun Context.eSetSystemSharedPreferences(key: Any, value: Any, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)): Boolean {
     val key = key.toString()
     val editor = sharedPreferences.edit()
     when (value) {
@@ -111,22 +111,31 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any): Boolean {
 }
 
 //系统数据文件存储读取扩展
-fun Context.eGetSystemSharedPreferences(key: String, value: Any = ""): Any {
-    val sharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)
-    return when (value) {
-        is String -> sharedPreferences.getString(key, value).toString()
-        is Boolean -> sharedPreferences.getBoolean(key, value)
-        is Float -> sharedPreferences.getFloat(key, value)
-        is Int -> sharedPreferences.getInt(key, value)
-        is Long -> sharedPreferences.getLong(key, value)
-        else -> sharedPreferences.getString(key, value as String?)
-    }
+fun Context.eGetSystemSharedPreferences(key: String, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) =
+        try {
+            sharedPreferences.getString(key, "")
+        } catch (e: ClassCastException) {
+            try {
+                sharedPreferences.getBoolean(key, true)
+            } catch (e: ClassCastException) {
+                try {
+                    sharedPreferences.getInt(key, 1)
+                } catch (e: ClassCastException) {
+                    try {
+                        sharedPreferences.getFloat(key, 1f)
+                    } catch (e: ClassCastException) {
+                        try {
+                            sharedPreferences.getLong(key, 1.toLong())
+                        } catch (e: ClassCastException) {
+                        }
+                    }
+                }
+            }
+        }
 
-}
 
 //用户文件数据存储扩展
-fun Context.eSetUserPutSharedPreferences(userID: String, key: String, value: Any): Boolean {
-    val sharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)
+fun Context.eSetUserSharedPreferences(userID: String, key: String, value: Any, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)): Boolean {
     val editor = sharedPreferences.edit()
     when (value) {
         is String -> editor.putString(key, value)
@@ -139,43 +148,61 @@ fun Context.eSetUserPutSharedPreferences(userID: String, key: String, value: Any
 }
 
 //用户文件数据读取扩展
-fun Context.eGetUserSharedPreferences(userID: Int, key: String, value: Any = ""): Any {
-    val sharedPreferences = getSharedPreferences(userID.toString(), Context.MODE_PRIVATE)
-    return when (value) {
-        is String -> sharedPreferences.getString(key, value)
-        is Boolean -> sharedPreferences.getBoolean(key, value)
-        is Float -> sharedPreferences.getFloat(key, value)
-        is Int -> sharedPreferences.getInt(key, value)
-        is Long -> sharedPreferences.getLong(key, value)
-        else -> sharedPreferences.getString(key, value as String?)
+fun Context.eGetUserSharedPreferences(userID: String, key:String,sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) = try {
+    sharedPreferences.getString(key, "")
+} catch (e: ClassCastException) {
+    try {
+        sharedPreferences.getBoolean(key, true)
+    } catch (e: ClassCastException) {
+        try {
+            sharedPreferences.getInt(key, 1)
+        } catch (e: ClassCastException) {
+            try {
+                sharedPreferences.getFloat(key, 1f)
+            } catch (e: ClassCastException) {
+                try {
+                    sharedPreferences.getLong(key, 1.toLong())
+                } catch (e: ClassCastException) {
+                }
+            }
+        }
     }
-
 }
 
+
+
 //首选项数据文件存储扩展
-fun Context.eSetDefaultSharedPreferences(key: String, value: Any = ""): Any {
-    val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-    val edit = sharedPref.edit()
-    return when (value) {
-        is String -> sharedPref.getString(key, value)
-        is Boolean -> sharedPref.getBoolean(key, value)
-        is Float -> sharedPref.getFloat(key, value)
-        is Int -> sharedPref.getInt(key, value)
-        is Long -> sharedPref.getLong(key, value)
-        else -> sharedPref.getString(key, value as String?)
+fun Context.eSetDefaultSharedPreferences(key: String, value: Any, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)): Boolean {
+    val editor = sharedPref.edit()
+    when (value) {
+        is String -> editor.putString(key, value)
+        is Boolean -> editor.putBoolean(key, value)
+        is Float -> editor.putFloat(key, value)
+        is Int -> editor.putInt(key, value)
+        is Long -> editor.putLong(key, value)
     }
+    return editor.commit()
 }
 
 //首选项数据文件读取扩展
-fun Context.eGetDefaultSharedPreferences(key: String, value: Any = ""): Any {
-    var sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-    return when (value) {
-        is String -> sharedPref.getString(key, value)
-        is Boolean -> sharedPref.getBoolean(key, value)
-        is Float -> sharedPref.getFloat(key, value)
-        is Int -> sharedPref.getInt(key, value)
-        is Long -> sharedPref.getLong(key, value)
-        else -> sharedPref.getString(key, value as String?)
+fun Context.eGetDefaultSharedPreferences(key: String,sharedPref: SharedPreferences= PreferenceManager.getDefaultSharedPreferences(this)) = try {
+    sharedPref.getString(key, "")
+} catch (e: ClassCastException) {
+    try {
+        sharedPref.getBoolean(key, true)
+    } catch (e: ClassCastException) {
+        try {
+            sharedPref.getInt(key, 1)
+        } catch (e: ClassCastException) {
+            try {
+                sharedPref.getFloat(key, 1f)
+            } catch (e: ClassCastException) {
+                try {
+                    sharedPref.getLong(key, 1.toLong())
+                } catch (e: ClassCastException) {
+                }
+            }
+        }
     }
 }
 
@@ -203,6 +230,17 @@ fun Bundle.eSetMessage(Sign: String, Message: Any = "") = when (Message) {
     }
 }
 
+//音频播放
+fun ePlayVoice(context: Context, music: Int, isLoop: Boolean = false) {
+    try {
+        val mp = MediaPlayer.create(context, music)//重新设置要播放的音频
+        mp.isLooping = isLoop
+        mp.start()//开始播放
+    } catch (e: Exception) {
+        e.printStackTrace()//输出异常信息
+    }
+
+}
 
 /**
  * String Json解析扩展--------------------------------------------------------------------------------
@@ -218,34 +256,60 @@ object eJson {
 
 }
 
-//音频播放
-fun ePlayVoice(context: Context, music: Int, isLoop: Boolean = false) {
-    try {
-        val mp = MediaPlayer.create(context, music)//重新设置要播放的音频
-        mp.isLooping = isLoop
-        mp.start()//开始播放
-    } catch (e: Exception) {
-        e.printStackTrace()//输出异常信息
+/**
+ * 广播接收器辅助扩展类--------------------------------------------------------------------------------------
+ */
+object eBReceiver {
+    //开机启动
+    private var isSetAutoBoot = true
+
+    fun eSetPowerBoot(context: Context, intent: Intent, cls: Class<*>) {
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+            eLog("开机自启", "SAK")
+            context.eShowTip("开机自启")
+            if (isSetAutoBoot) {
+                isSetAutoBoot = false
+                val startServiceIntent = Intent(context, cls)
+                startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                context.startActivity(startServiceIntent)
+            }
+        }
+    }
+
+    //APP更新启动
+    fun eSetAPPUpdateBoot(context: Context, intent: Intent, cls: Class<*>) {
+        //接收更新广播
+        if (intent.action == "android.intent.action.PACKAGE_REPLACED") {
+            eLog("升级了一个安装包，重新启动此程序", "SAK")
+            Toast.makeText(context, "升级了一个安装包，重新启动此程序", Toast.LENGTH_SHORT).show()
+            val startServiceIntent = Intent(context, cls)
+            startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(startServiceIntent)
+        }
+        //接收安装广播
+        if (intent.action == "android.intent.action.PACKAGE_ADDED") {
+            eLog("升级了一个安装包，重新启动此程序", "SAK")
+            Toast.makeText(context, "升级了一个安装包，重新启动此程序", Toast.LENGTH_SHORT).show()
+            val packName = intent.resolveActivityInfo(context.packageManager, 0).toString()
+            eLog("packName:$packName")
+            val startServiceIntent = Intent(context, cls)
+            startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(startServiceIntent)
+        }
+        //接收卸载广播
+        if (intent.action == "android.intent.action.PACKAGE_REMOVED") {
+//                val packageName = intent.dataString
+//                println("卸载了:" + packageName + "包名的程序")
+
+        }
     }
 
 }
-
 
 /**
  * App程序扩展类--------------------------------------------------------------------------------------
  */
 object eApp {
-    //开机自启
-    var isSetAutoBoot: Boolean = true
-    fun eSetAutoBoot(context: Context, intent: Intent, className: Class<*>) {
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            eLog("开机启动","SAK")
-            isSetAutoBoot=false
-            val startServiceIntent = Intent(context,className)
-            startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(startServiceIntent)
-        }
-    }
 
     //获取所有安装的app
     fun eGetLocalApps(context: Context) = context.packageManager.queryIntentActivities(Intent(Intent.ACTION_MAIN, null), 0)
@@ -853,17 +917,17 @@ object eString {
 object ePermissions {
     //系统设置修改权限
     fun eSetSystemPermissions(context: Context): Boolean {
-        var str=false
+        var str = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.System.canWrite(context)) {
                 val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
                 intent.data = Uri.parse("package:${context.packageName}")
                 context.startActivity(intent)
             } else {
-                 str=Settings.System.canWrite(context)
+                str = Settings.System.canWrite(context)
             }
-        }else{
-            str=true
+        } else {
+            str = true
         }
         return str
     }
@@ -935,7 +999,7 @@ object eShell {
             dos.writeBytes("exit\n")
             dos.flush()
             var line: String? = ""
-            while ((dis.readLine()).apply { line = this } != null) {
+            while ((dis.readLine()).apply { line = this } != null ) {
                 result += line + "\n"
             }
             p.waitFor()
