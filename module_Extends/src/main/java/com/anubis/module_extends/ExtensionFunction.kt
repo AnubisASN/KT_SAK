@@ -836,7 +836,7 @@ object eString {
     fun eIsChinese(c: Char) = c.toInt() >= 0x4E00 && c.toInt() <= 0x9FA5// 根据字节码判断
 
     //判断是否有英文
-    fun eHasEglish(chars: CharArray): Boolean {
+    fun eIsHasEglish(chars: CharArray): Boolean {
         for (i in chars.indices) {
             if (chars[i].toInt() >= 97 && chars[i].toInt() <= 122) {
                 return true
@@ -861,12 +861,27 @@ object eString {
         }
         return d
     }
+    //字节转十六进字符串
+    fun eGetToHexString(byteArray: ByteArray?): String {
+        if (byteArray == null || byteArray.isEmpty()){
+            eLogE("eGetToHexString:传入参数为空")
+            return ""
+        }
+        val hexString = StringBuilder()
+        for (i in byteArray.indices) {
+            if (byteArray[i] and 0xff.toByte() < 0x10)
+            //0~F前面不零
+                hexString.append("0")
+            hexString.append(Integer.toHexString(0xFF and byteArray[i].toInt()))
+        }
+        return hexString.toString().toLowerCase()
+    }
 
     //字符转字节
     fun eGetCharToByte(c: Char) = indexOf("0123456789ABCDEF", c).toByte()
 
     //字节转字符串
-    fun eBytesToHexString(src: ByteArray, lenth: Int): String? {
+    fun eGetBytesToHexString(src: ByteArray, lenth: Int): String? {
         val stringBuilder = StringBuilder("")
         if (src.isEmpty()) {
             return null
@@ -883,7 +898,7 @@ object eString {
     }
 
     //MD5加密
-    fun eEncodeMD5(str: String, digits: Int = 32): String {
+    fun eGetEncodeMD5(str: String, digits: Int = 32): String {
         try {
             //获取md5加密对象
             val instance: MessageDigest = MessageDigest.getInstance("MD5")

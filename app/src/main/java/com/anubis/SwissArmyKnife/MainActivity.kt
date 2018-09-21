@@ -18,10 +18,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsSpinner
-import android.widget.ScrollView
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.SwissArmyKnife.GreenDao.Data
 import com.anubis.SwissArmyKnife.R.id.*
@@ -59,8 +56,8 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA))
         APP = app().get()
         app().get()?.getActivity()!!.add(this)
-        TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX,VoiceModel.MALE)
-        datas = arrayOf("bt初始化发音_bt男生切换化发音_bt女声切换调用", "et_bt串口通信", "btVNC二进制文件执行","bt数据库插入_bt数据库查询_bt数据库删除", "bt动态加载", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX, VoiceModel.MALE)
+        datas = arrayOf("sp_bt初始化发音_bt切换化发音调用", "et_bt串口通信", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "bt动态加载", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
@@ -87,14 +84,28 @@ class MainActivity : Activity() {
         }
         rvList.layoutManager = LinearLayoutManager(this)
         val callback = object : ICallBack {
-            override fun CallResult(view: View, itmeID: Int, MSG: String, spinner: Spinner) {
+
+            override fun CallResult(view: View, itmeID: Int, MSG: String, spinner: Spinner, any:Adapter?) {
                 when (itmeID) {
-                    getDigit("初始化发音") -> when (view.id) {
-                        R.id.bt_item1->TTS!!.speak("初始化发音调用")
-                        R.id.bt_item2 -> TTS!!.setParams(VoiceModel.MALE).apply { Handler().postDelayed({this.speak("发音人男生发音调用")},2000) }
+                    getDigit("初始化发音") -> {
+                        val voiceModel= arrayOf( VoiceModel.FEMALE, VoiceModel.MALE, VoiceModel.EMOTIONAL_MALE,VoiceModel. CHILDREN)
+                        var spID=0
+                        spinner.adapter=ArrayAdapter<VoiceModel>(this@MainActivity,R.layout.support_simple_spinner_dropdown_item, voiceModel)
+                        spinner.onItemSelectedListener=object :AdapterView.OnItemSelectedListener{
+                            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                            }
+                            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                                spID=position
+                            }
+                        }
+                        when (view.id) {
+                            R.id.bt_item1 -> TTS!!.speak("初始化发音调用")
+                            R.id.bt_item2 -> TTS!!.setParams(voiceModel[spID]).apply { Handler().postDelayed({ this.speak("发音人男生发音调用") }, 2000) }
+                        }
                     }
-                    getDigit("VNC")->when(view.id){
-                        R.id.bt_item1->Hint("VNC二进制文件执行:${eVNC.startVNCs(this@MainActivity)}")
+                    getDigit("VNC") -> when (view.id) {
+                        R.id.bt_item1 -> Hint("VNC二进制文件执行:${eVNC.startVNCs(this@MainActivity)}")
                     }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
                     getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, MSG).MSG())
@@ -105,7 +116,7 @@ class MainActivity : Activity() {
                     }
                     getDigit("系统设置权限检测") -> when (view.id) {
                         R.id.bt_item1 -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                           Hint("系统设置权限检测：${ePermissions.eSetSystemPermissions(this@MainActivity)}")
+                            Hint("系统设置权限检测：${ePermissions.eSetSystemPermissions(this@MainActivity)}")
                         } else {
                             Hint("安卓版本低于6.0--${Build.VERSION.SDK_INT}")
                         }
@@ -225,7 +236,10 @@ class MainActivity : Activity() {
                         eLog("split:$str")
                         when (str.substring(0, 2)) {
                             "et" -> itemView.et_item1.visibility = View.VISIBLE
-                            "sp" -> itemView.sp_item1.visibility = View.VISIBLE
+                            "sp" ->{
+                                itemView.sp_item1.visibility = View.VISIBLE
+
+                            }
                             "bt" -> btList.add(str)
                         }
                     }
@@ -291,7 +305,9 @@ class MainActivity : Activity() {
     }
 
     interface ICallBack {
-        fun CallResult(view: View, numID: Int, MSG: String, spinner: Spinner)
+        fun CallResult(view: View, numID: Int, MSG: String, spinner: Spinner, any: Adapter?=null)
     }
 }
+
+
 
