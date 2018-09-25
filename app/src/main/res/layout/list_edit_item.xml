@@ -9,7 +9,6 @@
     android:background="#5f000000"
     android:gravity="center"
     android:orientation="horizontal"
-    android:weightSum="1"
     >
 
     <EditText
@@ -17,36 +16,40 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
+        android:layout_weight="0.3"
         android:visibility="gone"
-        android:layout_weight="0.3"/>
+        />
+
     <Spinner
         android:id="@+id/sp_item1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
-        android:visibility="gone"
-        android:layout_weight="0.2"
-        />
+        android:layout_weight="0.3"
+        android:visibility="gone"/>
+
     <Button
         android:id="@+id/bt_item1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
-        android:visibility="gone"
-        android:layout_weight="0.2"/>
+        android:layout_weight="0.15"
+        android:visibility="gone"/>
+
     <Button
         android:id="@+id/bt_item2"
         android:layout_width="0dp"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
-        android:layout_weight="0.15"/>
+        android:layout_weight="0.15"
+        android:visibility="gone"/>
+
     <Button
         android:id="@+id/bt_item3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
-        android:visibility="gone"
-        android:layout_weight="0.15"/>
+        android:layout_weight="0.15"
+        android:visibility="gone"/>
 
 </LinearLayout>
