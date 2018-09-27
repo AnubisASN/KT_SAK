@@ -54,7 +54,7 @@ import kotlin.collections.ArrayList
  *                       mAFT_FSDKFace: AFT_FSDKFace；人脸信息集
  *                              }
  */
-class eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
+object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     private val TAG = "TAG"
     private val appid = "EDqqPgtie4x6yQvqH2gfCRkcyq4H3RPYFxa9btSu7kX1"
     private val ft_key = "2QBBSXZns1ffdAbZGQa7rCEn3ex7bVCZR3Vru4ucqTaQ"
