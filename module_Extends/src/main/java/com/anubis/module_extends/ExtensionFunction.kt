@@ -32,6 +32,7 @@ import android.view.KeyEvent
 import android.widget.Toast
 import com.lzy.imagepicker.ImagePicker
 import com.lzy.imagepicker.loader.ImageLoader
+import com.lzy.imagepicker.util.Utils
 import com.lzy.imagepicker.view.CropImageView
 import com.tencent.bugly.Bugly.enable
 import com.tencent.bugly.proguard.p
@@ -148,7 +149,7 @@ fun Context.eSetUserSharedPreferences(userID: String, key: String, value: Any, s
 }
 
 //用户文件数据读取扩展
-fun Context.eGetUserSharedPreferences(userID: String, key:String,sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) = try {
+fun Context.eGetUserSharedPreferences(userID: String, key: String, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) = try {
     sharedPreferences.getString(key, "")
 } catch (e: ClassCastException) {
     try {
@@ -170,7 +171,6 @@ fun Context.eGetUserSharedPreferences(userID: String, key:String,sharedPreferenc
 }
 
 
-
 //首选项数据文件存储扩展
 fun Context.eSetDefaultSharedPreferences(key: String, value: Any, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)): Boolean {
     val editor = sharedPref.edit()
@@ -185,7 +185,7 @@ fun Context.eSetDefaultSharedPreferences(key: String, value: Any, sharedPref: Sh
 }
 
 //首选项数据文件读取扩展
-fun Context.eGetDefaultSharedPreferences(key: String,sharedPref: SharedPreferences= PreferenceManager.getDefaultSharedPreferences(this)) = try {
+fun Context.eGetDefaultSharedPreferences(key: String, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)) = try {
     sharedPref.getString(key, "")
 } catch (e: ClassCastException) {
     try {
@@ -413,15 +413,35 @@ object eApp {
     }
 
     //服务运行判断 com.anubis.iva.Service.IVAService
-    fun eServiceWhetherWorked(context: Context, className: String): Boolean {
-        val myManager = context.applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val runningService = myManager.getRunningServices(30) as ArrayList<ActivityManager.RunningServiceInfo>
-        for (i in runningService.indices) {
-            if (runningService[i].service.className.toString() == className) {
-                return true
-            }
+    fun eIsServiceRunning(context: Context,className: String): Boolean {
+        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+
+        val info = am.getRunningServices(0x7FFFFFFF)
+        if (info == null || info.size == 0) return false
+        for (aInfo in info) {
+            if (className == aInfo.service.className) return true
         }
         return false
+    }
+
+    //后台服务杀死
+    fun eKillBackgroundProcesses(context: Context,packageName: String): Boolean {
+        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        var info: List<ActivityManager.RunningAppProcessInfo>? = am.runningAppProcesses
+        if (info == null || info.isEmpty()) return true
+        for (aInfo in info) {
+            if (Arrays.asList(*aInfo.pkgList).contains(packageName)) {
+                am.killBackgroundProcesses(packageName)
+            }
+        }
+        info = am.runningAppProcesses
+        if (info == null || info.isEmpty()) return true
+        for (aInfo in info) {
+            if (Arrays.asList(*aInfo.pkgList).contains(packageName)) {
+                return false
+            }
+        }
+        return true
     }
 
     //软件安装判断
@@ -437,6 +457,8 @@ object eApp {
         }
         return packageInfo != null
     }
+
+
 
     //   首选Summary项动态改变
     //sSummaryDynamicSetting(findPreference("root_screen") as PreferenceScreen)
@@ -461,7 +483,7 @@ object eApp {
 /**
  * 正则扩展类-----------------------------------------------------------------------------------------
  */
-object eRegular {
+object eRegex {
     //获取数字
     fun eGetNumber(str: String): Int {
         val regEx = "[^0-9]"
@@ -493,9 +515,26 @@ object eRegular {
     //邮箱格式判断
     fun eIsEmail(email: String): Boolean {
         if (null == email || "" == email) return false
-        val p = Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*")//复杂匹配
-        val m = p.matcher(email)
-        return m.matches()
+        val regEm = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*"
+        return Pattern.compile(regEm).matcher(email).matches()//复杂匹配
+    }
+
+    //身份证格式判断
+    fun eIsIDCard(idCard: String): Boolean {
+        val regID = "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9Xx])$"
+        return Pattern.compile(regID).matcher(idCard).matches()
+    }
+
+    //URL格式判断
+    fun eIsUrl(url: String): Boolean {
+        val regUrl = "[a-zA-z]+://[^\\s]*"
+        return Pattern.compile(regUrl).matcher(url).matches()
+    }
+
+    //中文验证
+    fun eIsZh(zh:String): Boolean {
+        val reZh = "^[\\u4e00-\\u9fa5]+$"
+        return  Pattern.compile(reZh).matcher(zh).matches()
     }
 }
 
@@ -861,9 +900,10 @@ object eString {
         }
         return d
     }
+
     //字节转十六进字符串
     fun eGetToHexString(byteArray: ByteArray?): String {
-        if (byteArray == null || byteArray.isEmpty()){
+        if (byteArray == null || byteArray.isEmpty()) {
             eLogE("eGetToHexString:传入参数为空")
             return ""
         }
@@ -1014,7 +1054,7 @@ object eShell {
             dos.writeBytes("exit\n")
             dos.flush()
             var line: String? = ""
-            while ((dis.readLine()).apply { line = this } != null ) {
+            while ((dis.readLine()).apply { line = this } != null) {
                 result += line + "\n"
             }
             p.waitFor()

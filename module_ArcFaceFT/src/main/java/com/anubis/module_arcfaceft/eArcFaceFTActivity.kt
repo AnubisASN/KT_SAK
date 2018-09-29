@@ -45,9 +45,13 @@ import kotlin.collections.ArrayList
  * @初始化方法：init(){}
  * @param GLSurfaceView ：CameraGLSurfaceView；相机视图
  * @param urfaceView：CameraSurfaceView；表面视图
+ * @param CameraState:Boolean;设置返回，true返回图片
+ * @param  color: Int;矩阵颜色
+ * @param stroke: Int;矩阵线宽度
  * @param isReturmFaceBitmap：Boolean=false; 返回人脸矩阵截图
+ * @param shearNum:Int=50:人脸矩阵范围
  * @param cameraId: Int = 1;相机前后镜头
- * @param onClickCameraSwitch: View? = null；点击控件切换
+ * @param onClickCameraSwitch: View? = null；点击控件切换相机
  * @return: eArcFaceFTActivity {
  *                       mFaceNum: Int;人脸数
  *                       mBitmap: Bitmap；人脸BitMap图片

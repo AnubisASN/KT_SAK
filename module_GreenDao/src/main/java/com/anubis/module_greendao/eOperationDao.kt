@@ -26,7 +26,6 @@ class eOperationDao(context: Context, val greenDaoClassName: String = "com.anubi
     private val mManager: DaoManager = DaoManager(context, greenDaoClassName, DB_NAME)
     private var daoSession: AbstractDaoSession? = null
     private val TAG = "TAG"
-
     init {
         daoSession = mManager.daoSession as AbstractDaoSession
     }

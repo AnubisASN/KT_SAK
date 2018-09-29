@@ -16,7 +16,8 @@
             <option value="$PROJECT_DIR$/module_Office" />
             <option value="$PROJECT_DIR$/module_PortMSG" />
             <option value="$PROJECT_DIR$/module_TTS" />
-            <option value="$PROJECT_DIR$/module_VNCs" />
+            <option value="$PROJECT_DIR$/module_Utils" />
+            <option value="$PROJECT_DIR$/module_VNC" />
             <option value="$PROJECT_DIR$/module_WiFi" />
           </set>
         </option>

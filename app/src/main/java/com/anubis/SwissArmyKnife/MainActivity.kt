@@ -58,7 +58,7 @@ class MainActivity : Activity() {
         APP = app().get()
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用", "et_bt串口通信", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用", "et_bt串口通信", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录", "bt后台启动_bt后台杀死")
         init()
     }
 
@@ -72,6 +72,7 @@ class MainActivity : Activity() {
         return Digit
     }
 
+    var i = 1
     private fun init() {
         filePath = this.filesDir.path + "SAK_Record.txt"
         file = File(filePath)
@@ -97,22 +98,29 @@ class MainActivity : Activity() {
                             }
 
                             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                                spID=position
+                                spID = position
                             }
                         }
-                            when (view?.id) {
-                                R.id.bt_item1 ->{
-                                    TTS = TTS!!.setParams(voiceModel[spID])
-                                    Handler().postDelayed({ TTS!!.speak("发音人切换发音调用")},800)
-                                }
+                        when (view?.id) {
+                            R.id.bt_item1 -> {
+                                TTS = TTS!!.setParams(voiceModel[spID])
+                                Handler().postDelayed({ TTS!!.speak("发音人切换发音调用") }, 800)
                             }
+                        }
                     }
                     getDigit("VNC") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("VNC二进制文件执行:${eVNC.startVNCs(this@MainActivity)}")
                     }
+                    getDigit("后台杀死") -> when (view?.id) {
+                        R.id.bt_item1 -> {
+                            Hint("后台服务状态：${eApp.eIsServiceRunning(this@MainActivity,MyService::class.java.name)}")
+                            Hint("后台启动状态：${startService(Intent(this@MainActivity, MyService::class.java))}")
+                        }
+                        R.id.bt_item2 -> Hint("后台杀死状态：${eApp.eKillBackgroundProcesses(this@MainActivity, MyService::class.java.name)}")
+                    }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
-                    getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, MSG
-                            ?: "").MSG())
+                    getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, "/dev/" + MSG).MSG())
+//                        Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, MSG ?: "").MSG())
                     getDigit("数据库") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("数据库插入：${eOperationDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
                         R.id.bt_item2 -> Hint("数据库查询:" + eOperationDao(this@MainActivity).queryAllUser(Data()).size)
@@ -136,7 +144,6 @@ class MainActivity : Activity() {
                         R.id.bt_item2 -> Hint("创建WIFI热点:${eWiFi.eCreateWifiHotspot(this@MainActivity)}")
                         R.id.bt_item3 -> Hint("关闭WIFI热点：${eWiFi.eCloseWifiHotspot(this@MainActivity)}")
                     }
-                    getDigit("动态加载") -> ""
                     getDigit("AecFaceFT人脸跟踪模块（路由转发跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
                     getDigit("Shell执行") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("ROOT权限检测:${eShell.eHaveRoot()}")
@@ -167,8 +174,6 @@ class MainActivity : Activity() {
                                 Hint("执行Shell:$shell")
                                 eShowTip("请重启设备")
                             }, 3500)
-
-
                         }
                     }
                     getDigit("正则匹配") -> Hint("正则匹配：/datas/app/$packageName$MSG")
@@ -261,7 +266,6 @@ class MainActivity : Activity() {
                                 itemView.bt_item3.text = eString.eGetNumberPeriod(str, 2, "MAX")
                             }
                         }
-
                     }
                 } catch (e: Exception) {
                     if (datas.substring(0, 2) == "bt") {
@@ -271,8 +275,6 @@ class MainActivity : Activity() {
                 }
             }
         }
-
-
     }
 
 
@@ -281,7 +283,6 @@ class MainActivity : Activity() {
         if (requestCode != 1) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
-
     }
 
 
