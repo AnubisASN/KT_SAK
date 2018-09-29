@@ -1,5 +1,8 @@
 package com.blankj.utilcode.util;
 
+import com.blankj.utils.util.FileUtils;
+import com.blankj.utils.util.ZipUtils;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

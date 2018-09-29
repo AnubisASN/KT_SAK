@@ -1,5 +1,7 @@
 package com.blankj.utilcode.util;
 
+import com.blankj.utils.util.StringUtils;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

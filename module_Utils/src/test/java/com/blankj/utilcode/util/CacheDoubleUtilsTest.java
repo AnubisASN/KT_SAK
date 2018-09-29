@@ -6,6 +6,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.blankj.utils.util.CacheDiskUtils;
+import com.blankj.utils.util.CacheDoubleUtils;
+import com.blankj.utils.util.CacheMemoryUtils;
+import com.blankj.utils.util.FileUtils;
+import com.blankj.utils.util.Utils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
@@ -42,7 +48,7 @@ public class CacheDoubleUtilsTest extends BaseTest {
     private static final Bitmap           BITMAP             = Bitmap.createBitmap(100, 100, Bitmap.Config.RGB_565);
     private static final Drawable         DRAWABLE           = new BitmapDrawable(Utils.getApp().getResources(), BITMAP);
     private static final CacheMemoryUtils CACHE_MEMORY_UTILS = CacheMemoryUtils.getInstance();
-    private static final CacheDiskUtils   CACHE_DISK_UTILS   = CacheDiskUtils.getInstance(CACHE_FILE);
+    private static final CacheDiskUtils CACHE_DISK_UTILS   = CacheDiskUtils.getInstance(CACHE_FILE);
     private static final CacheDoubleUtils CACHE_DOUBLE_UTILS = CacheDoubleUtils.getInstance(CACHE_MEMORY_UTILS, CACHE_DISK_UTILS);
 
     @Before

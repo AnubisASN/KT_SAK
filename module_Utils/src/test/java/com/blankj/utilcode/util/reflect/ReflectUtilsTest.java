@@ -1,6 +1,6 @@
 package com.blankj.utilcode.util.reflect;
 
-import com.blankj.utilcode.util.ReflectUtils;
+import com.blankj.utils.util.ReflectUtils;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;

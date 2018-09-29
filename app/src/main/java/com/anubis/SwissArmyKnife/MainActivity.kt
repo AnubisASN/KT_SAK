@@ -2,32 +2,28 @@ package com.anubis.SwissArmyKnife
 
 import android.Manifest
 import android.app.Activity
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.provider.Settings
-import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils.split
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.ScrollView
+import android.widget.Spinner
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.SwissArmyKnife.GreenDao.Data
-import com.anubis.SwissArmyKnife.R.id.*
 import com.anubis.kt_extends.*
-import com.anubis.kt_extends.eApp.eAppRestart
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
 import com.anubis.kt_extends.eTime.eGetCurrentTime
-import com.anubis.module_arcfaceft.eArcFaceFTActivity
 import com.anubis.module_ewifi.eWiFi
 import com.anubis.module_greendao.eOperationDao
 import com.anubis.module_portMSG.ePortMessage
@@ -35,10 +31,9 @@ import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
 import com.anubis.module_vncs.eVNC
-import kotlinx.android.synthetic.main.list_edit_item.view.*
+import com.anubis.utils.util.ToastUtils
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.sp
-import org.jetbrains.anko.startActivity
+import kotlinx.android.synthetic.main.list_edit_item.view.*
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
@@ -58,7 +53,7 @@ class MainActivity : Activity() {
         APP = app().get()
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用", "et_bt串口通信", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录", "bt后台启动_bt后台杀死")
+        datas = arrayOf("sp_bt切换化发音调用", "et_bt串口通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
@@ -117,6 +112,10 @@ class MainActivity : Activity() {
                             Hint("后台启动状态：${startService(Intent(this@MainActivity, MyService::class.java))}")
                         }
                         R.id.bt_item2 -> Hint("后台杀死状态：${eApp.eKillBackgroundProcesses(this@MainActivity, MyService::class.java.name)}")
+                        R.id.bt_item3->{
+                            ToastUtils.setMsgColor(Color.GREEN)
+                            ToastUtils.showShort("Toast测试")
+                        }
                     }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
                     getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, "/dev/" + MSG).MSG())
@@ -204,7 +203,7 @@ class MainActivity : Activity() {
 
     class MyAdapter(val mContext: Context, val mDatas: Array<String>, val mCallbacks: ICallBack) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
         var mPosition: Int? = null
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
             val view = LayoutInflater.from(mContext).inflate(R.layout.list_edit_item, parent, false)
             return MyHolder(view)
         }

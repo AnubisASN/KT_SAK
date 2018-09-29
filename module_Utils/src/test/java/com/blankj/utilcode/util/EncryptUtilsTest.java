@@ -2,6 +2,8 @@ package com.blankj.utilcode.util;
 
 import android.util.Base64;
 
+import com.blankj.utils.util.EncryptUtils;
+
 import org.junit.Assert;
 import org.junit.Test;
 

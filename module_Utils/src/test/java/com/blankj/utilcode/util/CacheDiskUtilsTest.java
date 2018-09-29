@@ -6,6 +6,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.blankj.utils.util.CacheDiskUtils;
+import com.blankj.utils.util.FileUtils;
+import com.blankj.utils.util.Utils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
@@ -35,7 +39,7 @@ public class CacheDiskUtilsTest extends BaseTest {
     private static final String           DISK2_PATH        = PATH_CACHE + "disk2" + FILE_SEP;
     private static final File             DISK1_FILE        = new File(DISK1_PATH);
     private static final File             DISK2_FILE        = new File(DISK2_PATH);
-    private static final CacheDiskUtils   CACHE_DISK_UTILS1 = CacheDiskUtils.getInstance(DISK1_FILE);
+    private static final CacheDiskUtils CACHE_DISK_UTILS1 = CacheDiskUtils.getInstance(DISK1_FILE);
     private static final CacheDiskUtils   CACHE_DISK_UTILS2 = CacheDiskUtils.getInstance(DISK2_FILE);
     private static final byte[]           BYTES             = "CacheDiskUtils".getBytes();
     private static final String           STRING            = "CacheDiskUtils";

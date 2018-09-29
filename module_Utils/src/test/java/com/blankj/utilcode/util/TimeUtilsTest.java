@@ -1,6 +1,7 @@
 package com.blankj.utilcode.util;
 
-import com.blankj.utilcode.constant.TimeConstants;
+import com.blankj.utils.constant.TimeConstants;
+import com.blankj.utils.util.TimeUtils;
 
 import org.junit.Test;
 

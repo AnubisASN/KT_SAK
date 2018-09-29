@@ -1,5 +1,7 @@
 package com.blankj.utilcode.util;
 
+import com.blankj.utils.util.CacheMemoryUtils;
+
 import org.junit.Before;
 import org.junit.Test;
 
