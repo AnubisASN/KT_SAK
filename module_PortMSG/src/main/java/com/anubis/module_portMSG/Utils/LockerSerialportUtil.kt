@@ -1,16 +1,17 @@
 package com.anubis.module_portMSG.Utils
 
-import android.content.Intent
-import android_serialport_api.SerialPort
-import android.os.Looper
-import android.widget.Toast
-import android.content.IntentFilter
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Looper
 import android.util.Log
+import android.widget.Toast
+import android_serialport_api.SerialPort
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eShowTip
 import com.anubis.module_gorge.R
+import com.anubis.module_portMSG.ePortMSG
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -155,6 +156,7 @@ class LockerSerialportUtil private constructor(private val path: String, private
                         sportInterface!!.onLockerDataReceived(buffer, size, path)
                     }
                 } catch (e: IOException) {
+                    ePortMSG.Result=false
                     eLogE("Thread:$e")
                     return
                 }
@@ -204,19 +206,21 @@ class LockerSerialportUtil private constructor(private val path: String, private
             //            BaseUtils.setTips(mContext,path);
             DisplayError(mContext, R.string.error_security)
             mContext!!.sendBroadcast(Intent("open_fail"))
-
+            ePortMSG.Result=false
         } catch (e: IOException) {
             e.printStackTrace()
             DisplayError(mContext, R.string.error_unknown)
             mContext!!.sendBroadcast(Intent("open_fail"))
+            ePortMSG.Result=false
         } catch (e: InvalidParameterException) {
             e.printStackTrace()
             DisplayError(mContext, R.string.error_configuration)
             mContext!!.sendBroadcast(Intent("open_fail"))
+            ePortMSG.Result=false
         }catch (e:UnsatisfiedLinkError){
             eLogE("LockerSerialportUtil错误：$e")
             mContext?.eShowTip("CUP框架不支持")
-
+            ePortMSG.Result=false
         }
     }
 

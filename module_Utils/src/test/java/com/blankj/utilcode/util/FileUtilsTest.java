@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
  *     author: Blankj
  *     blog  : http://blankj.com
  *     time  : 2016/08/19
- *     desc  : test FileUtils
+ *     desc  : test eFileUtils
  * </pre>
  */
 public class FileUtilsTest {

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNull;
  *     author: Blankj
  *     blog  : http://blankj.com
  *     time  : 2018/06/13
- *     desc  : test CacheMemoryUtils
+ *     desc  : test eCacheMemoryUtils
  * </pre>
  */
 public class CacheMemoryUtilsTest {

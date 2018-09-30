@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
  *     author: Blankj
  *     blog  : http://blankj.com
  *     time  : 2016/08/16
- *     desc  : test RegexUtils
+ *     desc  : test eRegexUtils
  * </pre>
  */
 public class RegexUtilsTest {

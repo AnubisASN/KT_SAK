@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
  *     author: Blankj
  *     blog  : http://blankj.com
  *     time  : 2016/08/16
- *     desc  : test StringUtils
+ *     desc  : test eStringUtils
  * </pre>
  */
 public class StringUtilsTest {

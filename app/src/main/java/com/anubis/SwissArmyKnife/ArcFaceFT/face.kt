@@ -4,12 +4,10 @@ import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.anubis.SwissArmyKnife.R.id.imageView
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
-import com.anubis.module_arcfaceft.eArcFaceFTActivity
+import com.anubis.module_arcfaceft.eArcFaceFT
 import kotlinx.android.synthetic.main.activity_camera.*
-import org.jetbrains.anko.displayMetrics
 
 
 /**
@@ -33,9 +31,9 @@ class  Face: Activity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
-        var camera: eArcFaceFTActivity?=null
+        var camera: eArcFaceFT?=null
         try {
-            camera = eArcFaceFTActivity.init(findViewById(R.id.glsurfaceView),findViewById(R.id.surfaceView),isShearFaceBitmap = true)
+            camera = eArcFaceFT.init(findViewById(R.id.glsurfaceView),findViewById(R.id.surfaceView),isShearFaceBitmap = true)
         } catch (e: Exception) {
             eLogE("ArcFace:$e")
             eLog("ArcFace$e")

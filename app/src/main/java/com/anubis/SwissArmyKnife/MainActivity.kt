@@ -25,13 +25,13 @@ import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
 import com.anubis.kt_extends.eTime.eGetCurrentTime
 import com.anubis.module_ewifi.eWiFi
-import com.anubis.module_greendao.eOperationDao
-import com.anubis.module_portMSG.ePortMessage
+import com.anubis.module_greendao.eGreenDao
+import com.anubis.module_portMSG.ePortMSG
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
 import com.anubis.module_vncs.eVNC
-import com.anubis.utils.util.ToastUtils
+import com.anubis.utils.util.eToastUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import java.io.BufferedReader
@@ -113,17 +113,17 @@ class MainActivity : Activity() {
                         }
                         R.id.bt_item2 -> Hint("后台杀死状态：${eApp.eKillBackgroundProcesses(this@MainActivity, MyService::class.java.name)}")
                         R.id.bt_item3->{
-                            ToastUtils.setMsgColor(Color.GREEN)
-                            ToastUtils.showShort("Toast测试")
+                            eToastUtils.setMsgColor(Color.GREEN)
+                            eToastUtils.showShort("Toast测试")
                         }
                     }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
-                    getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, "/dev/" + MSG).MSG())
-//                        Hint("串口通讯状态：" + ePortMessage().getInit(this@MainActivity, MSG ?: "").MSG())
+                    getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMSG.MSG(this@MainActivity,if(MSG.isEmpty())"0" else MSG,"/dev/ttyS1"))
+//                        Hint("串口通讯状态：" + ePortMSG().getInit(this@MainActivity, MSG ?: "").MSG())
                     getDigit("数据库") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("数据库插入：${eOperationDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
-                        R.id.bt_item2 -> Hint("数据库查询:" + eOperationDao(this@MainActivity).queryAllUser(Data()).size)
-                        R.id.bt_item3 -> Hint("数据库删除：${eOperationDao(this@MainActivity).deleteAll(Data("", ""))}")
+                        R.id.bt_item1 -> Hint("数据库插入：${eGreenDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
+                        R.id.bt_item2 -> Hint("数据库查询:" + eGreenDao(this@MainActivity).queryAllUser(Data()).size)
+                        R.id.bt_item3 -> Hint("数据库删除：${eGreenDao(this@MainActivity).deleteAll(Data("", ""))}")
                     }
                     getDigit("系统设置权限检测") -> when (view?.id) {
                         R.id.bt_item1 -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

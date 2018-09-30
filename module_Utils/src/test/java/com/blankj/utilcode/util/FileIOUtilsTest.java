@@ -17,7 +17,7 @@ import static com.blankj.utilcode.util.TestConfig.PATH_TEMP;
  *     author: Blankj
  *     blog  : http://blankj.com
  *     time  : 2017/05/24
- *     desc  : test FileIOUtils
+ *     desc  : test eFileIOUtils
  * </pre>
  */
 public class FileIOUtilsTest {
@@ -34,31 +34,31 @@ public class FileIOUtilsTest {
 //        String p1 = path + "copy.zip";
 //        byte[] data = new byte[(1 << 20) * 100];
 //        long st, end;
-//        FileUtils.deleteFile(p);
+//        eFileUtils.deleteFile(p);
 //
 //        st = System.currentTimeMillis();
 //        for (int i = 0; i < 100; i++) {
-//            FileIOUtils.writeFileFromBytesByStream(p, data, true);
+//            eFileIOUtils.writeFileFromBytesByStream(p, data, true);
 //        }
 //        end = System.currentTimeMillis();
 //        System.out.println(end - st);
-//        FileUtils.deleteFile(p);
+//        eFileUtils.deleteFile(p);
 //
 //        st = System.currentTimeMillis();
 //        for (int i = 0; i < 100; i++) {
-//            FileIOUtils.writeFileFromBytesByChannel(p, data, true);
+//            eFileIOUtils.writeFileFromBytesByChannel(p, data, true);
 //        }
 //        end = System.currentTimeMillis();
 //        System.out.println(end - st);
-//        FileUtils.deleteFile(p);
+//        eFileUtils.deleteFile(p);
 //
 //        st = System.currentTimeMillis();
 //        for (int i = 0; i < 100; i++) {
-//            FileIOUtils.writeFileFromBytesByMap(p, data, true, false);
+//            eFileIOUtils.writeFileFromBytesByMap(p, data, true, false);
 //        }
 //        end = System.currentTimeMillis();
 //        System.out.println(end - st);
-//        FileUtils.deleteFile(p);
+//        eFileUtils.deleteFile(p);
     }
 
     @Test
@@ -81,15 +81,15 @@ public class FileIOUtilsTest {
 //        String p = path + "test.app.zip";
 //        long st, end;
 //        st = System.currentTimeMillis();
-//        FileIOUtils.readFile2BytesByStream(p);
+//        eFileIOUtils.readFile2BytesByStream(p);
 //        end = System.currentTimeMillis();
 //        System.out.println(end - st);
 //        st = System.currentTimeMillis();
-//        FileIOUtils.readFile2BytesByChannel(p);
+//        eFileIOUtils.readFile2BytesByChannel(p);
 //        end = System.currentTimeMillis();
 //        System.out.println(end - st);
 //        st = System.currentTimeMillis();
-//        FileIOUtils.readFile2BytesByMap(p);
+//        eFileIOUtils.readFile2BytesByMap(p);
 //        end = System.currentTimeMillis();
 //        System.out.println(end - st);
     }

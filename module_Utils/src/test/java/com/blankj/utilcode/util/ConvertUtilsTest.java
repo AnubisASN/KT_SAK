@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  *     author: Blankj
  *     blog  : http://blankj.com
  *     time  : 2016/08/13
- *     desc  : test ConvertUtils
+ *     desc  : test eConvertUtils
  * </pre>
  */
 public class ConvertUtilsTest {

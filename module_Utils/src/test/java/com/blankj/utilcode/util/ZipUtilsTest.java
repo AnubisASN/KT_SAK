@@ -19,7 +19,7 @@ import static junit.framework.TestCase.assertTrue;
  *     author: Blankj
  *     blog  : http://blankj.com
  *     time  : 2016/09/10
- *     desc  : test ZipUtils
+ *     desc  : test eZipUtils
  * </pre>
  */
 public class ZipUtilsTest {

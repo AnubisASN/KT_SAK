@@ -23,7 +23,7 @@ import static org.junit.Assert.fail;
  *     author: Blankj
  *     blog  : http://blankj.com
  *     time  : 2017/12/15
- *     desc  : ReflectUtils 单元测试
+ *     desc  : eReflectUtils 单元测试
  * </pre>
  */
 public class ReflectUtilsTest {

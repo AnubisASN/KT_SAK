@@ -30,7 +30,7 @@ import static org.junit.Assert.assertNull;
  *     author: Blankj
  *     blog  : http://blankj.com
  *     time  : 2017/05/26
- *     desc  : test CacheDiskUtils
+ *     desc  : test eCacheDiskUtils
  * </pre>
  */
 public class CacheDiskUtilsTest extends BaseTest {
@@ -41,18 +41,18 @@ public class CacheDiskUtilsTest extends BaseTest {
     private static final File             DISK2_FILE        = new File(DISK2_PATH);
     private static final CacheDiskUtils CACHE_DISK_UTILS1 = CacheDiskUtils.getInstance(DISK1_FILE);
     private static final CacheDiskUtils   CACHE_DISK_UTILS2 = CacheDiskUtils.getInstance(DISK2_FILE);
-    private static final byte[]           BYTES             = "CacheDiskUtils".getBytes();
-    private static final String           STRING            = "CacheDiskUtils";
+    private static final byte[]           BYTES             = "eCacheDiskUtils".getBytes();
+    private static final String           STRING            = "eCacheDiskUtils";
     private static final JSONObject       JSON_OBJECT       = new JSONObject();
     private static final JSONArray        JSON_ARRAY        = new JSONArray();
-    private static final ParcelableTest   PARCELABLE_TEST   = new ParcelableTest("Blankj", "CacheDiskUtils");
-    private static final SerializableTest SERIALIZABLE_TEST = new SerializableTest("Blankj", "CacheDiskUtils");
+    private static final ParcelableTest   PARCELABLE_TEST   = new ParcelableTest("Blankj", "eCacheDiskUtils");
+    private static final SerializableTest SERIALIZABLE_TEST = new SerializableTest("Blankj", "eCacheDiskUtils");
     private static final Bitmap           BITMAP            = Bitmap.createBitmap(100, 100, Bitmap.Config.RGB_565);
     private static final Drawable         DRAWABLE          = new BitmapDrawable(Utils.getApp().getResources(), BITMAP);
 
     @Before
     public void setUp() throws Exception {
-        JSON_OBJECT.put("class", "CacheDiskUtils");
+        JSON_OBJECT.put("class", "eCacheDiskUtils");
         JSON_OBJECT.put("author", "Blankj");
         JSON_ARRAY.put(0, JSON_OBJECT);
 

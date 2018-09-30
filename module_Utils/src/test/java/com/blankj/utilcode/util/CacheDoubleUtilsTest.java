@@ -39,12 +39,12 @@ public class CacheDoubleUtilsTest extends BaseTest {
 
     private static final String           CACHE_PATH         = PATH_CACHE + "double" + FILE_SEP;
     private static final File             CACHE_FILE         = new File(CACHE_PATH);
-    private static final byte[]           BYTES              = "CacheDoubleUtils".getBytes();
-    private static final String           STRING             = "CacheDoubleUtils";
+    private static final byte[]           BYTES              = "eCacheDoubleUtils".getBytes();
+    private static final String           STRING             = "eCacheDoubleUtils";
     private static final JSONObject       JSON_OBJECT        = new JSONObject();
     private static final JSONArray        JSON_ARRAY         = new JSONArray();
-    private static final ParcelableTest   PARCELABLE_TEST    = new ParcelableTest("Blankj", "CacheDoubleUtils");
-    private static final SerializableTest SERIALIZABLE_TEST  = new SerializableTest("Blankj", "CacheDoubleUtils");
+    private static final ParcelableTest   PARCELABLE_TEST    = new ParcelableTest("Blankj", "eCacheDoubleUtils");
+    private static final SerializableTest SERIALIZABLE_TEST  = new SerializableTest("Blankj", "eCacheDoubleUtils");
     private static final Bitmap           BITMAP             = Bitmap.createBitmap(100, 100, Bitmap.Config.RGB_565);
     private static final Drawable         DRAWABLE           = new BitmapDrawable(Utils.getApp().getResources(), BITMAP);
     private static final CacheMemoryUtils CACHE_MEMORY_UTILS = CacheMemoryUtils.getInstance();
@@ -53,7 +53,7 @@ public class CacheDoubleUtilsTest extends BaseTest {
 
     @Before
     public void setUp() throws Exception {
-        JSON_OBJECT.put("class", "CacheDoubleUtils");
+        JSON_OBJECT.put("class", "eCacheDoubleUtils");
         JSON_OBJECT.put("author", "Blankj");
         JSON_ARRAY.put(0, JSON_OBJECT);
 
