@@ -2,7 +2,6 @@ package com.anubis.kt_extends
 
 import android.app.Activity
 import android.app.ActivityManager
-import android.app.Application
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
@@ -16,32 +15,20 @@ import android.media.MediaPlayer
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
-import android.net.wifi.WifiConfiguration
-import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.preference.*
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.startActivity
 import android.text.TextUtils.indexOf
 import android.util.Base64
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
-import com.lzy.imagepicker.ImagePicker
-import com.lzy.imagepicker.loader.ImageLoader
-import com.lzy.imagepicker.util.Utils
-import com.lzy.imagepicker.view.CropImageView
-import com.tencent.bugly.Bugly.enable
-import com.tencent.bugly.proguard.p
 import org.jetbrains.anko.activityManager
-import org.jetbrains.anko.startActivity
 import org.json.JSONObject
 import java.io.*
-import java.lang.reflect.InvocationTargetException
-import java.lang.reflect.Method
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -49,7 +36,6 @@ import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.experimental.and
-import kotlin.math.log
 
 
 /**
@@ -239,9 +225,30 @@ fun ePlayVoice(context: Context, music: Int, isLoop: Boolean = false) {
     } catch (e: Exception) {
         e.printStackTrace()//输出异常信息
     }
-
 }
 
+
+fun eAssetsCopy(context: Context,fileName : String,copyName: String) {
+    try {
+        if (!File(copyName).exists()) {
+            eLog("$fileName 开始复制")
+            val   inputStream = context.getResources().getAssets().open(fileName)// assets文件夹下的文件
+            val fileOutputStream = FileOutputStream(copyName)// 保存到本地的文件夹下的文件
+            val buffer = ByteArray(1024)
+            var count = 0
+            while (inputStream.read(buffer).apply { count = this } > 0) {
+                fileOutputStream.write(buffer, 0, count)
+            }
+            fileOutputStream.flush()
+            fileOutputStream.close()
+            inputStream.close()
+            eLog("复制完成$copyName" )
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+        eLogE("文件复制错误")
+    }
+}
 /**
  * String Json解析扩展--------------------------------------------------------------------------------
  */
@@ -1029,6 +1036,7 @@ object ePermissions {
  * linux命令扩展类------------------------------------------------------------------------------------
  */
 object eShell {
+    val remount="mount -o remount,rw rootfs "
     //判断是否有Root权限
     fun eHaveRoot(): Boolean {
         try {

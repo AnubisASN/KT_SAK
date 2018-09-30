@@ -5,28 +5,17 @@ import android.graphics.Color
 import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.hardware.Camera
-import android.opengl.GLSurfaceView
-import android.os.Bundle
-import android.os.Handler
 import android.util.Log
-import android.view.MotionEvent
-import android.view.SurfaceView
 import android.view.View
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eBitmap
-import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.arcsoft.facetracking.AFT_FSDKEngine
 import com.arcsoft.facetracking.AFT_FSDKFace
 import com.arcsoft.facetracking.AFT_FSDKVersion
-
-import com.guo.android_extend.tools.CameraHelper
 import com.guo.android_extend.widget.CameraFrameData
 import com.guo.android_extend.widget.CameraGLSurfaceView
 import com.guo.android_extend.widget.CameraSurfaceView
 import com.guo.android_extend.widget.CameraSurfaceView.OnCameraListener
-
-import kotlin.collections.ArrayList
 
 /**
  * Author  ： AnubisASN   on 2018-07-23 9:12.
@@ -81,19 +70,19 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
     var mFaceNum: Int = 0
     var mBitmap: Bitmap? = null
     var mAFT_FSDKFace: AFT_FSDKFace? = null
-    var mIsState=true
+    var mIsState = true
     private var isShearFaceBitmap = false
-    private  var shearNum=50
+    private var shearNum = 50
     private var color: Int = Color.GREEN
     private var stroke: Int = 2
-    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView,CameraState:Boolean=true, color: Int = Color.GREEN, stroke: Int = 2, isShearFaceBitmap: Boolean = false, shearNum:Int=50,cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
+    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, CameraState: Boolean = true, color: Int = Color.GREEN, stroke: Int = 2, isShearFaceBitmap: Boolean = false, shearNum: Int = 50, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFTActivity {
         mGLSurfaceView = GLSurfaceView
         mSurfaceView = SurfaceView
-        mIsState=CameraState
+        mIsState = CameraState
         this.color = color
         this.stroke = stroke
         this.isShearFaceBitmap = isShearFaceBitmap
-        this.shearNum=shearNum
+        this.shearNum = shearNum
         mCameraID = if (cameraId == 0) Camera.CameraInfo.CAMERA_FACING_BACK else Camera.CameraInfo.CAMERA_FACING_FRONT
         mCameraRotate = if (cameraId == 0) 90 else 270
         mCameraMirror = cameraId != 0
@@ -110,6 +99,17 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
         return this
     }
 
+    fun setParameters ( color: Int = this.color, stroke: Int = this.stroke, isShearFaceBitmap: Boolean =  this.isShearFaceBitmap, shearNum: Int = this.shearNum, cameraId: Int = mCameraID) {
+        this.color = color
+        this.stroke = stroke
+        this.isShearFaceBitmap = isShearFaceBitmap
+        this.shearNum = shearNum
+        if (cameraId!= mCameraID){
+            mCameraID=cameraId
+            onClickCameraSwitch()
+        }
+
+    }
 
     override fun setupCamera(): Camera? {
         mCamera = Camera.open(mCameraID)
@@ -144,7 +144,7 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
         }
         mFaceNum = mFaceResult.size
         if (mFaceNum != 0 && mImageNV21 != null && mIsState) {
-            mIsState=false
+            mIsState = false
             val size = mCamera!!.parameters.previewSize
             if (isShearFaceBitmap) {
                 try {
@@ -167,7 +167,7 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
 
         }
         if (mFaceNum == 0 || !mIsState) {
-            mIsState=true
+            mIsState = true
             mImageNV21 = null
         }
         for (face in mFaceResult) {
@@ -220,7 +220,7 @@ object eArcFaceFTActivity : OnCameraListener, Camera.AutoFocusCallback {
         mGLSurfaceView!!.gleS2Render.setViewAngle(mCameraMirror, mCameraRotate)
     }
 
-    fun restartCamera(){
+    fun restartCamera() {
         mCamera?.startPreview()
     }
 
