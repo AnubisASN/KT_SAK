@@ -43,30 +43,27 @@ internal object ExcelUtils {
     /**
      * 单元格的格式设置 字体大小 颜色 对齐方式、背景颜色等...
      */
-    fun format() {
-        try {
-            arial14font = WritableFont(WritableFont.ARIAL, 14, WritableFont.BOLD)
-            arial14font!!.colour = jxl.format.Colour.LIGHT_BLUE
-            arial14format = WritableCellFormat(arial14font)
-            arial14format!!.alignment = jxl.format.Alignment.CENTRE
-            arial14format!!.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN)
-            arial14format!!.setBackground(jxl.format.Colour.VERY_LIGHT_YELLOW)
+    fun format() = try {
+        arial14font = WritableFont(WritableFont.ARIAL, 14, WritableFont.BOLD)
+        arial14font!!.colour = jxl.format.Colour.LIGHT_BLUE
+        arial14format = WritableCellFormat(arial14font)
+        arial14format!!.alignment = jxl.format.Alignment.CENTRE
+        arial14format!!.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN)
+        arial14format!!.setBackground(jxl.format.Colour.VERY_LIGHT_YELLOW)
 
-            arial10font = WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD)
-            arial10format = WritableCellFormat(arial10font)
-            arial10format!!.alignment = jxl.format.Alignment.CENTRE
-            arial10format!!.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN)
-            arial10format!!.setBackground(Colour.GRAY_25)
+        arial10font = WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD)
+        arial10format = WritableCellFormat(arial10font)
+        arial10format!!.alignment = jxl.format.Alignment.CENTRE
+        arial10format!!.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN)
+        arial10format!!.setBackground(Colour.GRAY_25)
 
-            arial12font = WritableFont(WritableFont.ARIAL, 10)
-            arial12format = WritableCellFormat(arial12font)
-            arial10format!!.alignment = jxl.format.Alignment.CENTRE//对齐格式
-            arial12format!!.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN) //设置边框
+        arial12font = WritableFont(WritableFont.ARIAL, 10)
+        arial12format = WritableCellFormat(arial12font)
+        arial10format!!.alignment = jxl.format.Alignment.CENTRE//对齐格式
+        arial12format!!.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN) //设置边框
 
-        } catch (e: WriteException) {
-            e.printStackTrace()
-        }
-
+    } catch (e: WriteException) {
+        e.printStackTrace()
     }
 
     /**

@@ -108,7 +108,6 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
             mCameraID=cameraId
             onClickCameraSwitch()
         }
-
     }
 
     override fun setupCamera(): Camera? {

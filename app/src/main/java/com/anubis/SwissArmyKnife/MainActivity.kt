@@ -133,7 +133,7 @@ class MainActivity : Activity() {
                         }
                         R.id.bt_item2 -> {
                             Hint("搜索WIFI:")
-                            for (wifi in eWiFi.eGetScanWifi(this@MainActivity)!!) {
+                            for (wifi in eWiFi.eGetScanWiFi(this@MainActivity)!!) {
                                 Hint("SSID:${wifi.SSID}")
                             }
                         }

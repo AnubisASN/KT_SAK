@@ -23,15 +23,14 @@ package com.anubis.module_office.Excel
  * @param fileName: String = "记录"；文件名
  * @param sheetName: String = "记录";表内标题
  */
+
+
 import android.content.Context
 import android.os.Environment
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eShowTip
-
-
 import java.io.File
-import java.lang.reflect.Method
 import java.util.*
 
 
@@ -77,7 +76,7 @@ class eExportExcel(val mContext: Context, val mTitle: Array<String>, val mDatas:
                 val beanList = ArrayList<String>()
                 for (j in mTitle.indices) {
                     // val method  = clazz.getDeclaredMethod("getData", Array<String>::class.java)
-                    val method = clazz.getMethod("getData")
+                    val method = clazz.getDeclaredMethod("getData")
                     val data = method?.invoke(datas) as Array<String>
                     beanList.add(data[j])
                 }

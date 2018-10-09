@@ -1,27 +1,14 @@
 package com.anubis.module_ewifi
 
 import android.content.Context
-import android.content.Intent
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
-import com.anubis.kt_extends.eLogE
-import java.lang.reflect.InvocationTargetException
-import android.widget.Toast
 import com.anubis.kt_extends.eLog
-import com.anubis.kt_extends.eShell
+import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eShowTip
-import android.os.Bundle
-import java.lang.reflect.AccessibleObject.setAccessible
-import android.net.ConnectivityManager
-import android.net.Uri
-import android.os.Build
-import android.os.Handler
-import android.os.ResultReceiver
-import android.provider.Settings
-import android.support.v4.content.ContextCompat.startActivity
-import android.util.Log
+import java.lang.reflect.InvocationTargetException
 
 
 /**
@@ -38,7 +25,19 @@ import android.util.Log
  *Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  *Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  *Router :  /'Module'/'Function'
- *说明：
+ *说明：eWiFi热点
+ * @初始化方法：eCreateWifiHotspot()
+ * @param Gcontext: Context；意图
+ * @param SSID: String；WiFi名
+ * @param PSW: String; WiFi密码
+ * @param HiddenSSID: Boolean； 是否隐藏
+ * @return Hint:String; 返回提示
+ * @设置方法：eCloseWifiHotspot()
+ * @param context:Context; 意图
+ * @return result:Boolean; 返回提示
+ * @wifi扫描方法：eGetScanWiFi（）
+ * @param context:Context; 意图
+ * @return mWifiList:MutableList<ScanResult>;信息列表
  */
 /**
  * 创建Wifi热点-------------------------------------------------------------------------------------
@@ -109,7 +108,7 @@ object eWiFi {
 
 
     //Wifi扫描结果
-    fun eGetScanWifi(context: Context): MutableList<ScanResult>? {
+    fun eGetScanWiFi(context: Context): MutableList<ScanResult>? {
         mWifiManager = context.getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
         mWifiInfo = mWifiManager!!.connectionInfo
         if (!mWifiManager!!.isWifiEnabled) {
