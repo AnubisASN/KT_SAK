@@ -25,6 +25,9 @@ import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
 import com.anubis.kt_extends.eTime.eGetCurrentTime
+import com.anubis.module_asrw.eASRW
+import com.anubis.module_asrw.recognization.IStatus
+import com.anubis.module_asrw.recognization.PidBuilder
 import com.anubis.module_ewifi.eWiFi
 import com.anubis.module_greendao.eGreenDao
 import com.anubis.module_portMSG.ePortMSG
@@ -32,9 +35,6 @@ import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
 import com.anubis.module_vncs.eVNC
-import com.anubis.module_wakeup.eWakeUp
-import com.anubis.module_wakeup.recognization.IStatus
-import com.anubis.module_wakeup.recognization.PidBuilder
 import com.anubis.utils.util.eToastUtils
 import com.baidu.speech.asr.SpeechConstant
 import kotlinx.android.synthetic.main.activity_main.*
@@ -53,16 +53,24 @@ class MainActivity : Activity() {
     private var file: File? = null
     private var datas: Array<String>? = null
     private var Time: Long = 0
-    private var wur: eWakeUp? = null
+    private var wur: eASRW? = null
+    private val handleMsg = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            handleMsg(msg)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO))
+        ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP = app().get()
         app().get()?.getActivity()!!.add(this)
         TTS = eTTS.ttsInit(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别", "et_bt串口通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt串口通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
+
     }
 
     private fun getDigit(str: String): Int {
@@ -105,18 +113,15 @@ class MainActivity : Activity() {
                             }
                         }
                         when (view?.id) {
+
                             R.id.bt_item1 -> {
                                 TTS = TTS!!.setParams(voiceModel[spID])
                                 Handler().postDelayed({ TTS!!.speak("发音人切换发音调用") }, 800)
                             }
                             R.id.bt_item2 -> {
-                               wur= eWakeUp.start(this@MainActivity, object : Handler() {
-                                   override fun handleMessage(msg: Message) {
-                                       super.handleMessage(msg)
-                                       handleMsg(msg)
-                                   }
-                               })
+                                eASRW.start(this@MainActivity,handleMsg)
                             }
+                            R.id.bt_item3 -> eASRW.ASR(this@MainActivity,handleMsg)
                         }
                     }
                     getDigit("VNC") -> when (view?.id) {
@@ -234,38 +239,38 @@ class MainActivity : Activity() {
             wur?.myRecognizer?.cancel()
             wur?.myRecognizer?.start(params)
         }
-                when (msg.what) {
-                    0 -> {
-                        //唤醒成功
-                        eLog("唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                    }
-                    IStatus.STATUS_NONE -> {
-//                识别引擎空闲
-                        eLog("识别引擎空闲:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                    }
-                    IStatus.STATUS_READY -> {
-//                引擎就绪 开始说话
-                        eLog("引擎就绪 开始说话:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                    }
-                    IStatus.STATUS_SPEAKING -> {
-//                监测到说话
-                        eLog("监测到说话:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                    }
-                    IStatus.STATUS_RECOGNITION -> {
-//                临时识别
-                        eLog("临时识别:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                    }
-                    IStatus.STATUS_FINISHED -> {//识别结束
-                        eLog("识别结束:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                        if (msg.arg2 == 1) {
-                            eLog("最终识别：" + msg.obj.toString())
-                            eShowTip("最终识别：" + msg.obj.toString())
-                        }
-
-                    }
-
-                }
+        when (msg.what) {
+            0 -> {
+                //唤醒成功
+                eLog("唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
             }
+            IStatus.STATUS_NONE -> {
+//                识别引擎空闲
+                eLog("识别引擎空闲:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+            }
+            IStatus.STATUS_READY -> {
+//                引擎就绪 开始说话
+                eLog("引擎就绪 开始说话:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+            }
+            IStatus.STATUS_SPEAKING -> {
+//                监测到说话
+                eLog("监测到说话:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+            }
+            IStatus.STATUS_RECOGNITION -> {
+//                临时识别
+                eLog("临时识别:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+            }
+            IStatus.STATUS_FINISHED -> {//识别结束
+                eLog("识别结束:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+                if (msg.arg2 == 1) {
+                    eLog("最终识别：" + msg.obj.toString())
+                    eShowTip("最终识别：" + msg.obj.toString())
+                }
+
+            }
+
+        }
+    }
 
     private fun Hint(str: String) {
         val Str = "${eGetCurrentTime("MM-dd HH:mm:ss")}： $str\n\n\n"

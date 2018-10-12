@@ -57,7 +57,7 @@ dependencies {
     implementation project(':module_VNC')
     implementation project(':module_Utils')
 //    implementation project(':module_WakeUp')
-    implementation project(':module_WakeUp')
+    implementation project(':module_ASRW')
 }
 repositories {
     mavenCentral()
