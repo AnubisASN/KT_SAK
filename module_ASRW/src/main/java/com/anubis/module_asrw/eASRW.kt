@@ -58,9 +58,9 @@ object eASRW : IStatus {
 
     private var myWakeup: MyWakeup? = null
     private val status = IStatus.STATUS_NONE
-    fun start(context: Context, handler: Handler, params: HashMap<String, Any> = HashMap()):eASRW{
+    fun start(context: Context, handler: Handler,AID_AKY_SKY: Array<String> = arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o"), params: HashMap<String, Any> = HashMap()):eASRW{
         asrStart(context,handler)
-        wakeStart(context,handler, params)
+        wakeStart(context,handler, AID_AKY_SKY,params)
         return this@eASRW
     }
 
@@ -72,10 +72,13 @@ object eASRW : IStatus {
 
     }
 
-   private fun wakeStart(context: Context, handler: Handler, params: HashMap<String, Any> = HashMap()){
+   private fun wakeStart(context: Context, handler: Handler,AID_AKY_SKY:Array<String>, params: HashMap<String, Any> = HashMap()){
         val listener = RecogWakeupListener(handler)
         myWakeup = myWakeup ?: MyWakeup(context, listener)
         params[SpeechConstant.WP_WORDS_FILE] = "assets:///WakeUp.bin"
+       params[SpeechConstant.APP_ID]=AID_AKY_SKY[0]
+       params[SpeechConstant.APP_KEY]=AID_AKY_SKY[1]
+       params[SpeechConstant.SECRET]=AID_AKY_SKY[2]
         myWakeup!!.start(params)
     }
     fun ASR(context: Context, handler: Handler ,backTrackInMs: Int = 1500,AID_AKY_SKY: Array<String> = arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o")) {
@@ -95,7 +98,7 @@ object eASRW : IStatus {
         myRecognizer?.cancel()?: asrStart(context,handler)
         myRecognizer?.start(params)
     }
-    fun wakeStop() {
+    fun asrwStop() {
         myRecognizer?.stop()
     }
 
