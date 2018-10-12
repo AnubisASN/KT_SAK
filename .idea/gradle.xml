@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/module_TTS" />
             <option value="$PROJECT_DIR$/module_Utils" />
             <option value="$PROJECT_DIR$/module_VNC" />
+            <option value="$PROJECT_DIR$/module_WakeUp" />
             <option value="$PROJECT_DIR$/module_WiFi" />
           </set>
         </option>

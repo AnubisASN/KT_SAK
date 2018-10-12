@@ -6,21 +6,21 @@ package com.anubis.module_tts
 import android.app.Application
 import android.os.Handler
 import android.util.Pair
-import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eGetSystemSharedPreferences
+import com.anubis.kt_extends.eLog
+import com.anubis.kt_extends.eLogE
+import com.anubis.kt_extends.eSetSystemSharedPreferences
 import com.anubis.module_tts.Bean.ParamMixMode
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
-
 import com.anubis.module_tts.control.InitConfig
 import com.anubis.module_tts.control.MySyntherizer
 import com.anubis.module_tts.control.NonBlockSyntherizer
 import com.anubis.module_tts.listener.UiMessageListener
-import com.baidu.tts.chainofresponsibility.logger.LoggerProxy
-import com.baidu.tts.client.TtsMode
-
-import java.io.IOException
 import com.anubis.module_tts.util.OfflineResource
+import com.baidu.tts.chainofresponsibility.logger.LoggerProxy
 import com.baidu.tts.client.SpeechSynthesizer
+import com.baidu.tts.client.TtsMode
 import java.util.*
 
 /**
@@ -120,7 +120,7 @@ object eTTS {
 //        checkResult(result, "loadModel")
     }
 
-    fun initTTS(mApplication: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK, AID_AKY_SKY: Array<String> = arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o")): eTTS {
+    fun ttsInit(mApplication: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK, AID_AKY_SKY: Array<String> = arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o")): eTTS {
         KEYS = AID_AKY_SKY
         val mode = when (voiceMode) {
             VoiceModel.FEMALE -> "F"
@@ -156,7 +156,7 @@ object eTTS {
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString())
-       return initTTS(mActivity!!, mHandler!!, ttsMode,voiceMode)
+       return ttsInit(mActivity!!, mHandler!!, ttsMode,voiceMode)
     }
 
 

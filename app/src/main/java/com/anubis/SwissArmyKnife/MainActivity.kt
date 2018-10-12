@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Message
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
@@ -31,12 +32,19 @@ import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
 import com.anubis.module_vncs.eVNC
+import com.anubis.module_wakeup.eWakeUp
+import com.anubis.module_wakeup.recognization.IStatus
+import com.anubis.module_wakeup.recognization.PidBuilder
 import com.anubis.utils.util.eToastUtils
+import com.baidu.speech.asr.SpeechConstant
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
+import java.util.LinkedHashMap
+import kotlin.collections.ArrayList
+import kotlin.collections.set
 
 class MainActivity : Activity() {
     private var APP: app? = null
@@ -45,15 +53,15 @@ class MainActivity : Activity() {
     private var file: File? = null
     private var datas: Array<String>? = null
     private var Time: Long = 0
-
+    private var wur: eWakeUp? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA))
+        ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO))
         APP = app().get()
         app().get()?.getActivity()!!.add(this)
-        TTS = eTTS.initTTS(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用", "et_bt串口通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        TTS = eTTS.ttsInit(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX, VoiceModel.MALE)
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别", "et_bt串口通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
@@ -101,6 +109,14 @@ class MainActivity : Activity() {
                                 TTS = TTS!!.setParams(voiceModel[spID])
                                 Handler().postDelayed({ TTS!!.speak("发音人切换发音调用") }, 800)
                             }
+                            R.id.bt_item2 -> {
+                               wur= eWakeUp.start(this@MainActivity, object : Handler() {
+                                   override fun handleMessage(msg: Message) {
+                                       super.handleMessage(msg)
+                                       handleMsg(msg)
+                                   }
+                               })
+                            }
                         }
                     }
                     getDigit("VNC") -> when (view?.id) {
@@ -108,17 +124,17 @@ class MainActivity : Activity() {
                     }
                     getDigit("后台杀死") -> when (view?.id) {
                         R.id.bt_item1 -> {
-                            Hint("后台服务状态：${eApp.eIsServiceRunning(this@MainActivity,MyService::class.java.name)}")
+                            Hint("后台服务状态：${eApp.eIsServiceRunning(this@MainActivity, MyService::class.java.name)}")
                             Hint("后台启动状态：${startService(Intent(this@MainActivity, MyService::class.java))}")
                         }
                         R.id.bt_item2 -> Hint("后台杀死状态：${eApp.eKillBackgroundProcesses(this@MainActivity, MyService::class.java.name)}")
-                        R.id.bt_item3->{
+                        R.id.bt_item3 -> {
                             eToastUtils.setMsgColor(Color.GREEN)
                             eToastUtils.showShort("Toast测试")
                         }
                     }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
-                    getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMSG.MSG(this@MainActivity,if(MSG.isEmpty())"0" else MSG,"/dev/ttyS1"))
+                    getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMSG.MSG(this@MainActivity, if (MSG.isEmpty()) "0" else MSG, "/dev/ttyS1"))
 //                        Hint("串口通讯状态：" + ePortMSG().getInit(this@MainActivity, MSG ?: "").MSG())
                     getDigit("数据库") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("数据库插入：${eGreenDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
@@ -193,6 +209,63 @@ class MainActivity : Activity() {
         rvList.setItemViewCacheSize(datas!!.size)
         eExecShell("mount -o remount,rw rootfs /system/ ")
     }
+
+    //    0 唤醒成功         3    引擎就绪 开始说话            4 监测到说话      9001  监测到结束说话        5  临时识别      6  识别结束        2 识别引擎空闲
+//    arg1 类型   arg2 最终状态   what  引擎状态   obj String消息
+    private val backTrackInMs = 1500
+    private val MSG_TYPE_WUR = 11
+    private val MSG_TYPE_ASR = 22
+    private val MSG_TYPE_TTS = 33
+    private val MSG_STATE_TTS_SPEAK_OVER = 0
+    private val MSG_STATE_TTS_SPEAK_START = 1
+    private fun handleMsg(msg: Message) {
+        if (msg.what == IStatus.STATUS_WAKEUP_SUCCESS) {
+            eLog("语音唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+            eShowTip("语音唤醒成功")
+//                  此处 开始正常识别流程
+            val params = LinkedHashMap<String, Any>()
+            params[SpeechConstant.ACCEPT_AUDIO_VOLUME] = false
+            params[SpeechConstant.VAD] = SpeechConstant.VAD_DNN
+            // 如识别短句，不需要需要逗号，将PidBuilder.INPUT改为搜索模型PidBuilder.SEARCH
+            params[SpeechConstant.PID] = PidBuilder.create().model(PidBuilder.INPUT).toPId()
+            if (backTrackInMs > 0) { // 方案1， 唤醒词说完后，直接接句子，中间没有停顿。
+                params[SpeechConstant.AUDIO_MILLS] = System.currentTimeMillis() - backTrackInMs
+            }
+            wur?.myRecognizer?.cancel()
+            wur?.myRecognizer?.start(params)
+        }
+                when (msg.what) {
+                    0 -> {
+                        //唤醒成功
+                        eLog("唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+                    }
+                    IStatus.STATUS_NONE -> {
+//                识别引擎空闲
+                        eLog("识别引擎空闲:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+                    }
+                    IStatus.STATUS_READY -> {
+//                引擎就绪 开始说话
+                        eLog("引擎就绪 开始说话:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+                    }
+                    IStatus.STATUS_SPEAKING -> {
+//                监测到说话
+                        eLog("监测到说话:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+                    }
+                    IStatus.STATUS_RECOGNITION -> {
+//                临时识别
+                        eLog("临时识别:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+                    }
+                    IStatus.STATUS_FINISHED -> {//识别结束
+                        eLog("识别结束:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
+                        if (msg.arg2 == 1) {
+                            eLog("最终识别：" + msg.obj.toString())
+                            eShowTip("最终识别：" + msg.obj.toString())
+                        }
+
+                    }
+
+                }
+            }
 
     private fun Hint(str: String) {
         val Str = "${eGetCurrentTime("MM-dd HH:mm:ss")}： $str\n\n\n"

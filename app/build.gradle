@@ -55,8 +55,9 @@ dependencies {
     implementation project(':module_GreenDao')
     implementation project(':module_WiFi')
     implementation project(':module_VNC')
-    implementation files('src/main/libs/javabase64-1.3.1.jar')
     implementation project(':module_Utils')
+//    implementation project(':module_WakeUp')
+    implementation project(':module_WakeUp')
 }
 repositories {
     mavenCentral()
