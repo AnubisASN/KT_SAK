@@ -212,7 +212,7 @@ class MainActivity : Activity() {
 
     //    0 唤醒成功         3    引擎就绪 开始说话            4 监测到说话      9001  监测到结束说话        5  临时识别      6  识别结束        2 识别引擎空闲
 //    arg1 类型   arg2 最终状态   what  引擎状态   obj String消息
-    private val backTrackInMs = 1500
+    private val backTrackInMs = 2000
     private val MSG_TYPE_WUR = 11
     private val MSG_TYPE_ASR = 22
     private val MSG_TYPE_TTS = 33
