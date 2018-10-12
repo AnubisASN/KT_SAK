@@ -58,27 +58,27 @@ object eASRW : IStatus {
 
     private var myWakeup: MyWakeup? = null
     private val status = IStatus.STATUS_NONE
-    fun start(context: Context, handler: Handler, params: HashMap<String, Any> = HashMap()){
+    fun start(context: Context, handler: Handler, params: HashMap<String, Any> = HashMap()):eASRW{
         asrStart(context,handler)
         wakeStart(context,handler, params)
+        return this@eASRW
     }
 
-   private fun asrStart(context: Context, handler: Handler ): eASRW {
+   private fun asrStart(context: Context, handler: Handler ) {
         Logger.setHandler(handler)
         // 初始化识别引擎
         val recogListener = MessageStatusRecogListener(handler)
         myRecognizer = myRecognizer ?: MyRecognizer(context, recogListener)
-        return this@eASRW
+
     }
 
-   private fun wakeStart(context: Context, handler: Handler, params: HashMap<String, Any> = HashMap()): eASRW {
+   private fun wakeStart(context: Context, handler: Handler, params: HashMap<String, Any> = HashMap()){
         val listener = RecogWakeupListener(handler)
         myWakeup = myWakeup ?: MyWakeup(context, listener)
         params[SpeechConstant.WP_WORDS_FILE] = "assets:///WakeUp.bin"
         myWakeup!!.start(params)
-        return this@eASRW
     }
-    fun ASR(context: Context, handler: Handler ,backTrackInMs: Int = 1500) {
+    fun ASR(context: Context, handler: Handler ,backTrackInMs: Int = 1500,AID_AKY_SKY: Array<String> = arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o")) {
         eLog("语音开始识别")
 //                  此处 开始正常识别流程
         val params = LinkedHashMap<String, Any>()
@@ -86,6 +86,9 @@ object eASRW : IStatus {
         params[SpeechConstant.VAD] = SpeechConstant.VAD_DNN
         // 如识别短句，不需要需要逗号，将PidBuilder.INPUT改为搜索模型PidBuilder.SEARCH
         params[SpeechConstant.PID] = PidBuilder.create().model(PidBuilder.INPUT).toPId()
+        params[SpeechConstant.APP_ID]=AID_AKY_SKY[0]
+        params[SpeechConstant.APP_KEY]=AID_AKY_SKY[1]
+        params[SpeechConstant.SECRET]=AID_AKY_SKY[2]
         if (backTrackInMs > 0) { // 方案1， 唤醒词说完后，直接接句子，中间没有停顿。
             params[SpeechConstant.AUDIO_MILLS] = System.currentTimeMillis() - backTrackInMs
         }
