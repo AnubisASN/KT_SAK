@@ -15,7 +15,20 @@ import java.util.LinkedHashMap
 import kotlin.collections.HashMap
 import kotlin.collections.set
 
-//
+/**
+*说明：语音唤醒与识别集成调用
+*@调用方法：开始（）
+*@param context：Context;上下文
+*@param handler：Handler;语音唤醒与识别消息回调
+*@param params：HashMap <String,Any>;参数设置（参考文档，百度语音识别输出参数）
+*@return：eASRW
+*说明：语音识别调用
+*@调用方法：ASR（）
+*@param context：Context;上下文
+*@param handler：Handler;语音识别消息回调
+*@param backTrackInMs：Int;语音回溯时间
+*@param AID_AKY_SKY：数组; APP_ID，APP_KEY，SECRET
+**/
 //                       _oo0oo_
 //                      o8888888o
 //                      88" . "88
@@ -34,10 +47,7 @@ import kotlin.collections.set
 //         \  \ `_.   \_ __\ /__ _/   .-` /  /
 //     =====`-.____`.___ \_____/___.-`___.-'=====
 //                       `=---='
-//
-//
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//
 //               佛祖保佑         永无BUG
 /**
  * 唤醒后识别 本例可与ActivityWakeUp 及对比作为集成识别代码的参考
