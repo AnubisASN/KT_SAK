@@ -134,9 +134,10 @@ class MainActivity : Activity() {
                         when (view?.id) {
 
                             R.id.bt_item1 -> {
-                                TTS = TTS!!.setParams(voiceModel[spID])
-                                Handler().postDelayed({ TTS!!.speak("发音人切换发音调用") }, 800)
-                                Hint("发音人切换发音调用")
+                               TTS= TTS!!.setParams(voiceModel[spID])
+                                Handler().postDelayed({ val state=TTS!!.speak("发音人切换发音调用")
+                                    Hint("发音人切换发音调用:$state")}, 800)
+
                             }
                             R.id.bt_item2 -> {
                                asrw= eASRW.start(this@MainActivity,handleMsg)

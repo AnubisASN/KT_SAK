@@ -54,10 +54,10 @@ public class MessageStatusRecogListener extends StatusRecogListener {
         if (speechEndTime > 0) {
             long diffTime = System.currentTimeMillis() - speechEndTime;
             message += "；说话结束到识别结束耗时【" + diffTime + "ms】";
-
+            Log.i("TAG", "onAsrFinalResult: "+message);
         }
         speechEndTime = 0;
-        sendMessage(message, status, true);
+        sendMessage( results[0], status, true);
     }
 
     @Override

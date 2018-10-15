@@ -200,52 +200,52 @@ object eTTS {
         val result = synthesizer?.speak(text)
         if (result != null) {
             return checkResult(result, "speak")
+        } else {
+            eLog("result为空")
+            return false
         }
-        return false
     }
 
     /**
      * 批量播放
      */
-    fun batchSpeak(texts: ArrayList<Pair<String, String>>) :Boolean{
+    fun batchSpeak(texts: ArrayList<Pair<String, String>>):Boolean {
         val result = synthesizer!!.batchSpeak(texts)
-       return checkResult(result, "batchSpeak")
+        return checkResult(result, "batchSpeak")
     }
 
     /**
      * 暂停播放。仅调用speak后生效
      */
-    fun pause() :Boolean{
+    fun pause():Boolean {
         val result = synthesizer!!.pause()
-      return  checkResult(result, "pause")
+     return    checkResult(result, "pause")
     }
 
     /**
      * 继续播放。仅调用speak后生效，调用pause生效
      */
-    fun resume() :Boolean{
+    fun resume():Boolean {
         val result = synthesizer!!.resume()
-       return checkResult(result, "resume")
+        return checkResult(result, "resume")
     }
 
     /**
      * 停止合成引擎。即停止播放，合成，清空内部合成队列。
      */
-    fun stop() :Boolean{
+    fun stop():Boolean {
         val result = synthesizer!!.stop()
-        return checkResult(result, "stop")
+        return   checkResult(result, "stop")
     }
 
     // ================== ============= ==========================
     //检查回调方法
-    private fun checkResult(result: Int, method: String): Boolean {
-        return if (result != 0) {
+    private fun checkResult(result: Int, method: String):Boolean {
+        if (result != 0) {
             eLogE("error code :$result method:$method, 错误码文档:http://yuyin.baidu.com/docs/tts/122 ")
-            true
-        } else {
-            eLogE("语音合成引擎还未准备就绪")
-            false
+            return false
         }
+        return true
     }
 
     fun ttsDestroy() {
