@@ -62,20 +62,21 @@ object eTTS {
     private var offlineVoice = OfflineResource.VOICE_DUYY
     private var synthesizer: MySyntherizer? = null
 
-        /**
-         * 合成的参数，可以初始化时填写，也可以在合成前设置。
-         *
-         * @return
-         */
-        // 以下参数均为选填
-        // 该参数设置为TtsMode.MIX生效。即纯在线模式不生效。
-        // MIX_MODE_DEFAULT 默认 ，wifi状态下使用在线，非wifi离线。在线状态下，请求超时6s自动转离线
-        // MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI wifi状态下使用在线，非wifi离线。在线状态下， 请求超时1.2s自动转离线
-        // MIX_MODE_HIGH_SPEED_NETWORK ， 3G 4G wifi状态下使用在线，其它状态离线。在线状态下，请求超时1.2s自动转离线
-        // MIX_MODE_HIGH_SPEED_SYNTHESIZE, 2G 3G 4G wifi状态下使用在线，其它状态离线。在线状态下，请求超时1.2s自动转离线
-        // 离线资源文件， 从assets目录中复制到临时目录，需要在initTTs方法前完成
-        // 声学模型文件路径 (离线引擎使用), 请确认下面两个文件存在
-        private val params: HashMap<String, String> get() {
+    /**
+     * 合成的参数，可以初始化时填写，也可以在合成前设置。
+     *
+     * @return
+     */
+    // 以下参数均为选填
+    // 该参数设置为TtsMode.MIX生效。即纯在线模式不生效。
+    // MIX_MODE_DEFAULT 默认 ，wifi状态下使用在线，非wifi离线。在线状态下，请求超时6s自动转离线
+    // MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI wifi状态下使用在线，非wifi离线。在线状态下， 请求超时1.2s自动转离线
+    // MIX_MODE_HIGH_SPEED_NETWORK ， 3G 4G wifi状态下使用在线，其它状态离线。在线状态下，请求超时1.2s自动转离线
+    // MIX_MODE_HIGH_SPEED_SYNTHESIZE, 2G 3G 4G wifi状态下使用在线，其它状态离线。在线状态下，请求超时1.2s自动转离线
+    // 离线资源文件， 从assets目录中复制到临时目录，需要在initTTs方法前完成
+    // 声学模型文件路径 (离线引擎使用), 请确认下面两个文件存在
+    private val params: HashMap<String, String>
+        get() {
             val params = HashMap<String, String>()
             eLog("设置在线发声音人:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model"))
 //设置本地发音人
@@ -133,7 +134,7 @@ object eTTS {
         mApplication.eSetSystemSharedPreferences("set_PARAM_MIX_MODE", ParamMixMode)
         this.mActivity = mApplication
         this.mHandler = mHandler
-        this.ttsMode =ttsMode
+        this.ttsMode = ttsMode
         try {
             init()
         } catch (e: Exception) {
@@ -156,7 +157,7 @@ object eTTS {
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
         mActivity!!.eSetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString())
-       return ttsInit(mActivity!!, mHandler!!, ttsMode,voiceMode)
+        return ttsInit(mActivity!!, mHandler!!, ttsMode, voiceMode)
     }
 
 
@@ -195,52 +196,55 @@ object eTTS {
      * 获取音频流的方式见SaveFileActivity及FileSaveListener
      * 需要合成的文本text的长度不能超过1024个GBK字节。
      */
-    fun speak(text: String) {
+    fun speak(text: String): Boolean {
         val result = synthesizer?.speak(text)
         if (result != null) {
-            checkResult(result, "speak")
+            return checkResult(result, "speak")
         }
+        return false
     }
 
     /**
      * 批量播放
      */
-    fun batchSpeak(texts: ArrayList<Pair<String, String>>) {
+    fun batchSpeak(texts: ArrayList<Pair<String, String>>) :Boolean{
         val result = synthesizer!!.batchSpeak(texts)
-        checkResult(result, "batchSpeak")
+       return checkResult(result, "batchSpeak")
     }
 
     /**
      * 暂停播放。仅调用speak后生效
      */
-    fun pause() {
+    fun pause() :Boolean{
         val result = synthesizer!!.pause()
-        checkResult(result, "pause")
+      return  checkResult(result, "pause")
     }
 
     /**
      * 继续播放。仅调用speak后生效，调用pause生效
      */
-    fun resume() {
+    fun resume() :Boolean{
         val result = synthesizer!!.resume()
-        checkResult(result, "resume")
+       return checkResult(result, "resume")
     }
 
     /**
      * 停止合成引擎。即停止播放，合成，清空内部合成队列。
      */
-    fun stop() {
+    fun stop() :Boolean{
         val result = synthesizer!!.stop()
-        checkResult(result, "stop")
+        return checkResult(result, "stop")
     }
 
     // ================== ============= ==========================
     //检查回调方法
-    private fun checkResult(result: Int, method: String) {
-        if (result != 0) {
+    private fun checkResult(result: Int, method: String): Boolean {
+        return if (result != 0) {
             eLogE("error code :$result method:$method, 错误码文档:http://yuyin.baidu.com/docs/tts/122 ")
-        }else{
+            true
+        } else {
             eLogE("语音合成引擎还未准备就绪")
+            false
         }
     }
 

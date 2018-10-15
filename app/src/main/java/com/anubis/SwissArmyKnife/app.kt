@@ -2,12 +2,7 @@ package com.anubis.SwissArmyKnife
 
 import android.app.Activity
 import android.app.Application
-import android.os.Handler
-import android.os.Message
 import com.alibaba.android.arouter.launcher.ARouter
-import com.anubis.SwissArmyKnife.app.Companion.init
-import com.anubis.SwissArmyKnife.app.Companion.mActivityList
-import com.anubis.module_tts.eTTS
 import com.tencent.bugly.crashreport.CrashReport
 
 /**
@@ -27,32 +22,22 @@ import com.tencent.bugly.crashreport.CrashReport
  */
 
 class app : Application() {
-    var mTTS: eTTS? = null
-    var mHandler: Handler? = null
-
+    var mActivityList: ArrayList<Activity>?=null
     companion object {
         var init: app? = null
-        var mActivityList: ArrayList<Activity>? = null
-    }
 
+    }
     override fun onCreate() {
         super.onCreate()
+        mActivityList=ArrayList()
         CrashReport.initCrashReport(applicationContext, "47d98f44ec", false)
         CrashReport.initCrashReport(applicationContext)
         ARouter.openLog()
         ARouter.openDebug()
         init = this
         ARouter.init(init)
-        mActivityList=ArrayList()
-        mHandler = object : Handler() {
-            override fun handleMessage(msg: Message?) {
-                super.handleMessage(msg)
-                handleMSG(msg!!)
-            }
         }
-    }
+
 
     fun get() = init
-    fun handleMSG(msg: Message) {}
-    fun getActivity() = mActivityList
 }

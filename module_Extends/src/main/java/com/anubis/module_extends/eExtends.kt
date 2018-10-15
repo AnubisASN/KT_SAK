@@ -228,11 +228,11 @@ fun ePlayVoice(context: Context, music: Int, isLoop: Boolean = false) {
 }
 
 
-fun eAssetsCopy(context: Context,fileName : String,copyName: String) {
+fun eAssetsCopy(context: Context, fileName: String, copyName: String) {
     try {
         if (!File(copyName).exists()) {
             eLog("$fileName 开始复制")
-            val   inputStream = context.getResources().getAssets().open(fileName)// assets文件夹下的文件
+            val inputStream = context.getResources().getAssets().open(fileName)// assets文件夹下的文件
             val fileOutputStream = FileOutputStream(copyName)// 保存到本地的文件夹下的文件
             val buffer = ByteArray(1024)
             var count = 0
@@ -242,13 +242,14 @@ fun eAssetsCopy(context: Context,fileName : String,copyName: String) {
             fileOutputStream.flush()
             fileOutputStream.close()
             inputStream.close()
-            eLog("复制完成$copyName" )
+            eLog("复制完成$copyName")
         }
     } catch (e: IOException) {
         e.printStackTrace()
         eLogE("文件复制错误")
     }
 }
+
 /**
  * String Json解析扩展--------------------------------------------------------------------------------
  */
@@ -270,21 +271,21 @@ object eBReceiver {
     //开机启动
     private var isSetAutoBoot = true
 
-    fun eSetPowerBoot(context: Context, intent: Intent, cls: Class<*>) {
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+    fun eSetPowerBoot(context: Context, intent: Intent, cls: Class<*>): String {
+        return if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             eLog("开机自启", "SAK")
-            context.eShowTip("开机自启")
             if (isSetAutoBoot) {
                 isSetAutoBoot = false
                 val startServiceIntent = Intent(context, cls)
                 startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(startServiceIntent)
-            }
-        }
+                "IVA自启完成"
+            } else ""
+        } else ""
     }
 
     //APP更新启动
-    fun eSetAPPUpdateBoot(context: Context, intent: Intent, cls: Class<*>) {
+    fun eSetAPPUpdateBoot(context: Context, intent: Intent, cls: Class<*>): String {
         //接收更新广播
         if (intent.action == "android.intent.action.PACKAGE_REPLACED") {
             eLog("升级了一个安装包，重新启动此程序", "SAK")
@@ -292,6 +293,7 @@ object eBReceiver {
             val startServiceIntent = Intent(context, cls)
             startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(startServiceIntent)
+            return "IVA已完成更新"
         }
         //接收安装广播
         if (intent.action == "android.intent.action.PACKAGE_ADDED") {
@@ -307,10 +309,9 @@ object eBReceiver {
         if (intent.action == "android.intent.action.PACKAGE_REMOVED") {
 //                val packageName = intent.dataString
 //                println("卸载了:" + packageName + "包名的程序")
-
         }
+        return ""
     }
-
 }
 
 /**
@@ -420,7 +421,7 @@ object eApp {
     }
 
     //服务运行判断 com.anubis.iva.Service.IVAService
-    fun eIsServiceRunning(context: Context,className: String): Boolean {
+    fun eIsServiceRunning(context: Context, className: String): Boolean {
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
 
         val info = am.getRunningServices(0x7FFFFFFF)
@@ -432,7 +433,7 @@ object eApp {
     }
 
     //后台服务杀死
-    fun eKillBackgroundProcesses(context: Context,packageName: String): Boolean {
+    fun eKillBackgroundProcesses(context: Context, packageName: String): Boolean {
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         var info: List<ActivityManager.RunningAppProcessInfo>? = am.runningAppProcesses
         if (info == null || info.isEmpty()) return true
@@ -464,7 +465,6 @@ object eApp {
         }
         return packageInfo != null
     }
-
 
 
     //   首选Summary项动态改变
@@ -539,9 +539,9 @@ object eRegex {
     }
 
     //中文验证
-    fun eIsZh(zh:String): Boolean {
+    fun eIsZh(zh: String): Boolean {
         val reZh = "^[\\u4e00-\\u9fa5]+$"
-        return  Pattern.compile(reZh).matcher(zh).matches()
+        return Pattern.compile(reZh).matcher(zh).matches()
     }
 }
 
@@ -1036,7 +1036,7 @@ object ePermissions {
  * linux命令扩展类------------------------------------------------------------------------------------
  */
 object eShell {
-    val remount="mount -o remount,rw rootfs "
+    val remount = "mount -o remount,rw rootfs "
     //判断是否有Root权限
     fun eHaveRoot(): Boolean {
         try {

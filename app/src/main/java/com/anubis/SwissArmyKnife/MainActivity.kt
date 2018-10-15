@@ -45,7 +45,26 @@ import java.io.FileReader
 import java.util.LinkedHashMap
 import kotlin.collections.ArrayList
 import kotlin.collections.set
-
+//                       _oo0oo_
+//                      o8888888o
+//                      88" . "88
+//                      (| -_- |)
+//                      0\  =  /0
+//                    ___/`---'\___
+//                  .' \\|     |// '.
+//                 / \\|||  :  |||// \
+//                / _||||| -:- |||||- \
+//               |   | \\\  -  /// |   |
+//               | \_|  ''\---/''  |_/ |
+//               \  .-\__  '-'  ___/-. /
+//             ___'. .'  /--.--\  `. .'___
+//          ."" '<  `.___\_<|>_/___.' >' "".
+//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+//         \  \ `_.   \_ __\ /__ _/   .-` /  /
+//     =====`-.____`.___ \_____/___.-`___.-'=====
+//                       `=---='
+//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//               佛祖保佑         永无BUG
 class MainActivity : Activity() {
     private var APP: app? = null
     private var TTS: eTTS? = null
@@ -66,8 +85,8 @@ class MainActivity : Activity() {
         setContentView(R.layout.activity_main)
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP = app().get()
-        app().get()?.getActivity()!!.add(this)
-        TTS = eTTS.ttsInit(app().get()!!, app().get()!!.mHandler!!, TTSMode.MIX, VoiceModel.MALE)
+        app().get()!!.mActivityList!!.add(this)
+        TTS = eTTS.ttsInit(app().get()!!,Handler(), TTSMode.MIX, VoiceModel.MALE)
         datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt串口通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
 
@@ -378,8 +397,8 @@ class MainActivity : Activity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         Hint("keyCode:$keyCode")
-        eLog("size" + app().get()?.getActivity()!!.size)
-        return eSetKeyDownExit(this, keyCode, app().get()?.getActivity(), false, exitHint = "完成退出")
+        eLog("size" + app().get()?.mActivityList!!.size)
+        return eSetKeyDownExit(this, keyCode, app().get()?.mActivityList, false, exitHint = "完成退出")
     }
 
     override fun onDestroy() {

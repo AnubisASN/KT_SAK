@@ -11,10 +11,7 @@ import android.util.Log
 
 
 class MyService : Service() {
-
     private var mRunnable: Runnable? = null
-
-
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
@@ -43,8 +40,6 @@ class MyService : Service() {
 
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-
-
         return Service.START_NOT_STICKY        //保活的一种
     }
 
