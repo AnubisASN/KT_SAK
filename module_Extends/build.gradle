@@ -4,7 +4,7 @@ apply plugin: 'bugly'
 bugly {
     appId = 'b92d0ff01b' // 注册时分配的App ID
     appKey = '8bfa8b71-a559-4ebe-be0d-0ddd62cca6c6' // 注册时分配的App Key
-    debug=true
+    debug = true
 }
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -30,7 +30,7 @@ dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     //Android依赖包
     api 'com.android.support.constraint:constraint-layout:1.1.2'
-    api ('com.android.support:appcompat-v7:27.1.1')
+    api('com.android.support:appcompat-v7:27.1.1')
     api 'com.android.support:design:27.1.1'
 //            {
 //        exclude group: 'com.android.support'
@@ -46,7 +46,7 @@ dependencies {
     api 'org.jetbrains.anko:anko-recyclerview-v7:0.9.1'
     //Junit测试
     api 'junit:junit:4.12'
-    androidTestApi ('com.android.support.test:runner:1.0.2')
+    androidTestApi('com.android.support.test:runner:1.0.2')
 //            {
 //        exclude group: 'com.android.support'
 //    }
@@ -59,6 +59,12 @@ dependencies {
     api 'com.lzy.widget:imagepicker:0.5.4'
     //GreenDao
     api 'org.greenrobot:greendao:3.2.2' // add library
+    //OkGo
+    //必须使用
+    api 'com.lzy.net:okgo:3.0.4'
+    //以下三个选择添加，okrx和okrx2不能同时使用
+    api 'com.lzy.net:okrx2:2.0.2'
+    api 'com.lzy.net:okserver:2.0.5'
 }
 repositories {
     mavenCentral()
