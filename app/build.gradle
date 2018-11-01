@@ -58,6 +58,7 @@ dependencies {
     implementation project(':module_Utils')
 //    implementation project(':module_WakeUp')
     implementation project(':module_ASRW')
+    implementation project(':module_FTP')
 }
 repositories {
     mavenCentral()

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.anubis.SwissArmyKnife">
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
@@ -18,10 +19,16 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <uses-permission android:name="ACTION_MANAGE_WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    //FTP
+    <!-- 添加删除后台程序的权限 -->
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <!-- 允许开机自动启动APP的权限 -->
     //开机自启权限
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
-        android:name=".app"
+        android:name="com.anubis.module_ftp.FsApp"
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"

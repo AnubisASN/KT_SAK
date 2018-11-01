@@ -2,8 +2,11 @@ package com.anubis.SwissArmyKnife
 
 import android.app.Activity
 import android.app.Application
+import android.os.Environment
 import com.alibaba.android.arouter.launcher.ARouter
+import com.anubis.module_ftp.FsApp.Companion.init
 import com.tencent.bugly.crashreport.CrashReport
+import java.io.File
 
 /**
  * Author  ： AnubisASN   on 2018-07-21 17:03.
@@ -24,20 +27,43 @@ import com.tencent.bugly.crashreport.CrashReport
 class app : Application() {
     var mActivityList: ArrayList<Activity>?=null
     companion object {
-        var init: app? = null
+        private   var mInit: app? = null
+        val  mAPP :app get() = mInit!!
+        val mActivityList: ArrayList<Activity> =  ArrayList()
 
     }
     override fun onCreate() {
         super.onCreate()
-        mActivityList=ArrayList()
+        mInit = this
         CrashReport.initCrashReport(applicationContext, "47d98f44ec", false)
         CrashReport.initCrashReport(applicationContext)
         ARouter.openLog()
         ARouter.openDebug()
-        init = this
         ARouter.init(init)
+        createDir()
         }
 
 
     fun get() = init
+
+
+    //---------------------------------------分割线   FTP---------------------------------------------
+    /*创建文件夹*/
+    private fun createDir() {
+        //联胜文件夹
+        val fileLS = File(Environment.getExternalStorageDirectory().toString(), "联胜智能")
+        if (!fileLS.exists()) {
+            fileLS.mkdir()
+        }
+    }
+
+
+    fun isFreeVersion(): Boolean {
+        try {
+            return get()!!.getPackageName().contains("free")
+        } catch (swallow: Exception) {
+        }
+
+        return false
+    }
 }
