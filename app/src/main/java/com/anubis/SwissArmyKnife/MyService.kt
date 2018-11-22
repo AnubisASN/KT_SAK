@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
 import android.util.Log
+import com.anubis.kt_extends.eTime
 
 
 class MyService : Service() {
@@ -29,6 +30,13 @@ class MyService : Service() {
                 LaunchIntent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(LaunchIntent)
             }
+                if (cn.packageName != packageName || eTime.eGetCurrentTime("mm:ss") == "03:30") {
+//                    MyApplication.getInstance().exit()
+                    val LaunchIntent = packageManager.getLaunchIntentForPackage(application.packageName)
+                    LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(LaunchIntent)
+                }
+
             } catch (e: Exception) {
                 Log.i("TAG", "run: 守护线程发生错误$e")
             }
