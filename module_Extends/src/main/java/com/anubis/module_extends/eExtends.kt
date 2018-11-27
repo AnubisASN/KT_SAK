@@ -945,7 +945,7 @@ object eString {
     }
 
     //MD5加密
-    fun eGetEncodeMD5(str: String, digits: Int = 32): String {
+    fun eGetEncodeMD5(str: String, digits: Int = 32): String? {
         try {
             //获取md5加密对象
             val instance: MessageDigest = MessageDigest.getInstance("MD5")
@@ -969,7 +969,7 @@ object eString {
             e.printStackTrace()
         }
 
-        return ""
+        return null
     }
 }
 
