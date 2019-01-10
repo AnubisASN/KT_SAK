@@ -39,7 +39,7 @@ object ePortMSG : LockerPortInterface {
     private var outputStream: OutputStream? = null     //发送串口的输出流
     private var mp: MediaPlayer? = null
     //    private var activity: Activity? = null
-    var Result: Boolean = true
+    internal var Result: Boolean = true
 
 //    private companion object {
 //        var init: ePortMSG? = null

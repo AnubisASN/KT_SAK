@@ -208,6 +208,7 @@ encryptSHA256, encryptSHA256ToString                  : SHA256 加密
 encryptSHA384, encryptSHA384ToString                  : SHA384 加密
 encryptSHA512, encryptSHA512ToString                  : SHA512 加密
 encryptHmacMD5, encryptHmacMD5ToString                : HmacMD5 加密
+
 encryptHmacSHA1, encryptHmacSHA1ToString              : HmacSHA1 加密
 encryptHmacSHA224, encryptHmacSHA224ToString          : HmacSHA224 加密
 encryptHmacSHA256, encryptHmacSHA256ToString          : HmacSHA256 加密

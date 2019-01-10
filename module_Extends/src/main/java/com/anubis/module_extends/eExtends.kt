@@ -98,22 +98,23 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any, sharedPreferences:
 }
 
 //系统数据文件存储读取扩展
-fun Context.eGetSystemSharedPreferences(key: String, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) =
+fun Context.eGetSystemSharedPreferences(key: String,value:Any="", sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) =
         try {
-            sharedPreferences.getString(key, "")
-        } catch (e: ClassCastException) {
+            sharedPreferences.getString(key, value.toString())
+        } catch (e: Exception) {
             try {
-                sharedPreferences.getBoolean(key, true)
-            } catch (e: ClassCastException) {
+                sharedPreferences.getBoolean(key, value as Boolean)
+            } catch (e: Exception) {
                 try {
-                    sharedPreferences.getInt(key, 1)
-                } catch (e: ClassCastException) {
+                    sharedPreferences.getInt(key, value.toString().toInt())
+                } catch (e: Exception) {
                     try {
-                        sharedPreferences.getFloat(key, 1f)
-                    } catch (e: ClassCastException) {
+                        sharedPreferences.getFloat(key, value.toString().toFloat())
+                    } catch (e: Exception) {
                         try {
-                            sharedPreferences.getLong(key, 1.toLong())
-                        } catch (e: ClassCastException) {
+                            sharedPreferences.getLong(key, value.toString().toLong())
+                        } catch (e: Exception) {
+                            value.toString()
                         }
                     }
                 }
@@ -135,7 +136,7 @@ fun Context.eSetUserSharedPreferences(userID: String, key: String, value: Any, s
 }
 
 //用户文件数据读取扩展
-fun Context.eGetUserSharedPreferences(userID: String, key: String, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) = try {
+fun Context.eGetUserSharedPreferences(userID: String, key: String,value: Any="", sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) = try {
     sharedPreferences.getString(key, "")
 } catch (e: ClassCastException) {
     try {
@@ -150,6 +151,7 @@ fun Context.eGetUserSharedPreferences(userID: String, key: String, sharedPrefere
                 try {
                     sharedPreferences.getLong(key, 1.toLong())
                 } catch (e: ClassCastException) {
+                    value
                 }
             }
         }
@@ -171,7 +173,7 @@ fun Context.eSetDefaultSharedPreferences(key: String, value: Any, sharedPref: Sh
 }
 
 //首选项数据文件读取扩展
-fun Context.eGetDefaultSharedPreferences(key: String, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)) = try {
+fun Context.eGetDefaultSharedPreferences(key: String,value: Any="", sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)) = try {
     sharedPref.getString(key, "")
 } catch (e: ClassCastException) {
     try {
@@ -186,6 +188,7 @@ fun Context.eGetDefaultSharedPreferences(key: String, sharedPref: SharedPreferen
                 try {
                     sharedPref.getLong(key, 1.toLong())
                 } catch (e: ClassCastException) {
+                    value
                 }
             }
         }
@@ -1037,6 +1040,8 @@ object ePermissions {
  */
 object eShell {
     val remount = "mount -o remount,rw rootfs "
+    val install="pm install -r"
+    val kill="am force-stop"
     //判断是否有Root权限
     fun eHaveRoot(): Boolean {
         try {

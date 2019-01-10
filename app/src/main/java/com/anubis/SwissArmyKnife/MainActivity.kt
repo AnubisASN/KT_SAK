@@ -88,7 +88,7 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         app.mActivityList.add(this)
         TTS = eTTS.ttsInit(app().get()!!,Handler(), TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt串口通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除","btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）","bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt串口通信1","et_bt串口通信3","et_bt串口通信4","et_btString数据保存_btInt数据保存_bt数据读取", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除","btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）","bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
 
     }
@@ -172,7 +172,9 @@ class MainActivity : Activity() {
                         }
                     }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
-                    getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMSG.MSG(this@MainActivity, if (MSG.isEmpty()) "0" else MSG, "/dev/ttyS1"))
+                    getDigit("串口通信1") -> Hint("串口通讯状态：" + ePortMSG.MSG(this@MainActivity, if (MSG.isEmpty()) "0" else MSG, "/dev/ttyS1"))
+                    getDigit("串口通信3") -> Hint("串口通讯状态：" + ePortMSG.MSG(this@MainActivity, if (MSG.isEmpty()) "0" else MSG, "/dev/ttyS3"))
+                    getDigit("串口通信4") -> Hint("串口通讯状态：" + ePortMSG.MSG(this@MainActivity, if (MSG.isEmpty()) "0" else MSG, "/dev/ttyS4"))
 //                        Hint("串口通讯状态：" + ePortMSG().getInit(this@MainActivity, MSG ?: "").MSG())
                     getDigit("数据库") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("数据库插入：${eGreenDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
@@ -228,6 +230,11 @@ class MainActivity : Activity() {
                                 eShowTip("请重启设备")
                             }, 3500)
                         }
+                    }
+                    getDigit("数据保存")->when(view?.id){
+                        R.id.bt_item1->Hint("Stirng数据保存：${eSetSystemSharedPreferences("test",MSG.toString())}")
+                        R.id.bt_item2->Hint("Int数据保存：${eSetSystemSharedPreferences("test",MSG.toInt())}")
+                        R.id.bt_item3->Hint("数据读取：${eGetSystemSharedPreferences("test",MSG)}")
                     }
                     getDigit("正则匹配") -> Hint("正则匹配：/datas/app/$packageName$MSG")
                     getDigit("清除记录") -> {
