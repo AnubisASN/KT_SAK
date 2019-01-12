@@ -45,12 +45,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".Face"/>
-
+        <activity android:name="com.anubis.module_videochat.eVideoChat"/>
         <service
             android:name=".MyService"
             android:enabled="true"
             android:process="system"
             />
+
         <!-- 开机自启动服务 -->
         <receiver android:name=".MyBroadcastReceiver">
             <intent-filter>

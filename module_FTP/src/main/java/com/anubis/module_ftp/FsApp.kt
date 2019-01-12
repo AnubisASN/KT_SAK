@@ -39,7 +39,7 @@ class FsApp : Application() {
         init = this
         ARouter.init(init)
 
-        createDir()
+//        createDir()
         }
 
 
@@ -48,13 +48,13 @@ class FsApp : Application() {
 
     //---------------------------------------分割线   FTP---------------------------------------------
     /*创建文件夹*/
-    private fun createDir() {
-        //联胜文件夹
-        val fileLS = File(Environment.getExternalStorageDirectory().toString(), "联胜智能")
-        if (!fileLS.exists()) {
-            fileLS.mkdir()
-        }
-    }
+//    private fun createDir() {
+//        //联胜文件夹
+//        val fileLS = File(Environment.getExternalStorageDirectory().toString(), "联胜智能")
+//        if (!fileLS.exists()) {
+//            fileLS.mkdir()
+//        }
+//    }
 
 
     fun isFreeVersion(): Boolean {

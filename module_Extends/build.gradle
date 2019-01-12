@@ -57,6 +57,8 @@ dependencies {
     api 'com.tencent.bugly:crashreport:2.6.6.1'
     //ImagePicker
     api 'com.lzy.widget:imagepicker:0.5.4'
+    //Dex分包
+    api 'com.android.support:multidex:1.0.3'
     //GreenDao
     api 'org.greenrobot:greendao:3.2.2' // add library
     //OkGo

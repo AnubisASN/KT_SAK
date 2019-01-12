@@ -2,9 +2,12 @@ package com.anubis.SwissArmyKnife
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.os.Environment
+import android.support.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.module_ftp.FsApp.Companion.init
+import com.baidu.tts.tools.FileTools.createDir
 import com.tencent.bugly.crashreport.CrashReport
 import java.io.File
 
@@ -40,7 +43,7 @@ class app : Application() {
         ARouter.openLog()
         ARouter.openDebug()
         ARouter.init(init)
-        createDir()
+//        createDir()
         }
 
 
@@ -48,16 +51,20 @@ class app : Application() {
 
 
     //---------------------------------------分割线   FTP---------------------------------------------
-    /*创建文件夹*/
-    private fun createDir() {
-        //联胜文件夹
-        val fileLS = File(Environment.getExternalStorageDirectory().toString(), "联胜智能")
-        if (!fileLS.exists()) {
-            fileLS.mkdir()
-        }
+//    /*创建文件夹*/
+//    private fun createDir() {
+//        //联胜文件夹
+//        val fileLS = File(Environment.getExternalStorageDirectory().toString(), "联胜智能")
+//        if (!fileLS.exists()) {
+//            fileLS.mkdir()
+//        }
+//    }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        // 主要是添加下面这句代码
+        MultiDex.install(this)
     }
-
-
     fun isFreeVersion(): Boolean {
         try {
             return get()!!.getPackageName().contains("free")

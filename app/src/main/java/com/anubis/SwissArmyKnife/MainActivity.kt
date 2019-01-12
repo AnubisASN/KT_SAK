@@ -36,6 +36,7 @@ import com.anubis.module_portMSG.ePortMSG
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
+import com.anubis.module_videochat.eVideoChat
 import com.anubis.module_vncs.eVNC
 import com.anubis.utils.util.eToastUtils
 import com.baidu.speech.asr.SpeechConstant
@@ -47,6 +48,7 @@ import java.io.FileReader
 import java.util.LinkedHashMap
 import kotlin.collections.ArrayList
 import kotlin.collections.set
+
 //                       _oo0oo_
 //                      o8888888o
 //                      88" . "88
@@ -75,6 +77,8 @@ class MainActivity : Activity() {
     private var datas: Array<String>? = null
     private var Time: Long = 0
     private var asrw: eASRW? = null
+    private var hashMap1 = HashMap<String, Boolean>()
+    private var hashMap2 = HashMap<String, Boolean>()
     private val handleMsg = object : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
@@ -87,8 +91,8 @@ class MainActivity : Activity() {
         setContentView(R.layout.activity_main)
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         app.mActivityList.add(this)
-        TTS = eTTS.ttsInit(app().get()!!,Handler(), TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt串口通信1","et_bt串口通信3","et_bt串口通信4","et_btString数据保存_btInt数据保存_bt数据读取", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除","btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）","bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        TTS = eTTS.ttsInit(app().get()!!, Handler(), TTSMode.MIX, VoiceModel.MALE)
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt串口通信1", "et_bt串口通信3", "et_bt串口通信4", "et_btString数据保存_btInt数据保存_bt数据读取", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
 
     }
@@ -135,13 +139,15 @@ class MainActivity : Activity() {
                         when (view?.id) {
 
                             R.id.bt_item1 -> {
-                               TTS= TTS!!.setParams(voiceModel[spID])
-                                Handler().postDelayed({ val state=TTS!!.speak("发音人切换发音调用")
-                                    Hint("发音人切换发音调用:$state")}, 800)
+                                TTS = TTS!!.setParams(voiceModel[spID])
+                                Handler().postDelayed({
+                                    val state = TTS!!.speak("发音人切换发音调用")
+                                    Hint("发音人切换发音调用:$state")
+                                }, 800)
 
                             }
                             R.id.bt_item2 -> {
-                               asrw= eASRW.start(this@MainActivity,handleMsg)
+                                asrw = eASRW.start(this@MainActivity, handleMsg)
                                 Hint("语音唤醒激活")
                             }
                             R.id.bt_item3 -> {
@@ -153,12 +159,19 @@ class MainActivity : Activity() {
                     getDigit("VNC") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("VNC二进制文件执行:${eVNC.startVNCs(this@MainActivity)}")
                     }
+                    getDigit("音视频") ->
+                        ARouter.getInstance().build("/module_videochat/eVideoChat")
+//                                .withBundle("init1",b1)
+                                .withString("init1","00")
+//                                .withBundle("init2",b2)
+                                .navigation()
+
                     getDigit("CPU") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("CPU架构:${android.os.Build.CPU_ABI}")
                     }
                     getDigit("FTP") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("FTP服务启动:${startActivity(Intent(this@MainActivity, eFTPUI::class.java))}")
-                        R.id.bt_item2->Hint("FTP服务关闭:${sendBroadcast(Intent(FsService.ACTION_STOP_FTPSERVER))}")
+                        R.id.bt_item2 -> Hint("FTP服务关闭:${sendBroadcast(Intent(FsService.ACTION_STOP_FTPSERVER))}")
                     }
                     getDigit("后台杀死") -> when (view?.id) {
                         R.id.bt_item1 -> {
@@ -231,10 +244,10 @@ class MainActivity : Activity() {
                             }, 3500)
                         }
                     }
-                    getDigit("数据保存")->when(view?.id){
-                        R.id.bt_item1->Hint("Stirng数据保存：${eSetSystemSharedPreferences("test",MSG.toString())}")
-                        R.id.bt_item2->Hint("Int数据保存：${eSetSystemSharedPreferences("test",MSG.toInt())}")
-                        R.id.bt_item3->Hint("数据读取：${eGetSystemSharedPreferences("test",MSG)}")
+                    getDigit("数据保存") -> when (view?.id) {
+                        R.id.bt_item1 -> Hint("Stirng数据保存：${eSetSystemSharedPreferences("test", MSG.toString())}")
+                        R.id.bt_item2 -> Hint("Int数据保存：${eSetSystemSharedPreferences("test", MSG.toInt())}")
+                        R.id.bt_item3 -> Hint("数据读取：${eGetSystemSharedPreferences("test", MSG)}")
                     }
                     getDigit("正则匹配") -> Hint("正则匹配：/datas/app/$packageName$MSG")
                     getDigit("清除记录") -> {

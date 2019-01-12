@@ -19,6 +19,7 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
         sourceSets.main {
             jniLibs.srcDirs = ['libs']
         }
@@ -63,9 +64,9 @@ dependencies {
     implementation project(':module_WiFi')
     implementation project(':module_VNC')
     implementation project(':module_Utils')
-//    implementation project(':module_WakeUp')
     implementation project(':module_ASRW')
     implementation project(':module_FTP')
+    implementation project(':module_VideoChat')
 }
 repositories {
     mavenCentral()
