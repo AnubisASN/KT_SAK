@@ -156,7 +156,7 @@ class LockerSerialportUtil private constructor(private val path: String, private
                         sportInterface!!.onLockerDataReceived(buffer, size, path)
                     }
                 } catch (e: IOException) {
-                    ePortMSG.Result=false
+//                    ePortMSG.Result=false
                     eLogE("Thread:$e")
                     return
                 }

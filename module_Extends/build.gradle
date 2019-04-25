@@ -46,11 +46,11 @@ dependencies {
     api 'org.jetbrains.anko:anko-recyclerview-v7:0.9.1'
     //Junit测试
     api 'junit:junit:4.12'
-    androidTestApi('com.android.support.test:runner:1.0.2')
+    androidTestImplementation('com.android.support.test:runner:1.0.2')
 //            {
 //        exclude group: 'com.android.support'
 //    }
-    androidTestApi 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     //路由转发
     api 'com.alibaba:arouter-api:1.3.1'
     //Bugly
@@ -61,6 +61,8 @@ dependencies {
     api 'com.android.support:multidex:1.0.3'
     //GreenDao
     api 'org.greenrobot:greendao:3.2.2' // add library
+    //Gson
+    api 'com.google.code.gson:gson:2.8.2'
     //OkGo
     //必须使用
     api 'com.lzy.net:okgo:3.0.4'

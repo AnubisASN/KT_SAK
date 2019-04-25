@@ -3,11 +3,18 @@ package com.anubis.module_portMSG
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.media.MediaPlayer
+import android.os.Handler
+import android.os.Message
+import android.service.autofill.Validators.or
 import android.util.Log
+import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eString
 import com.anubis.module_portMSG.Utils.LockerPortInterface
 import com.anubis.module_portMSG.Utils.LockerSerialportUtil
 import java.io.OutputStream
+import kotlin.experimental.and
+import kotlin.experimental.or
+
 
 @SuppressLint("StaticFieldLeak")
 /**
@@ -40,7 +47,7 @@ object ePortMSG : LockerPortInterface {
     private var mp: MediaPlayer? = null
     //    private var activity: Activity? = null
     internal var Result: Boolean = true
-
+    private var mHandle: Handler? = null
 //    private companion object {
 //        var init: ePortMSG? = null
 //    }
@@ -50,12 +57,16 @@ object ePortMSG : LockerPortInterface {
 //    }
 
     @Throws(Exception::class)
-    fun MSG(activity: Activity,msg: String = "DAAD014400DBBD", mPATH: String = "/dev/ttyUSB0", BAUDRATE: Int = 9600): Boolean {
+    fun sendMSG(activity: Activity, msg: Any = "A", mPATH: String = "/dev/ttyS3", BAUDRATE: Int = 9600): Boolean {
         PATH = mPATH
         this.BAUDRATE = BAUDRATE
         openPort(activity)
-        sendParams(msg)
-        closePort()
+        when (msg) {
+            is String -> sendParams(msg)
+            is ByteArray -> sendParams(msg)
+            else->{sendParams(msg.toString())}
+        }
+        closeMSG()
 //            } catch (e: Exception) {
 //                eLogE("MyException：$e")
 //            }
@@ -63,35 +74,30 @@ object ePortMSG : LockerPortInterface {
         return Result
     }
 
-//            bt_daad.id -> {
-//                val openToken = "DAAD014400DBBD"
-//                Thread(Runnable {
-//                    openPort2()
-//                    sendParams2(openToken)
-//                    closePort()
-//                }).start()
-
-//            bt_0105.id -> {
-//                val openToken = "01050000FF008C3A"
-//                Thread(Runnable {
-//                    openPort2()
-//                    sendParams2(openToken)
-//                    closePort()
-//                }).start()
+    @Throws(Exception::class)
+    fun getMSG(activity: Activity, mHandle: Handler, mPATH: String = "/dev/ttyS3", BAUDRATE: Int = 9600): Boolean {
+        PATH = mPATH
+        this.BAUDRATE = BAUDRATE
+        this.mHandle = mHandle
+        openPort(activity)
+//            } catch (e: Exception) {
+//                eLogE("MyException：$e")
 //            }
+//        }).start()
+        return Result
+    }
 
     /**
      * 关闭串口
      */
-    private fun closePort() {
-
+    fun closeMSG() {
         LockerSerialportUtil.instance!!.closeSerialPort()
     }
 
     /**
      * 打开串口
      */
-    private fun openPort(activity:Activity) {
+    private fun openPort(activity: Activity) {
         println("打开串口")
         LockerSerialportUtil.init(activity, PATH!!, BAUDRATE!!, this)
         //        LockerSerialportUtil.init(this,PATH1,BAUDRATE,this);
@@ -107,13 +113,16 @@ object ePortMSG : LockerPortInterface {
             return
         }
         outputStream!!.write(eString.eGetHexStringToBytes(msg))
-
-        if (msg.startsWith("daad") || msg.startsWith("DAAD") || msg.startsWith("0105000") && msg !== "010500000000CDCA") {
-//            playVoice(R.raw.open_success, false)
-        }
-
     }
 
+    private fun sendParams(msg: ByteArray) {
+
+        if (outputStream == null) {
+            return
+        }
+        outputStream!!.write(msg)
+
+    }
 
 
     /**
@@ -123,13 +132,42 @@ object ePortMSG : LockerPortInterface {
      */
     override fun onLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
         val result = String(buffer, 0, size)
+        val message = Message()
+        message.obj = buffer
+        eLog("转换：" + bytesToInt(buffer, 0))
+        mHandle!!.sendMessage(message)
+        for (i in buffer.iterator()) {
+            eLog("sss:" + i.toInt())
+        }
+        eLog("TAG", "size:${buffer.size}")
         Log.e("收到", "onLockerDataReceived====$result")
     }
+
+    fun convertTwoUnSignInt(byteArray: ByteArray): Int =
+            (byteArray[3].toInt() shl 24) or (byteArray[2].toInt() and 0xFF) or (byteArray[1].toInt() shl 8) or (byteArray[0].toInt() and 0xFF)
 
     override fun onLockerOutputStream(outputStream: OutputStream) {
         this.outputStream = outputStream
     }
 
-
+    fun bytesToInt(src: ByteArray, offset: Int): Int {
+        val value: Int
+        value = (src[offset].toInt() and 0x02
+                or (src[offset + 1].toInt() and 0x09 shl 8)
+                or (src[offset + 2].toInt() and 0x12 shl 16)
+                or (src[offset + 3].toInt() and 0x02 shl 24)
+                or (src[offset + 4].toInt() and 0x11 shl 32)
+                or (src[offset + 5].toInt() and 0x03 shl 40)
+                or (src[offset + 6].toInt() and 0x10 shl 48)
+                or (src[offset + 7].toInt() and 0x20 shl 56)
+                or (src[offset + 8].toInt() and 0x30 shl 53)
+                or (src[offset + 9].toInt() and 0xff shl 61)
+                or (src[offset + 10].toInt() and 0x03 shl 64))
+        return value
+    }
 }
+
+
+
+
 

@@ -21,6 +21,7 @@ import android.widget.ScrollView
 import android.widget.Spinner
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.SwissArmyKnife.GreenDao.Data
+import com.anubis.SwissArmyKnife.R.id.*
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
@@ -38,16 +39,26 @@ import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
 import com.anubis.module_videochat.eVideoChat
 import com.anubis.module_vncs.eVNC
+import com.anubis.utils.util.eServiceUtils.startService
 import com.anubis.utils.util.eToastUtils
 import com.baidu.speech.asr.SpeechConstant
+import com.lzy.okgo.OkGo
+import com.lzy.okgo.callback.StringCallback
+import com.lzy.okgo.model.HttpParams
+import com.lzy.okgo.model.Response
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.list_edit_item.*
 import kotlinx.android.synthetic.main.list_edit_item.view.*
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileReader
+import org.jetbrains.anko.custom.onUiThread
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.*
+import java.net.Socket
+import java.net.URLDecoder
 import java.util.LinkedHashMap
 import kotlin.collections.ArrayList
 import kotlin.collections.set
+import kotlin.concurrent.thread
 
 //                       _oo0oo_
 //                      o8888888o
@@ -77,13 +88,28 @@ class MainActivity : Activity() {
     private var datas: Array<String>? = null
     private var Time: Long = 0
     private var asrw: eASRW? = null
-    private var hashMap1 = HashMap<String, Boolean>()
-    private var hashMap2 = HashMap<String, Boolean>()
     private val handleMsg = object : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             handleMsg(msg)
         }
+    }
+    private val handler = object : Handler() {
+        override fun handleMessage(msg: Message?) {
+            super.handleMessage(msg)
+            val str: ByteArray = msg?.obj as ByteArray
+            OkGo.post<String>("http://192.168.1.75:8080/CPSystem/testData")
+                    .params("by", String(str, 0, str.size))
+                    .execute(object : StringCallback() {
+                        override fun onSuccess(response: Response<String>?) {
+                            eShowTip("成功")
+                        }
+
+                    })
+        }
+//                Hint("获取到串口数据：${msg?.obj.toString()}")
+
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,7 +118,7 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         app.mActivityList.add(this)
         TTS = eTTS.ttsInit(app().get()!!, Handler(), TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt串口通信1", "et_bt串口通信3", "et_bt串口通信4", "et_btString数据保存_btInt数据保存_bt数据读取", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt串口通信1", "et_bt串口通信3", "et_btTCP发送", "et_bt串口通信4", "et_bt串口数据接收_bt关闭串口", "et_btString数据保存_btInt数据保存_bt数据读取", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btFTP连接_btFTP文件下载_btFTP文件上传", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
 
     }
@@ -159,16 +185,35 @@ class MainActivity : Activity() {
                     getDigit("VNC") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("VNC二进制文件执行:${eVNC.startVNCs(this@MainActivity)}")
                     }
+                    getDigit("TCP发送") -> Hint("TCP测试：" + if (socketState) {
+                        thread { sendMSM(MSG) }
+                    } else {
+                        initClienSocket(MSG)
+                    })
                     getDigit("音视频") ->
                         ARouter.getInstance().build("/module_videochat/eVideoChat")
 //                                .withBundle("init1",b1)
-                                .withString("init1","00")
+                                .withString("init1", "00")
 //                                .withBundle("init2",b2)
                                 .navigation()
 
                     getDigit("CPU") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("CPU架构:${android.os.Build.CPU_ABI}")
                     }
+
+                    getDigit("FTP文件") -> when (view?.id) {
+                        R.id.bt_item1 -> Hint("FTP连接:")
+                        R.id.bt_item2 -> {
+                            Hint("文件上传:")
+                            thread {
+                            }
+                        }
+                        R.id.bt_item2 -> {
+                            Hint("文件下载:")
+                        }
+
+                    }
+
                     getDigit("FTP") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("FTP服务启动:${startActivity(Intent(this@MainActivity, eFTPUI::class.java))}")
                         R.id.bt_item2 -> Hint("FTP服务关闭:${sendBroadcast(Intent(FsService.ACTION_STOP_FTPSERVER))}")
@@ -185,9 +230,16 @@ class MainActivity : Activity() {
                         }
                     }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
-                    getDigit("串口通信1") -> Hint("串口通讯状态：" + ePortMSG.MSG(this@MainActivity, if (MSG.isEmpty()) "0" else MSG, "/dev/ttyS1"))
-                    getDigit("串口通信3") -> Hint("串口通讯状态：" + ePortMSG.MSG(this@MainActivity, if (MSG.isEmpty()) "0" else MSG, "/dev/ttyS3"))
-                    getDigit("串口通信4") -> Hint("串口通讯状态：" + ePortMSG.MSG(this@MainActivity, if (MSG.isEmpty()) "0" else MSG, "/dev/ttyS4"))
+                    getDigit("串口通信") ->
+                    Hint("串口通讯状态-3s："+ePortMSG.sendMSG(this@MainActivity, if (MSG.isEmpty()) "a" else MSG, "/dev/ttyS3"))
+                    getDigit("串口通信3") -> Hint("串口通讯状态：-3b" + ePortMSG.sendMSG(this@MainActivity, if (MSG.isEmpty()) "a".toByteArray() else MSG.toByteArray(), "/dev/ttyS3"))
+                    getDigit("串口通信4") -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, if (MSG.isEmpty()) "0" else MSG, "/dev/ttyS4"))
+                    getDigit("串口数据") -> {
+                        when (view?.id) {
+                            R.id.bt_item1 -> Hint("打开串口：" + ePortMSG.getMSG(this@MainActivity, handler, if (MSG.isEmpty()) "/dev/ttyS1" else MSG))
+                            R.id.bt_item2 -> Hint("关闭串口：" + ePortMSG.closeMSG())
+                        }
+                    }
 //                        Hint("串口通讯状态：" + ePortMSG().getInit(this@MainActivity, MSG ?: "").MSG())
                     getDigit("数据库") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("数据库插入：${eGreenDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
@@ -262,6 +314,7 @@ class MainActivity : Activity() {
                 }
             }
         }
+
         val myAdapter = MyAdapter(this, datas!!, callback)
         rvList.adapter = myAdapter
         rvList.setItemViewCacheSize(datas!!.size)
@@ -415,7 +468,6 @@ class MainActivity : Activity() {
         }
     }
 
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         ePermissions.eSetOnRequestPermissionsResult(this, requestCode, permissions, grantResults)
         if (requestCode != 1) {
@@ -439,6 +491,92 @@ class MainActivity : Activity() {
 
     interface ICallBack {
         fun CallResult(view: View?, numID: Int, MSG: String, spinner: Spinner)
+    }
+
+
+    val receivedDataThread = Runnable {
+        try {
+            while (true) {
+                val buffer = ByteArray(1024)
+                val count = In?.read(buffer)
+                var receiveData = String(buffer, 0, count ?: 0)
+                receiveData = URLDecoder.decode(receiveData, "gbk")
+                val msg = mHandler.obtainMessage()
+                msg.what = 2
+                msg.obj = receiveData
+                mHandler.sendMessage(msg)
+            }
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+    }
+    //消息处理
+    var In: InputStream? = null
+    var Out: OutputStream? = null
+    var mHandler: Handler = Handler {
+        when (it.what) {
+            1 -> {
+                socketState = true
+                //连接成功，启动接收线程
+                eLog("连接成功，启动接收线程")
+                eShowTip("TCP连接成功")
+                Out = (it.obj as IsAndOs).`os`
+                In = (it.obj as IsAndOs).`in`
+                Thread(receivedDataThread).start()
+                thread { sendMSM(msg) }
+                //心跳保活
+                return@Handler true
+            }
+            2 -> {
+                //接收到数据
+                Hint("接收到：" + it.obj.toString())
+                return@Handler true
+            }
+            else -> return@Handler true
+        }
+    }
+    //连接服务器
+    var socketState = false
+    var msg = ""
+    fun initClienSocket(str: String) {
+        val info = str.split("-")
+        msg = info[2]
+        eLog("开始连接TCP服务")
+        Thread {
+            try {
+                val socker = Socket(info[0], info[1].toInt())
+                val op = PrintStream(socker?.getOutputStream(), true, "utf-8")
+                val `in` = socker?.getInputStream()
+                IsAndOs.`in` = `in`
+                IsAndOs.os = op
+                val msg = mHandler.obtainMessage()
+                eLog("IsAndOs:$IsAndOs")
+                msg.obj = IsAndOs
+                msg.what = 1
+                mHandler.sendMessage(msg)
+            } catch (e: java.lang.Exception) {
+                socketState = false
+                mHandler.postDelayed({
+                    initClienSocket(str)
+                    eShowTip("TCP服务连接失败，重连")
+                }, 5000)
+
+            }
+        }.start()
+    }
+
+    //消息发送
+    fun sendMSM(str: String) {
+        (Out as PrintStream).print(str)
+        eLog("消息发送:$str")
+    }
+
+    object IsAndOs {
+        var `in`: InputStream? = null
+        var os: OutputStream? = null
+
     }
 }
 
