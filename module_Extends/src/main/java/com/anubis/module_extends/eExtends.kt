@@ -115,7 +115,7 @@ fun Context.eGetSystemSharedPreferences(key: String, value: Any = "", sharedPref
                         try {
                             sharedPreferences.getLong(key, value.toString().toLong())
                         } catch (e: Exception) {
-                            value.toString()
+                            value
                         }
                     }
                 }
