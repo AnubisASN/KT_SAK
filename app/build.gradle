@@ -31,7 +31,7 @@ android {
 //        }
     ndk {
             // 设置支持的 SO 库构架，注意这里要根据你的实际情况来设置
-            abiFilters 'armeabi', 'armeabi-v7a'
+            abiFilters 'x86','armeabi', 'armeabi-v7a'
         }
     }
     buildTypes {
@@ -67,6 +67,7 @@ dependencies {
     implementation project(':module_ASRW')
     implementation project(':module_FTP')
     implementation project(':module_VideoChat')
+    implementation project(':module_ArcFace')
 }
 repositories {
     mavenCentral()

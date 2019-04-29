@@ -1,6 +1,5 @@
 buildscript {
     ext.kotlin_version = '1.2.61'
-    ext.kotlin_version = '1.2.50'
     repositories {
 //        google()
         jcenter()
@@ -8,9 +7,10 @@ buildscript {
             url 'https://maven.google.com/'
             name 'Google'
         }
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.alibaba:arouter-register:1.0.2"
         classpath 'com.tencent.bugly:symtabfileuploader:2.1.2'

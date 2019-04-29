@@ -136,7 +136,7 @@ class eGreenDao(context: Context, val greenDaoClassName: String = "com.anubis.mo
     /**
      * 使用native sql进行查询操作
      */
-    fun queryUserByNativeSql(sql: String, conditions: Array<String>, user: Any): List<Any> {
+    fun queryUserByNativeSql(user: Any,sql: String, conditions: Array<String>): List<Any> {
         return daoSession!!.queryRaw<Any, Any>(user::class.java as Class<Any>?, sql, *conditions)
     }
 

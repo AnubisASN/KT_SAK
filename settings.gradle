@@ -1,1 +1,1 @@
-include ':app',':module_Extends', ':module_PortMSG',':module_TTS',':module_ArcFaceFT', ':module_Office',':module_GreenDao', ':module_WiFi', ':module_VNC', ':module_Utils', ':module_ASRW', ':module_FTP', ':module_VideoChat'
+include ':app',':module_Extends', ':module_PortMSG',':module_TTS',':module_ArcFaceFT', ':module_Office',':module_GreenDao', ':module_WiFi', ':module_VNC', ':module_Utils', ':module_ASRW', ':module_FTP', ':module_VideoChat', ':module_ArcFace'

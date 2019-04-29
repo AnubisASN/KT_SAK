@@ -19,11 +19,6 @@ android {
         sourceSets.main {
             jniLibs.srcDirs = ['libs']
         }
-//        javaCompileOptions {
-//            annotationProcessorOptions {
-//                arguments = [moduleName: project.getName()]
-//            }
-//        }
     }
 
     buildTypes {
@@ -42,10 +37,10 @@ kapt {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':module_Extends')
+    api files('libs/facetracking.jar')
     //路由转发
     api 'com.guo.android_extend:android-extend:1.0.5'
     kapt 'com.alibaba:arouter-compiler:1.1.4'
-    api files('libs/facetracking.jar')
 }
 repositories {
     mavenCentral()

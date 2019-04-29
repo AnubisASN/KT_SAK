@@ -60,7 +60,7 @@ class eVideoChat : AppCompatActivity() {
             initAgoraEngineAndJoinChannel()
         }
         init()
-        //默认关闭
+        //默认关闭-
 //        onLocalVideo.isSelected=false
 //        onLocalVideoMuteClicked(onLocalVideo)
 //        Handler().postDelayed({

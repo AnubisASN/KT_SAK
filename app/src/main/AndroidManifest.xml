@@ -46,6 +46,7 @@
         </activity>
         <activity android:name=".Face"/>
         <activity android:name="com.anubis.module_videochat.eVideoChat"/>
+
         <service
             android:name=".MyService"
             android:enabled="true"
@@ -64,7 +65,7 @@
                 <action android:name="android.intent.action.PACKAGE_REPLACED"/>
             </intent-filter>
         </receiver>
-
+        <activity android:name=".Face0"/>
     </application>
 
 </manifest>

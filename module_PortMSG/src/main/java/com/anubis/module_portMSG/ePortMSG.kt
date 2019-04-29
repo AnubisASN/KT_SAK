@@ -37,7 +37,6 @@ object ePortMSG : LockerPortInterface {
     private var PATH: String? = null //串口名称         RS485开门方式
     private var BAUDRATE: Int? = null            //波特率
     private var outputStream: OutputStream? = null     //发送串口的输出流
-    private var mp: MediaPlayer? = null
     //    private var activity: Activity? = null
     internal var Result: Boolean = true
 

@@ -4,7 +4,6 @@
 
 
     <uses-sdk
-        android:minSdkVersion="15"
         android:targetSdkVersion="25" />
 
     <!--<instrumentation-->

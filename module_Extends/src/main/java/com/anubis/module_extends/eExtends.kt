@@ -71,12 +71,12 @@ fun eLog(str: Any, TAG: String = "TAG") {
     Log.i(TAG, "eLog:${str.toString()}\n ")
 }
 
-fun Activity?.eLogE(str: Any, TAG: String = "TAG") {
-    Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：${str.toString()}\n ")
+fun Activity?.eLogE(str: Any,e:Exception?=null, TAG: String = "TAG") {
+        Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：$str\n $e ")
 }
 
-fun eLogE(str: Any, TAG: String = "TAG") {
-    Log.e(TAG, "eLogE:${str.toString()}\n ")
+fun eLogE(str: Any,e:Exception?=null, TAG: String = "TAG") {
+    Log.e(TAG, "eLogE:$str\n $e")
 }
 
 
