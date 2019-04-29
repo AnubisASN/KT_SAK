@@ -29,6 +29,7 @@ import android.widget.Toast
 import org.jetbrains.anko.activityManager
 import org.json.JSONObject
 import java.io.*
+import java.net.*
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -72,11 +73,11 @@ fun eLog(str: Any, TAG: String = "TAG") {
 }
 
 fun Activity?.eLogE(str: Any,e:Exception?=null, TAG: String = "TAG") {
-        Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：$str\n $e ")
+    Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：$str\n$e ")
 }
 
 fun eLogE(str: Any,e:Exception?=null, TAG: String = "TAG") {
-    Log.e(TAG, "eLogE:$str\n $e")
+    Log.e(TAG, "eLogE:$str\n$e ")
 }
 
 
@@ -98,7 +99,7 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any, sharedPreferences:
 }
 
 //系统数据文件存储读取扩展
-fun Context.eGetSystemSharedPreferences(key: String,value:Any="", sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) =
+fun Context.eGetSystemSharedPreferences(key: String, value: Any = "", sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) =
         try {
             sharedPreferences.getString(key, value.toString())
         } catch (e: Exception) {
@@ -114,7 +115,7 @@ fun Context.eGetSystemSharedPreferences(key: String,value:Any="", sharedPreferen
                         try {
                             sharedPreferences.getLong(key, value.toString().toLong())
                         } catch (e: Exception) {
-                            value.toString()
+                            value
                         }
                     }
                 }
@@ -136,7 +137,7 @@ fun Context.eSetUserSharedPreferences(userID: String, key: String, value: Any, s
 }
 
 //用户文件数据读取扩展
-fun Context.eGetUserSharedPreferences(userID: String, key: String,value: Any="", sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) = try {
+fun Context.eGetUserSharedPreferences(userID: String, key: String, value: Any = "", sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) = try {
     sharedPreferences.getString(key, "")
 } catch (e: ClassCastException) {
     try {
@@ -173,7 +174,7 @@ fun Context.eSetDefaultSharedPreferences(key: String, value: Any, sharedPref: Sh
 }
 
 //首选项数据文件读取扩展
-fun Context.eGetDefaultSharedPreferences(key: String,value: Any="", sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)) = try {
+fun Context.eGetDefaultSharedPreferences(key: String, value: Any = "", sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)) = try {
     sharedPref.getString(key, "")
 } catch (e: ClassCastException) {
     try {
@@ -698,6 +699,7 @@ object eNetWork {
 }
 
 
+
 /**
  * 设备信息扩展类--------------------------------------------------------------------------------------
  */
@@ -726,6 +728,55 @@ object eDevice {
 
     //获得显示
     fun eGetDisPlay() = Build.DISPLAY
+
+
+    //获取本地IP
+    fun getHostIP(): String? {
+        var hostIp: String? = null
+        try {
+            val nis = NetworkInterface.getNetworkInterfaces()
+            var ia: InetAddress? = null
+            while (nis.hasMoreElements()) {
+                val ni = nis.nextElement() as NetworkInterface
+                val ias = ni.inetAddresses
+                while (ias.hasMoreElements()) {
+                    ia = ias.nextElement()
+                    if (ia is Inet6Address) {
+                        continue// skip ipv6
+                    }
+                    val ip = ia!!.hostAddress
+                    if ("127.0.0.1" != ip) {
+                        hostIp = ia.hostAddress
+                        break
+                    }
+                }
+            }
+        } catch (e: SocketException) {
+            Log.i("yao", "SocketException")
+            e.printStackTrace()
+        }
+        return hostIp
+    }
+
+    //获取IP
+    fun getIP(): String? {
+        try {
+            val en = NetworkInterface.getNetworkInterfaces()
+            while (en.hasMoreElements()) {
+                val intf = en.nextElement()
+                val enumIpAddr = intf.inetAddresses
+                while (enumIpAddr.hasMoreElements()) {
+                    val inetAddress = enumIpAddr.nextElement()
+                    if (!inetAddress.isLoopbackAddress && inetAddress is Inet4Address) {
+                        return inetAddress.getHostAddress().toString()
+                    }
+                }
+            }
+        } catch (ex: SocketException) {
+            ex.printStackTrace()
+        }
+        return null
+    }
 }
 
 /**
@@ -974,6 +1025,22 @@ object eString {
 
         return null
     }
+
+    fun eInterception(str: String, lenght: Int = 1024,symbol:String=","): String {
+        var j = 0
+        var s = ""
+        var section = if (str.length % lenght == 0) (str.length / lenght) - 1 else str.length / lenght
+        if (0 == section) {
+            s = str
+        }
+        val sb = StringBuffer(str)
+        for (i in 1..section) {
+            s = sb.insert(lenght * i + j, symbol).toString()
+            j++
+        }
+        return s
+    }
+
 }
 
 /**
@@ -1040,8 +1107,8 @@ object ePermissions {
  */
 object eShell {
     val remount = "mount -o remount,rw rootfs "
-    val install="pm install -r"
-    val kill="am force-stop"
+    val install = "pm install -r"
+    val kill = "am force-stop"
     //判断是否有Root权限
     fun eHaveRoot(): Boolean {
         try {
