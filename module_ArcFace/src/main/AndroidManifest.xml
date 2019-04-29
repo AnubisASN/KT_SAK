@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.anubis.module_arcface">
+    <!--1) //网络权限，当禁用后，无法进行有效激活-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--2) 设备验证权限，//读取获取设备硬件验证信息，当禁用后，无法进行有效激活-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+</manifest>
