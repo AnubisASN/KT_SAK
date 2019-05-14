@@ -5,7 +5,9 @@ import android.graphics.Color
 import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.hardware.Camera
+import android.opengl.GLSurfaceView
 import android.util.Log
+import android.view.SurfaceView
 import android.view.View
 import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eLogE
@@ -75,7 +77,7 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
     private var shearNum = 50
     private var color: Int = Color.GREEN
     private var stroke: Int = 2
-    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, CameraState: Boolean = true, color: Int = Color.GREEN, stroke: Int = 2, isShearFaceBitmap: Boolean = false, shearNum: Int = 50, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFT {
+    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, CameraState: Boolean = true,mCameraRotate:Int?=null,color: Int = Color.GREEN, stroke: Int = 2, isShearFaceBitmap: Boolean = false, shearNum: Int = 50, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFT {
         mGLSurfaceView = GLSurfaceView
         mSurfaceView = SurfaceView
         mIsState = CameraState
@@ -84,10 +86,13 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
         this.isShearFaceBitmap = isShearFaceBitmap
         this.shearNum = shearNum
         mCameraID = if (cameraId == 0) Camera.CameraInfo.CAMERA_FACING_BACK else Camera.CameraInfo.CAMERA_FACING_FRONT
-        mCameraRotate = if (cameraId == 0) 90 else 270
+        this.mCameraRotate = if (cameraId == 0) 90 else 270
+        if (mCameraRotate!=null){
+            this.mCameraRotate=mCameraRotate
+        }
         mCameraMirror = cameraId != 0
         mSurfaceView!!.setOnCameraListener(this)
-        mSurfaceView!!.setupGLSurafceView(mGLSurfaceView, true, mCameraMirror, mCameraRotate)
+        mSurfaceView!!.setupGLSurafceView(mGLSurfaceView, true, mCameraMirror, this.mCameraRotate)
         mSurfaceView!!.debug_print_fps(true, false)
         var err = engine.AFT_FSDK_InitialFaceEngine(appid, ft_key, AFT_FSDKEngine.AFT_OPF_0_HIGHER_EXT, 16, 5)
         Log.d(TAG, "AFT_FSDK_InitialFaceEngine =" + err.code)

@@ -32,6 +32,7 @@ import java.io.*
 import java.net.*
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.security.cert.Extension
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Matcher
@@ -72,11 +73,11 @@ fun eLog(str: Any, TAG: String = "TAG") {
     Log.i(TAG, "eLog:${str.toString()}\n ")
 }
 
-fun Activity?.eLogE(str: Any,e:Exception?=null, TAG: String = "TAG") {
+fun Activity?.eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
     Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：$str\n$e ")
 }
 
-fun eLogE(str: Any,e:Exception?=null, TAG: String = "TAG") {
+fun eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
     Log.e(TAG, "eLogE:$str\n$e ")
 }
 
@@ -99,22 +100,29 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any, sharedPreferences:
 }
 
 //系统数据文件存储读取扩展
-fun Context.eGetSystemSharedPreferences(key: String, value: Any = "", sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) =
+fun Context.eGetSystemSharedPreferences(key: String, value: Any? = null, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) =
         try {
-            sharedPreferences.getString(key, value.toString())
+            eLog("1")
+            sharedPreferences.getString(key, value as String? ?:"")
+
         } catch (e: Exception) {
             try {
-                sharedPreferences.getBoolean(key, value as Boolean)
+                eLog("2")
+                sharedPreferences.getBoolean(key, value as Boolean??:true)
             } catch (e: Exception) {
                 try {
-                    sharedPreferences.getInt(key, value.toString().toInt())
+                    eLog("3")
+                    sharedPreferences.getInt(key, value as Int??:0)
                 } catch (e: Exception) {
                     try {
-                        sharedPreferences.getFloat(key, value.toString().toFloat())
+                        eLog("4")
+                        sharedPreferences.getFloat(key, value as Float??:0f)
                     } catch (e: Exception) {
                         try {
-                            sharedPreferences.getLong(key, value.toString().toLong())
+                            eLog("5")
+                            sharedPreferences.getLong(key, value as Long??:0)
                         } catch (e: Exception) {
+                            eLog("6")
                             value
                         }
                     }
@@ -699,7 +707,6 @@ object eNetWork {
 }
 
 
-
 /**
  * 设备信息扩展类--------------------------------------------------------------------------------------
  */
@@ -894,6 +901,23 @@ object eBitmap {
         return mBitmap
     }
 
+    fun eRotateBitmap(bitmap: Bitmap?, rotate: Float): Bitmap? {
+        if (bitmap == null) {
+            return null
+        }
+        val width = bitmap.width
+        val height = bitmap.height
+        val matrix = Matrix()
+        matrix.setRotate(rotate)
+        // 围绕原地进行旋转
+        val newBM = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false)
+        if (newBM == bitmap) {
+            return newBM
+        }
+        bitmap.recycle()
+        return newBM
+    }
+
 
     //图片旋转
     fun eRotateMyBitmap(bmp: Bitmap, mCameraID: Int = 1): Bitmap {
@@ -1026,7 +1050,7 @@ object eString {
         return null
     }
 
-    fun eInterception(str: String, lenght: Int = 1024,symbol:String=","): String {
+    fun eInterception(str: String, lenght: Int = 1024, symbol: String = ","): String {
         var j = 0
         var s = ""
         var section = if (str.length % lenght == 0) (str.length / lenght) - 1 else str.length / lenght

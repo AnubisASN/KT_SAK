@@ -67,6 +67,7 @@ dependencies {
     implementation project(':module_ASRW')
     implementation project(':module_FTP')
     implementation project(':module_VideoChat')
+    implementation project(':module_ArcFace')
 }
 repositories {
     mavenCentral()

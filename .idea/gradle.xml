@@ -22,7 +22,6 @@
             <option value="$PROJECT_DIR$/module_Utils" />
             <option value="$PROJECT_DIR$/module_VNC" />
             <option value="$PROJECT_DIR$/module_VideoChat" />
-            <option value="$PROJECT_DIR$/module_VideoChatS" />
             <option value="$PROJECT_DIR$/module_WiFi" />
           </set>
         </option>
