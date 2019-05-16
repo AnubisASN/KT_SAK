@@ -77,7 +77,7 @@ abstract public class CmdAbstractStore extends FtpCmd {
                             break storing;
                         }
                         // Notify other apps that we just deleted a file
-                        MediaUpdater.notifyFileDeleted(storeFile.getPath());
+                        MediaUpdater.Companion.notifyFileDeleted(storeFile.getPath());
                     }
                 }
                 if (sessionThread.offset <= 0) {
@@ -234,7 +234,7 @@ abstract public class CmdAbstractStore extends FtpCmd {
             sessionThread.writeString("226 Transmission complete\r\n");
             // Notify the music player (and possibly others) that a few file has
             // been uploaded.
-            MediaUpdater.notifyFileCreated(storeFile.getPath());
+            MediaUpdater.Companion.notifyFileCreated(storeFile.getPath());
         }
         sessionThread.closeDataSocket();
         Log.d(TAG, "STOR finished");

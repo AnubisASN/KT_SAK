@@ -14,15 +14,16 @@
     <!-- 允许开机自动启动APP的权限 -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
-
     <!--<application-->
     <!--android:icon="@drawable/launcher"-->
     <!--android:label="@string/swiftp_name"-->
-    <!--android:name=".FsApp"-->
+    <!--android:name=".app"-->
     <!--android:allowBackup="true" >-->
     <application>
 
-        <activity android:name=".GUI.eFTPUI">
+        <activity android:name=".GUI.eFTPUIs"
+            android:launchMode="singleTask"
+            >
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN"/>-->
                 <!--<category android:name="android.intent.category.LAUNCHER"/>-->
@@ -76,18 +77,6 @@
         </receiver>
 
         <service android:name=".GUI.eWidgetProvider$UpdateService"/>
-
-        <!-- 设置自动启动APP的广播 -->
-        <receiver
-            android:name=".oaReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter android:priority="900">
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </receiver>
-
 
     </application>
 

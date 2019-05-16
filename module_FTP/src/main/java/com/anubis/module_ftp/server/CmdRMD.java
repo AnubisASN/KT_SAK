@@ -96,7 +96,7 @@ public class CmdRMD extends FtpCmd implements Runnable {
         } else {
             Log.d(TAG, "RMD deleting file: " + toDelete);
             boolean success = toDelete.delete();
-            MediaUpdater.notifyFileDeleted(toDelete.getPath());
+            MediaUpdater.Companion.notifyFileDeleted(toDelete.getPath());
             return success;
         }
     }

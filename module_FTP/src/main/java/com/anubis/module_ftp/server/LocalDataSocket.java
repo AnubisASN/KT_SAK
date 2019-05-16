@@ -140,7 +140,7 @@ public class LocalDataSocket {
     }
 
     public InetAddress getPasvIp() {
-        return FsService.getLocalInetAddress();
+        return FsService.Companion.getLocalInetAddress();
     }
 
     public void reportTraffic(long bytes) {

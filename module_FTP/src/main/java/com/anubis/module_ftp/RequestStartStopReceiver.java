@@ -16,13 +16,13 @@ public class RequestStartStopReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.v(TAG, "Received: " + intent.getAction());
         try {
-            if (intent.getAction().equals(FsService.ACTION_START_FTPSERVER)) {
+            if (intent.getAction().equals(FsService.Companion.getACTION_START_FTPSERVER())) {
                 Intent serverService = new Intent(context, FsService.class);
-                if (!FsService.isRunning()) {
+                if (!FsService.Companion.isRunning()) {
                     warnIfNoExternalStorage();
                     context.startService(serverService);
                 }
-            } else if (intent.getAction().equals(FsService.ACTION_STOP_FTPSERVER)) {
+            } else if (intent.getAction().equals(FsService.Companion.getACTION_STOP_FTPSERVER())) {
                 Intent serverService = new Intent(context, FsService.class);
                 context.stopService(serverService);
             }
@@ -39,7 +39,7 @@ public class RequestStartStopReceiver extends BroadcastReceiver {
         String storageState = Environment.getExternalStorageState();
         if (!storageState.equals(Environment.MEDIA_MOUNTED)) {
             Log.v(TAG, "Warning due to storage state " + storageState);
-            Toast toast = Toast.makeText(FsApp.Companion.getInit().get(),
+            Toast toast = Toast.makeText(  eDataFTP.INSTANCE.getMAPP(),
                     R.string.storage_warning, Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();

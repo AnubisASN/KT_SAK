@@ -34,17 +34,17 @@ public class FsSettings {
 
     public static String getUserName() {
         final SharedPreferences sp = getSharedPreferences();
-        return sp.getString("username", "ftp");
+        return sp.getString("username", eDataFTP.INSTANCE.getUserName());
     }
 
     public static String getPassWord() {
         final SharedPreferences sp = getSharedPreferences();
-        return sp.getString("password", "ftp");
+        return sp.getString("password",  eDataFTP.INSTANCE.getPassWord());
     }
 
     public static boolean allowAnoymous() {
         final SharedPreferences sp = getSharedPreferences();
-        return sp.getBoolean("allow_anonymous", false);
+        return sp.getBoolean("allow_anonymous", eDataFTP.INSTANCE.getAllowAnonymous());
     }
 
     public static File getChrootDir() {
@@ -52,11 +52,11 @@ public class FsSettings {
         String dirName = sp.getString("chrootDir", "");
         File chrootDir = new File(dirName);
         if (dirName.equals("")) {
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                chrootDir = Environment.getExternalStorageDirectory();
-            } else {
-                chrootDir = new File("/");
-            }
+//            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//                chrootDir = Environment.getExternalStorageDirectory();
+//            } else {
+                chrootDir = new File(eDataFTP.INSTANCE.getChrootDir());
+//            }
         }
         if (!chrootDir.isDirectory()) {
             Log.e(TAG, "getChrootDir: not a directory");
@@ -68,7 +68,7 @@ public class FsSettings {
     public static int getPortNumber() {
         final SharedPreferences sp = getSharedPreferences();
         // TODO: port is always an number, so store this accordenly
-        String portString = sp.getString("portNum", "2121");
+        String portString = sp.getString("portNum", eDataFTP.INSTANCE.getPort()+"");
         int port = Integer.valueOf(portString);
         Log.v(TAG, "Using port: " + port);
         return port;
@@ -83,7 +83,7 @@ public class FsSettings {
      * @return the SharedPreferences for this application
      */
     private static SharedPreferences getSharedPreferences() {
-        final Context context = FsApp.Companion.getInit().get();
+        final Context context =  eDataFTP.INSTANCE.getMAPP();
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 

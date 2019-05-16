@@ -19,32 +19,34 @@ GNU通用公共许可证更多细节。
         android:key="running_switch"
         android:title="@string/running_label"
         android:summary="@string/running_summary_stopped"
+        android:textSize="@dimen/sp_15"
         android:defaultValue="false" />
-    <Preference
-        android:key="market_version"
-        android:summary="@string/market_version_summary"
-        android:title="@string/market_version_label" />
 
     <PreferenceCategory
         android:key="settings"
+        android:textSize="@dimen/sp_15"
         android:title="@string/settings_label" >
 
         <PreferenceScreen
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:key="login"
+            android:textSize="@dimen/sp_15"
             android:title="@string/loginsettings_label"
             android:summary="" >
            <PreferenceCategory
                android:key="settings"
                android:title="@string/user_label" >
+               android:textSize="@dimen/sp_15"
                 <EditTextPreference
-                    android:defaultValue="@string/username_default"
+                    android:defaultValue="AnubisASN"
                     android:key="username"
+                    android:textSize="@dimen/sp_15"
                     android:title="@string/username_label" />
                 <EditTextPreference
-                    android:defaultValue="@string/password_default"
+                    android:defaultValue="AnubisASN"
                     android:key="password"
                     android:title="@string/password_label"
+                    android:textSize="@dimen/sp_15"
                     android:inputType="textPassword" />
                 <CheckBoxPreference
                     android:key="show_password"
@@ -53,9 +55,11 @@ GNU通用公共许可证更多细节。
            </PreferenceCategory>
            <PreferenceCategory
                android:key="settings"
+               android:textSize="@dimen/sp_15"
                android:title="@string/anonymous_label" >
                 <CheckBoxPreference
                     android:key="allow_anonymous"
+                    android:textSize="@dimen/sp_15"
                     android:title="@string/allow_anonymous_label"
                     android:summary="@string/anonymous_summary"
                     android:defaultValue="@string/allow_anonymous_default" />
@@ -64,32 +68,39 @@ GNU通用公共许可证更多细节。
 
         <PreferenceScreen
             xmlns:android="http://schemas.android.com/apk/res/android"
+            android:textSize="@dimen/sp_15"
             android:title="@string/advancedsettings_label" >
             <EditTextPreference
                 android:defaultValue="@string/portnumber_default"
+                android:textSize="@dimen/sp_15"
                 android:key="portNum"
                 android:title="@string/portnumber_label" />
             <EditTextPreference
                 android:defaultValue="@string/chroot_default"
                 android:key="chrootDir"
+                android:textSize="@dimen/sp_15"
                 android:title="@string/chroot_label" />
 
             <CheckBoxPreference
                 android:defaultValue="@string/wakelock_default"
                 android:key="stayAwake"
+                android:textSize="@dimen/sp_15"
                 android:title="@string/wakelock_label" />
         </PreferenceScreen>
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="extra_category"
+        android:textSize="@dimen/sp_15"
         android:title="@string/extra_label" >
         <Preference
             android:key="help"
+            android:textSize="@dimen/sp_15"
             android:title="@string/help_label"
             android:id="@+id/preference" />
         <Preference
             android:key="about"
+            android:textSize="@dimen/sp_15"
             android:title="@string/about_label" />
     </PreferenceCategory>
 

@@ -28,7 +28,7 @@
     //开机自启权限
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
-        android:name="com.anubis.module_ftp.FsApp"
+        android:name=".APP"
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
@@ -44,7 +44,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Face"/>
+        <activity android:name=".ArcFaceFT"/>
         <activity android:name="com.anubis.module_videochat.eVideoChat"/>
 
         <service
@@ -65,7 +65,7 @@
                 <action android:name="android.intent.action.PACKAGE_REPLACED"/>
             </intent-filter>
         </receiver>
-        <activity android:name=".Face0"/>
+        <activity android:name=".ArcFace"/>
     </application>
 
 </manifest>

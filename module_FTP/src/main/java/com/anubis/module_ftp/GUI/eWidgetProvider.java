@@ -47,8 +47,8 @@ public class eWidgetProvider extends AppWidgetProvider {
         Log.v(TAG, "Received broadcast: " + intent.getAction());
         // 监视由ftp服务器进行的广播，并在需要时更新小部件
         final String action = intent.getAction();
-        if (action.equals(FsService.ACTION_STARTED)
-                || action.equals(FsService.ACTION_STOPPED)) {
+        if (action.equals(FsService.Companion.getACTION_STARTED())
+                || action.equals(FsService.Companion.getACTION_STOPPED())) {
             Intent updateIntent = new Intent(context, UpdateService.class);
             context.startService(updateIntent);
         }
@@ -70,15 +70,15 @@ public class eWidgetProvider extends AppWidgetProvider {
         public int onStartCommand(Intent intent, int flags, int startId) {
             Log.d(TAG, "UpdateService start command");
             // We need to create the correct pending intent for when the widget is clicked
-            final String action = FsService.isRunning() ? FsService.ACTION_STOP_FTPSERVER
-                    : FsService.ACTION_START_FTPSERVER;
+            final String action = FsService.Companion.isRunning() ? FsService.Companion.getACTION_STOP_FTPSERVER()
+                    : FsService.Companion.getACTION_START_FTPSERVER();
             Intent startIntent = new Intent(action);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
                     startIntent, 0);
             RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_layout);
             views.setOnClickPendingIntent(R.id.widget_button, pendingIntent);
             // we need to put the correct image on the widget
-            final int drawable = FsService.isRunning() ? R.drawable.widget_on
+            final int drawable = FsService.Companion.isRunning() ? R.drawable.widget_on
                     : R.drawable.widget_off;
             views.setImageViewResource(R.id.widget_button, drawable);
             // new info is on widget, update it

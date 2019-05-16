@@ -44,9 +44,9 @@ public class eNotification extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "onReceive broadcast: " + intent.getAction());
-        if (intent.getAction().equals(FsService.ACTION_STARTED)) {
+        if (intent.getAction().equals(FsService.Companion.getACTION_STARTED())) {
             setupNotification(context);
-        } else if (intent.getAction().equals(FsService.ACTION_STOPPED)) {
+        } else if (intent.getAction().equals(FsService.Companion.getACTION_STOPPED())) {
             clearNotification(context);
         }
     }
@@ -59,7 +59,7 @@ public class eNotification extends BroadcastReceiver {
         NotificationManager nm = (NotificationManager) context.getSystemService(ns);
 
         // get ip address
-        InetAddress address = FsService.getLocalInetAddress();
+        InetAddress address = FsService.Companion.getLocalInetAddress();
         if (address == null) {
             Log.w(TAG, "Unable to retreive the local ip address");
             return;
@@ -78,7 +78,7 @@ public class eNotification extends BroadcastReceiver {
         CharSequence contentText = String.format(context.getString(R.string.notif_text),
                 iptext);
 
-        Intent notificationIntent = new Intent(context, eFTPUI.class);
+        Intent notificationIntent = new Intent(context, eFTPUIs.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
@@ -86,7 +86,7 @@ public class eNotification extends BroadcastReceiver {
 
         int stopIcon = android.R.drawable.ic_menu_close_clear_cancel;
         CharSequence stopText = context.getString(R.string.notif_stop_text);
-        Intent stopIntent = new Intent(FsService.ACTION_STOP_FTPSERVER);
+        Intent stopIntent = new Intent(FsService.Companion.getACTION_STOP_FTPSERVER());
         PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 0,
                 stopIntent, PendingIntent.FLAG_ONE_SHOT);
 

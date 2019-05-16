@@ -19,13 +19,19 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.anubis.module_ftp.server;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 
+import com.anubis.kt_extends.eApp;
 import com.anubis.module_ftp.Defaults;
-import com.anubis.module_ftp.FsApp;
 import com.anubis.module_ftp.FsService;
 import com.anubis.module_ftp.FsSettings;
-
+import com.anubis.module_ftp.eDataFTP;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,14 +40,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
 
 public class SessionThread extends Thread {
-    private static final String TAG = SessionThread.class.getSimpleName();
-
+    private static final String TAG ="TAG";
+//    private Intent mIntent;
     protected boolean shouldExit = false;
     protected Socket cmdSocket;
     protected ByteBuffer buffer = ByteBuffer.allocate(Defaults.getInputBufferSize());
@@ -119,12 +130,13 @@ public class SessionThread extends Thread {
      * Received some bytes from the data socket, which is assumed to already be connected.
      * The bytes are placed in the given array, and the number of bytes successfully read
      * is returned.
+     * <p>
+     * //     * @param bytes
+     * Where to place the input bytes
      *
-     * @param bytes
-     *            Where to place the input bytes
      * @return >0 if successful which is the number of bytes read, -1 if no bytes remain
-     *         to be read, -2 if the data socket was not connected, 0 if there was a read
-     *         error
+     * to be read, -2 if the data socket was not connected, 0 if there was a read
+     * error
      */
     public int receiveFromDataSocket(byte[] buf) {
         int bytesRead;
@@ -233,10 +245,13 @@ public class SessionThread extends Thread {
 
     @Override
     public void run() {
+//        mIntent = new Intent();
+//        mIntent.setAction("com.anubis");
+        Message msg = Message.obtain();
         Log.i(TAG, "SessionThread started");
 
         if (sendWelcomeBanner) {
-//            writeString("220 SwiFTP " + FsApp.getVersion() + " ready\r\n");
+//            writeString("220 SwiFTP " + app.getVersion() + " ready\r\n");
             writeString("220 SwiFTP " + " ready\r\n");
         }
         // Main loop: read an incoming line and process it
@@ -247,16 +262,41 @@ public class SessionThread extends Thread {
                 String line;
                 line = in.readLine(); // will accept \r\n or \n for terminator
                 if (line != null) {
-                    FsService.writeMonitor(true, line);
+                    FsService.Companion.writeMonitor(true, line);
                     Log.d(TAG, "Received line from client: " + line);
                     FtpCmd.dispatchCommand(this, line);
+                    if (line.equals("QUIT")){
+                        msg.what=eDataFTP.INSTANCE.getCONNECTION_DISCONNECT();
+                        msg.obj="Normal Quit";
+                        Thread.sleep(100);
+//                        if (!eApp.INSTANCE.eGetShowActivity(moduleData.INSTANCE.getMAPP()).toString().equals("readsense.face.ui.TransitionUI")) {
+//                            mIntent.putExtra("TYPE",moduleData.INSTANCE.getType());
+//                            FsService.Companion.getMFsService().sendBroadcast(mIntent);
+
+                        eDataFTP.INSTANCE.getMHndler().sendMessage(msg);
+//                        }
+                        break;
+                    }
                 } else {
-                    Log.i(TAG, "readLine gave null, quitting");
+                    msg.what=eDataFTP.INSTANCE.getCONNECTION_DISCONNECT();
+                    msg.obj="Exception Quit";
+                    Thread.sleep(100);
+//                        mIntent.putExtra("TYPE",moduleData.INSTANCE.getType());
+//                       FsService.Companion.getMFsService().sendBroadcast(mIntent);
+                    eDataFTP.INSTANCE.getMHndler().sendMessage(msg);
+//                    }
                     break;
                 }
             }
         } catch (IOException e) {
-            Log.i(TAG, "Connection was dropped");
+            Log.e(TAG, "断开连接错误："+e);
+//            if (!eApp.INSTANCE.eGetShowActivity(moduleData.INSTANCE.getMAPP()).toString().equals("readsense.face.ui.TransitionUI")) {
+//                mIntent.putExtra("TYPE",moduleData.INSTANCE.getType());
+//                FsService.Companion.getMFsService().sendBroadcast(mIntent);
+//                Log.i(TAG, "run:发送广播 ");
+//            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         closeSocket();
     }
@@ -299,14 +339,14 @@ public class SessionThread extends Thread {
         }
     }
 
-    public void writeString(String str) {
-        FsService.writeMonitor(false, str);
+    public void writeString(String string) {
+        FsService.Companion.writeMonitor(false, string);
         byte[] strBytes;
         try {
-            strBytes = str.getBytes(encoding);
+            strBytes = string.getBytes(encoding);
         } catch (UnsupportedEncodingException e) {
             Log.e(TAG, "Unsupported encoding: " + encoding);
-            strBytes = str.getBytes();
+            strBytes = string.getBytes();
         }
         writeBytes(strBytes);
     }
@@ -370,17 +410,24 @@ public class SessionThread extends Thread {
     }
 
     public void authAttempt(boolean authenticated) {
+        Message msg=new Message();
         if (authenticated) {
             Log.i(TAG, "Authentication complete");
+            msg.what=eDataFTP.INSTANCE.getCONNECTION_SUCCEED();
+            msg.obj="Authentication complete";
             userAuthenticated = true;
         } else {
             authFails++;
             Log.i(TAG, "Auth failed: " + authFails + "/" + MAX_AUTH_FAILS);
+            msg.obj="Auth failed: " + authFails + "/" + MAX_AUTH_FAILS;
             if (authFails > MAX_AUTH_FAILS) {
                 Log.i(TAG, "Too many auth fails, quitting session");
+                msg.obj="Too many auth fails, quitting session";
                 quit();
             }
+            msg.what=eDataFTP.INSTANCE.getCONNECTION_FAILURE();
         }
+        eDataFTP.INSTANCE.getMHndler().sendMessage(msg);
     }
 
     public File getWorkingDir() {

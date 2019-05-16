@@ -21,8 +21,6 @@ import android.widget.ScrollView
 import android.widget.Spinner
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.SwissArmyKnife.GreenDao.Data
-import com.anubis.SwissArmyKnife.R.id.sv_Hint
-import com.anubis.SwissArmyKnife.R.id.tv_Hint
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
@@ -32,13 +30,12 @@ import com.anubis.module_asrw.recognization.IStatus
 import com.anubis.module_asrw.recognization.PidBuilder
 import com.anubis.module_ewifi.eWiFi
 import com.anubis.module_ftp.FsService
-import com.anubis.module_ftp.GUI.eFTPUI
+import com.anubis.module_ftp.GUI.eFTPUIs
 import com.anubis.module_greendao.eGreenDao
 import com.anubis.module_portMSG.ePortMSG
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
-import com.anubis.module_videochat.eVideoChat
 import com.anubis.module_vncs.eVNC
 import com.anubis.utils.util.eToastUtils
 import com.baidu.speech.asr.SpeechConstant
@@ -73,7 +70,6 @@ import kotlin.concurrent.thread
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //               佛祖保佑         永无BUG
 class MainActivity : Activity() {
-    private var APP: app? = null
     private var TTS: eTTS? = null
     private var filePath = ""
     private var file: File? = null
@@ -93,8 +89,8 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
-        app.mActivityList.add(this)
-        TTS = eTTS.ttsInit(app().get()!!, Handler(), TTSMode.MIX, VoiceModel.MALE)
+        APP.mActivityList.add(this)
+        TTS = eTTS.ttsInit(APP.mAPP, Handler(), TTSMode.MIX, VoiceModel.MALE)
         datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别","et_btSTRING_btInt_btBoolean","et_btFloat_bt获取", "et_bt串口通信", "et_btTCP通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
@@ -183,7 +179,7 @@ class MainActivity : Activity() {
                         R.id.bt_item1 -> Hint("CPU架构:${android.os.Build.CPU_ABI}")
                     }
                     getDigit("FTP") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("FTP服务启动:${startActivity(Intent(this@MainActivity, eFTPUI::class.java))}")
+                        R.id.bt_item1 -> Hint("FTP服务启动:${startActivity(Intent(this@MainActivity, eFTPUIs::class.java))}")
                         R.id.bt_item2 -> Hint("FTP服务关闭:${sendBroadcast(Intent(FsService.ACTION_STOP_FTPSERVER))}")
                     }
                     getDigit("后台杀死") -> when (view?.id) {
@@ -241,15 +237,15 @@ class MainActivity : Activity() {
                         R.id.bt_item2 -> Hint("Shell执行：${eShell.eExecShell(MSG)}")
                         R.id.bt_item3 -> {
                             if (MSG.isNotEmpty()) {
-                                val shell = "cp -r /datas/app/$MSG* /system/priv*"
+                                val shell = "cp -r /datas/APP/$MSG* /system/priv*"
                                 Hint("自定义修改为系统APP:" + eExecShell(shell))
                                 Hint("执行Shell:$shell")
                             } else {
-                                var shell = " cp -r /datas/app/$packageName* /system/priv*"
+                                var shell = " cp -r /datas/APP/$packageName* /system/priv*"
                                 Hint("修改为系统APP:" + eExecShell(shell))
                                 Hint("执行Shell:$shell")
-                                if (File("/datas/app-lib/$packageName-1").exists()) {
-                                    shell = "mv /datas/app-lib/$packageName*/ /system/lib/"
+                                if (File("/datas/APP-lib/$packageName-1").exists()) {
+                                    shell = "mv /datas/APP-lib/$packageName*/ /system/lib/"
                                     Hint("文件夹存在，修改lib数据:" + eExecShell(shell))
                                     Hint("执行Shell:$shell")
                                 }
@@ -260,14 +256,14 @@ class MainActivity : Activity() {
                                 Hint("执行Shell:$shell")
                             }, 2000)
                             Handler().postDelayed({
-                                val shell = " rm -rf /datas/app/$MSG*"
+                                val shell = " rm -rf /datas/APP/$MSG*"
                                 Hint("删除数据遗留:" + eExecShell(shell))
                                 Hint("执行Shell:$shell")
                                 eShowTip("请重启设备")
                             }, 3500)
                         }
                     }
-                    getDigit("正则匹配") -> Hint("正则匹配：/datas/app/$packageName$MSG")
+                    getDigit("正则匹配") -> Hint("正则匹配：/datas/APP/$packageName$MSG")
                     getDigit("清除记录") -> {
                         if (System.currentTimeMillis() - Time > 1000) {
                             Time = System.currentTimeMillis()
@@ -444,8 +440,8 @@ class MainActivity : Activity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         Hint("keyCode:$keyCode")
-        eLog("size" + app.mAPP.mActivityList!!.size)
-        return eSetKeyDownExit(this, keyCode, app.mAPP.mActivityList!!, false, exitHint = "完成退出")
+        eLog("size" + APP.mAPP.mActivityList!!.size)
+        return eSetKeyDownExit(this, keyCode, APP.mAPP.mActivityList!!, false, exitHint = "完成退出")
     }
 
     override fun onDestroy() {
