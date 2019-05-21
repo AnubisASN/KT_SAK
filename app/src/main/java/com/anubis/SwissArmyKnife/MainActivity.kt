@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter
 import android.widget.ScrollView
 import android.widget.Spinner
 import com.alibaba.android.arouter.launcher.ARouter
+import com.anubis.SwissArmyKnife.APP.Companion.mAPP
 import com.anubis.SwissArmyKnife.GreenDao.Data
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
@@ -41,6 +42,7 @@ import com.anubis.module_tts.eTTS
 import com.anubis.module_vncs.eVNC
 import com.anubis.utils.util.eToastUtils
 import com.baidu.speech.asr.SpeechConstant
+import com.huashi.otg.sdk.HandlerMsg
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import org.jetbrains.anko.custom.async
@@ -89,6 +91,7 @@ class MainActivity : Activity() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             handleMsg(msg)
+            handleOtg(msg)
         }
     }
 
@@ -118,8 +121,8 @@ class MainActivity : Activity() {
         file = File(filePath)
         if (file!!.exists()) {
             Handler().post {
-                val buf = BufferedReader(FileReader(filePath))
-                Hint(buf.readText())
+//                val buf = BufferedReader(FileReader(filePath))
+//                Hint(buf.readText())
             }
         } else {
             file!!.createNewFile()
@@ -162,7 +165,7 @@ class MainActivity : Activity() {
                         }
                     }
                     getDigit("身份证阅读器")->{
-                        startActivity(Intent(this@MainActivity, eCardOTG::class.java))
+                        eCardOTG.otgInit(mAPP,handleMsg)
                     }
                             getDigit ("STRING") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("String保存：${eSetSystemSharedPreferences("string", if (MSG.isEmpty()) "String" else MSG)}")
@@ -334,7 +337,6 @@ class MainActivity : Activity() {
                 state = false
             }
             onUiThread { progressDialog!!.incrementProgressBy(1) }// 增加进度条的进度  }
-
             eLog("msg:${msg.arg1}")
             return
         }
@@ -395,6 +397,27 @@ class MainActivity : Activity() {
 
         }
     }
+    private fun handleOtg(msg: Message) {
+        if (msg.what == 99 || msg.what == 100) {
+            eLog(msg.obj)
+        }
+        //第一次授权时候的判断是利用handler判断，授权过后就不用这个判断了
+        if (msg.what == HandlerMsg.CONNECT_SUCCESS) {
+            eLog("msg连接成功---${msg.obj}")
+        }
+        if (msg.what == HandlerMsg.CONNECT_ERROR) {
+            eLog("msg连接失败")
+        }
+        if (msg.what == HandlerMsg.READ_ERROR) {
+            //cz();
+            //statu.setText("卡认证失败");
+//            eLog("msg请放卡...")
+        }
+        if (msg.what == HandlerMsg.READ_SUCCESS) {
+            eLog("msg读卡成功")
+            eLog(msg.obj)
+        }
+    }
 
     private fun Hint(str: String) {
         val Str = "${eGetCurrentTime("MM-dd HH:mm:ss")}： $str\n\n\n"
@@ -430,7 +453,6 @@ class MainActivity : Activity() {
                 val editContext = holder.itemView.et_item1.text.toString()
                 mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
             }
-
         }
 
         //界面设置 ed_    sp_  bt_x3

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'kotlin-android'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
@@ -30,5 +30,5 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':module_Extends')
-    implementation files('libs/OTGCom.jar')
+    api files('libs/OTGCom.jar')
 }
