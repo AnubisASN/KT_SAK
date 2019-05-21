@@ -134,7 +134,7 @@ object ePortMSG : LockerPortInterface {
         val message = Message()
         message.obj = buffer
         eLog("转换：" + bytesToInt(buffer, 0))
-        mHandle!!.sendMessage(message)
+        mHandle?.sendMessage(message)
         for (i in buffer.iterator()) {
             eLog("sss:" + i.toInt())
         }

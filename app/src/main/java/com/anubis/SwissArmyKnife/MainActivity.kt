@@ -2,6 +2,7 @@ package com.anubis.SwissArmyKnife
 
 import android.Manifest
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -28,6 +29,7 @@ import com.anubis.kt_extends.eTime.eGetCurrentTime
 import com.anubis.module_asrw.eASRW
 import com.anubis.module_asrw.recognization.IStatus
 import com.anubis.module_asrw.recognization.PidBuilder
+import com.anubis.module_cardotg.eCardOTG
 import com.anubis.module_ewifi.eWiFi
 import com.anubis.module_ftp.FsService
 import com.anubis.module_ftp.GUI.eFTPUIs
@@ -41,6 +43,9 @@ import com.anubis.utils.util.eToastUtils
 import com.baidu.speech.asr.SpeechConstant
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.list_edit_item.view.*
+import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.custom.onUiThread
+import org.jetbrains.anko.uiThread
 import java.io.*
 import java.net.Socket
 import java.net.URLDecoder
@@ -78,6 +83,8 @@ class MainActivity : Activity() {
     private var asrw: eASRW? = null
     private var hashMap1 = HashMap<String, Boolean>()
     private var hashMap2 = HashMap<String, Boolean>()
+    var state = true
+    var progressDialog: ProgressDialog? = null
     private val handleMsg = object : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
@@ -91,7 +98,7 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, Handler(), TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别","et_btSTRING_btInt_btBoolean","et_btFloat_bt获取", "et_bt串口通信", "et_btTCP通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信", "et_btTCP通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
@@ -154,15 +161,20 @@ class MainActivity : Activity() {
                             }
                         }
                     }
-
-                    getDigit("STRING") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("String保存：${eSetSystemSharedPreferences("string",if(MSG.isEmpty())"String" else MSG)}")
-                      R.id.bt_item2-> Hint("Int保存：${eSetSystemSharedPreferences("int", if(MSG.isEmpty()) 123 else MSG.toInt())}")
-                        R.id.bt_item3-> Hint("Boolean保存：${eSetSystemSharedPreferences("boolean", MSG=="true")}")
+                    getDigit("身份证阅读器")->{
+                        startActivity(Intent(this@MainActivity, eCardOTG::class.java))
+                    }
+                            getDigit ("STRING") -> when (view?.id) {
+                        R.id.bt_item1 -> Hint("String保存：${eSetSystemSharedPreferences("string", if (MSG.isEmpty()) "String" else MSG)}")
+                        R.id.bt_item2 -> Hint("Int保存：${eSetSystemSharedPreferences("int", if (MSG.isEmpty()) 123 else MSG.toInt())}")
+                        R.id.bt_item3 -> Hint("Boolean保存：${eSetSystemSharedPreferences("boolean", MSG == "true")}")
                     }
                     getDigit("获取") -> when (view?.id) {
-                        R.id.bt_item1-> Hint("Float保存：${eSetSystemSharedPreferences("float", if(MSG.isEmpty()) 123f else MSG.toFloat())}")
-                        R.id.bt_item2 -> Hint("获取-String:${eGetSystemSharedPreferences("string","string")?:"null"}-Int:${eGetSystemSharedPreferences("int",123)?:0}-Boolean:${eGetSystemSharedPreferences("boolean",true)?:true}-Float:${eGetSystemSharedPreferences("float",0f)?:0f}}")
+                        R.id.bt_item1 -> Hint("Float保存：${eSetSystemSharedPreferences("float", if (MSG.isEmpty()) 123f else MSG.toFloat())}")
+                        R.id.bt_item2 -> Hint("获取-String:${eGetSystemSharedPreferences("string", "string")
+                                ?: "null"}-Int:${eGetSystemSharedPreferences("int", 123)
+                                ?: 0}-Boolean:${eGetSystemSharedPreferences("boolean", true)
+                                ?: true}-Float:${eGetSystemSharedPreferences("float", 0f) ?: 0f}}")
                     }
 
                     getDigit("VNC") -> when (view?.id) {
@@ -171,7 +183,7 @@ class MainActivity : Activity() {
                     getDigit("音视频") ->
                         ARouter.getInstance().build("/module_videochat/eVideoChat")
 //                                .withBundle("init1",b1)
-                                .withString("init1","00")
+                                .withString("init1", "00")
 //                                .withBundle("init2",b2)
                                 .navigation()
 
@@ -181,6 +193,32 @@ class MainActivity : Activity() {
                     getDigit("FTP") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("FTP服务启动:${startActivity(Intent(this@MainActivity, eFTPUIs::class.java))}")
                         R.id.bt_item2 -> Hint("FTP服务关闭:${sendBroadcast(Intent(FsService.ACTION_STOP_FTPSERVER))}")
+                    }
+                    getDigit("加载弹窗") -> {
+                        progressDialog = ProgressDialog(this@MainActivity)
+                        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+                        // 设置ProgressDialog 标题
+                        progressDialog!!.setTitle("下载提示")
+                        // 设置ProgressDialog 提示信息
+                        progressDialog!!.setMessage("当前下载进度:")
+                        // 设置ProgressDialog 是否可以按退回按键取消
+                        progressDialog!!.setCancelable(false)
+                        progressDialog!!.show()
+                        progressDialog!!.max = 5000
+                        progressDialog!!.progress = 0
+//                        for (i in 0..5000){
+                        async {
+                            for (i in 0..5000) {
+                                mHandler.post { progressDialog!!.incrementProgressBy(1) }
+//                                handleMsg.sendMessage(msg)
+                                eLog("i$i")
+                            }
+                            uiThread { progressDialog?.dismiss() }
+                        }
+//                            progressDialog.secondaryProgress
+
+//                        }
+
                     }
                     getDigit("后台杀死") -> when (view?.id) {
                         R.id.bt_item1 -> {
@@ -194,16 +232,16 @@ class MainActivity : Activity() {
                         }
                     }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
-                    getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, if (MSG.isEmpty()) "0" else MSG.split("-")[0], "/dev/"+MSG.split("-")[1]))
+                    getDigit("串口通信") -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, if (MSG.isEmpty()) "0" else MSG.split("-")[0], "/dev/" + MSG.split("-")[1]))
 
 //                        Hint("串口通讯状态：" + ePortMSG().getInit(this@MainActivity, MSG ?: "").MSG())
                     getDigit("TCP通信") -> Hint("TCP通信：" + if (socketState) {
-                       if (MSG.indexOf("3333")!=-1){
-                         val  msg=eString.eGetNumberPeriod(MSG,18,"MAX")
-                           thread { sendMSM(msg) }
-                        }else{
-                           thread { sendMSM(MSG) }
-                       }
+                        if (MSG.indexOf("3333") != -1) {
+                            val msg = eString.eGetNumberPeriod(MSG, 18, "MAX")
+                            thread { sendMSM(msg) }
+                        } else {
+                            thread { sendMSM(MSG) }
+                        }
 
                     } else {
                         initClienSocket(MSG)
@@ -291,6 +329,17 @@ class MainActivity : Activity() {
     private val MSG_STATE_TTS_SPEAK_OVER = 0
     private val MSG_STATE_TTS_SPEAK_START = 1
     private fun handleMsg(msg: Message) {
+        if (msg.what == 5000) {
+            if (msg.arg1 == 5000) {
+                state = false
+            }
+            onUiThread { progressDialog!!.incrementProgressBy(1) }// 增加进度条的进度  }
+
+            eLog("msg:${msg.arg1}")
+            return
+        }
+
+
         if (msg.what == IStatus.STATUS_WAKEUP_SUCCESS) {
             Hint("语音唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
             eLog("语音唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
@@ -524,11 +573,13 @@ class MainActivity : Activity() {
             }
         }.start()
     }
+
     //消息发送
     fun sendMSM(str: String) {
         (Out as PrintStream).print(str)
         eLog("消息发送:$str")
     }
+
     object IsAndOs {
         var `in`: InputStream? = null
         var os: OutputStream? = null

@@ -102,27 +102,21 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any, sharedPreferences:
 //系统数据文件存储读取扩展
 fun Context.eGetSystemSharedPreferences(key: String, value: Any? = null, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) =
         try {
-            eLog("1")
             sharedPreferences.getString(key, value as String? ?:"")
 
         } catch (e: Exception) {
             try {
-                eLog("2")
                 sharedPreferences.getBoolean(key, value as Boolean??:true)
             } catch (e: Exception) {
                 try {
-                    eLog("3")
                     sharedPreferences.getInt(key, value as Int??:0)
                 } catch (e: Exception) {
                     try {
-                        eLog("4")
                         sharedPreferences.getFloat(key, value as Float??:0f)
                     } catch (e: Exception) {
                         try {
-                            eLog("5")
                             sharedPreferences.getLong(key, value as Long??:0)
                         } catch (e: Exception) {
-                            eLog("6")
                             value
                         }
                     }
@@ -143,23 +137,22 @@ fun Context.eSetUserSharedPreferences(userID: String, key: String, value: Any, s
     }
     return editor.commit()
 }
-
 //用户文件数据读取扩展
-fun Context.eGetUserSharedPreferences(userID: String, key: String, value: Any = "", sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) = try {
-    sharedPreferences.getString(key, "")
-} catch (e: ClassCastException) {
+fun Context.eGetUserSharedPreferences(userID: String, key: String, value: Any? = null, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) =         try {
+    sharedPreferences.getString(key, value as String? ?:"")
+} catch (e: Exception) {
     try {
-        sharedPreferences.getBoolean(key, true)
-    } catch (e: ClassCastException) {
+        sharedPreferences.getBoolean(key, value as Boolean??:true)
+    } catch (e: Exception) {
         try {
-            sharedPreferences.getInt(key, 1)
-        } catch (e: ClassCastException) {
+            sharedPreferences.getInt(key, value as Int??:0)
+        } catch (e: Exception) {
             try {
-                sharedPreferences.getFloat(key, 1f)
-            } catch (e: ClassCastException) {
+                sharedPreferences.getFloat(key, value as Float??:0f)
+            } catch (e: Exception) {
                 try {
-                    sharedPreferences.getLong(key, 1.toLong())
-                } catch (e: ClassCastException) {
+                    sharedPreferences.getLong(key, value as Long??:0)
+                } catch (e: Exception) {
                     value
                 }
             }
@@ -182,21 +175,21 @@ fun Context.eSetDefaultSharedPreferences(key: String, value: Any, sharedPref: Sh
 }
 
 //首选项数据文件读取扩展
-fun Context.eGetDefaultSharedPreferences(key: String, value: Any = "", sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)) = try {
-    sharedPref.getString(key, "")
-} catch (e: ClassCastException) {
+fun Context.eGetDefaultSharedPreferences(key: String, value: Any ?= null, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)) =         try {
+    sharedPref.getString(key, value as String? ?:"")
+} catch (e: Exception) {
     try {
-        sharedPref.getBoolean(key, true)
-    } catch (e: ClassCastException) {
+        sharedPref.getBoolean(key, value as Boolean??:true)
+    } catch (e: Exception) {
         try {
-            sharedPref.getInt(key, 1)
-        } catch (e: ClassCastException) {
+            sharedPref.getInt(key, value as Int??:0)
+        } catch (e: Exception) {
             try {
-                sharedPref.getFloat(key, 1f)
-            } catch (e: ClassCastException) {
+                sharedPref.getFloat(key, value as Float??:0f)
+            } catch (e: Exception) {
                 try {
-                    sharedPref.getLong(key, 1.toLong())
-                } catch (e: ClassCastException) {
+                    sharedPref.getLong(key, value as Long??:0)
+                } catch (e: Exception) {
                     value
                 }
             }
