@@ -39,15 +39,21 @@ import com.anubis.module_portMSG.ePortMSG
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
+import com.anubis.module_videochat.eVideoChat
 import com.anubis.module_vncs.eVNC
 import com.anubis.utils.util.eToastUtils
 import com.baidu.speech.asr.SpeechConstant
 import com.huashi.otg.sdk.HandlerMsg
+import com.lzy.okgo.OkGo
+import com.lzy.okgo.callback.StringCallback
+import com.lzy.okgo.model.Response
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.custom.onUiThread
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.uiThread
+import org.json.JSONException
 import java.io.*
 import java.net.Socket
 import java.net.URLDecoder
@@ -101,7 +107,7 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, Handler(), TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3", "et_btTCP通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3", "btHTTP测试_btHTTP循环测试", "et_btTCP通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
@@ -121,7 +127,7 @@ class MainActivity : Activity() {
         file = File(filePath)
         if (file!!.exists()) {
             Handler().post {
-//                val buf = BufferedReader(FileReader(filePath))
+                //                val buf = BufferedReader(FileReader(filePath))
 //                Hint(buf.readText())
             }
         } else {
@@ -164,13 +170,53 @@ class MainActivity : Activity() {
                             }
                         }
                     }
-                    getDigit("身份证阅读器")->{
-                        eCardOTG.otgInit(mAPP,handleMsg)
+                    getDigit("身份证阅读器") -> {
+                        eCardOTG.otgInit(mAPP, handleMsg)
                     }
-                            getDigit ("STRING") -> when (view?.id) {
+                    getDigit("STRING") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("String保存：${eSetSystemSharedPreferences("string", if (MSG.isEmpty()) "String" else MSG)}")
                         R.id.bt_item2 -> Hint("Int保存：${eSetSystemSharedPreferences("int", if (MSG.isEmpty()) 123 else MSG.toInt())}")
                         R.id.bt_item3 -> Hint("Boolean保存：${eSetSystemSharedPreferences("boolean", MSG == "true")}")
+                    }
+                    getDigit("HTTP测试") -> when (view?.id) {
+                        R.id.bt_item1 -> {
+//                            if (eNetWork.eIsNetworkOnline().apply { eLog("HTTP测试网络检测：$this") }) {
+//                                OkGo.post<String>("http://119.23.77.41:8082/DataRelay/receiveData")
+                            OkGo.post<String>("http://www.hbzayun.com/ACSystem/testPost")
+                                    .tag(this)
+                                    .execute(object : StringCallback() {
+                                        override fun onSuccess(response: Response<String>?) {
+                                            Hint("HTTP测试：成功---${response?.body()}")
+                                        }
+
+                                        override fun onError(response: Response<String>?) {
+                                            super.onError(response)
+                                            Hint("HTTP测试：失败---${response?.body()}")
+                                        }
+                                    })
+//                            }
+                        }
+                        R.id.bt_item2 -> {
+                            async {
+                                while (true) {
+//                                    if (eNetWork.eIsNetworkOnline().apply { eLog("HTTP测试网络检测：$this") }) {
+//                                        OkGo.post<String>("http://119.23.77.41:8082/DataRelay/receiveData")
+                                    OkGo.post<String>("http://www.hbzayun.com/ACSystem/testPost")
+                                            .tag(this)
+                                            .execute(object : StringCallback() {
+                                                override fun onSuccess(response: Response<String>?) {
+                                                    Hint("HTTP测试：成功---${response?.body()}")
+                                                }
+
+                                                override fun onError(response: Response<String>?) {
+                                                    super.onError(response)
+                                                    Hint("HTTP测试：失败---${response?.body()}")
+                                                }
+                                            })
+                                }
+                            }
+//                            }
+                        }
                     }
                     getDigit("获取") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("Float保存：${eSetSystemSharedPreferences("float", if (MSG.isEmpty()) 123f else MSG.toFloat())}")
@@ -183,12 +229,16 @@ class MainActivity : Activity() {
                     getDigit("VNC") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("VNC二进制文件执行:${eVNC.startVNCs(this@MainActivity)}")
                     }
-                    getDigit("音视频") ->
-                        ARouter.getInstance().build("/module_videochat/eVideoChat")
-//                                .withBundle("init1",b1)
-                                .withString("init1", "00")
-//                                .withBundle("init2",b2)
-                                .navigation()
+                    getDigit("音视频") ->{
+                        val intent=Intent(this@MainActivity,eVideoChat::class.java)
+                        intent.putExtra("ChannelName",MSG)
+                        startActivity(intent)
+                    }
+//                        ARouter.getInstance().build("/module_videochat/eVideoChat")
+////                                .withBundle("init1",b1)
+//                                .withString("init1", "00")
+////                                .withBundle("init2",b2)
+//                                .navigation()
 
                     getDigit("CPU") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("CPU架构:${android.os.Build.CPU_ABI}")
@@ -235,9 +285,9 @@ class MainActivity : Activity() {
                         }
                     }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
-                    getDigit("串口通信") -> when(view?.id){
-                        R.id.bt_item1  ->Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG.toByteArray(), "/dev/ttyS1"))
-                        R.id.bt_item2  ->Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG.toByteArray(), "/dev/ttyS3"))
+                    getDigit("串口通信") -> when (view?.id) {
+                        R.id.bt_item1 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG.toByteArray(), "/dev/ttyS1"))
+                        R.id.bt_item2 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG.toByteArray(), "/dev/ttyS3"))
                     }
 
 //                        Hint("串口通讯状态：" + ePortMSG().getInit(this@MainActivity, MSG ?: "").MSG())
@@ -400,6 +450,7 @@ class MainActivity : Activity() {
 
         }
     }
+
     private fun handleOtg(msg: Message) {
         if (msg.what == 99 || msg.what == 100) {
             eLog(msg.obj)
@@ -541,7 +592,7 @@ class MainActivity : Activity() {
                 msg.obj = receiveData
                 mHandler.sendMessage(msg)
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
@@ -565,6 +616,14 @@ class MainActivity : Activity() {
             2 -> {
                 //接收到数据
                 Hint("接收到：" + it.obj.toString())
+                try {
+                    if (eJson.eGetJsonObject(it.obj.toString(), "msgType") == "22") {
+                        val data = "{\"msgType\":\"23\",\"data\":[{\"imgName\":\"${eJson.eGetJsonObject( eJson.eGetJsonArray(it.obj.toString(), "data")[0].toString(), "imgPath").split("/").last()}\"}]}"
+                        eLog("获取图片：$data")
+                       thread {sendMSM(data)}
+                    }
+                } catch (e: JSONException) {
+                }
                 return@Handler true
             }
             else -> return@Handler true

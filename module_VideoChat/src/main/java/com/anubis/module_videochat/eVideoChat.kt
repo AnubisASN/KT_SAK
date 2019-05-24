@@ -31,6 +31,7 @@ import java.util.*
 
 @Route(path = "/module_videochat/eVideoChat")
 class eVideoChat : AppCompatActivity() {
+   private var channelName="demoChannel1"
 //    @Autowired
 //     var init1=Bundle()
 //    @Autowired
@@ -53,6 +54,8 @@ class eVideoChat : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_chat_view)
+         channelName = intent.getStringExtra("ChannelName")
+
 
         if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
                 checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID) &&
@@ -211,7 +214,7 @@ class eVideoChat : AppCompatActivity() {
 
     // Tutorial Step 4
     private fun joinChannel() {
-        mRtcEngine!!.joinChannel(null, "demoChannel1", "Extra Optional Data", 0) // if you do not specify the uid, we will generate the uid for you
+        mRtcEngine!!.joinChannel(null, channelName, "Extra Optional Data", 0) // if you do not specify the uid, we will generate the uid for you
     }
 
     // Tutorial Step 5
