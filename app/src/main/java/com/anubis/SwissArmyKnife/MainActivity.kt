@@ -44,6 +44,7 @@ import com.anubis.module_vncs.eVNC
 import com.anubis.utils.util.eToastUtils
 import com.baidu.speech.asr.SpeechConstant
 import com.huashi.otg.sdk.HandlerMsg
+import com.lzy.imagepicker.util.Utils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
@@ -55,6 +56,7 @@ import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.uiThread
 import org.json.JSONException
 import java.io.*
+import java.net.ServerSocket
 import java.net.Socket
 import java.net.URLDecoder
 import java.util.LinkedHashMap
@@ -107,7 +109,7 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, Handler(), TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3", "btHTTP测试_btHTTP循环测试", "et_btTCP通信", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3", "btHTTP测试_btHTTP循环测试", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
@@ -123,12 +125,12 @@ class MainActivity : Activity() {
 
     var i = 1
     private fun init() {
-        filePath = this.filesDir.path + "SAK_Record.txt"
+        filePath = "/sdcard/SAK_Record.txt"
         file = File(filePath)
         if (file!!.exists()) {
             Handler().post {
-                //                val buf = BufferedReader(FileReader(filePath))
-//                Hint(buf.readText())
+                val buf = BufferedReader(FileReader(filePath))
+                Hint(buf.readText())
             }
         } else {
             file!!.createNewFile()
@@ -227,11 +229,11 @@ class MainActivity : Activity() {
                     }
 
                     getDigit("VNC") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("VNC二进制文件执行:${eVNC.startVNCs(this@MainActivity)}")
+                        R.id.bt_item1 -> Hint("VNC二进制文件执行:${if(eVNC.startVNCs(this@MainActivity)) "成功：5901" else "失败"}")
                     }
-                    getDigit("音视频") ->{
-                        val intent=Intent(this@MainActivity,eVideoChat::class.java)
-                        intent.putExtra("ChannelName",MSG)
+                    getDigit("音视频") -> {
+                        val intent = Intent(this@MainActivity, eVideoChat::class.java)
+                        intent.putExtra("ChannelName", MSG)
                         startActivity(intent)
                     }
 //                        ARouter.getInstance().build("/module_videochat/eVideoChat")
@@ -291,17 +293,22 @@ class MainActivity : Activity() {
                     }
 
 //                        Hint("串口通讯状态：" + ePortMSG().getInit(this@MainActivity, MSG ?: "").MSG())
-                    getDigit("TCP通信") -> Hint("TCP通信：" + if (socketState) {
-                        if (MSG.indexOf("3333") != -1) {
-                            val msg = eString.eGetNumberPeriod(MSG, 18, "MAX")
-                            thread { sendMSM(msg) }
-                        } else {
-                            thread { sendMSM(MSG) }
-                        }
+                    getDigit("TCP客户端通信") -> when (view?.id) {
+                        R.id.bt_item1 -> Hint("TCP通信：" + if (socketState) {
+                            if (MSG.indexOf("3333") != -1) {
+                                val msg = eString.eGetNumberPeriod(MSG, 18, "MAX")
+                                thread { sendMSM(msg) }
+                            } else {
+                                thread { sendMSM(MSG) }
+                            }
 
-                    } else {
-                        initClienSocket(MSG)
-                    })
+                        } else {
+                            initClienSocket(MSG)
+                        })
+                        R.id.bt_item2 -> if (!serverSocketState) Hint("TCP服务端创建：${initServerSocket()}") else {
+                            thread { sSendMSM(MSG) }
+                        }
+                    }
                     getDigit("数据库") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("数据库插入：${eGreenDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
                         R.id.bt_item2 -> Hint("数据库查询:" + eGreenDao(this@MainActivity).queryAllUser(Data()).size)
@@ -565,13 +572,14 @@ class MainActivity : Activity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         Hint("keyCode:$keyCode")
-        eLog("size" + APP.mAPP.mActivityList!!.size)
-        return eSetKeyDownExit(this, keyCode, APP.mAPP.mActivityList!!, false, exitHint = "完成退出")
+        eLog("size" + APP.mAPP.mActivityList?.size)
+        return eSetKeyDownExit(this, keyCode, APP.mAPP.mActivityList, false, exitHint = "完成退出")
     }
 
     override fun onDestroy() {
         if (tv_Hint.text.isNotEmpty()) {
             file!!.writeText(tv_Hint.text.toString())
+            eLog("记录保存")
         }
         super.onDestroy()
     }
@@ -599,6 +607,7 @@ class MainActivity : Activity() {
     //消息处理
     var In: InputStream? = null
     var Out: OutputStream? = null
+    var json = ""
     var mHandler: Handler = Handler {
         when (it.what) {
             1 -> {
@@ -614,18 +623,62 @@ class MainActivity : Activity() {
                 return@Handler true
             }
             2 -> {
-                //接收到数据
-                Hint("接收到：" + it.obj.toString())
+                //接收到数据  ,"status":true}
+                val Json = it.obj.toString()
+
+                if (Json.indexOf("\"status\":") == -1 && Json.indexOf("}") == -1) {
+                    json += Json
+                    return@Handler true
+                } else {
+                    json += Json
+                }
+                json = json.replace("\\", "").replace("\n", "").replace("\t", "").trim()
+                Hint("接收到：$json")
                 try {
-                    if (eJson.eGetJsonObject(it.obj.toString(), "msgType") == "22") {
-                        val data = "{\"msgType\":\"23\",\"data\":[{\"imgName\":\"${eJson.eGetJsonObject( eJson.eGetJsonArray(it.obj.toString(), "data")[0].toString(), "imgPath").split("/").last()}\"}]}"
+                    var fileName = ""
+                    if (eJson.eGetJsonObject(json, "msgType") == "22") {
+                        fileName = eJson.eGetJsonObject(eJson.eGetJsonArray(json, "data")[0].toString(), "imgPath").split("/").last()
+                        val data = "{\"msgType\":\"23\",\"data\":[{\"imgName\":\"$fileName\"}]}"
                         eLog("获取图片：$data")
-                       thread {sendMSM(data)}
+                        thread { sendMSM(data) }
+                    }
+                    if (json.length > 300) {
+                        val imgFile = eJson.eGetJsonObject(eJson.eGetJsonArray(json, "data")[0].toString(), "imgPath")
+                        eLog("imgFile:" + imgFile)
+                        val file = File("/sdcard/0.jpg")
+                        if (!file.exists()) {
+                            file.createNewFile()
+                        }
+                        eFile.eBase64ToFile(imgFile, "/sdcard/0.jpg")
+                        eLog("创建成功")
                     }
                 } catch (e: JSONException) {
+                    eLogE("JSON解析错误", e)
+                }
+                json = ""
+                return@Handler true
+            }
+            3 -> {//TCP服务端接收
+                val data = it.obj.toString()
+                eLog("服务端接收到：" + data)
+                Hint("服务端接收到：" + data)
+                var type: String = ""
+                try {
+                    type = eJson.eGetJsonObject(data, "dataType")
+                    Hint("服务端解析type：$type")
+                    //发送接收结果
+                    thread { sSendMSM("{\"msgType\":\"$type\",\"status\":\"接收成功\"}") }
+                    serverSocketState = true
+                    //发送处理结果
+//                    val json=Utils.getInfo(type, data)
+//                    sSendMSM(Utils.json(type, json).replace("\\", ""))
+//                    APP.resultData = null
+                } catch (e: Exception) {
+                    eLogE(type + "TCP服务端数据异常，无法解析:$e")
                 }
                 return@Handler true
             }
+
             else -> return@Handler true
         }
     }
@@ -667,6 +720,70 @@ class MainActivity : Activity() {
     object IsAndOs {
         var `in`: InputStream? = null
         var os: OutputStream? = null
+    }
+
+    //服务端-----------------------------
+    //消息处理
+    var serverSocketState = false
+    var sIn: InputStream? = null
+    var sOut: OutputStream? = null
+    var serverSocket: ServerSocket? = null
+    var sSocket: Socket? = null
+    fun initServerSocket() {
+        // 声明一个ServerSocket对象
+        Thread {
+            try {
+                // 创建一个ServerSocket对象，并让这个Socket在3335端口监听
+                if (serverSocket == null)
+                    serverSocket = ServerSocket(3335)
+                eLog("serverSocket创建成功")
+                // 调用ServerSocket的accept()方法，接受客户端所发送的请求，
+                // 如果客户端没有发送数据，那么该线程就停滞不继续
+                while (true) {
+                    sSocket = serverSocket!!.accept()
+                    eLog("socket创建成功")
+                    onUiThread { Hint("socket创建成功") }
+                    sIsAndOs.os = PrintStream(sSocket!!.getOutputStream(), true, "utf-8")
+                    sIsAndOs.`in` = sSocket!!.getInputStream()
+                    sOut = sIsAndOs.os
+                    // 从Socket当中得到InputStream对象
+                    val inputStream = sSocket!!.getInputStream()
+//                while(APP.tcpsState){
+                    val buffer = ByteArray(1024 * 4)
+                    var temp = 0
+                    async {
+                        // 从InputStream当中读取客户端所发送的数据
+                        while ((inputStream!!.read(buffer)).apply { temp = this } != -1) {
+                            val msg = mHandler.obtainMessage()
+                            msg.what = 3
+                            msg.obj = String(buffer, 0, temp)
+                            mHandler.sendMessage(msg)
+                        }
+                    }
+                }
+
+            } catch (e: IOException) {
+                serverSocket?.close()
+                serverSocket = null
+                eLogE("initServerSocket错误")
+            }
+        }.start()
+    }
+
+    object sIsAndOs {
+        var `in`: InputStream? = null
+        var os: OutputStream? = null
+
+    }
+
+    //服务端消息发送
+    fun sSendMSM(str: String) {
+//        val msgs = Utils.eInterception(str, symbol = "|").split("|")
+//        for (msg in msgs) {
+        (sOut as PrintStream).print(str)
+        eLog("消息发送:$str")
+        Hint("消息发送:$str")
+//        }
     }
 }
 

@@ -17,6 +17,7 @@ import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.preference.*
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
@@ -102,20 +103,20 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any, sharedPreferences:
 //系统数据文件存储读取扩展
 fun Context.eGetSystemSharedPreferences(key: String, value: Any? = null, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) =
         try {
-            sharedPreferences.getString(key, value as String? ?:"")
+            sharedPreferences.getString(key, value as String? ?: "")
 
         } catch (e: Exception) {
             try {
-                sharedPreferences.getBoolean(key, value as Boolean??:true)
+                sharedPreferences.getBoolean(key, value as Boolean? ?: true)
             } catch (e: Exception) {
                 try {
-                    sharedPreferences.getInt(key, value as Int??:0)
+                    sharedPreferences.getInt(key, value as Int? ?: 0)
                 } catch (e: Exception) {
                     try {
-                        sharedPreferences.getFloat(key, value as Float??:0f)
+                        sharedPreferences.getFloat(key, value as Float? ?: 0f)
                     } catch (e: Exception) {
                         try {
-                            sharedPreferences.getLong(key, value as Long??:0)
+                            sharedPreferences.getLong(key, value as Long? ?: 0)
                         } catch (e: Exception) {
                             value
                         }
@@ -137,21 +138,22 @@ fun Context.eSetUserSharedPreferences(userID: String, key: String, value: Any, s
     }
     return editor.commit()
 }
+
 //用户文件数据读取扩展
-fun Context.eGetUserSharedPreferences(userID: String, key: String, value: Any? = null, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) =         try {
-    sharedPreferences.getString(key, value as String? ?:"")
+fun Context.eGetUserSharedPreferences(userID: String, key: String, value: Any? = null, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) = try {
+    sharedPreferences.getString(key, value as String? ?: "")
 } catch (e: Exception) {
     try {
-        sharedPreferences.getBoolean(key, value as Boolean??:true)
+        sharedPreferences.getBoolean(key, value as Boolean? ?: true)
     } catch (e: Exception) {
         try {
-            sharedPreferences.getInt(key, value as Int??:0)
+            sharedPreferences.getInt(key, value as Int? ?: 0)
         } catch (e: Exception) {
             try {
-                sharedPreferences.getFloat(key, value as Float??:0f)
+                sharedPreferences.getFloat(key, value as Float? ?: 0f)
             } catch (e: Exception) {
                 try {
-                    sharedPreferences.getLong(key, value as Long??:0)
+                    sharedPreferences.getLong(key, value as Long? ?: 0)
                 } catch (e: Exception) {
                     value
                 }
@@ -175,20 +177,20 @@ fun Context.eSetDefaultSharedPreferences(key: String, value: Any, sharedPref: Sh
 }
 
 //首选项数据文件读取扩展
-fun Context.eGetDefaultSharedPreferences(key: String, value: Any ?= null, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)) =         try {
-    sharedPref.getString(key, value as String? ?:"")
+fun Context.eGetDefaultSharedPreferences(key: String, value: Any? = null, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)) = try {
+    sharedPref.getString(key, value as String? ?: "")
 } catch (e: Exception) {
     try {
-        sharedPref.getBoolean(key, value as Boolean??:true)
+        sharedPref.getBoolean(key, value as Boolean? ?: true)
     } catch (e: Exception) {
         try {
-            sharedPref.getInt(key, value as Int??:0)
+            sharedPref.getInt(key, value as Int? ?: 0)
         } catch (e: Exception) {
             try {
-                sharedPref.getFloat(key, value as Float??:0f)
+                sharedPref.getFloat(key, value as Float? ?: 0f)
             } catch (e: Exception) {
                 try {
-                    sharedPref.getLong(key, value as Long??:0)
+                    sharedPref.getLong(key, value as Long? ?: 0)
                 } catch (e: Exception) {
                     value
                 }
@@ -260,12 +262,12 @@ fun eAssetsCopy(context: Context, fileName: String, copyName: String) {
  */
 object eJson {
     //Object Json解析扩展
-    fun eGetJsonObject(json: String, resultKey: String) = JSONObject(json).getString(resultKey)
+    fun eGetJsonObject(json: String, resultKey: String) = JSONObject(json).optString(resultKey)
 
     //Array Json解析扩展
-    fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).getJSONArray(resultKey).getJSONObject(i).toString()
+    fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).optJSONArray(resultKey).getJSONObject(i).toString()
 
-    fun eGetJsonArray(json: String, resultKey: String) = JSONObject(json).getJSONArray(resultKey)
+    fun eGetJsonArray(json: String, resultKey: String) = JSONObject(json).optJSONArray(resultKey)
 
 }
 
@@ -923,6 +925,94 @@ object eBitmap {
         }
         return Bitmap.createBitmap(bmp, 0, 0, bmp.width, bmp.height, matrix, true)
     }
+}
+
+/**
+ * 文件转换扩展类--------------------------------------------------------------------------------------
+ */
+object eFile {
+    fun eFileToBase64(path: String): String? {
+        var inputFile: FileInputStream? = null
+        try {
+            val file = File(path)
+            inputFile = FileInputStream(file)
+            val buffer = ByteArray(inputFile.available())
+            val length = inputFile.read(buffer)
+            inputFile.close()
+            return Base64.encodeToString(buffer, 0, length, Base64.DEFAULT)
+        } catch (e: Exception) {
+            inputFile?.close()
+            eLogE("转换错误", e)
+            return null
+        }
+    }
+
+    @Throws(Exception::class)
+    fun eBase64ToFile(base64Code: String, savePath: String) {
+        //byte[] buffer = new BASE64Decoder().decodeBuffer(base64Code);
+        val buffer = Base64.decode(base64Code, Base64.DEFAULT)
+        val out = FileOutputStream(savePath)
+        out.write(buffer)
+        out.close()
+    }
+
+
+//    public static String encodeBase64File(String path) throws Exception {
+//    File  file = new File(path);
+//    FileInputStream inputFile = new FileInputStream(file);
+//    byte[] buffer = new byte[(int)file.length()];
+//    inputFile.read(buffer);
+//    inputFile.close();
+//    return new BASE64Encoder().encode(buffer);
+//}
+///**
+//* 将base64字符解码保存文件
+//* @param base64Code
+//* @param targetPath
+//* @throws Exception
+//*/
+//public static void decoderBase64File(String base64Code,String targetPath) throws Exception {
+//    byte[] buffer = new BASE64Decoder().decodeBuffer(base64Code);
+//    FileOutputStream out = new FileOutputStream(targetPath);
+//    out.write(buffer);
+//    out.close();
+//}
+/**
+* 将base64字符保存文本文件
+* @param base64Code
+* @param targetPath
+* @throws Exception
+*/
+fun toFile( base64Code:String, targetPath:String) {
+    val buffer = base64Code.toByteArray()
+    val out =   FileOutputStream(targetPath);
+    out.write(buffer);
+    out.close();
+}
+
+    fun eBase64ToFile(base64: String, file: File): File {
+        var out: FileOutputStream? = null
+        try {
+            // 解码，然后将字节转换为文件
+            if (!file.exists())
+                file.createNewFile()
+            val bytes = Base64.decode(base64, Base64.DEFAULT)// 将字符串转换为byte数组
+            val input = ByteArrayInputStream(bytes)
+            val buffer = ByteArray(1024)
+            out = FileOutputStream(file)
+            var bytesum = 0
+            var byteread = 0
+            while ((input.read(buffer)).apply { byteread = this } != -1) {
+                bytesum += byteread
+                out.write(buffer, 0, byteread) // 文件写操作
+            }
+        } catch (ioe: Exception) {
+            out?.close()
+            eLogE("转换异常", ioe)
+        }
+        return file
+    }
+
 }
 
 /**
