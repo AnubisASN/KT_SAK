@@ -63,9 +63,10 @@ object ePortMSG : LockerPortInterface {
         when (msg) {
             is String -> sendParams(msg)
             is ByteArray -> sendParams(msg)
-            else->{sendParams(msg.toString())}
+            else -> {
+                sendParams(msg.toString())
+            }
         }
-        closeMSG()
 //            } catch (e: Exception) {
 //                eLogE("MyException：$e")
 //            }
@@ -96,7 +97,7 @@ object ePortMSG : LockerPortInterface {
     /**
      * 打开串口
      */
-    private fun openPort(activity: Activity) {
+    fun openPort(activity: Activity) {
         println("打开串口")
         LockerSerialportUtil.init(activity, PATH!!, BAUDRATE!!, this)
         //        LockerSerialportUtil.init(this,PATH1,BAUDRATE,this);
@@ -129,17 +130,23 @@ object ePortMSG : LockerPortInterface {
      * @param size   返回的字节长度
      * @param path   串口名，如果有多个串口需要识别是哪个串口返回的数据（传或不传可以根据自己的编码习惯）
      */
+    private var data = ""
+
     override fun onLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
-        val result = String(buffer, 0, size)
-        val message = Message()
-        message.obj = buffer
-        eLog("转换：" + bytesToInt(buffer, 0))
-        mHandle?.sendMessage(message)
-        for (i in buffer.iterator()) {
-            eLog("sss:" + i.toInt())
+        val temporaryData = String(buffer, 0, size)
+        eLog("串口监听：$temporaryData---${temporaryData.isNotBlank()}")
+        if (temporaryData.isNotBlank()) {
+            data += temporaryData
+        } else {
+            if (data.isNotBlank()|| data.isNotEmpty()) {
+                val message = Message()
+                eLog("发送：$path---$data")
+                message.obj = "$path---$data"
+                mHandle?.sendMessage(message)
+                data=""
+            }
+
         }
-        eLog("TAG", "size:${buffer.size}")
-        Log.e("收到", "onLockerDataReceived====$result")
     }
 
     fun convertTwoUnSignInt(byteArray: ByteArray): Int =

@@ -49,7 +49,31 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.custom.async
-
+/**
+ * Author  ： AnubisASN   on 18-7-16 上午8:37.
+ * E-mail  ： anubisasn@gmail.com ( anubisasn@qq.com )
+ * HomePage： www.anubisasn.me
+ *命名规则定义：
+ *Module :  module_'ModuleName'
+ *Library :  lib_'LibraryName'
+ *Package :  'PackageName'_'Module'
+ *Class :  'Mark'_'Function'_'Tier'
+ *Layout :  'Module'_'Function'
+ *Resource :  'Module'_'ResourceName'_'Mark'
+ * /+Id :  'LoayoutName'_'Widget'+FunctionName
+ *Router :  /'Module'/'Function'
+ *类说明：活体检测+人脸跟踪
+ *  @初始化方法：init()
+ * @param mAcitvity: Activity；活动
+ * @param  previewView: View；预览视图
+ * @param faceRectView: FaceRectView；人脸矩形视图
+ * @param rotation: Int;预览角度
+ * @param cameraId: Int；相机ID
+ * @param isMirror: Boolean;镜像设置
+ * @return: eArcFace
+ * @获取捕获 mBitmap：Bitmao；获取抓捕图像
+ * @抓捕控制 mIsStatem：Boolean ；true返回,false不反回
+ */
 @SuppressLint("StaticFieldLeak")
 object eArcFace : ViewTreeObserver.OnGlobalLayoutListener {
     private var cameraHelper: CameraHelper? = null
@@ -66,7 +90,6 @@ object eArcFace : ViewTreeObserver.OnGlobalLayoutListener {
     private val ACTION_REQUEST_PERMISSIONS = 0x001
     private val NEEDED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE)
     private var mImageNV21: ByteArray? = null
-    var mFaceNum: Int = 0
     var mBitmap: Bitmap? = null
     //    var mAFT_FSDKFace: AFT_FSDKFace? = null
     var mIsState = true
@@ -76,6 +99,8 @@ object eArcFace : ViewTreeObserver.OnGlobalLayoutListener {
     private var mPreviewView: View? = null
     private var mFaceRectView: FaceRectView? = null
     private var mRotation: Int = 0
+
+
     fun init(activity: Activity, previewView: View, faceRectView: FaceRectView, rotation: Int = 0, cameraId: Int? = null, isMirror: Boolean? = null): eArcFace {
         mCameraID = cameraId ?: mCameraID
         mIsMirror = isMirror ?: mIsMirror

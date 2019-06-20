@@ -23,6 +23,7 @@ import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.text.TextUtils.indexOf
+import android.text.TextUtils.substring
 import android.util.Base64
 import android.util.Log
 import android.view.KeyEvent
@@ -626,6 +627,11 @@ object eTime {
     //获取时间戳格式转时间
     fun eGetCuoFormatTime(dateCuo: Long, format: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(format).format(Date(dateCuo))
 
+    //时间转时间戳
+    fun dateToStamp(s: String, type: String = "s"): String {
+        val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s).time.toString()
+        return if (type == "s") date.substring(0, 10) else date
+    }
 }
 
 /**
@@ -977,18 +983,18 @@ object eFile {
 //    out.write(buffer);
 //    out.close();
 //}
-/**
-* 将base64字符保存文本文件
-* @param base64Code
-* @param targetPath
-* @throws Exception
-*/
-fun toFile( base64Code:String, targetPath:String) {
-    val buffer = base64Code.toByteArray()
-    val out =   FileOutputStream(targetPath);
-    out.write(buffer);
-    out.close();
-}
+    /**
+     * 将base64字符保存文本文件
+     * @param base64Code
+     * @param targetPath
+     * @throws Exception
+     */
+    fun toFile(base64Code: String, targetPath: String) {
+        val buffer = base64Code.toByteArray()
+        val out = FileOutputStream(targetPath);
+        out.write(buffer);
+        out.close();
+    }
 
     fun eBase64ToFile(base64: String, file: File): File {
         var out: FileOutputStream? = null

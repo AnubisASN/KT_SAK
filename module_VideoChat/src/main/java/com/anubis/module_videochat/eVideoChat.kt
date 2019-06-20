@@ -55,8 +55,7 @@ class eVideoChat : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_chat_view)
          channelName = intent.getStringExtra("ChannelName")
-
-
+        mInit = this
         if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
                 checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID) &&
                 checkSelfPermission(REQUESTED_PERMISSIONS[2], PERMISSION_REQ_ID)) {
@@ -196,7 +195,6 @@ class eVideoChat : AppCompatActivity() {
     // Tutorial Step 2
     private fun setupVideoProfile() {
         mRtcEngine!!.enableVideo()
-
         //      mRtcEngine.setVideoProfile(Constants.VIDEO_PROFILE_360P, false); // Earlier than 2.3.0
         mRtcEngine!!.setVideoEncoderConfiguration(VideoEncoderConfiguration(VideoEncoderConfiguration.VD_640x360, VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
                 VideoEncoderConfiguration.STANDARD_BITRATE,
@@ -266,9 +264,9 @@ class eVideoChat : AppCompatActivity() {
     companion object {
 
         private val LOG_TAG = eVideoChat::class.java.simpleName
-
         private val PERMISSION_REQ_ID = 22
-
+        private var mInit: eVideoChat? = null
+        val getInit: eVideoChat get() = mInit!!
         // permission WRITE_EXTERNAL_STORAGE is not mandatory for Agora RTC SDK, just incase if you wanna save logs to external sdcard
         private val REQUESTED_PERMISSIONS = arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
