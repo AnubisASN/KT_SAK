@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app_Piceker" />
             <option value="$PROJECT_DIR$/module_ASRW" />
             <option value="$PROJECT_DIR$/module_ArcFace" />
             <option value="$PROJECT_DIR$/module_ArcFaceFT" />
@@ -17,6 +18,7 @@
             <option value="$PROJECT_DIR$/module_FTP" />
             <option value="$PROJECT_DIR$/module_GreenDao" />
             <option value="$PROJECT_DIR$/module_Office" />
+            <option value="$PROJECT_DIR$/module_Piceker" />
             <option value="$PROJECT_DIR$/module_PortMSG" />
             <option value="$PROJECT_DIR$/module_QRCode" />
             <option value="$PROJECT_DIR$/module_TTS" />

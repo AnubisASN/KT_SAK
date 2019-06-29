@@ -905,13 +905,13 @@ object eBitmap {
             val stream = ByteArrayOutputStream()
             image.compressToJpeg(rect, 80, stream)
             val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
-            mBitmap = eRotateMyBitmap(bmp)
             stream.close()
             eGcBitmap(bmp)
         }
         return mBitmap
     }
 
+    //图片旋转
     fun eRotateBitmap(bitmap: Bitmap?, rotate: Float): Bitmap? {
         if (bitmap == null) {
             return null
@@ -930,17 +930,7 @@ object eBitmap {
     }
 
 
-    //图片旋转
-    fun eRotateMyBitmap(bmp: Bitmap, mCameraID: Int = 1): Bitmap {
-        //*****旋转一下
-        var matrix = Matrix()
-        if (mCameraID == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            matrix.postRotate(270f)
-        } else {
-            matrix.postRotate(90f)
-        }
-        return Bitmap.createBitmap(bmp, 0, 0, bmp.width, bmp.height, matrix, true)
-    }
+
 }
 
 /**
