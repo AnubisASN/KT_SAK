@@ -2,6 +2,7 @@ package com.anubis.kt_extends
 
 import android.app.Activity
 import android.app.ActivityManager
+import android.app.Application
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
@@ -348,9 +349,17 @@ object eApp {
         return null
     }
 
-
     //APP重启
-    fun eAppRestart(activity: Activity, activityList: ArrayList<Activity>? = null): Boolean {
+    fun eAppRestart(context: Application, activity: Activity) {
+        //启动页
+        val intent = Intent(context, activity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+        android.os.Process.killProcess(android.os.Process.myPid())
+    }
+
+    //Activity重启
+    fun eActivityRestart(activity: Activity, activityList: ArrayList<Activity>? = null): Boolean {
         try {
             if (activityList != null) {
                 for (av in activityList) {
@@ -366,8 +375,9 @@ object eApp {
         } catch (e: Exception) {
             return false
         }
-
     }
+
+
 
     //    APP包名启动
     fun eAppStart(activity: Activity, packageName: String? = null): Boolean {

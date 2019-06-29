@@ -292,7 +292,7 @@ class MainActivity : Activity() {
                             eToastUtils.showShort("Toast测试")
                         }
                     }
-                    getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(this@MainActivity)}")
+                    getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(APP.mAPP,this@MainActivity)}")
                     getDigit("串口通信") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG.toByteArray(), "/dev/ttyS1"))
                         R.id.bt_item2 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG.toByteArray(), "/dev/ttyS3"))
