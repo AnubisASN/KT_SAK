@@ -8,7 +8,7 @@ import android.widget.ScrollView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eTime
-import com.anubis.module_picker.ePiceker
+import com.anubis.module_picker.ePicker
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import kotlinx.android.synthetic.main.picker.*
 @Route(path = "/app/piceker")
@@ -24,13 +24,13 @@ val REQUEST_CODE=0x000111
         when (v.id) {
             picker_btPX.id ->{
                 type=0
-                ePiceker.eImageStart(this@PicekerActivity,1000)
+                ePicker.eImageStart(this@PicekerActivity,1000)
             }
 
 
             picker_btFile.id ->{
                 type=1
-                ePiceker.eFileStart(this@PicekerActivity,2000)
+                ePicker.eFileStart(this@PicekerActivity,2000)
             }
 
 
@@ -38,7 +38,7 @@ val REQUEST_CODE=0x000111
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-       val datas= ePiceker.eResult(this@PicekerActivity,requestCode,resultCode,data)
+       val datas= ePicker.eResult(this@PicekerActivity,requestCode,resultCode,data)
         if (datas!=null){
             if (type==0 ) {
                 for (data in datas)

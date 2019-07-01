@@ -28,7 +28,7 @@ import me.rosuh.filepicker.config.FilePickerManager.REQUEST_CODE
  *Router :  /'Module'/'Function'
  *说明：
  */
-object ePiceker{
+object ePicker{
     private var IMAGE_REQUEST_CODE = 0x000111
     private var FILE_REQUEST_CODE = FilePickerManager.REQUEST_CODE
     fun eImageStart(activity: Activity,  REQUEST_CODE: Int = 0x000111,Type: Int = PhoenixOption.TYPE_PICK_MEDIA, phoenix: PhoenixOption = Phoenix.with()) {
