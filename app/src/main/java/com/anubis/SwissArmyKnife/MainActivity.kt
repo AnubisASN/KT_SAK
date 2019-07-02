@@ -23,6 +23,7 @@ import android.widget.Spinner
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
 import com.anubis.SwissArmyKnife.GreenDao.Data
+import com.anubis.SwissArmyKnife.HttpServer.eHttpTest
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
@@ -35,6 +36,7 @@ import com.anubis.module_ewifi.eWiFi
 import com.anubis.module_ftp.FsService
 import com.anubis.module_ftp.GUI.eFTPUIs
 import com.anubis.module_greendao.eGreenDao
+import com.anubis.module_httpserver.eHttpServer
 import com.anubis.module_portMSG.ePortMSG
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
@@ -51,7 +53,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.custom.onUiThread
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.uiThread
 import org.json.JSONException
 import java.io.*
@@ -108,16 +109,22 @@ class MainActivity : Activity() {
         }
     }
 
+    companion object {
+        var mainActivity: MainActivity? = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mainActivity = this@MainActivity
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, Handler(), TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
+    private var httpIntent: Intent? = null
     private fun getDigit(str: String): Int {
         var Digit = 0
         for (data in datas!!) {
@@ -233,8 +240,18 @@ class MainActivity : Activity() {
                                 ?: true}-Float:${eGetSystemSharedPreferences("float", 0f) ?: 0f}}")
                     }
 
+                    getDigit("Http服务") -> {
+
+                        when (view?.id) {
+                            R.id.bt_item1 ->
+                                Hint("http服务开启:${eHttpServer.eStart(eHttpTest::class.java)}")
+
+                            R.id.bt_item2 -> Hint("http服务关闭:${eHttpServer.eStop()}")
+                        }
+                    }
+
                     getDigit("VNC") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("VNC二进制文件执行:${if(eVNC.startVNCs(this@MainActivity)) "成功：5901" else "失败"}")
+                        R.id.bt_item1 -> Hint("VNC二进制文件执行:${if (eVNC.startVNCs(this@MainActivity)) "成功：5901" else "失败"}")
                     }
                     getDigit("音视频") -> {
                         val intent = Intent(this@MainActivity, eVideoChat::class.java)
@@ -291,11 +308,11 @@ class MainActivity : Activity() {
                             eToastUtils.showShort("Toast测试")
                         }
                     }
-                    getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(APP.mAPP,this@MainActivity)}")
+                    getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(APP.mAPP, this@MainActivity)}")
                     getDigit("串口通信") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG.toByteArray(), "/dev/ttyS1"))
                         R.id.bt_item2 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG.toByteArray(), "/dev/ttyS3"))
-                        R.id.bt_item3 -> Hint("串口通讯状态：" + ePortMSG.getMSG(this@MainActivity,handlePort , "/dev/ttyS3"))
+                        R.id.bt_item3 -> Hint("串口通讯状态：" + ePortMSG.getMSG(this@MainActivity, handlePort, "/dev/ttyS3"))
                     }
 
 //                        Hint("串口通讯状态：" + ePortMSG().getInit(this@MainActivity, MSG ?: "").MSG())
@@ -485,14 +502,15 @@ class MainActivity : Activity() {
             eLog(msg.obj)
         }
     }
-    private  fun handleProt(msg :Message){
-        val data=msg.obj.toString()
-        val datas=data.split("---")
-        eLog("${datas[0]}---接收到："+datas[1])
+
+    private fun handleProt(msg: Message) {
+        val data = msg.obj.toString()
+        val datas = data.split("---")
+        eLog("${datas[0]}---接收到：" + datas[1])
 
     }
 
-    private fun Hint(str: String) {
+      fun Hint(str: String) {
         val Str = "${eGetCurrentTime("MM-dd HH:mm:ss")}： $str\n\n\n"
         eLog(Str, "SAK")
         tv_Hint.append(Str)

@@ -69,6 +69,7 @@ dependencies {
     implementation project(':module_VideoChat')
     implementation project(':module_ArcFace')
     implementation project(':module_CardOTG')
+    implementation project(':module_HttpServer')
 }
 repositories {
     mavenCentral()

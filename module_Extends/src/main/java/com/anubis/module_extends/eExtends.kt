@@ -1308,7 +1308,7 @@ object eShell {
  */
 object eReflection {
     ////获取 加载类
-    fun eGetClass(packageName: String) = Class.forName(packageName)
+    fun eGetClass(className: String) = Class.forName(className)
 
     ////获取 实例化类
     fun eGetClassInstance(cls: Class<Any>) = cls.newInstance()

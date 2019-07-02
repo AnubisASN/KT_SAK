@@ -26,12 +26,20 @@ import me.rosuh.filepicker.config.FilePickerManager.REQUEST_CODE
  *Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  *Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  *Router :  /'Module'/'Function'
- *说明：
  */
-object ePicker{
+ /**
+ *说明： 图片选择器框架
+ * @调用方法：eImageStart()
+ * @param activity: Application；应用程序
+ * @param REQUEST_CODE: Int=0x000111；成功回调代码
+ * @param Type: Int = PhoenixOption.TYPE_PICK_MEDIA；显示类型（TYPE_PICK_MEDIA or TYPE_TAKE_PICTURE or TYPE_BROWSER_PICTURE）
+ * @param phoenix: PhoenixOption = Phoenix.with();默认初始化与主动初始化
+ * @return: void
+ */
+object ePicker {
     private var IMAGE_REQUEST_CODE = 0x000111
     private var FILE_REQUEST_CODE = FilePickerManager.REQUEST_CODE
-    fun eImageStart(activity: Activity,  REQUEST_CODE: Int = 0x000111,Type: Int = PhoenixOption.TYPE_PICK_MEDIA, phoenix: PhoenixOption = Phoenix.with()) {
+    fun eImageStart(activity: Activity, REQUEST_CODE: Int = 0x000111, Type: Int = PhoenixOption.TYPE_PICK_MEDIA, phoenix: PhoenixOption = Phoenix.with()) {
         phoenix.theme(PhoenixOption.THEME_BLUE)// 主题
                 .fileType(MimeType.ofImage())//显示的文件类型图片、视频、图片和视频
                 .maxPickNumber(3)// 最大选择数量
@@ -46,20 +54,34 @@ object ePicker{
                 .thumbnailHeight(160)// 选择界面图片高度
                 .thumbnailWidth(160)// 选择界面图片宽度
                 .enableClickSound(false)// 是否开启点击声音
-//                        .pickedMediaList(pic)// 已选图片数据
                 .videoFilterTime(0)//显示多少秒以内的视频
                 .mediaFilterSize(10000)//显示多少kb以下的图片/视频，默认为0，表示不限制
                 .start(activity, Type, REQUEST_CODE)
         IMAGE_REQUEST_CODE = REQUEST_CODE
     }
 
-
+    /**
+     *说明： 文件选择器
+     * @调用方法：eFileStart()
+     * @param activity: Activity；界面活动
+     * @param REQUEST_CODE: Int=FilePickerManager.REQUEST_CODE；成功回调代码
+     * @param filePicker: FilePickerConfig = FilePickerManager.from(activity)；默认初始化与主动初始化
+     * @return: void
+     */
     fun eFileStart(activity: Activity, REQUEST_CODE: Int = FilePickerManager.REQUEST_CODE, filePicker: FilePickerConfig = FilePickerManager.from(activity)) {
         filePicker.forResult(REQUEST_CODE)
         FILE_REQUEST_CODE = REQUEST_CODE
     }
-
-    fun eResult(activity: Activity,requestCode: Int, resultCode: Int, data: Intent?) = if (resultCode === Activity.RESULT_OK) {
+     /**
+      *说明：选择器结果回调
+      * @调用方法：eResult()
+      * @param activity: Activity；界面活动
+      * @param requestCode: Int；请求回调代码
+      * @param resultCode: Int；结果回调代码
+      * @param data: Intent;回调数据
+      * @return: List<Any>
+      */
+    fun eResult(activity: Activity, requestCode: Int, resultCode: Int, data: Intent?) = if (resultCode === Activity.RESULT_OK) {
         when (requestCode) {
             IMAGE_REQUEST_CODE -> {
                 //返回的数据
@@ -68,7 +90,7 @@ object ePicker{
             FILE_REQUEST_CODE -> {
                 FilePickerManager.obtainData()
             }
-            else ->null
+            else -> null
         }
     } else {
         activity.eShowTip("你没有选择任何~")

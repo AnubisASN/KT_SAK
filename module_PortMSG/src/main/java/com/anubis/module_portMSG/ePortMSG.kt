@@ -31,14 +31,6 @@ import kotlin.experimental.or
  * /+Id :  'LoayoutName'_'Widget'+FunctionName
  *Router :  /'Module'/'Function'
  *类说明：串口通讯封装开发库
- *  @初始化方法：getInit()
- * @param mAcitvity: Activity；活动
- * @param mPATH: String；串口名
- * @param BAUDRATE：Int；波动
- * @return: ePortMSG
- * @通讯方法：MSG()
- * @param msg: String；消息
- * @return: Boolean
  */
 object ePortMSG : LockerPortInterface {
     private var PATH: String? = null //串口名称         RS485开门方式
@@ -54,7 +46,15 @@ object ePortMSG : LockerPortInterface {
 //    init {
 //        init = this@ePortMSG
 //    }
-
+    /**
+     * 方法说明：串口数据发送
+     * @调用方法：sendMSG()
+     * @param mAcitvity: Activity；活动
+     * @param msg: String or ByteArray；信息
+     * @param mPATH: String；串口名
+     * @param BAUDRATE：Int；波动
+     * @return: Boolean
+     */
     @Throws(Exception::class)
     fun sendMSG(activity: Activity, msg: Any = "A", mPATH: String = "/dev/ttyS3", BAUDRATE: Int = 9600): Boolean {
         PATH = mPATH
@@ -74,16 +74,21 @@ object ePortMSG : LockerPortInterface {
         return Result
     }
 
+    /**
+     * 方法说明：串口数据监听
+     * @调用方法：getMSG()
+     * @param mAcitvity: Activity；活动
+     * @param  mHandle: Handler；消息回调
+     * @param mPATH: String；串口名
+     * @param BAUDRATE：Int；波动
+     * @return: Boolean
+     */
     @Throws(Exception::class)
     fun getMSG(activity: Activity, mHandle: Handler, mPATH: String = "/dev/ttyS3", BAUDRATE: Int = 9600): Boolean {
         PATH = mPATH
         this.BAUDRATE = BAUDRATE
         this.mHandle = mHandle
         openPort(activity)
-//            } catch (e: Exception) {
-//                eLogE("MyException：$e")
-//            }
-//        }).start()
         return Result
     }
 
@@ -104,7 +109,7 @@ object ePortMSG : LockerPortInterface {
     }
 
     /**
-     * 发送指令"DAAD064400DBBD"
+     * 发送指令
      * @param msg
      */
     private fun sendParams(msg: String) {
