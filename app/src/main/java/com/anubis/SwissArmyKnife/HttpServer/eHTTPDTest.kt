@@ -28,7 +28,7 @@ import com.anubis.module_httpserver.protocols.http.response.Response.newFixedLen
  * Router :  /'Module'/'Function'
  * 说明：
  */
-class eHttpTest: eHTTPD() {
+class eHTTPDTest: eHTTPD() {
     public override fun serve(session: IHTTPSession): Response {
         try {
             // 这一句话必须要写，否则在获取数据时，获取不到数据

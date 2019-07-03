@@ -16,10 +16,12 @@ import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.control.InitConfig
 import com.anubis.module_tts.control.MySyntherizer
 import com.anubis.module_tts.control.NonBlockSyntherizer
+import com.anubis.module_tts.listener.FileSaveListener
 import com.anubis.module_tts.listener.UiMessageListener
 import com.anubis.module_tts.util.OfflineResource
 import com.baidu.tts.chainofresponsibility.logger.LoggerProxy
 import com.baidu.tts.client.SpeechSynthesizer
+import com.baidu.tts.client.SpeechSynthesizerListener
 import com.baidu.tts.client.TtsMode
 import java.util.*
 
@@ -60,7 +62,7 @@ object eTTS {
     // assets目录下bd_etts_common_speech_m15_mand_eng_high_am-mix_v3.0.0_20170505.dat为离线男声模型；
     // assets目录下bd_etts_common_speech_f7_mand_eng_high_am-mix_v3.0.0_20170512.dat为离线女声模型
     private var offlineVoice = OfflineResource.VOICE_DUYY
-    private var synthesizer: MySyntherizer? = null
+     var synthesizer: MySyntherizer? = null
 
     /**
      * 合成的参数，可以初始化时填写，也可以在合成前设置。
@@ -90,13 +92,17 @@ object eTTS {
                 }
             }
             // 设置合成的音量，0-9 ，默认 9
-            params[SpeechSynthesizer.PARAM_VOLUME] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME").toString() ?: "9"
+            params[SpeechSynthesizer.PARAM_VOLUME] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME").toString()
+                    ?: "9"
             // 设置合成的语速，0-9 ，默认 5
-            params[SpeechSynthesizer.PARAM_SPEED] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED").toString() ?: "5"
+            params[SpeechSynthesizer.PARAM_SPEED] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED").toString()
+                    ?: "5"
             // 设置合成的语调，0-9 ，默认 5
-            params[SpeechSynthesizer.PARAM_PITCH] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH").toString() ?: "5"
+            params[SpeechSynthesizer.PARAM_PITCH] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH").toString()
+                    ?: "5"
 //            params[SpeechSynthesizer.PARAM_MIX_MODE] = SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI
-            params[SpeechSynthesizer.PARAM_MIX_MODE] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_MIX_MODE").toString() ?: SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE
+            params[SpeechSynthesizer.PARAM_MIX_MODE] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_MIX_MODE").toString()
+                    ?: SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE
             val offlineResource = createOfflineResource(offlineVoice)
             if (offlineResource == null) {
                 eLogE("offlineResource==null")
@@ -121,7 +127,7 @@ object eTTS {
 //        checkResult(result, "loadModel")
     }
 
-    fun ttsInit(mApplication: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK, AID_AKY_SKY: Array<String> = arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o")): eTTS {
+    fun ttsInit(mApplication: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK, listener:SpeechSynthesizerListener=UiMessageListener(mHandler),AID_AKY_SKY: Array<String> = arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o")): eTTS {
         KEYS = AID_AKY_SKY
         val mode = when (voiceMode) {
             VoiceModel.FEMALE -> "F"
@@ -136,11 +142,11 @@ object eTTS {
         this.mHandler = mHandler
         this.ttsMode = ttsMode
         try {
-            init()
+            init(listener)
         } catch (e: Exception) {
             eLogE("initTTS错误：$e")
             ttsDestroy()
-            init()
+            init(listener)
         }
         return this
     }
@@ -168,11 +174,11 @@ object eTTS {
      * UiMessageListener 在MessageListener的基础上，对handler发送消息，实现UI的文字更新
      * FileSaveListener 在UiMessageListener的基础上，使用 onSynthesizeDataArrived回调，获取音频流
      */
-    private fun init() {
+
+    private fun init(listener: SpeechSynthesizerListener) {
         LoggerProxy.printable(true) // 日志打印在logcat中
         // 设置初始化参数
         // 此处可以改为 含有您业务逻辑的SpeechSynthesizerListener的实现类
-        val listener = UiMessageListener(mHandler)
         val params = params
         val initConfig = InitConfig(if (ttsMode == TTSMode.MIX) TtsMode.MIX else TtsMode.ONLINE, params, listener)
         synthesizer = NonBlockSyntherizer(mActivity!!, initConfig, mHandler!!) // 此处可以改为MySyntherizer 了解调用过程
@@ -207,9 +213,24 @@ object eTTS {
     }
 
     /**
+     * 合成
+     */
+    fun synthesize(text: String,id:String="0"): Boolean {
+        val result = synthesizer?.synthesize(text,id)
+        if (result != null) {
+            return checkResult(result, "synthesize")
+        } else {
+            eLog("result为空")
+            return false
+        }
+    }
+    fun ss(){
+    }
+
+    /**
      * 批量播放
      */
-    fun batchSpeak(texts: ArrayList<Pair<String, String>>):Boolean {
+    fun batchSpeak(texts: ArrayList<Pair<String, String>>): Boolean {
         val result = synthesizer!!.batchSpeak(texts)
         return checkResult(result, "batchSpeak")
     }
@@ -217,15 +238,15 @@ object eTTS {
     /**
      * 暂停播放。仅调用speak后生效
      */
-    fun pause():Boolean {
+    fun pause(): Boolean {
         val result = synthesizer!!.pause()
-     return    checkResult(result, "pause")
+        return checkResult(result, "pause")
     }
 
     /**
      * 继续播放。仅调用speak后生效，调用pause生效
      */
-    fun resume():Boolean {
+    fun resume(): Boolean {
         val result = synthesizer!!.resume()
         return checkResult(result, "resume")
     }
@@ -233,14 +254,14 @@ object eTTS {
     /**
      * 停止合成引擎。即停止播放，合成，清空内部合成队列。
      */
-    fun stop():Boolean {
+    fun stop(): Boolean {
         val result = synthesizer!!.stop()
-        return   checkResult(result, "stop")
+        return checkResult(result, "stop")
     }
 
     // ================== ============= ==========================
     //检查回调方法
-    private fun checkResult(result: Int, method: String):Boolean {
+    private fun checkResult(result: Int, method: String): Boolean {
         if (result != 0) {
             eLogE("error code :$result method:$method, 错误码文档:http://yuyin.baidu.com/docs/tts/122 ")
             return false

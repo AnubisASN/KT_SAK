@@ -6,12 +6,16 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.media.AudioFormat
+import android.media.AudioManager
+import android.media.AudioTrack
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +27,7 @@ import android.widget.Spinner
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
 import com.anubis.SwissArmyKnife.GreenDao.Data
-import com.anubis.SwissArmyKnife.HttpServer.eHttpTest
+import com.anubis.SwissArmyKnife.HttpServer.eHTTPDTest
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
@@ -41,6 +45,7 @@ import com.anubis.module_portMSG.ePortMSG
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
+import com.anubis.module_tts.listener.FileSaveListener
 import com.anubis.module_videochat.eVideoChat
 import com.anubis.module_vncs.eVNC
 import com.anubis.utils.util.eToastUtils
@@ -109,6 +114,13 @@ class MainActivity : Activity() {
         }
     }
 
+    private val handleTTS = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            handleTTS(msg)
+        }
+    }
+
     companion object {
         var mainActivity: MainActivity? = null
     }
@@ -119,8 +131,8 @@ class MainActivity : Activity() {
         mainActivity = this@MainActivity
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
-        TTS = eTTS.ttsInit(APP.mAPP, Handler(), TTSMode.MIX, VoiceModel.MALE)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE,listener = FileSaveListener(handleTTS,"/sdcard/img/info"))
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
     }
 
@@ -184,6 +196,11 @@ class MainActivity : Activity() {
                             }
                         }
                     }
+
+                    getDigit("语音合成") -> when (view?.id) {
+                        R.id.bt_item1 -> Hint("语音合成：${TTS!!.synthesize(if (MSG.isEmpty()) "语音合成" else MSG,"0")}")
+                        R.id.bt_item2 -> Hint("语音播放：${ePlayPCM("/sdcard/img/info/output-${if (MSG.isEmpty())"0" else MSG}.pcm")}")
+                    }
                     getDigit("身份证阅读器") -> {
                         eCardOTG.otgInit(mAPP, handleMsg)
                     }
@@ -244,7 +261,7 @@ class MainActivity : Activity() {
 
                         when (view?.id) {
                             R.id.bt_item1 ->
-                                Hint("http服务开启:${eHttpServer.eStart(eHttpTest::class.java)}")
+                                Hint("http服务开启:${eHttpServer.eStart(eHTTPDTest::class.java)}")
 
                             R.id.bt_item2 -> Hint("http服务关闭:${eHttpServer.eStop()}")
                         }
@@ -406,6 +423,12 @@ class MainActivity : Activity() {
         eExecShell("mount -o remount,rw rootfs /system/ ")
     }
 
+
+    private fun handleTTS(msg: Message) {
+        eLog("what:${msg.what}---obj:${msg.obj}---arg1:${msg.arg1}---arg2:${msg.arg2}")
+    }
+
+
     //    0 唤醒成功         3    引擎就绪 开始说话            4 监测到说话      9001  监测到结束说话        5  临时识别      6  识别结束        2 识别引擎空闲
 //    arg1 类型   arg2 最终状态   what  引擎状态   obj String消息
     private val backTrackInMs = 2000
@@ -510,7 +533,7 @@ class MainActivity : Activity() {
 
     }
 
-      fun Hint(str: String) {
+    fun Hint(str: String) {
         val Str = "${eGetCurrentTime("MM-dd HH:mm:ss")}： $str\n\n\n"
         eLog(Str, "SAK")
         tv_Hint.append(Str)
@@ -815,6 +838,8 @@ class MainActivity : Activity() {
         Hint("消息发送:$str")
 //        }
     }
+
+
 }
 
 

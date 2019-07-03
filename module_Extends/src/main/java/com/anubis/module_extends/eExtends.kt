@@ -12,6 +12,9 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.*
 import android.hardware.Camera
+import android.media.AudioFormat
+import android.media.AudioManager
+import android.media.AudioTrack
 import android.media.MediaPlayer
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -28,8 +31,10 @@ import android.text.TextUtils.substring
 import android.util.Base64
 import android.util.Log
 import android.view.KeyEvent
+import org.jetbrains.anko.custom.async
 import android.widget.Toast
 import org.jetbrains.anko.activityManager
+import org.jetbrains.anko.custom.async
 import org.json.JSONObject
 import java.io.*
 import java.net.*
@@ -226,16 +231,59 @@ fun Bundle.eSetMessage(Sign: String, Message: Any = "") = when (Message) {
 }
 
 //音频播放
-fun ePlayVoice(context: Context, music: Int, isLoop: Boolean = false) {
+fun ePlayVoice(context: Context, music: Any , isLoop: Boolean = false) {
     try {
-        val mp = MediaPlayer.create(context, music)//重新设置要播放的音频
+        var mp= MediaPlayer()
+        if (mp.isPlaying) {//确保在prepare()之前调用了stop()
+            mp.stop()
+            mp.reset()
+        }
+        eLog("music:$music")
+        when (music) {
+            is Int -> mp = MediaPlayer.create(context, music)//重新设置要播放的音频}
+            is String ->mp.setDataSource(music)
+        }
+        mp.prepare()
         mp.isLooping = isLoop
-        mp.start()//开始播放
+        mp.start ()//开始播放
     } catch (e: Exception) {
         e.printStackTrace()//输出异常信息
     }
 }
 
+
+fun ePlayPCM(path: String) {
+        val bufferSize = AudioTrack.getMinBufferSize(16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT)
+        var audioTrack: AudioTrack?= AudioTrack(AudioManager.STREAM_MUSIC, 16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM)
+        var fis: FileInputStream? = null
+        var isPlaying = true
+        var isStop = false
+        try {
+            audioTrack!!.play()
+            fis = FileInputStream(path)
+            val buffer = ByteArray(bufferSize)
+            var len = 0
+            while ((fis.read(buffer)).apply { len = this } != -1 && !isStop) {
+                audioTrack.write(buffer, 0, len)
+            }
+        } catch (e: Exception) {
+            eLogE("playPCMRecord", e)
+        } finally {
+            isPlaying = false
+            isStop = false
+            if (audioTrack != null) {
+                audioTrack.stop()
+                audioTrack = null
+            }
+            if (fis != null) {
+                try {
+                    fis.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+}
 
 fun eAssetsCopy(context: Context, fileName: String, copyName: String) {
     try {
@@ -376,7 +424,6 @@ object eApp {
             return false
         }
     }
-
 
 
     //    APP包名启动
@@ -928,7 +975,6 @@ object eBitmap {
         bitmap.recycle()
         return newBM
     }
-
 
 
 }

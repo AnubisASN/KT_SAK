@@ -24,6 +24,8 @@ open class UiMessageListener(private val mainHandler: Handler?) : MessageListene
      */
     override fun onSynthesizeDataArrived(utteranceId: String, data: ByteArray, progress: Int) {
         // sendMessage("onSynthesizeDataArrived");
+        eLog("onSynthesizeDataArrived")
+
         mainHandler!!.sendMessage(mainHandler.obtainMessage(UI_CHANGE_SYNTHES_TEXT_SELECTION, progress, 0))
     }
 
