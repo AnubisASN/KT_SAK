@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="10dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btn_fullView"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bnav_tab_background"
+            android:gravity="center"
+            android:text="全览"
+            android:textColor="#333333"
+            android:textSize="18dp" />
+
+        <Button
+            android:id="@+id/btn_road"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bnav_tab_background"
+            android:gravity="center"
+            android:text="路况"
+            android:textColor="#333333"
+            android:textSize="18dp" />
+    </RelativeLayout>
+
+    <com.anubis.module_navi.custom.BNScrollLayout
+        android:id="@+id/layout_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="5dp"
+        app:exitOffset="0dp"
+        app:isSupportExit="false">
+
+        <com.anubis.module_navi.custom.BNScrollView
+            android:id="@+id/content_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/layout_3tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bnav_tab_background"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <include
+                            android:id="@+id/route_0"
+                            layout="@layout/item_route_result_tab"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
+                        <include
+                            android:id="@+id/route_1"
+                            layout="@layout/item_route_result_tab"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
+                        <include
+                            android:id="@+id/route_2"
+                            layout="@layout/item_route_result_tab"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:background="#eaeaea" />
+
+                    <TextView
+                        android:id="@+id/btn_start_navi"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bnav_tv_background"
+                        android:gravity="center"
+                        android:text="开始导航"
+                        android:textColor="@color/bnav_text_selector"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+                <com.anubis.module_navi.custom.BNRecyclerView
+                    android:id="@+id/rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@android:color/white" />
+            </LinearLayout>
+        </com.anubis.module_navi.custom.BNScrollView>
+    </com.anubis.module_navi.custom.BNScrollLayout>
+</FrameLayout>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sdk_name">Baidu Navigation SDK Demo</string>
+	<string name="title_route_guide_demo">1. GPS导航(RouteGuideDemo)</string>
+</resources>

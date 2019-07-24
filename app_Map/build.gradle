@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+//apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        useLibrary 'org.apache.http.legacy'
+
+        //路由转发
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                arguments = [ moduleName : project.getName() ]
+//            }
+//        }
+        ndk {
+            // 设置支持的 SO 库构架，注意这里要根据你的实际情况来设置
+            abiFilters 'x86','armeabi', 'armeabi-v7','armeabi-v7a'
+        }
+
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+kapt {
+    arguments {
+        arg("moduleName", project.getName())
+    }
+}
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+    mavenCentral()
+}
+dependencies {
+    implementation project(':module_Navigate')
+    api ('org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.61'){exclude group:'org.jetbrains',module:'annotations'}
+}
+

@@ -13,6 +13,20 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        sourceSets.main {
+            jniLibs.srcDirs = ['libs']
+        }
+        //路由转发
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                arguments = [ moduleName : project.getName() ]
+//            }
+//        }
+        ndk {
+            // 设置支持的 SO 库构架，注意这里要根据你的实际情况来设置
+            abiFilters 'armeabi', 'armeabi-v7','armeabi-v7a'
+        }
     }
 
     buildTypes {

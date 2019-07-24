@@ -45,6 +45,9 @@ android {
         daoPackage 'com.anubis.modlue_greendao.Gen' //自动生成的工具类的包名
         targetGenDir 'src/main/java' //生成文件的路径
     }
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
 }
 kapt {
     arguments {
@@ -70,6 +73,8 @@ dependencies {
     implementation project(':module_ArcFace')
     implementation project(':module_CardOTG')
     implementation project(':module_HttpServer')
+    implementation files('libs/XHApi.jar')
+    implementation project(':module_UDevice')
 }
 repositories {
     mavenCentral()

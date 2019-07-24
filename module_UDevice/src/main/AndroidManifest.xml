@@ -1,0 +1,22 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.anubis.module_usbdevice">
+    //sd卡操作权限
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    uses-permission android:name=”android.permission.READ_EXTERNAL_STORAGE /
+    //USB
+    <uses-feature android:name="android.hardware.usb.host" />
+    <uses-permission android:name="android.hardware.usb.host"/>
+    <application>
+    <receiver
+        android:name=".eUSBBroadcastReceiver"
+        android:enabled="true"
+        android:exported="true"
+        >
+        <intent-filter>
+            <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+        </intent-filter>
+    </receiver>
+    </application>
+</manifest>

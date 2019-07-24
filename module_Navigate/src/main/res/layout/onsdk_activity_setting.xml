@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2017 Baidu, Inc. All Rights Reserved.
+  -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/nav_view_select_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:baselineAligned="false"
+            android:clickable="false"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/nav_view_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="16dp"
+                android:text="导航视角"
+                android:textAppearance="@style/NavCommonListItemTitleText" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:divider="@drawable/bnav_setting_during_divider_medium"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/during_setting_btn_bottom_line_margin"
+                android:showDividers="middle">
+
+                <LinearLayout
+                    android:id="@+id/bnav_view_car3d_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/during_setting_btn_height"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/bnav_setting_btn_bg_selector"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/bnav_view_car3d_tv"
+                        style="@style/NavSettingDuringBtnText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="跟随车头" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bnav_view_north2d_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/during_setting_btn_height"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/bnav_setting_btn_bg_selector"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/bnav_view_north2d_tv"
+                        style="@style/NavSettingDuringBtnText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:text="正北朝上" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView style="@style/NavSettingDuringDivider" />
+
+        <RelativeLayout
+            android:id="@+id/nav_day_night_mode_select_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:baselineAligned="false"
+            android:clickable="false"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/nav_day_night_mode_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="16dp"
+                android:text="日夜模式"
+                android:textAppearance="@style/NavCommonListItemTitleText" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:divider="@drawable/bnav_setting_during_divider_medium"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/during_setting_btn_bottom_line_margin"
+                android:showDividers="middle">
+
+                <LinearLayout
+                    android:id="@+id/bnav_auto_mode_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/during_setting_btn_height"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/bnav_setting_btn_bg_selector"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/bnav_auto_mode_tv"
+                        style="@style/NavSettingDuringBtnText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="自动" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bnav_day_mode_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/during_setting_btn_height"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/bnav_setting_btn_bg_selector"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/bnav_day_mode_tv"
+                        style="@style/NavSettingDuringBtnText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="白天" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bnav_night_mode_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/during_setting_btn_height"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/bnav_setting_btn_bg_selector"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/bnav_night_mode_tv"
+                        style="@style/NavSettingDuringBtnText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="夜间" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView style="@style/NavSettingDuringDivider" />
+
+        <RelativeLayout
+            android:id="@+id/nav_display_select_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:baselineAligned="false"
+            android:clickable="false"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/nav_display_mode_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="16dp"
+                android:text="导航中图面显示"
+                android:textAppearance="@style/NavCommonListItemTitleText" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_remaining_road_condition_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/during_setting_btn_bottom_line_margin">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:divider="@drawable/bnav_setting_during_divider_medium"
+                android:orientation="horizontal"
+                android:showDividers="middle">
+
+                <LinearLayout
+                    android:id="@+id/bnav_display_overview_mode_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/during_setting_btn_height"
+                    android:layout_weight="1"
+                    android:background="@drawable/bnav_setting_btn_bg_selector"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/nav_display_overview_mode_tv"
+                        style="@style/NavSettingDuringBtnText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="全览小窗" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bnav_display_road_cond_mode_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/during_setting_btn_height"
+                    android:layout_weight="1"
+                    android:background="@drawable/bnav_setting_btn_bg_selector"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/nav_display_road_condition_mode_tv"
+                        style="@style/NavSettingDuringBtnText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="路况条" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView style="@style/NavSettingDuringDivider" />
+
+        <RelativeLayout
+            android:id="@+id/nav_scale_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/nav_scale_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="导航比例尺智能缩放"
+                    android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                <TextView
+                    android:id="@+id/nav_scale_tips_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:text="导航中地图自动放大或缩小"
+                    android:textAppearance="@style/NavCommonListItemTipsText" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/nav_scale_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:contentDescription="@null"
+                android:src="@drawable/nav_checkout_icon" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/nav_multi_route_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/nav_multi_route_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="多路线推荐"
+                    android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                <TextView
+                    android:id="@+id/nav_multi_route_tips_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:text="开启或关闭多路线推荐"
+                    android:textAppearance="@style/NavCommonListItemTipsText" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/nav_multi_route_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:contentDescription="@null"
+                android:src="@drawable/nav_checkout_icon" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/set_diy_car_logo"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_weight="1"
+                android:background="@drawable/bnav_setting_btn_bg_selector"
+                android:text="设置自定义车标"
+                android:textColor="@color/bnav_setting_btn_text_selector"
+                android:textSize="10dp" />
+
+            <Button
+                android:id="@+id/set_diy_start_logo"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_weight="1"
+                android:background="@drawable/bnav_setting_btn_bg_selector"
+                android:text="设置自定义起点"
+                android:textColor="@color/bnav_setting_btn_text_selector"
+                android:textSize="10dp" />
+
+            <Button
+                android:id="@+id/set_diy_end_logo"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_weight="1"
+                android:background="@drawable/bnav_setting_btn_bg_selector"
+                android:text="设置自定义终点"
+                android:textColor="@color/bnav_setting_btn_text_selector"
+                android:textSize="10dp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp"
+            android:text="专业导航设置功能入口控制"
+            android:textAppearance="@style/NavCommonListItemTitleText" />
+
+        <!-- bottombar open -->
+        <RelativeLayout
+            android:id="@+id/nav_bottombar_open_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/nav_bottombar_open_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="底部栏展开控制"
+                    android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                <TextView
+                    android:id="@+id/nav_bottombar_open_tips_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:text="控制底部栏是否可以展开，总控制入口"
+                    android:textAppearance="@style/NavCommonListItemTipsText" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/nav_bottombar_open_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:contentDescription="@null"
+                android:src="@drawable/nav_checkout_icon" />
+        </RelativeLayout>
+
+        <!-- more settings enable -->
+        <RelativeLayout
+            android:id="@+id/nav_more_settings_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/nav_more_settings_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="更多设置功能入口控制"
+                    android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                <TextView
+                    android:id="@+id/nav_more_settings_tips_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:text="控制底部bar展开后是否展示更多设置入口"
+                    android:textAppearance="@style/NavCommonListItemTipsText" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/nav_more_settings_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:contentDescription="@null"
+                android:src="@drawable/nav_checkout_icon" />
+        </RelativeLayout>
+
+        <!-- 路线偏好 -->
+        <RelativeLayout
+            android:id="@+id/nav_route_sort_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/nav_route_sort_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="底部栏路线偏好入口控制"
+                    android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                <TextView
+                    android:id="@+id/nav_route_sort_tips_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:text="控制是否展示底部栏的偏好入口"
+                    android:textAppearance="@style/NavCommonListItemTipsText" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/nav_route_sort_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:contentDescription="@null"
+                android:src="@drawable/nav_checkout_icon" />
+        </RelativeLayout>
+
+        <!-- 沿途检索 -->
+        <RelativeLayout
+            android:id="@+id/nav_route_search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/nav_settings_middle_selector"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/nav_route_search_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="沿途检索功能入口控制"
+                    android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                <TextView
+                    android:id="@+id/nav_route_search_tips_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"
+                    android:text="控制是否展示沿途检索功能入口"
+                    android:textAppearance="@style/NavCommonListItemTipsText" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/nav_route_search_cb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:contentDescription="@null"
+                android:src="@drawable/nav_checkout_icon" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>

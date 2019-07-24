@@ -1,6 +1,7 @@
 package com.anubis.SwissArmyKnife
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
@@ -25,6 +26,7 @@ import android.widget.ArrayAdapter
 import android.widget.ScrollView
 import android.widget.Spinner
 import com.alibaba.android.arouter.launcher.ARouter
+import com.android.xhapimanager.XHApiManager
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
 import com.anubis.SwissArmyKnife.GreenDao.Data
 import com.anubis.SwissArmyKnife.HttpServer.eHTTPDTest
@@ -46,6 +48,7 @@ import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
 import com.anubis.module_tts.listener.FileSaveListener
+import com.anubis.module_usbdevice.eUDevice
 import com.anubis.module_videochat.eVideoChat
 import com.anubis.module_vncs.eVNC
 import com.anubis.utils.util.eToastUtils
@@ -96,6 +99,7 @@ class MainActivity : Activity() {
     private var datas: Array<String>? = null
     private var Time: Long = 0
     private var asrw: eASRW? = null
+    var XHA: XHApiManager? = null
     private var hashMap1 = HashMap<String, Boolean>()
     private var hashMap2 = HashMap<String, Boolean>()
     var state = true
@@ -121,9 +125,17 @@ class MainActivity : Activity() {
         }
     }
 
+    private val uHandler =object : Handler() {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            handleUSB(msg)
+        }
+    }
+
     companion object {
         var mainActivity: MainActivity? = null
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,23 +143,21 @@ class MainActivity : Activity() {
         mainActivity = this@MainActivity
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
-        TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE,listener = FileSaveListener(handleTTS,"/sdcard/img/info"))
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
+if (Build.MODEL=="ZK-R32A")
+        XHA = XHApiManager()
+        eUDevice.init(mAPP,uHandler)
     }
 
-    private var httpIntent: Intent? = null
-    private fun getDigit(str: String): Int {
-        var Digit = 0
-        for (data in datas!!) {
-            if (data.indexOf(str) != -1) {
-                Digit = datas!!.indexOf(data)
-            }
-        }
-        return Digit
-    }
+
+    /**
+     * -----------------------------------------测试控制模块——————————————————————————————————————————
+     */
 
     var i = 1
+
     private fun init() {
         filePath = "/sdcard/SAK_Record.txt"
         file = File(filePath)
@@ -198,11 +208,14 @@ class MainActivity : Activity() {
                     }
 
                     getDigit("语音合成") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("语音合成：${TTS!!.synthesize(if (MSG.isEmpty()) "语音合成" else MSG,"0")}")
-                        R.id.bt_item2 -> Hint("语音播放：${ePlayPCM("/sdcard/img/info/output-${if (MSG.isEmpty())"0" else MSG}.pcm")}")
+                        R.id.bt_item1 -> Hint("语音合成：${TTS!!.synthesize(if (MSG.isEmpty()) "语音合成" else MSG, "0")}")
+                        R.id.bt_item2 -> Hint("语音播放：${ePlayPCM("/sdcard/img/info/output-${if (MSG.isEmpty()) "0" else MSG}.pcm")}")
                     }
                     getDigit("身份证阅读器") -> {
                         eCardOTG.otgInit(mAPP, handleMsg)
+                    }
+                    getDigit("GPIO") -> when (view?.id) {
+                        R.id.bt_item1 -> Hint("GPIO读取：${XHA!!.XHReadGpioValue(if (MSG.isEmpty()) 0 else MSG.toInt())}")
                     }
                     getDigit("STRING") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("String保存：${eSetSystemSharedPreferences("string", if (MSG.isEmpty()) "String" else MSG)}")
@@ -421,12 +434,15 @@ class MainActivity : Activity() {
         rvList.adapter = myAdapter
         rvList.setItemViewCacheSize(datas!!.size)
         eExecShell("mount -o remount,rw rootfs /system/ ")
+
+
+
     }
 
 
-    private fun handleTTS(msg: Message) {
-        eLog("what:${msg.what}---obj:${msg.obj}---arg1:${msg.arg1}---arg2:${msg.arg2}")
-    }
+    /**
+     * -----------------------------------------回调结果模块——————————————————————————————————————————
+     */
 
 
     //    0 唤醒成功         3    引擎就绪 开始说话            4 监测到说话      9001  监测到结束说话        5  临时识别      6  识别结束        2 识别引擎空闲
@@ -533,11 +549,67 @@ class MainActivity : Activity() {
 
     }
 
+    private fun handleTTS(msg: Message) {
+        eLog("what:${msg.what}---obj:${msg.obj}---arg1:${msg.arg1}---arg2:${msg.arg2}")
+    }
+
+    private  fun handleUSB(msg: Message){
+        when (msg.what) {
+            1 -> {
+                eShowTip("USB连接")
+                Handler().postDelayed({ LoadingData() }, 2000)
+            }
+            0 -> eShowTip("USB断开")
+        }
+    }
+
+
+    /**
+     * -----------------------------------------业务控制模块——————————————————————————————————————————
+     */
+    private fun LoadingData() {
+//        try {
+        eLog("数量：${eUDevice.deviceCount}")
+        @Suppress("MISSING_DEPENDENCY_CLASS")
+        val device = eUDevice.getUsbMassDevice(0)
+        val rootFile = File("/mnt/").listFiles()
+        for (file in rootFile) {
+            try {
+                eLog("rootFile:"+file.name)
+                if (file.name.indexOf("usb") != -1 && file.isDirectory && file.listFiles().isNotEmpty())
+                    for (fileName in file.list())
+                        when {
+                            fileName.indexOf(".jpg") != -1 || fileName.indexOf(".JPG") != -1 || fileName.indexOf(".png") != -1 || fileName.indexOf(".PNG") != -1 -> Hint("$fileName 是图片")
+
+                            fileName.indexOf(".MP4") != -1 || fileName.indexOf(".mp4") != -1 || fileName.indexOf(".webm") != -1-> Hint("$fileName 是视频")
+
+                            fileName.indexOf(".apk") != -1 || fileName.indexOf(".APK") != -1 -> Hint("$fileName 是安装包")
+                        }
+            } catch (e: Exception) {
+                eLogE("错误",e)
+            }
+        }
+
+    }
+
+    /**
+     * -----------------------------------------测试组件模块——————————————————————————————————————————
+     */
     fun Hint(str: String) {
         val Str = "${eGetCurrentTime("MM-dd HH:mm:ss")}： $str\n\n\n"
         eLog(Str, "SAK")
         tv_Hint.append(Str)
         sv_Hint.fullScroll(ScrollView.FOCUS_DOWN)
+    }
+
+    private fun getDigit(str: String): Int {
+        var Digit = 0
+        for (data in datas!!) {
+            if (data.indexOf(str) != -1) {
+                Digit = datas!!.indexOf(data)
+            }
+        }
+        return Digit
     }
 
     class MyAdapter(val mContext: Context, val mDatas: Array<String>, val mCallbacks: ICallBack) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
@@ -614,6 +686,10 @@ class MainActivity : Activity() {
         }
     }
 
+    /**
+     * -----------------------------------------周期控制模块——————————————————————————————————————————
+     */
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         ePermissions.eSetOnRequestPermissionsResult(this, requestCode, permissions, grantResults)
@@ -637,10 +713,19 @@ class MainActivity : Activity() {
         super.onDestroy()
     }
 
+    /**
+     * -----------------------------------------回调模块——————————————————————————————————————————
+     */
+
+
     interface ICallBack {
         fun CallResult(view: View?, numID: Int, MSG: String, spinner: Spinner)
     }
 
+
+    /**
+     * -----------------------------------------TCP模块——————————————————————————————————————————
+     */
     val receivedDataThread = Runnable {
         try {
             while (true) {
