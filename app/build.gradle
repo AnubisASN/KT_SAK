@@ -75,6 +75,7 @@ dependencies {
     implementation project(':module_HttpServer')
     implementation files('libs/XHApi.jar')
     implementation project(':module_UDevice')
+    implementation project(':module_QRCode')
 }
 repositories {
     mavenCentral()

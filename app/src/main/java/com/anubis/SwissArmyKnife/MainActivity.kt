@@ -44,6 +44,7 @@ import com.anubis.module_ftp.GUI.eFTPUIs
 import com.anubis.module_greendao.eGreenDao
 import com.anubis.module_httpserver.eHttpServer
 import com.anubis.module_portMSG.ePortMSG
+import com.anubis.module_qrcode.eQRCode
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
@@ -125,7 +126,7 @@ class MainActivity : Activity() {
         }
     }
 
-    private val uHandler =object : Handler() {
+    private val uHandler = object : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             handleUSB(msg)
@@ -144,11 +145,11 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
-if (Build.MODEL=="ZK-R32A")
-        XHA = XHApiManager()
-        eUDevice.init(mAPP,uHandler)
+        if (Build.MODEL == "ZK-R32A")
+            XHA = XHApiManager()
+        eUDevice.init(mAPP, uHandler)
     }
 
 
@@ -206,7 +207,13 @@ if (Build.MODEL=="ZK-R32A")
                             }
                         }
                     }
-
+                    getDigit("二维码") -> when (view?.id) {
+                        R.id.bt_item1 -> {
+                            iv_Hint.setImageBitmap(eQRCode.createQRCode(if (MSG.isEmpty()) "请输入内容" else MSG))
+                            iv_Hint.visibility = View.VISIBLE
+                            Handler().postDelayed({iv_Hint.visibility=View.GONE},5000)
+                        }
+                    }
                     getDigit("语音合成") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("语音合成：${TTS!!.synthesize(if (MSG.isEmpty()) "语音合成" else MSG, "0")}")
                         R.id.bt_item2 -> Hint("语音播放：${ePlayPCM("/sdcard/img/info/output-${if (MSG.isEmpty()) "0" else MSG}.pcm")}")
@@ -436,7 +443,6 @@ if (Build.MODEL=="ZK-R32A")
         eExecShell("mount -o remount,rw rootfs /system/ ")
 
 
-
     }
 
 
@@ -553,7 +559,7 @@ if (Build.MODEL=="ZK-R32A")
         eLog("what:${msg.what}---obj:${msg.obj}---arg1:${msg.arg1}---arg2:${msg.arg2}")
     }
 
-    private  fun handleUSB(msg: Message){
+    private fun handleUSB(msg: Message) {
         when (msg.what) {
             1 -> {
                 eShowTip("USB连接")
@@ -575,18 +581,18 @@ if (Build.MODEL=="ZK-R32A")
         val rootFile = File("/mnt/").listFiles()
         for (file in rootFile) {
             try {
-                eLog("rootFile:"+file.name)
+                eLog("rootFile:" + file.name)
                 if (file.name.indexOf("usb") != -1 && file.isDirectory && file.listFiles().isNotEmpty())
                     for (fileName in file.list())
                         when {
                             fileName.indexOf(".jpg") != -1 || fileName.indexOf(".JPG") != -1 || fileName.indexOf(".png") != -1 || fileName.indexOf(".PNG") != -1 -> Hint("$fileName 是图片")
 
-                            fileName.indexOf(".MP4") != -1 || fileName.indexOf(".mp4") != -1 || fileName.indexOf(".webm") != -1-> Hint("$fileName 是视频")
+                            fileName.indexOf(".MP4") != -1 || fileName.indexOf(".mp4") != -1 || fileName.indexOf(".webm") != -1 -> Hint("$fileName 是视频")
 
                             fileName.indexOf(".apk") != -1 || fileName.indexOf(".APK") != -1 -> Hint("$fileName 是安装包")
                         }
             } catch (e: Exception) {
-                eLogE("错误",e)
+                eLogE("错误", e)
             }
         }
 

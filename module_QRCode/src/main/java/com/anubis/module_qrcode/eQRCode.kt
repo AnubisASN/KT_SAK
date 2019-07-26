@@ -1,102 +1,337 @@
 package com.anubis.module_qrcode
 
-import com.google.zxing.WriterException
-import android.graphics.Bitmap
-import android.graphics.Color
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.qrcode.QRCodeWriter
-import com.google.zxing.common.BitMatrix
-import com.google.zxing.EncodeHintType
-import android.support.annotation.ColorInt
-import android.text.TextUtils
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
-import com.google.zxing.common.CharacterSetECI
-import java.util.*
-
-
 /**
- * Author  ： AnubisASN   on 19-2-27 下午5:14.
- * E-mail  ： anubisasn@gmail.com ( anubisasn@qq.com )
- *  Q Q： 773506352
- *命名规则定义：
- *Module :  module_'ModuleName'
- *Library :  lib_'LibraryName'
- *Package :  'PackageName'_'Module'
- *Class :  'Mark'_'Function'_'Tier'
- *Layout :  'Module'_'Function'
- *Resource :  'Module'_'ResourceName'_'Mark'
- *Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
- *Class Id :  'LoayoutName'_'Widget'+'FunctionName'
- *Router :  /'Module'/'Function'
- *说明：
+ * *          _       _
+ * *   __   _(_)_   _(_) __ _ _ __
+ * *   \ \ / / \ \ / / |/ _` | '_ \
+ * *    \ V /| |\ V /| | (_| | | | |
+ * *     \_/ |_| \_/ |_|\__,_|_| |_|
+ *
+ *
+ * Created by vivian on 2016/11/28.
  */
+
+import android.graphics.Bitmap
+import android.graphics.Matrix
+
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
+import com.google.zxing.WriterException
+import com.google.zxing.common.BitMatrix
+import com.google.zxing.qrcode.QRCodeWriter
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
+
+import java.util.Hashtable
+
 object eQRCode {
+    private var IMAGE_HALFWIDTH = 50
 
     /**
-     * 创建二维码位图 (支持自定义配置和自定义样式)
+     * 生成二维码
      *
-     * @param content 字符串内容
-     * @param width 位图宽度,要求>=0(单位:px)
-     * @param height 位图高度,要求>=0(单位:px)
-     * @param character_set 字符集/字符转码格式 (支持格式:[CharacterSetECI])。传null时,zxing源码默认使用 "ISO-8859-1"
-     * @param error_correction 容错级别 (支持级别:[ErrorCorrectionLevel])。传null时,zxing源码默认使用 "L"
-     * @param margin 空白边距 (可修改,要求:整型且>=0), 传null时,zxing源码默认使用"4"。
-     * @param color_black 黑色色块的自定义颜色值
-     * @param color_white 白色色块的自定义颜色值
-     * @param content 字符串内容(支持中文)
-     * @param width 位图宽度(单位:px)
-     * @param height 位图高度(单位:px)
-     * @return
+     * @param text 文字或网址
+     * @param size 生成二维码的大小
+     * @return bitmap
      */
-    fun createQRCodeBitmap(str: String, width: Int, height: Int,  character_set: String = "UTF-8", error_correction: String = "H", margin: String = "2", color_black: Int = Color.BLACK, color_white: Int = Color.WHITE): Bitmap? {
-
-        /** 1.参数合法性判断  */
-        if (TextUtils.isEmpty(str)) { // 字符串内容判空
-            return null
-        }
-
-        if (width < 0 || height < 0) { // 宽和高都需要>=0
-            return null
-        }
-
+    @JvmOverloads
+    fun createQRCode(text: String, size: Int = 500): Bitmap? {
         try {
-            /** 2.设置二维码相关配置,生成BitMatrix(位矩阵)对象  */
-            val hints = Hashtable<EncodeHintType,String>()
-
-            if (!TextUtils.isEmpty(character_set)) {
-                hints.put(EncodeHintType.CHARACTER_SET, character_set) // 字符转码格式设置
-            }
-
-            if (!TextUtils.isEmpty(error_correction)) {
-                hints.put(EncodeHintType.ERROR_CORRECTION, error_correction) // 容错级别设置
-            }
-
-            if (!TextUtils.isEmpty(margin)) {
-                hints.put(EncodeHintType.MARGIN, margin) // 空白边距设置
-            }
-            val bitMatrix = QRCodeWriter().encode(str, BarcodeFormat.QR_CODE, width, height, hints)
-
-            /** 3.创建像素数组,并根据BitMatrix(位矩阵)对象为数组元素赋颜色值  */
-            val pixels = IntArray(width * height)
-            for (y in 0 until height) {
-                for (x in 0 until width) {
+            val hints = Hashtable<EncodeHintType, String>()
+            hints[EncodeHintType.CHARACTER_SET] = "utf-8"
+            val bitMatrix = QRCodeWriter().encode(text,
+                    BarcodeFormat.QR_CODE, size, size, hints)
+            val pixels = IntArray(size * size)
+            for (y in 0 until size) {
+                for (x in 0 until size) {
                     if (bitMatrix.get(x, y)) {
-                        pixels[y * width + x] = color_black // 黑色色块像素设置
+                        pixels[y * size + x] = -0x1000000
                     } else {
-                        pixels[y * width + x] = color_white // 白色色块像素设置
+                        pixels[y * size + x] = -0x1
                     }
                 }
             }
-
-            /** 4.创建Bitmap对象,根据像素数组设置Bitmap每个像素点的颜色值,之后返回Bitmap对象  */
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+            val bitmap = Bitmap.createBitmap(size, size,
+                    Bitmap.Config.ARGB_8888)
+            bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
             return bitmap
         } catch (e: WriterException) {
             e.printStackTrace()
+            return null
         }
 
-        return null
+    }
+
+    /**
+     * bitmap的颜色代替黑色的二维码
+     *
+     * @param text
+     * @param size
+     * @param mBitmap
+     * @return
+     */
+    fun createQRCodeWithLogo2(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+        var mBitmap = mBitmap
+        try {
+            IMAGE_HALFWIDTH = size / 10
+            val hints = Hashtable<EncodeHintType, Any>()
+            hints[EncodeHintType.CHARACTER_SET] = "utf-8"
+
+            hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H
+            val bitMatrix = QRCodeWriter().encode(text,
+                    BarcodeFormat.QR_CODE, size, size, hints)
+
+            //将logo图片按martix设置的信息缩放
+            mBitmap = Bitmap.createScaledBitmap(mBitmap, size, size, false)
+
+            val pixels = IntArray(size * size)
+            val color = -0x1
+            for (y in 0 until size) {
+                for (x in 0 until size) {
+                    if (bitMatrix.get(x, y)) {
+                        pixels[y * size + x] = mBitmap.getPixel(x, y)
+                    } else {
+                        pixels[y * size + x] = color
+                    }
+
+                }
+            }
+            val bitmap = Bitmap.createBitmap(size, size,
+                    Bitmap.Config.ARGB_8888)
+            bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
+            return bitmap
+        } catch (e: WriterException) {
+            e.printStackTrace()
+            return null
+        }
+
+    }
+
+    /**
+     * bitmap作为底色
+     *
+     * @param text
+     * @param size
+     * @param mBitmap
+     * @return
+     */
+    fun createQRCodeWithLogo3(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+        var mBitmap = mBitmap
+        try {
+            IMAGE_HALFWIDTH = size / 10
+            val hints = Hashtable<EncodeHintType, Any>()
+            hints[EncodeHintType.CHARACTER_SET] = "utf-8"
+
+            hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H
+            val bitMatrix = QRCodeWriter().encode(text,
+                    BarcodeFormat.QR_CODE, size, size, hints)
+
+            //将logo图片按martix设置的信息缩放
+            mBitmap = Bitmap.createScaledBitmap(mBitmap, size, size, false)
+
+            val pixels = IntArray(size * size)
+            val color = -0x6d8ca
+            for (y in 0 until size) {
+                for (x in 0 until size) {
+                    if (bitMatrix.get(x, y)) {
+                        pixels[y * size + x] = color
+                    } else {
+                        pixels[y * size + x] = mBitmap.getPixel(x, y) and 0x66ffffff
+                    }
+                }
+            }
+            val bitmap = Bitmap.createBitmap(size, size,
+                    Bitmap.Config.ARGB_8888)
+            bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
+            return bitmap
+        } catch (e: WriterException) {
+            e.printStackTrace()
+            return null
+        }
+
+    }
+
+    /**
+     * 比方法2的颜色黑一些
+     *
+     * @param text
+     * @param size
+     * @param mBitmap
+     * @return
+     */
+    fun createQRCodeWithLogo4(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+        var mBitmap = mBitmap
+        try {
+            IMAGE_HALFWIDTH = size / 10
+            val hints = Hashtable<EncodeHintType, Any>()
+            hints[EncodeHintType.CHARACTER_SET] = "utf-8"
+
+            hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H
+            val bitMatrix = QRCodeWriter().encode(text,
+                    BarcodeFormat.QR_CODE, size, size, hints)
+
+            //将logo图片按martix设置的信息缩放
+            mBitmap = Bitmap.createScaledBitmap(mBitmap, size, size, false)
+
+            val pixels = IntArray(size * size)
+            var flag = true
+            for (y in 0 until size) {
+                for (x in 0 until size) {
+                    if (bitMatrix.get(x, y)) {
+                        if (flag) {
+                            flag = false
+                            pixels[y * size + x] = -0x1000000
+                        } else {
+                            pixels[y * size + x] = mBitmap.getPixel(x, y)
+                            flag = true
+                        }
+                    } else {
+                        pixels[y * size + x] = -0x1
+                    }
+                }
+            }
+            val bitmap = Bitmap.createBitmap(size, size,
+                    Bitmap.Config.ARGB_8888)
+            bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
+            return bitmap
+        } catch (e: WriterException) {
+            e.printStackTrace()
+            return null
+        }
+
+    }
+
+    /**
+     * 生成带logo的二维码
+     * @param text
+     * @param size
+     * @param mBitmap
+     * @return
+     */
+    fun createQRCodeWithLogo5(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+        var mBitmap = mBitmap
+        try {
+            IMAGE_HALFWIDTH = size / 10
+            val hints = Hashtable<EncodeHintType, Any>()
+            hints[EncodeHintType.CHARACTER_SET] = "utf-8"
+
+            hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H
+            val bitMatrix = QRCodeWriter().encode(text,
+                    BarcodeFormat.QR_CODE, size, size, hints)
+
+            //将logo图片按martix设置的信息缩放
+            mBitmap = Bitmap.createScaledBitmap(mBitmap, size, size, false)
+
+            val width = bitMatrix.getWidth()//矩阵高度
+            val height = bitMatrix.getHeight()//矩阵宽度
+            val halfW = width / 2
+            val halfH = height / 2
+
+            val m = Matrix()
+            val sx = 2.toFloat() * IMAGE_HALFWIDTH / mBitmap.width
+            val sy = 2.toFloat() * IMAGE_HALFWIDTH / mBitmap.height
+            m.setScale(sx, sy)
+            //设置缩放信息
+            //将logo图片按martix设置的信息缩放
+            mBitmap = Bitmap.createBitmap(mBitmap, 0, 0,
+                    mBitmap.width, mBitmap.height, m, false)
+
+            val pixels = IntArray(size * size)
+            for (y in 0 until size) {
+                for (x in 0 until size) {
+                    if (x > halfW - IMAGE_HALFWIDTH && x < halfW + IMAGE_HALFWIDTH
+                            && y > halfH - IMAGE_HALFWIDTH
+                            && y < halfH + IMAGE_HALFWIDTH) {
+                        //该位置用于存放图片信息
+                        //记录图片每个像素信息
+                        pixels[y * width + x] = mBitmap.getPixel(x - halfW + IMAGE_HALFWIDTH, y - halfH + IMAGE_HALFWIDTH)
+                    } else {
+                        if (bitMatrix.get(x, y)) {
+                            pixels[y * size + x] = -0xc84e62
+                        } else {
+                            pixels[y * size + x] = -0x1
+                        }
+                    }
+                }
+            }
+            val bitmap = Bitmap.createBitmap(size, size,
+                    Bitmap.Config.ARGB_8888)
+            bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
+            return bitmap
+        } catch (e: WriterException) {
+            e.printStackTrace()
+            return null
+        }
+
+    }
+
+    /**
+     * 修改三个顶角颜色的，带logo的二维码
+     * @param text
+     * @param size
+     * @param mBitmap
+     * @return
+     */
+    fun createQRCodeWithLogo6(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+        var mBitmap = mBitmap
+        try {
+            IMAGE_HALFWIDTH = size / 10
+            val hints = Hashtable<EncodeHintType, Any>()
+            hints[EncodeHintType.CHARACTER_SET] = "utf-8"
+            /*
+             * 设置容错级别，默认为ErrorCorrectionLevel.L
+             * 因为中间加入logo所以建议你把容错级别调至H,否则可能会出现识别不了
+             */
+            hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.H
+            val bitMatrix = QRCodeWriter().encode(text,
+                    BarcodeFormat.QR_CODE, size, size, hints)
+
+            //将logo图片按martix设置的信息缩放
+            mBitmap = Bitmap.createScaledBitmap(mBitmap, size, size, false)
+
+            val width = bitMatrix.getWidth()//矩阵高度
+            val height = bitMatrix.getHeight()//矩阵宽度
+            val halfW = width / 2
+            val halfH = height / 2
+
+            val m = Matrix()
+            val sx = 2.toFloat() * IMAGE_HALFWIDTH / mBitmap.width
+            val sy = 2.toFloat() * IMAGE_HALFWIDTH / mBitmap.height
+            m.setScale(sx, sy)
+            //设置缩放信息
+            //将logo图片按martix设置的信息缩放
+            mBitmap = Bitmap.createBitmap(mBitmap, 0, 0,
+                    mBitmap.width, mBitmap.height, m, false)
+
+            val pixels = IntArray(size * size)
+            for (y in 0 until size) {
+                for (x in 0 until size) {
+                    if (x > halfW - IMAGE_HALFWIDTH && x < halfW + IMAGE_HALFWIDTH
+                            && y > halfH - IMAGE_HALFWIDTH
+                            && y < halfH + IMAGE_HALFWIDTH) {
+                        //该位置用于存放图片信息
+                        //记录图片每个像素信息
+                        pixels[y * width + x] = mBitmap.getPixel(x - halfW + IMAGE_HALFWIDTH, y - halfH + IMAGE_HALFWIDTH)
+                    } else {
+                        if (bitMatrix.get(x, y)) {
+                            pixels[y * size + x] = -0xeeeeef
+                            if (x < 115 && (y < 115 || y >= size - 115) || y < 115 && x >= size - 115) {
+                                pixels[y * size + x] = -0x6d8ca
+                            }
+                        } else {
+                            pixels[y * size + x] = -0x1
+                        }
+                    }
+                }
+            }
+            val bitmap = Bitmap.createBitmap(size, size,
+                    Bitmap.Config.ARGB_8888)
+            bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
+            return bitmap
+        } catch (e: WriterException) {
+            e.printStackTrace()
+            return null
+        }
+
     }
 }
 
