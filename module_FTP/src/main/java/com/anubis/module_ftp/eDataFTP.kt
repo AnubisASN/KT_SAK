@@ -21,9 +21,10 @@ import android.os.Handler
  *说明：
  */
 object eDataFTP {
-    val CONNECTION_FAILURE=0 //连接失败
-    val CONNECTION_SUCCEED=1 //连接成功
-    val CONNECTION_DISCONNECT=2 //连接断开
+    val CONNECTION_FAILURE=0 //连接失败    what
+    val CONNECTION_SUCCEED=1 //连接成功  what
+    val CONNECTION_DISCONNECT=-1 //连接断开  what
+    val DATA_TRANSFER=2 //连接断开  what
     var mFTPUI:Activity?=null
     var hint: String? = "0"
     var type:String="break"

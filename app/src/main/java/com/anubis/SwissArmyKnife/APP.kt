@@ -40,7 +40,7 @@ class APP : Application() {
         ARouter.openLog()
         ARouter.openDebug()
         ARouter.init(mInit)
-        eDataFTP.init(mInit!!)
+        eDataFTP.init(mInit!!,3335,"anubis","anubis")
 //        createDir()
         }
 

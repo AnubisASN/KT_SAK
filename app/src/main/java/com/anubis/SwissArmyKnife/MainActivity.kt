@@ -145,7 +145,7 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
         if (Build.MODEL == "ZK-R32A")
             XHA = XHApiManager()
@@ -211,7 +211,7 @@ class MainActivity : Activity() {
                         R.id.bt_item1 -> {
                             iv_Hint.setImageBitmap(eQRCode.createQRCode(if (MSG.isEmpty()) "请输入内容" else MSG))
                             iv_Hint.visibility = View.VISIBLE
-                            Handler().postDelayed({iv_Hint.visibility=View.GONE},5000)
+                            Handler().postDelayed({ iv_Hint.visibility = View.GONE }, 5000)
                         }
                     }
                     getDigit("语音合成") -> when (view?.id) {
@@ -221,6 +221,12 @@ class MainActivity : Activity() {
                     getDigit("身份证阅读器") -> {
                         eCardOTG.otgInit(mAPP, handleMsg)
                     }
+                    getDigit("LogCat") ->
+                        async {
+                           eShell.eExecShell("logcat  *:e -v time   -s AndroidRuntime ${this@MainActivity.packageName}  ${android.os.Process.myPid()} -d > /mnt/sdcard/log.txt "
+                           )
+                        }
+
                     getDigit("GPIO") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("GPIO读取：${XHA!!.XHReadGpioValue(if (MSG.isEmpty()) 0 else MSG.toInt())}")
                     }
@@ -392,7 +398,12 @@ class MainActivity : Activity() {
                         R.id.bt_item2 -> Hint("创建WIFI热点:${eWiFi.eCreateWifiHotspot(this@MainActivity)}")
                         R.id.bt_item3 -> Hint("关闭WIFI热点：${eWiFi.eCloseWifiHotspot(this@MainActivity)}")
                     }
-                    getDigit("AecFaceFT人脸跟踪模块（路由转发跳转）") -> ARouter.getInstance().build("/face/arcFace").navigation()
+                    getDigit("路由转发跳转") ->
+                        when (view?.id) {
+                            R.id.bt_item1 -> ARouter.getInstance().build("/face/ArcFaceFT").navigation()
+                            R.id.bt_item2 ->ARouter.getInstance().build("/face/ArcFace").navigation()
+                        }
+
                     getDigit("Shell执行") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("ROOT权限检测:${eShell.eHaveRoot()}")
                         R.id.bt_item2 -> Hint("Shell执行：${eShell.eExecShell(MSG)}")
@@ -578,23 +589,11 @@ class MainActivity : Activity() {
         eLog("数量：${eUDevice.deviceCount}")
         @Suppress("MISSING_DEPENDENCY_CLASS")
         val device = eUDevice.getUsbMassDevice(0)
-        val rootFile = File("/mnt/").listFiles()
-        for (file in rootFile) {
-            try {
-                eLog("rootFile:" + file.name)
-                if (file.name.indexOf("usb") != -1 && file.isDirectory && file.listFiles().isNotEmpty())
-                    for (fileName in file.list())
-                        when {
-                            fileName.indexOf(".jpg") != -1 || fileName.indexOf(".JPG") != -1 || fileName.indexOf(".png") != -1 || fileName.indexOf(".PNG") != -1 -> Hint("$fileName 是图片")
-
-                            fileName.indexOf(".MP4") != -1 || fileName.indexOf(".mp4") != -1 || fileName.indexOf(".webm") != -1 -> Hint("$fileName 是视频")
-
-                            fileName.indexOf(".apk") != -1 || fileName.indexOf(".APK") != -1 -> Hint("$fileName 是安装包")
-                        }
-            } catch (e: Exception) {
-                eLogE("错误", e)
-            }
-        }
+        @Suppress("MISSING_DEPENDENCY_CLASS")
+        val rootF= eUDevice.getUsbFiles(   eUDevice.readDevice(device!!)!!)
+//        @Suppress("MISSING_DEPENDENCY_CLASS")
+//        for (root in rootF)
+//            eLog("root----:${root.name}")
 
     }
 

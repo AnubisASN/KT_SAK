@@ -19,9 +19,7 @@ import android.media.MediaPlayer
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.Environment
+import android.os.*
 import android.preference.*
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
@@ -37,6 +35,7 @@ import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.custom.async
 import org.json.JSONObject
 import java.io.*
+import java.lang.Process
 import java.net.*
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -231,9 +230,9 @@ fun Bundle.eSetMessage(Sign: String, Message: Any = "") = when (Message) {
 }
 
 //音频播放
-fun ePlayVoice(context: Context, music: Any , isLoop: Boolean = false) {
+fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false) {
     try {
-        var mp= MediaPlayer()
+        var mp = MediaPlayer()
         if (mp.isPlaying) {//确保在prepare()之前调用了stop()
             mp.stop()
             mp.reset()
@@ -241,11 +240,11 @@ fun ePlayVoice(context: Context, music: Any , isLoop: Boolean = false) {
         eLog("music:$music")
         when (music) {
             is Int -> mp = MediaPlayer.create(context, music)//重新设置要播放的音频}
-            is String ->mp.setDataSource(music)
+            is String -> mp.setDataSource(music)
         }
         mp.prepare()
         mp.isLooping = isLoop
-        mp.start ()//开始播放
+        mp.start()//开始播放
     } catch (e: Exception) {
         e.printStackTrace()//输出异常信息
     }
@@ -253,36 +252,36 @@ fun ePlayVoice(context: Context, music: Any , isLoop: Boolean = false) {
 
 
 fun ePlayPCM(path: String) {
-        val bufferSize = AudioTrack.getMinBufferSize(16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT)
-        var audioTrack: AudioTrack?= AudioTrack(AudioManager.STREAM_MUSIC, 16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM)
-        var fis: FileInputStream? = null
-        var isPlaying = true
-        var isStop = false
-        try {
-            audioTrack!!.play()
-            fis = FileInputStream(path)
-            val buffer = ByteArray(bufferSize)
-            var len = 0
-            while ((fis.read(buffer)).apply { len = this } != -1 && !isStop) {
-                audioTrack.write(buffer, 0, len)
-            }
-        } catch (e: Exception) {
-            eLogE("playPCMRecord", e)
-        } finally {
-            isPlaying = false
-            isStop = false
-            if (audioTrack != null) {
-                audioTrack.stop()
-                audioTrack = null
-            }
-            if (fis != null) {
-                try {
-                    fis.close()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
+    val bufferSize = AudioTrack.getMinBufferSize(16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT)
+    var audioTrack: AudioTrack? = AudioTrack(AudioManager.STREAM_MUSIC, 16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM)
+    var fis: FileInputStream? = null
+    var isPlaying = true
+    var isStop = false
+    try {
+        audioTrack!!.play()
+        fis = FileInputStream(path)
+        val buffer = ByteArray(bufferSize)
+        var len = 0
+        while ((fis.read(buffer)).apply { len = this } != -1 && !isStop) {
+            audioTrack.write(buffer, 0, len)
+        }
+    } catch (e: Exception) {
+        eLogE("playPCMRecord", e)
+    } finally {
+        isPlaying = false
+        isStop = false
+        if (audioTrack != null) {
+            audioTrack.stop()
+            audioTrack = null
+        }
+        if (fis != null) {
+            try {
+                fis.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
         }
+    }
 }
 
 fun eAssetsCopy(context: Context, fileName: String, copyName: String) {
@@ -728,19 +727,18 @@ object eNetWork {
 
     //计算数据大小
     fun eGetFormatSize(size: Long) = when {
-        size < 1 -> "0 K/s"
-        size in 1..1023 -> size.toString() + " K/s"
-        1024 < size -> (size / 1024).toString() + " M/s"
-        else -> "0 K/s"
+        size < 1 -> "0 K"
+        size in 1..1023 -> size.toString() + " K"
+        1024 < size -> (size / 1024).toString() + " M"
+        else -> "0 K"
     }
 
     // 获取PING延迟
     fun eGetNetDelayTime(): String {
         var delay = String()
-        var p: Process? = null
         var output = ""
         try {
-            p = Runtime.getRuntime().exec("/system/bin/ping -c 4 " + "www.baidu.com")
+            val p = Runtime.getRuntime().exec("/system/bin/ping -c 4 " + "www.baidu.com")
             eLog("p$p")
             eLog("inputStream${p.inputStream}")
             eLog("InputStreamReader${InputStreamReader(p.inputStream)}")
@@ -945,21 +943,24 @@ object eBitmap {
     }
 
     //获取预览图
-    fun eGetPhoneBitmap(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect = Rect(0, 0, width, height), mCameraID: Int = 1): Bitmap? {
+    fun eGetPhoneBitmap(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect = Rect(0, 0, width, height), rotate: Float=0f,quality:Int=80): Bitmap? {
         var mBitmap: Bitmap? = null
-        if (mImageNV21 != null) {
+        try {
             val image = YuvImage(mImageNV21, ImageFormat.NV21, width, height, null)
             val stream = ByteArrayOutputStream()
-            image.compressToJpeg(rect, 80, stream)
+            image.compressToJpeg(rect, quality, stream)
             val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
+            mBitmap = eRotateBitmap(bmp,rotate)
             stream.close()
-            eGcBitmap(bmp)
+//            eGcBitmap(bmp)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         return mBitmap
     }
 
     //图片旋转
-    fun eRotateBitmap(bitmap: Bitmap?, rotate: Float): Bitmap? {
+    fun eRotateBitmap(bitmap: Bitmap?, rotate: Float=0f): Bitmap? {
         if (bitmap == null) {
             return null
         }
@@ -1278,6 +1279,60 @@ object eShell {
         return true
     }
 
+    fun eExecShellOut(shell: String) {
+        var mReader: BufferedReader? = null
+        var mRunning = true
+        var cmds: String? = null
+        var mPID: String
+        var out: FileOutputStream? = null
+        var logcatProc: Process? = null
+        try {
+            eLog(shell)
+            logcatProc = Runtime.getRuntime().exec(shell);
+            mReader = BufferedReader(InputStreamReader(logcatProc.inputStream), 1024);
+            var line = "";
+            while (mRunning && (mReader.readLine().apply { line = this }) != null) {
+                if (!mRunning) {
+                    break;
+                }
+                if (line.isEmpty()) {
+                    continue;
+                }
+                if (line.contains(android.os.Process.myPid().toString())) {
+                    eLog("shell:$line")
+//                    out.write((simpleDateFormat2.format(new Date()) + "  " + line + "\n").getBytes());
+                }
+            }
+
+        } catch (e: IOException) {
+            e.printStackTrace();
+        } finally {
+            if (logcatProc != null) {
+                logcatProc.destroy();
+                logcatProc = null;
+            }
+            if (mReader != null) {
+                try {
+                    mReader.close();
+                    mReader = null;
+                } catch (e: IOException) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (e: IOException) {
+                    e.printStackTrace();
+                }
+                out = null;
+            }
+
+        }
+
+    }
+
+
     //执行命令并且输出结果
     fun eExecShell(shell: String): String {
         var result = ""
@@ -1365,8 +1420,5 @@ object eReflection {
     }
 }
 
-object  USB{
-
-}
 
 

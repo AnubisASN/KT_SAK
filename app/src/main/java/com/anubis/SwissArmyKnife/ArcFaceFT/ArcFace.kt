@@ -3,6 +3,7 @@ package com.anubis.SwissArmyKnife
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_arcface.eArcFace
@@ -22,8 +23,9 @@ import kotlinx.android.synthetic.main.activity_preview.*
  *Resource :  'Module'_'ResourceName'_'Mark'
  * /+Id :  'LoayoutName'_'Widget'+FunctionName
  *Router :  /'Module'/'Function'
- *说明：
+ *说明：  活体检测+人脸跟踪
  */
+@Route(path = "/face/ArcFace")
 class  ArcFace: Activity(){
     private  var mRunnable:Runnable?=null
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -29,6 +29,7 @@ enum class MediaUpdater {
         override fun onScanCompleted(path: String, uri: Uri) {
             val msg=Message()
             msg.obj=path
+            msg.what=eDataFTP.DATA_TRANSFER
             eDataFTP.mHndler?.sendMessage(msg)
 //            Log.i(TAG, "Scan completed: $path : $uri")
 //            if (path.indexOf("register") != -1) {

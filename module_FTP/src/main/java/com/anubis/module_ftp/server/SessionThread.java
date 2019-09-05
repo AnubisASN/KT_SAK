@@ -427,7 +427,11 @@ public class SessionThread extends Thread {
             }
             msg.what=eDataFTP.INSTANCE.getCONNECTION_FAILURE();
         }
-        eDataFTP.INSTANCE.getMHndler().sendMessage(msg);
+        try {
+            eDataFTP.INSTANCE.getMHndler().sendMessage(msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public File getWorkingDir() {

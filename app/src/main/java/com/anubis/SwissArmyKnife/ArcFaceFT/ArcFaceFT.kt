@@ -1,6 +1,7 @@
 package com.anubis.SwissArmyKnife
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -23,29 +24,30 @@ import kotlinx.android.synthetic.main.activity_camera.*
  *Resource :  'Module'_'ResourceName'_'Mark'
  * /+Id :  'LoayoutName'_'Widget'+FunctionName
  *Router :  /'Module'/'Function'
- *说明：
+ *说明： 人脸跟踪
  */
 @Route(path = "/face/ArcFaceFT")
-class  ArcFaceFT: Activity(){
-    private  var mRunnable:Runnable?=null
+class ArcFaceFT : Activity() {
+    private var mRunnable: Runnable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
-        var camera: eArcFaceFT?=null
+        var camera: eArcFaceFT? = null
         try {
-            camera = eArcFaceFT.init(findViewById(R.id.glsurfaceView),findViewById(R.id.surfaceView),isShearFaceBitmap = true,onClickCameraSwitch = glsurfaceView)
+            camera = eArcFaceFT.init(findViewById(R.id.glsurfaceView), findViewById(R.id.surfaceView),false, Color.GREEN, 2, false, 100, 1,0 ,270f, imageView)
         } catch (e: Exception) {
             eLogE("ArcFace:$e")
             eLog("ArcFace$e")
         }
-        mRunnable= Runnable {
+        mRunnable = Runnable {
             eLog("${camera!!.mFaceNum}--$")
-            camera.mIsState=true
-            if (camera.mFaceNum!=0 ){
-                imageView.setImageBitmap(camera.mBitmap)
+            camera.mIsState = true
+            if (camera.mFaceNum != 0) {
+              eLog (  "camear:${camera.mBitmap==null}")
+                imageView.post { imageView.setImageBitmap(camera.mBitmap) }
             }
-            Handler().postDelayed(mRunnable,1000)
+            Handler().postDelayed(mRunnable, 500)
         }
-        Handler().postDelayed(mRunnable,1000)
+        Handler().postDelayed(mRunnable, 500)
     }
 }

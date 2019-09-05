@@ -58,7 +58,6 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     kapt 'com.alibaba:arouter-compiler:1.1.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation project(':module_ArcFaceFT')
     implementation project(':module_Extends')
     implementation project(':module_TTS')
     implementation project(':module_PortMSG')
@@ -76,6 +75,7 @@ dependencies {
     implementation files('libs/XHApi.jar')
     implementation project(':module_UDevice')
     implementation project(':module_QRCode')
+    implementation project(':module_ArcFaceFT')
 }
 repositories {
     mavenCentral()

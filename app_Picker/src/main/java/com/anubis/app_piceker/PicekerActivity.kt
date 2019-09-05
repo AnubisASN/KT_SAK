@@ -5,19 +5,28 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ScrollView
+import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.anubis.app_piceker.R.id.*
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eTime
 import com.anubis.module_picker.ePicker
+import com.anubis.module_picker.eTimePicker
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import kotlinx.android.synthetic.main.picker.*
 @Route(path = "/app/piceker")
 class PicekerActivity : AppCompatActivity() {
 val REQUEST_CODE=0x000111
     var type=0
+    var timeSelector:eTimePicker?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.picker)
+           timeSelector = eTimePicker(this,  object : eTimePicker.ResultHandler {
+               override fun handle(time: String) {
+                   Toast.makeText(applicationContext, time, Toast.LENGTH_LONG).show()
+               }
+           }, "1989-01-30 00:00", "2018-12-31 00:00")
     }
 
     fun onClick(v: View) {
@@ -32,7 +41,9 @@ val REQUEST_CODE=0x000111
                 type=1
                 ePicker.eFileStart(this@PicekerActivity,2000)
             }
-
+            picker_btTime.id->{
+                timeSelector?.show()
+            }
 
         }
     }

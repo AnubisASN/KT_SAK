@@ -5,11 +5,10 @@ import android.graphics.Color
 import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.hardware.Camera
-import android.opengl.GLSurfaceView
 import android.util.Log
-import android.view.SurfaceView
 import android.view.View
 import com.anubis.kt_extends.eBitmap
+import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.arcsoft.facetracking.AFT_FSDKEngine
 import com.arcsoft.facetracking.AFT_FSDKFace
@@ -75,24 +74,23 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
     var mIsState = true
     private var isShearFaceBitmap = false
     private var shearNum = 50
+    private var rotate=0f
     private var color: Int = Color.GREEN
     private var stroke: Int = 2
-    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, CameraState: Boolean = true,mCameraRotate:Int?=null,color: Int = Color.GREEN, stroke: Int = 2, isShearFaceBitmap: Boolean = false, shearNum: Int = 50, cameraId: Int = 1, onClickCameraSwitch: View? = null): eArcFaceFT {
+    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, CameraState: Boolean = true, color: Int = Color.GREEN, stroke: Int = 2, isShearFaceBitmap: Boolean = false, shearNum: Int = 50, cameraId: Int = 1, CameraRotate:Int=0,getBitmapRotate:Float=0f,onClickCameraSwitch: View? = null): eArcFaceFT {
         mGLSurfaceView = GLSurfaceView
         mSurfaceView = SurfaceView
         mIsState = CameraState
+        rotate=getBitmapRotate
         this.color = color
         this.stroke = stroke
         this.isShearFaceBitmap = isShearFaceBitmap
         this.shearNum = shearNum
         mCameraID = if (cameraId == 0) Camera.CameraInfo.CAMERA_FACING_BACK else Camera.CameraInfo.CAMERA_FACING_FRONT
-        this.mCameraRotate = if (cameraId == 0) 90 else 270
-        if (mCameraRotate!=null){
-            this.mCameraRotate=mCameraRotate
-        }
+        mCameraRotate = CameraRotate+if (cameraId == 0) 90 else 270
         mCameraMirror = cameraId != 0
         mSurfaceView!!.setOnCameraListener(this)
-        mSurfaceView!!.setupGLSurafceView(mGLSurfaceView, true, mCameraMirror, this.mCameraRotate)
+        mSurfaceView!!.setupGLSurafceView(mGLSurfaceView, true, mCameraMirror, mCameraRotate)
         mSurfaceView!!.debug_print_fps(true, false)
         var err = engine.AFT_FSDK_InitialFaceEngine(appid, ft_key, AFT_FSDKEngine.AFT_OPF_0_HIGHER_EXT, 16, 5)
         Log.d(TAG, "AFT_FSDK_InitialFaceEngine =" + err.code)
@@ -104,11 +102,12 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
         return this
     }
 
-    fun setParameters ( color: Int = this.color, stroke: Int = this.stroke, isShearFaceBitmap: Boolean =  this.isShearFaceBitmap, shearNum: Int = this.shearNum, cameraId: Int = mCameraID) {
+    fun setParameters (color: Int = this.color, stroke: Int = this.stroke, isShearFaceBitmap: Boolean =  this.isShearFaceBitmap, getBitmapRotate:Float= rotate, shearNum: Int = this.shearNum, cameraId: Int = mCameraID) {
         this.color = color
         this.stroke = stroke
         this.isShearFaceBitmap = isShearFaceBitmap
         this.shearNum = shearNum
+        rotate=getBitmapRotate
         if (cameraId!= mCameraID){
             mCameraID=cameraId
             onClickCameraSwitch()
@@ -150,25 +149,25 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
         if (mFaceNum != 0 && mImageNV21 != null && mIsState) {
             mIsState = false
             val size = mCamera!!.parameters.previewSize
-            if (isShearFaceBitmap) {
+            if ( isShearFaceBitmap) {
                 try {
-                    val left = mAFT_FSDKFace!!.rect.left - shearNum
-                    val top = mAFT_FSDKFace!!.rect.top - shearNum
-                    val right = mAFT_FSDKFace!!.rect.right + shearNum
-                    val bottom = mAFT_FSDKFace!!.rect.bottom + shearNum
-                    mBitmap = eBitmap.eGetPhoneBitmap(mImageNV21!!, size.width, size.height, Rect(if (left < 0) 1 else left,
+                    val left = eArcFaceFT.mAFT_FSDKFace!!.rect.left - eArcFaceFT.shearNum
+                    val top = eArcFaceFT.mAFT_FSDKFace!!.rect.top - eArcFaceFT.shearNum
+                    val right = eArcFaceFT.mAFT_FSDKFace!!.rect.right + eArcFaceFT.shearNum
+                    val bottom = eArcFaceFT.mAFT_FSDKFace!!.rect.bottom + eArcFaceFT.shearNum
+                    eArcFaceFT.mBitmap = eBitmap.eGetPhoneBitmap(eArcFaceFT.mImageNV21!!, size.width, size.height, Rect(if (left < 0) 1 else left,
                             if (top < 0) 1 else top,
                             if (right > size.width) size.width - 1 else right,
                             if (bottom > size.height) size.height - 1 else bottom
-                    ))
+                    ),rotate=rotate)
                 } catch (e: Exception) {
-                    mBitmap = eBitmap.eGetPhoneBitmap(mImageNV21!!, size.width, size.height)
+                    eArcFaceFT.mBitmap = eBitmap.eGetPhoneBitmap(eArcFaceFT.mImageNV21!!, size.width, size.height,rotate=rotate)
                     eLogE("矩阵截取失败$e")
                 }
             } else {
-                mBitmap = eBitmap.eGetPhoneBitmap(mImageNV21!!, size.width, size.height)
+                eArcFaceFT.mBitmap = eBitmap.eGetPhoneBitmap(eArcFaceFT.mImageNV21!!, size.width, size.height,rotate = rotate)
+                eLog("mBitmap:${eArcFaceFT.mBitmap ==null}")
             }
-
         }
         if (mFaceNum == 0 || !mIsState) {
             mIsState = true

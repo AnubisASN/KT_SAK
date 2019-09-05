@@ -7,6 +7,7 @@ import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eReflection
 import com.anubis.kt_extends.eShowTip
+import com.anubis.module_httpserver.eHttpServer.server
 import com.anubis.module_httpserver.protocols.http.eHTTPD
 
 import java.lang.Exception
@@ -29,14 +30,14 @@ import java.lang.Exception
  */
 object eHttpServer {
     var server: eHTTPD? = null
-    fun eStart(className: Class<*>, port: String = "3334"): eHTTPD? {
+    fun eStart(`class`: Class<*>, port: String = "3334"): eHTTPD? {
         if (server == null) {
             try {
-                val con = eReflection.eGetClass(className.name).getConstructor(String::class.java)
+                val con = eReflection.eGetClass(`class`.name).getConstructor(String::class.java)
                 server = con.newInstance(port) as eHTTPD
                 eLog("开启HTTP服务")
             } catch (e: NoSuchMethodException) {
-                val con = eReflection.eGetClass(className.name).getConstructor()
+                val con = eReflection.eGetClass(`class`.name).getConstructor()
                 server = con.newInstance() as eHTTPD
                 eLog("开启HTTP服务")
             } catch (e: Exception) {

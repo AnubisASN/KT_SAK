@@ -101,7 +101,7 @@ object eUDevice {
     }
 
     /**
-     * 根据设备获取路径
+     * 根据设备文件
      *
      * @param device
      * @return
@@ -131,7 +131,7 @@ object eUDevice {
     }
 
     /**
-     * 获取U盘的文件和文件夹路径
+     * 获取U盘的文件和文件夹
      *
      * @param fileSystem
      * @return
