@@ -44,7 +44,7 @@ class ArcFaceFT : Activity() {
             camera.mIsState = true
             if (camera.mFaceNum != 0) {
               eLog (  "camear:${camera.mBitmap==null}")
-                imageView.post { imageView.setImageBitmap(camera.mBitmap) }
+             imageView.setImageBitmap(camera.mBitmap)
             }
             Handler().postDelayed(mRunnable, 500)
         }

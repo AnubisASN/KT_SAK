@@ -11,7 +11,6 @@ import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.*
-import android.hardware.Camera
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
@@ -25,21 +24,17 @@ import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.text.TextUtils.indexOf
-import android.text.TextUtils.substring
 import android.util.Base64
 import android.util.Log
 import android.view.KeyEvent
-import org.jetbrains.anko.custom.async
 import android.widget.Toast
 import org.jetbrains.anko.activityManager
-import org.jetbrains.anko.custom.async
 import org.json.JSONObject
 import java.io.*
 import java.lang.Process
 import java.net.*
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-import java.security.cert.Extension
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Matcher
@@ -978,6 +973,75 @@ object eBitmap {
     }
 
 
+    fun saveBytetoFile(file: File, yuvBytes: ByteArray,w:Int,h:Int, rotate: Int=0,quality: Int = 80):Boolean {
+        // 通过YuvImage得到Bitmap格式的byte[]
+        try {
+        if (!file.exists())
+            file.createNewFile()
+        val yuvImage = YuvImage(yuvBytes, ImageFormat.NV21, w, h, null)
+        val out = ByteArrayOutputStream()
+        yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 10, out)
+        val dataBmp = out.toByteArray()
+        // 生成Bitmap
+        val bitmap = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
+
+        // 旋转
+        val matrix = Matrix()
+        matrix.setRotate(rotate.toFloat())
+        val bmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        bitmap.recycle()
+            val fos = FileOutputStream(file)
+            bmp.compress(Bitmap.CompressFormat.JPEG, quality, fos)
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            eLogE("保存失败", e)
+          return  false
+        }
+    }
+
+
+    fun getBitmapFromYuvByte(yuv: ByteArray, iw: Int, ih: Int, imageformat: Int): Bitmap? {
+        val out = ByteArrayOutputStream()
+        val yuvImage = YuvImage(yuv, imageformat, iw, ih, null as IntArray?)
+        yuvImage.compressToJpeg(Rect(0, 0, iw, ih), 80, out)
+        val b=out.toByteArray()
+        return if (b != null && b.size != 0) BitmapFactory.decodeByteArray(b, 0, b.size) else null
+    }
+
+    fun saveBitmap(bitmap: Bitmap, absPath: String): Boolean {
+        return saveBitmap(bitmap, File(absPath))
+    }
+
+    fun saveBitmap(bitmap: Bitmap?, file: File): Boolean {
+        if (bitmap == null) {
+            return false
+        } else {
+            var fos: FileOutputStream? = null
+            try {
+                if (!file.exists())
+                    file.createNewFile()
+                fos = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                fos.flush()
+                return true
+            } catch (var13: Exception) {
+                var13.printStackTrace()
+            } finally {
+                if (fos != null) {
+                    try {
+                        fos.close()
+                    } catch (var12: IOException) {
+                        var12.printStackTrace()
+                    }
+
+                }
+
+            }
+
+            return false
+        }
+    }
 }
 
 /**
