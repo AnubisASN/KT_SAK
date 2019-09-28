@@ -76,6 +76,7 @@ dependencies {
     implementation project(':module_UDevice')
     implementation project(':module_QRCode')
     implementation project(':module_ArcFaceFT')
+    implementation project(':module_TCP')
 }
 repositories {
     mavenCentral()

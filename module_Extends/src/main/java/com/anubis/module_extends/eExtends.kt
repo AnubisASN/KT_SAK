@@ -28,7 +28,11 @@ import android.util.Base64
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
+import com.anubis.kt_extends.eString.eInterception
+import com.tencent.bugly.proguard.s
 import org.jetbrains.anko.activityManager
+import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.uiThread
 import org.json.JSONObject
 import java.io.*
 import java.lang.Process
@@ -72,15 +76,17 @@ fun Activity?.eLog(str: Any, TAG: String = "TAG") {
 }
 
 fun eLog(str: Any, TAG: String = "TAG") {
-    Log.i(TAG, "eLog:${str.toString()}\n ")
+    Log.i(TAG, "eNLog:$str\n ")
 }
 
 fun Activity?.eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
+    e?.printStackTrace()
     Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：$str\n$e ")
 }
 
 fun eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
-    Log.e(TAG, "eLogE:$str\n$e ")
+    e?.printStackTrace()
+    Log.e(TAG, "eNLogE:$str\n$e ")
 }
 
 
@@ -105,7 +111,6 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any, sharedPreferences:
 fun Context.eGetSystemSharedPreferences(key: String, value: Any? = null, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) =
         try {
             sharedPreferences.getString(key, value as String? ?: "")
-
         } catch (e: Exception) {
             try {
                 sharedPreferences.getBoolean(key, value as Boolean? ?: true)
@@ -201,16 +206,10 @@ fun Context.eGetDefaultSharedPreferences(key: String, value: Any? = null, shared
 }
 
 
-/**
- * Intent Set传递扩展---------------------------------------------------------------------------------
- */
 //Intent Get传递扩展
 fun Intent.eGetMessage(Sign: String): String = getStringExtra(Sign)
 
 
-/**
- * Intent Set 捆绑传递扩展----------------------------------------------------------------------------
- */
 fun Bundle.eSetMessage(Sign: String, Message: Any = "") = when (Message) {
     is String -> putString(Sign, Message)
     is Int -> putInt(Sign, Message)
@@ -232,7 +231,6 @@ fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false) {
             mp.stop()
             mp.reset()
         }
-        eLog("music:$music")
         when (music) {
             is Int -> mp = MediaPlayer.create(context, music)//重新设置要播放的音频}
             is String -> mp.setDataSource(music)
@@ -245,7 +243,7 @@ fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false) {
     }
 }
 
-
+//PCM播放
 fun ePlayPCM(path: String) {
     val bufferSize = AudioTrack.getMinBufferSize(16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT)
     var audioTrack: AudioTrack? = AudioTrack(AudioManager.STREAM_MUSIC, 16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM)
@@ -279,11 +277,11 @@ fun ePlayPCM(path: String) {
     }
 }
 
-fun eAssetsCopy(context: Context, fileName: String, copyName: String) {
+//assets文件复制
+fun eAssetsToFile(context: Context, assetsName: String, copyName: String): Boolean {
     try {
         if (!File(copyName).exists()) {
-            eLog("$fileName 开始复制")
-            val inputStream = context.getResources().getAssets().open(fileName)// assets文件夹下的文件
+            val inputStream = context.getResources().getAssets().open(assetsName)// assets文件夹下的文件
             val fileOutputStream = FileOutputStream(copyName)// 保存到本地的文件夹下的文件
             val buffer = ByteArray(1024)
             var count = 0
@@ -293,13 +291,15 @@ fun eAssetsCopy(context: Context, fileName: String, copyName: String) {
             fileOutputStream.flush()
             fileOutputStream.close()
             inputStream.close()
-            eLog("复制完成$copyName")
         }
+        return true
     } catch (e: IOException) {
         e.printStackTrace()
         eLogE("文件复制错误")
+        return false
     }
 }
+
 
 /**
  * String Json解析扩展--------------------------------------------------------------------------------
@@ -322,7 +322,7 @@ object eBReceiver {
     //开机启动
     private var isSetAutoBoot = true
 
-    fun eSetPowerBoot(context: Context, intent: Intent, cls: Class<*>): String {
+    fun eSetPowerBoot(context: Context, intent: Intent, cls: Class<*>): Boolean {
         return if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             eLog("开机自启", "SAK")
             if (isSetAutoBoot) {
@@ -330,38 +330,37 @@ object eBReceiver {
                 val startServiceIntent = Intent(context, cls)
                 startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(startServiceIntent)
-                "IVA自启完成"
-            } else ""
-        } else ""
+                true
+            } else false
+        } else false
     }
 
     //APP更新启动
-    fun eSetAPPUpdateBoot(context: Context, intent: Intent, cls: Class<*>): String {
+    fun eSetAPPUpdateBoot(context: Context, intent: Intent, cls: Class<*>, hint: Array<String>? = arrayOf("升级了一个安装包", "安装了一个安装包", "卸载了一个安装包")): Boolean {
         //接收更新广播
         if (intent.action == "android.intent.action.PACKAGE_REPLACED") {
-            eLog("升级了一个安装包，重新启动此程序", "SAK")
-            Toast.makeText(context, "升级了一个安装包，重新启动此程序", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, hint!![0], Toast.LENGTH_SHORT).show()
             val startServiceIntent = Intent(context, cls)
             startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(startServiceIntent)
-            return "IVA已完成更新"
+            return true
         }
         //接收安装广播
         if (intent.action == "android.intent.action.PACKAGE_ADDED") {
-            eLog("升级了一个安装包，重新启动此程序", "SAK")
-            Toast.makeText(context, "升级了一个安装包，重新启动此程序", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, hint!![1], Toast.LENGTH_SHORT).show()
             val packName = intent.resolveActivityInfo(context.packageManager, 0).toString()
             eLog("packName:$packName")
             val startServiceIntent = Intent(context, cls)
             startServiceIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(startServiceIntent)
+            return true
         }
         //接收卸载广播
         if (intent.action == "android.intent.action.PACKAGE_REMOVED") {
-//                val packageName = intent.dataString
-//                println("卸载了:" + packageName + "包名的程序")
+            Toast.makeText(context, hint!![2], Toast.LENGTH_SHORT).show()
+            return true
         }
-        return ""
+        return false
     }
 }
 
@@ -511,6 +510,17 @@ object eApp {
         return true
     }
 
+    //根据包名获取PID
+    fun eGetPackNamePID(context: Context, packName: String): Int? {
+        val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val mRunningProcess = manager.runningAppProcesses
+        for (amProcess in mRunningProcess) {
+            if (packName == amProcess.processName)
+                return amProcess.pid
+        }
+        return null
+    }
+
     //软件安装判断
     fun eIsAppInstall(packageName: String, mContext: Context): Boolean {
         var packageInfo: PackageInfo? = null
@@ -609,22 +619,24 @@ object eRegex {
  */
 object eKeyEvent {
     private var Time: Long = 0
-    fun eSetKeyDownExit(activity: Activity, keyCode: Int, activityList: ArrayList<Activity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", ClickTime: Long = 2000): Boolean {
+    fun eSetKeyDownExit(activity: Activity, keyCode: Int, activityList: ArrayList<Activity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", ClickTime: Long = 2000, isExecute: Boolean = true): Boolean {
         return if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (System.currentTimeMillis() - Time > ClickTime) {
                 activity.eShowTip(hint)
                 Time = System.currentTimeMillis()
                 false
             } else {
-                if (activityList != null) {
-                    for (activity in activityList) {
-                        activity.finish()
+                if (isExecute) {
+                    if (activityList != null) {
+                        for (activity in activityList) {
+                            activity.finish()
+                        }
                     }
-                }
-                activity.eShowTip(exitHint)
-                activity.finish()
-                if (systemExit) {
-                    System.exit(0)
+                    activity.eShowTip(exitHint)
+                    activity.finish()
+                    if (systemExit) {
+                        System.exit(0)
+                    }
                 }
                 true
             }
@@ -720,13 +732,6 @@ object eNetWork {
         return false
     }
 
-    //计算数据大小
-    fun eGetFormatSize(size: Long) = when {
-        size < 1 -> "0 K"
-        size in 1..1023 -> size.toString() + " K"
-        1024 < size -> (size / 1024).toString() + " M"
-        else -> "0 K"
-    }
 
     // 获取PING延迟
     fun eGetNetDelayTime(): String {
@@ -789,8 +794,8 @@ object eDevice {
 
 
     //获取本地IP
-    fun getHostIP(): String? {
-        var hostIp: String? = null
+    fun eGetHostIP(): String {
+        var hostIp: String="0.0.0.0"
         try {
             val nis = NetworkInterface.getNetworkInterfaces()
             var ia: InetAddress? = null
@@ -814,26 +819,6 @@ object eDevice {
             e.printStackTrace()
         }
         return hostIp
-    }
-
-    //获取IP
-    fun getIP(): String? {
-        try {
-            val en = NetworkInterface.getNetworkInterfaces()
-            while (en.hasMoreElements()) {
-                val intf = en.nextElement()
-                val enumIpAddr = intf.inetAddresses
-                while (enumIpAddr.hasMoreElements()) {
-                    val inetAddress = enumIpAddr.nextElement()
-                    if (!inetAddress.isLoopbackAddress && inetAddress is Inet4Address) {
-                        return inetAddress.getHostAddress().toString()
-                    }
-                }
-            }
-        } catch (ex: SocketException) {
-            ex.printStackTrace()
-        }
-        return null
     }
 }
 
@@ -937,15 +922,15 @@ object eBitmap {
         return BitmapFactory.decodeByteArray(decode, 0, decode.size)
     }
 
-    //获取预览图
-    fun eGetPhoneBitmap(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect = Rect(0, 0, width, height), rotate: Float=0f,quality:Int=80): Bitmap? {
+    //NV21 Bytes字节转文件
+    fun eByteArrayToBitmp(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect = Rect(0, 0, width, height), rotate: Float = 0f, quality: Int = 80): Bitmap? {
         var mBitmap: Bitmap? = null
         try {
             val image = YuvImage(mImageNV21, ImageFormat.NV21, width, height, null)
             val stream = ByteArrayOutputStream()
             image.compressToJpeg(rect, quality, stream)
             val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
-            mBitmap = eRotateBitmap(bmp,rotate)
+            mBitmap = eRotateBitmap(bmp, rotate)
             stream.close()
 //            eGcBitmap(bmp)
         } catch (e: Exception) {
@@ -954,8 +939,36 @@ object eBitmap {
         return mBitmap
     }
 
+    //YUV Bytes字节转文件
+    fun eByteArrayToFile(file: File, yuvBytes: ByteArray, w: Int, h: Int, imageformat: Int = ImageFormat.NV21, rotate: Int = 0, quality: Int = 80): Boolean {
+        // 通过YuvImage得到Bitmap格式的byte[]
+        try {
+            if (!file.exists())
+                file.createNewFile()
+            val yuvImage = YuvImage(yuvBytes, imageformat, w, h, null)
+            val out = ByteArrayOutputStream()
+            yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 10, out)
+            val dataBmp = out.toByteArray()
+            // 生成Bitmap
+            val bitmap = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
+
+            // 旋转
+            val matrix = Matrix()
+            matrix.setRotate(rotate.toFloat())
+            val bmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+            bitmap.recycle()
+            val fos = FileOutputStream(file)
+            bmp.compress(Bitmap.CompressFormat.JPEG, quality, fos)
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            eLogE("保存失败", e)
+            return false
+        }
+    }
+
     //图片旋转
-    fun eRotateBitmap(bitmap: Bitmap?, rotate: Float=0f): Bitmap? {
+    fun eRotateBitmap(bitmap: Bitmap?, rotate: Float = 0f): Bitmap? {
         if (bitmap == null) {
             return null
         }
@@ -972,48 +985,13 @@ object eBitmap {
         return newBM
     }
 
-
-    fun saveBytetoFile(file: File, yuvBytes: ByteArray,w:Int,h:Int, rotate: Int=0,quality: Int = 80):Boolean {
-        // 通过YuvImage得到Bitmap格式的byte[]
-        try {
-        if (!file.exists())
-            file.createNewFile()
-        val yuvImage = YuvImage(yuvBytes, ImageFormat.NV21, w, h, null)
-        val out = ByteArrayOutputStream()
-        yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 10, out)
-        val dataBmp = out.toByteArray()
-        // 生成Bitmap
-        val bitmap = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
-
-        // 旋转
-        val matrix = Matrix()
-        matrix.setRotate(rotate.toFloat())
-        val bmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-        bitmap.recycle()
-            val fos = FileOutputStream(file)
-            bmp.compress(Bitmap.CompressFormat.JPEG, quality, fos)
-            return true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            eLogE("保存失败", e)
-          return  false
-        }
+    //Bitmap转文件
+    fun eBitmapToFile(bitmap: Bitmap, absPath: String, quality: Int = 80): Boolean {
+        return eBitmapToFile(bitmap, File(absPath), quality)
     }
 
-
-    fun getBitmapFromYuvByte(yuv: ByteArray, iw: Int, ih: Int, imageformat: Int): Bitmap? {
-        val out = ByteArrayOutputStream()
-        val yuvImage = YuvImage(yuv, imageformat, iw, ih, null as IntArray?)
-        yuvImage.compressToJpeg(Rect(0, 0, iw, ih), 80, out)
-        val b=out.toByteArray()
-        return if (b != null && b.size != 0) BitmapFactory.decodeByteArray(b, 0, b.size) else null
-    }
-
-    fun saveBitmap(bitmap: Bitmap, absPath: String): Boolean {
-        return saveBitmap(bitmap, File(absPath))
-    }
-
-    fun saveBitmap(bitmap: Bitmap?, file: File): Boolean {
+    //Bitmap转文件
+    fun eBitmapToFile(bitmap: Bitmap?, file: File, quality: Int = 80): Boolean {
         if (bitmap == null) {
             return false
         } else {
@@ -1022,7 +1000,7 @@ object eBitmap {
                 if (!file.exists())
                     file.createNewFile()
                 fos = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                bitmap.compress(Bitmap.CompressFormat.PNG, quality, fos)
                 fos.flush()
                 return true
             } catch (var13: Exception) {
@@ -1034,11 +1012,8 @@ object eBitmap {
                     } catch (var12: IOException) {
                         var12.printStackTrace()
                     }
-
                 }
-
             }
-
             return false
         }
     }
@@ -1048,6 +1023,7 @@ object eBitmap {
  * 文件转换扩展类--------------------------------------------------------------------------------------
  */
 object eFile {
+    //    文件转Base64
     fun eFileToBase64(path: String): String? {
         var inputFile: FileInputStream? = null
         try {
@@ -1063,15 +1039,15 @@ object eFile {
             return null
         }
     }
-
-    @Throws(Exception::class)
-    fun eBase64ToFile(base64Code: String, savePath: String) {
-        //byte[] buffer = new BASE64Decoder().decodeBuffer(base64Code);
-        val buffer = Base64.decode(base64Code, Base64.DEFAULT)
-        val out = FileOutputStream(savePath)
-        out.write(buffer)
-        out.close()
-    }
+//
+//    @Throws(Exception::class)
+//    fun eBase64ToFile(base64Code: String, savePath: String) {
+//        //byte[] buffer = new BASE64Decoder().decodeBuffer(base64Code);
+//        val buffer = Base64.decode(base64Code, Base64.DEFAULT)
+//        val out = FileOutputStream(savePath)
+//        out.write(buffer)
+//        out.close()
+//    }
 
 
 //    public static String encodeBase64File(String path) throws Exception {
@@ -1094,19 +1070,16 @@ object eFile {
 //    out.write(buffer);
 //    out.close();
 //}
-    /**
-     * 将base64字符保存文本文件
-     * @param base64Code
-     * @param targetPath
-     * @throws Exception
-     */
-    fun toFile(base64Code: String, targetPath: String) {
+
+    //    base64字符保存文本文件
+    fun eBase64StrToFile(base64Code: String, targetPath: String) {
         val buffer = base64Code.toByteArray()
-        val out = FileOutputStream(targetPath);
-        out.write(buffer);
-        out.close();
+        val out = FileOutputStream(targetPath)
+        out.write(buffer)
+        out.close()
     }
 
+    //Base64转文件
     fun eBase64ToFile(base64: String, file: File): File {
         var out: FileOutputStream? = null
         try {
@@ -1136,6 +1109,15 @@ object eFile {
  * 字符转换扩展类--------------------------------------------------------------------------------------
  */
 object eString {
+    //数据转换
+    fun eGetFormatSize(size: Long) = when {
+        size < 1 -> "0K"
+        size in 1..1023 -> size.toString() + " K"
+        1024 < size -> (size / 1024).toString() + " M"
+        else -> "0 K"
+    }
+
+
     //数值段获取
     fun eGetNumberPeriod(str: String, start: Any, end: Any): String {
         val Str = str.trim()
@@ -1250,6 +1232,7 @@ object eString {
         return null
     }
 
+    //字符串截取
     fun eInterception(str: String, lenght: Int = 1024, symbol: String = ","): String {
         var j = 0
         var s = ""
@@ -1343,59 +1326,6 @@ object eShell {
         return true
     }
 
-    fun eExecShellOut(shell: String) {
-        var mReader: BufferedReader? = null
-        var mRunning = true
-        var cmds: String? = null
-        var mPID: String
-        var out: FileOutputStream? = null
-        var logcatProc: Process? = null
-        try {
-            eLog(shell)
-            logcatProc = Runtime.getRuntime().exec(shell);
-            mReader = BufferedReader(InputStreamReader(logcatProc.inputStream), 1024);
-            var line = "";
-            while (mRunning && (mReader.readLine().apply { line = this }) != null) {
-                if (!mRunning) {
-                    break;
-                }
-                if (line.isEmpty()) {
-                    continue;
-                }
-                if (line.contains(android.os.Process.myPid().toString())) {
-                    eLog("shell:$line")
-//                    out.write((simpleDateFormat2.format(new Date()) + "  " + line + "\n").getBytes());
-                }
-            }
-
-        } catch (e: IOException) {
-            e.printStackTrace();
-        } finally {
-            if (logcatProc != null) {
-                logcatProc.destroy();
-                logcatProc = null;
-            }
-            if (mReader != null) {
-                try {
-                    mReader.close();
-                    mReader = null;
-                } catch (e: IOException) {
-                    e.printStackTrace();
-                }
-            }
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (e: IOException) {
-                    e.printStackTrace();
-                }
-                out = null;
-            }
-
-        }
-
-    }
-
 
     //执行命令并且输出结果
     fun eExecShell(shell: String): String {
@@ -1441,7 +1371,6 @@ object eShell {
     fun eExecShellSilent(shell: String): Int {
         var result = -1;
         var dos: DataOutputStream? = null
-
         try {
             var p = Runtime.getRuntime().exec("su")
             dos = DataOutputStream(p.outputStream)
@@ -1464,6 +1393,57 @@ object eShell {
             }
         }
         return result
+    }
+
+    //长时间获取返回  测试
+    fun eTExecShellOut(shell: String) {
+        var mReader: BufferedReader? = null
+        var mRunning = true
+        var cmds: String? = null
+        var mPID: String
+        var out: FileOutputStream? = null
+        var logcatProc: Process? = null
+        try {
+            eLog(shell)
+            logcatProc = Runtime.getRuntime().exec(shell)
+            mReader = BufferedReader(InputStreamReader(logcatProc.inputStream), 1024);
+            var line = "";
+            while (mRunning && (mReader.readLine().apply { line = this }) != null) {
+                if (!mRunning) {
+                    break;
+                }
+                if (line.isEmpty()) {
+                    continue;
+                }
+                if (line.contains(android.os.Process.myPid().toString())) {
+                    eLog("eShell:$line")
+//                    out.write((simpleDateFormat2.format(new Date()) + "  " + line + "\n").getBytes());
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace();
+        } finally {
+            if (logcatProc != null) {
+                logcatProc.destroy();
+                logcatProc = null;
+            }
+            if (mReader != null) {
+                try {
+                    mReader.close();
+                    mReader = null;
+                } catch (e: IOException) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (e: IOException) {
+                    e.printStackTrace();
+                }
+                out = null;
+            }
+        }
     }
 }
 

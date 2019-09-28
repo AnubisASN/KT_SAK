@@ -30,6 +30,11 @@ import com.android.xhapimanager.XHApiManager
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
 import com.anubis.SwissArmyKnife.GreenDao.Data
 import com.anubis.SwissArmyKnife.HttpServer.eHTTPDTest
+import com.anubis.SwissArmyKnife.parame.handleMsg
+import com.anubis.SwissArmyKnife.parame.handlePort
+import com.anubis.SwissArmyKnife.parame.handleTCP
+import com.anubis.SwissArmyKnife.parame.handleTTS
+import com.anubis.SwissArmyKnife.parame.uHandler
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
@@ -45,6 +50,10 @@ import com.anubis.module_greendao.eGreenDao
 import com.anubis.module_httpserver.eHttpServer
 import com.anubis.module_portMSG.ePortMSG
 import com.anubis.module_qrcode.eQRCode
+import com.anubis.module_tcp.eTCP
+import com.anubis.module_tcp.eTCP.eServerSocketHashMap
+import com.anubis.module_tcp.eTCP.eSocketHashMap
+import com.anubis.module_tcp.eTCP.eSocketReceive
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
@@ -99,39 +108,10 @@ class MainActivity : Activity() {
     private var file: File? = null
     private var datas: Array<String>? = null
     private var Time: Long = 0
-    private var asrw: eASRW? = null
     var XHA: XHApiManager? = null
     private var hashMap1 = HashMap<String, Boolean>()
     private var hashMap2 = HashMap<String, Boolean>()
-    var state = true
     var progressDialog: ProgressDialog? = null
-    private val handleMsg = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            handleMsg(msg)
-            handleOtg(msg)
-        }
-    }
-    private val handlePort = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            handleProt(msg)
-        }
-    }
-
-    private val handleTTS = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            handleTTS(msg)
-        }
-    }
-
-    private val uHandler = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            handleUSB(msg)
-        }
-    }
 
     companion object {
         var mainActivity: MainActivity? = null
@@ -142,10 +122,11 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mainActivity = this@MainActivity
+        parame.mainActivity = mainActivity
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "et_btTCP客户端通信_btTCP服务端", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接_bt数据发送_btTCP创建", "et_btTCP服务端通道关闭_btTCP服务端线程关闭_btTCP服务端通道重连", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
         if (Build.MODEL == "ZK-R32A")
             XHA = XHApiManager()
@@ -175,7 +156,7 @@ class MainActivity : Activity() {
         var spID = 0
         val adapter = ArrayAdapter<VoiceModel>(this@MainActivity, android.R.layout.simple_spinner_item, voiceModel)
         val callback = object : ICallBack {
-            override fun CallResult(view: View?, itmeID: Int, MSG: String, spinner: Spinner) {
+            override fun CallResult(view: View?, itmeID: Int, MSG: String?, spinner: Spinner) {
                 when (itmeID) {
                     getDigit("初始化发音") -> {
                         spinner.adapter = adapter
@@ -198,7 +179,7 @@ class MainActivity : Activity() {
 
                             }
                             R.id.bt_item2 -> {
-                                asrw = eASRW.start(this@MainActivity, handleMsg)
+                                parame.asrw = eASRW.start(this@MainActivity, handleMsg)
                                 Hint("语音唤醒激活")
                             }
                             R.id.bt_item3 -> {
@@ -209,30 +190,59 @@ class MainActivity : Activity() {
                     }
                     getDigit("二维码") -> when (view?.id) {
                         R.id.bt_item1 -> {
-                            iv_Hint.setImageBitmap(eQRCode.createQRCode(if (MSG.isEmpty()) "请输入内容" else MSG))
+                            iv_Hint.setImageBitmap(eQRCode.createQRCode(MSG?:"请输入内容"))
                             iv_Hint.visibility = View.VISIBLE
                             Handler().postDelayed({ iv_Hint.visibility = View.GONE }, 5000)
                         }
                     }
                     getDigit("语音合成") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("语音合成：${TTS!!.synthesize(if (MSG.isEmpty()) "语音合成" else MSG, "0")}")
-                        R.id.bt_item2 -> Hint("语音播放：${ePlayPCM("/sdcard/img/info/output-${if (MSG.isEmpty()) "0" else MSG}.pcm")}")
+                        R.id.bt_item1 -> Hint("语音合成：${TTS!!.synthesize(MSG?:"语音合成", "0")}")
+                        R.id.bt_item2 -> Hint("语音播放：${ePlayPCM("/sdcard/img/info/output-${MSG?:"0"}.pcm")}")
                     }
                     getDigit("身份证阅读器") -> {
                         eCardOTG.otgInit(mAPP, handleMsg)
                     }
                     getDigit("LogCat") ->
                         async {
-                           eShell.eExecShell("logcat  *:e -v time   -s AndroidRuntime ${this@MainActivity.packageName}  ${android.os.Process.myPid()} -d > /mnt/sdcard/log.txt "
-                           )
+                            eShell.eExecShell("logcat  *:e -v time   -s AndroidRuntime ${this@MainActivity.packageName}  ${android.os.Process.myPid()} -d > /mnt/sdcard/log.txt "
+                            )
                         }
+                    getDigit("TCP连接") -> when (view?.id) {
+                        R.id.bt_item1 -> {
+                            eTCP.eSocketConnect(MSG?.split("-")?.get(0)?:"192.168.1.110", MSG?.split("-")?.get(1)?.toInt()?:3335, handleTCP)
+                                eLog("个数：${eSocketHashMap.size}")
+                        }
+                        R.id.bt_item2 -> {
+                            eTCP.eSocketSend(MSG?.split("-")?.get(0)?:"192.168.1.110", MSG?.split("-")?.get(1)?:"123",eTCP.eServerSocketHashMap)
+                        }
+                        R.id.bt_item3->{
+                             eTCP.eServerSocket( tcpHandler = handleTCP)
+                        }
+                    }
+                    getDigit("通道关闭") -> when (view?.id) {
+                        R.id.bt_item1 -> {
+                            eTCP.eCloseServer()
+//                            Hint("eSocketHashMap ："+    eTCP.eCloseReceives(eSocketHashMap,MSG))
+                        }
+                        R.id.bt_item2 -> {
+                            Hint("eServerSocketHashMap ："+ eTCP.eCloseReceives(eServerSocketHashMap,MSG,false))
+                        }
+                        R.id.bt_item3->{
+                            eTCP.eSocketReceive(MSG?:"192.168.1.110", handleTCP, eServerSocketHashMap)
+
+                           Hint("eSocketHashMap ：${eSocketHashMap.size}")
+                            Hint("eServerSocketHashMap ：${eServerSocketHashMap.size}")
+                        }
+                    }
+
+
 
                     getDigit("GPIO") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("GPIO读取：${XHA!!.XHReadGpioValue(if (MSG.isEmpty()) 0 else MSG.toInt())}")
+                        R.id.bt_item1 -> Hint("GPIO读取：${XHA!!.XHReadGpioValue(MSG?.toInt()?: 0 )}")
                     }
                     getDigit("STRING") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("String保存：${eSetSystemSharedPreferences("string", if (MSG.isEmpty()) "String" else MSG)}")
-                        R.id.bt_item2 -> Hint("Int保存：${eSetSystemSharedPreferences("int", if (MSG.isEmpty()) 123 else MSG.toInt())}")
+                        R.id.bt_item1 -> Hint("String保存：${eSetSystemSharedPreferences("string", MSG?: "String"  )}")
+                        R.id.bt_item2 -> Hint("Int保存：${eSetSystemSharedPreferences("int", MSG?:123)}")
                         R.id.bt_item3 -> Hint("Boolean保存：${eSetSystemSharedPreferences("boolean", MSG == "true")}")
                     }
                     getDigit("HTTP测试") -> when (view?.id) {
@@ -276,7 +286,7 @@ class MainActivity : Activity() {
                         }
                     }
                     getDigit("获取") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("Float保存：${eSetSystemSharedPreferences("float", if (MSG.isEmpty()) 123f else MSG.toFloat())}")
+                        R.id.bt_item1 -> Hint("Float保存：${eSetSystemSharedPreferences("float",MSG?.toFloat()?:123f)}")
                         R.id.bt_item2 -> Hint("获取-String:${eGetSystemSharedPreferences("string", "string")
                                 ?: "null"}-Int:${eGetSystemSharedPreferences("int", 123)
                                 ?: 0}-Boolean:${eGetSystemSharedPreferences("boolean", true)
@@ -284,7 +294,6 @@ class MainActivity : Activity() {
                     }
 
                     getDigit("Http服务") -> {
-
                         when (view?.id) {
                             R.id.bt_item1 ->
                                 Hint("http服务开启:${eHttpServer.eStart(eHTTPDTest::class.java)}")
@@ -292,7 +301,6 @@ class MainActivity : Activity() {
                             R.id.bt_item2 -> Hint("http服务关闭:${eHttpServer.eStop()}")
                         }
                     }
-
                     getDigit("VNC") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("VNC二进制文件执行:${if (eVNC.startVNCs(this@MainActivity)) "成功：5901" else "失败"}")
                     }
@@ -353,28 +361,12 @@ class MainActivity : Activity() {
                     }
                     getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(APP.mAPP, this@MainActivity)}")
                     getDigit("串口通信") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG.toByteArray(), "/dev/ttyS1"))
-                        R.id.bt_item2 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG.toByteArray(), "/dev/ttyS3"))
-                        R.id.bt_item3 -> Hint("串口通讯状态：" + ePortMSG.getMSG(this@MainActivity, handlePort, "/dev/ttyS3"))
+                        R.id.bt_item1 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG?.toByteArray()?:"0".toByteArray(), "/dev/ttyS1"))
+                        R.id.bt_item2 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG?.toByteArray()?:"0".toByteArray(), "/dev/ttyS3"))
+                        R.id.bt_item3 -> Hint("串口通讯状态：" + ePortMSG.getMSG(this@MainActivity, handlePort, MSG?: "/dev/ttyS3"))
                     }
 
-//                        Hint("串口通讯状态：" + ePortMSG().getInit(this@MainActivity, MSG ?: "").MSG())
-                    getDigit("TCP客户端通信") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("TCP通信：" + if (socketState) {
-                            if (MSG.indexOf("3333") != -1) {
-                                val msg = eString.eGetNumberPeriod(MSG, 18, "MAX")
-                                thread { sendMSM(msg) }
-                            } else {
-                                thread { sendMSM(MSG) }
-                            }
 
-                        } else {
-                            initClienSocket(MSG)
-                        })
-                        R.id.bt_item2 -> if (!serverSocketState) Hint("TCP服务端创建：${initServerSocket()}") else {
-                            thread { sSendMSM(MSG) }
-                        }
-                    }
                     getDigit("数据库") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("数据库插入：${eGreenDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
                         R.id.bt_item2 -> Hint("数据库查询:" + eGreenDao(this@MainActivity).queryAllUser(Data()).size)
@@ -401,14 +393,14 @@ class MainActivity : Activity() {
                     getDigit("路由转发跳转") ->
                         when (view?.id) {
                             R.id.bt_item1 -> ARouter.getInstance().build("/face/ArcFaceFT").navigation()
-                            R.id.bt_item2 ->ARouter.getInstance().build("/face/ArcFace").navigation()
+                            R.id.bt_item2 -> ARouter.getInstance().build("/face/ArcFace").navigation()
                         }
 
                     getDigit("Shell执行") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("ROOT权限检测:${eShell.eHaveRoot()}")
-                        R.id.bt_item2 -> Hint("Shell执行：${eShell.eExecShell(MSG)}")
+                        R.id.bt_item2 -> Hint("Shell执行：${eShell.eExecShell(MSG?:"date")}")
                         R.id.bt_item3 -> {
-                            if (MSG.isNotEmpty()) {
+                            if (MSG?.isNotEmpty() == true) {
                                 val shell = "cp -r /datas/APP/$MSG* /system/priv*"
                                 Hint("自定义修改为系统APP:" + eExecShell(shell))
                                 Hint("执行Shell:$shell")
@@ -458,139 +450,15 @@ class MainActivity : Activity() {
 
 
     /**
-     * -----------------------------------------回调结果模块——————————————————————————————————————————
-     */
-
-
-    //    0 唤醒成功         3    引擎就绪 开始说话            4 监测到说话      9001  监测到结束说话        5  临时识别      6  识别结束        2 识别引擎空闲
-//    arg1 类型   arg2 最终状态   what  引擎状态   obj String消息
-    private val backTrackInMs = 2000
-    private val MSG_TYPE_WUR = 11
-    private val MSG_TYPE_ASR = 22
-    private val MSG_TYPE_TTS = 33
-    private val MSG_STATE_TTS_SPEAK_OVER = 0
-    private val MSG_STATE_TTS_SPEAK_START = 1
-    private fun handleMsg(msg: Message) {
-        if (msg.what == 5000) {
-            if (msg.arg1 == 5000) {
-                state = false
-            }
-            onUiThread { progressDialog!!.incrementProgressBy(1) }// 增加进度条的进度  }
-            eLog("msg:${msg.arg1}")
-            return
-        }
-
-
-        if (msg.what == IStatus.STATUS_WAKEUP_SUCCESS) {
-            Hint("语音唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-            eLog("语音唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-            eShowTip("语音唤醒成功")
-//                  此处 开始正常识别流程
-            val params = LinkedHashMap<String, Any>()
-            params[SpeechConstant.ACCEPT_AUDIO_VOLUME] = false
-            params[SpeechConstant.VAD] = SpeechConstant.VAD_DNN
-            // 如识别短句，不需要需要逗号，将PidBuilder.INPUT改为搜索模型PidBuilder.SEARCH
-            params[SpeechConstant.PID] = PidBuilder.create().model(PidBuilder.INPUT).toPId()
-            if (backTrackInMs > 0) { // 方案1， 唤醒词说完后，直接接句子，中间没有停顿。
-                params[SpeechConstant.AUDIO_MILLS] = System.currentTimeMillis() - backTrackInMs
-            }
-            asrw?.myRecognizer?.cancel()
-            asrw?.myRecognizer?.start(params)
-        }
-        when (msg.what) {
-            0 -> {
-                //唤醒成功
-                Hint("唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                eLog("唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-            }
-            IStatus.STATUS_NONE -> {
-//                识别引擎空闲
-                Hint("识别引擎空闲:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                eLog("识别引擎空闲:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-            }
-            IStatus.STATUS_READY -> {
-//                引擎就绪 开始说话
-                Hint("引擎就绪 开始说话:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                eLog("引擎就绪 开始说话:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-            }
-            IStatus.STATUS_SPEAKING -> {
-//                监测到说话
-                Hint("监测到说话:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                eLog("监测到说话:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-            }
-            IStatus.STATUS_RECOGNITION -> {
-//                临时识别
-                Hint("临时识别:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                eLog("临时识别:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-            }
-            IStatus.STATUS_FINISHED -> {//识别结束
-                eLog("识别结束:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                eLog("识别结束:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
-                if (msg.arg2 == 1) {
-                    Hint("最终识别：" + msg.obj.toString())
-                    eLog("最终识别：" + msg.obj.toString())
-                    eShowTip("最终识别：" + msg.obj.toString())
-                }
-
-            }
-
-        }
-    }
-
-    private fun handleOtg(msg: Message) {
-        if (msg.what == 99 || msg.what == 100) {
-            eLog(msg.obj)
-        }
-        //第一次授权时候的判断是利用handler判断，授权过后就不用这个判断了
-        if (msg.what == HandlerMsg.CONNECT_SUCCESS) {
-            eLog("msg连接成功---${msg.obj}")
-        }
-        if (msg.what == HandlerMsg.CONNECT_ERROR) {
-            eLog("msg连接失败")
-        }
-        if (msg.what == HandlerMsg.READ_ERROR) {
-            //cz();
-            //statu.setText("卡认证失败");
-//            eLog("msg请放卡...")
-        }
-        if (msg.what == HandlerMsg.READ_SUCCESS) {
-            eLog("msg读卡成功")
-            eLog(msg.obj)
-        }
-    }
-
-    private fun handleProt(msg: Message) {
-        val data = msg.obj.toString()
-        val datas = data.split("---")
-        eLog("${datas[0]}---接收到：" + datas[1])
-
-    }
-
-    private fun handleTTS(msg: Message) {
-        eLog("what:${msg.what}---obj:${msg.obj}---arg1:${msg.arg1}---arg2:${msg.arg2}")
-    }
-
-    private fun handleUSB(msg: Message) {
-        when (msg.what) {
-            1 -> {
-                eShowTip("USB连接")
-                Handler().postDelayed({ LoadingData() }, 2000)
-            }
-            0 -> eShowTip("USB断开")
-        }
-    }
-
-
-    /**
      * -----------------------------------------业务控制模块——————————————————————————————————————————
      */
-    private fun LoadingData() {
+    fun LoadingData() {
 //        try {
         eLog("数量：${eUDevice.deviceCount}")
         @Suppress("MISSING_DEPENDENCY_CLASS")
         val device = eUDevice.getUsbMassDevice(0)
         @Suppress("MISSING_DEPENDENCY_CLASS")
-        val rootF= eUDevice.getUsbFiles(   eUDevice.readDevice(device!!)!!)
+        val rootF = eUDevice.getUsbFiles(eUDevice.readDevice(device!!)!!)
 //        @Suppress("MISSING_DEPENDENCY_CLASS")
 //        for (root in rootF)
 //            eLog("root----:${root.name}")
@@ -633,7 +501,8 @@ class MainActivity : Activity() {
             mPosition = position
             holder.setData(mDatas[position], position)
             holder.itemView.bt_item1.setOnClickListener {
-                val editContext = holder.itemView.et_item1.text.toString()
+                var editContext:String? = holder.itemView.et_item1.text.toString()
+                editContext=if (editContext?.isEmpty() != false)null else editContext
                 mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
             }
             holder.itemView.bt_item2.setOnClickListener {
@@ -724,7 +593,7 @@ class MainActivity : Activity() {
 
 
     interface ICallBack {
-        fun CallResult(view: View?, numID: Int, MSG: String, spinner: Spinner)
+        fun CallResult(view: View?, numID: Int, MSG: String?, spinner: Spinner)
     }
 
 
@@ -792,7 +661,7 @@ class MainActivity : Activity() {
                         if (!file.exists()) {
                             file.createNewFile()
                         }
-                        eFile.eBase64ToFile(imgFile, "/sdcard/0.jpg")
+                        eFile.eBase64StrToFile(imgFile, "/sdcard/0.jpg")
                         eLog("创建成功")
                     }
                 } catch (e: JSONException) {

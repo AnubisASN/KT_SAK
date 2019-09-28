@@ -251,7 +251,7 @@ object eArcFace : ViewTreeObserver.OnGlobalLayoutListener {
                 eLog("livenessCode:$livenessCode")
                 if (mIsState) {
                     mIsState=false
-                    mBitmap = eBitmap.eGetPhoneBitmap(nv21, previewSize!!.width, previewSize!!.height)
+                    mBitmap = eBitmap.eByteArrayToBitmp(nv21, previewSize!!.width, previewSize!!.height)
                 }
 
 

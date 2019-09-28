@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ScrollView
 import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.anubis.app_piceker.R.id.*
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eTime
 import com.anubis.module_picker.ePicker
