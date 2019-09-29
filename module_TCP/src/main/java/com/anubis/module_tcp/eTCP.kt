@@ -43,13 +43,14 @@ object eTCP {
     val HANDLER_CLOSE_CODE = 0     //关闭连接
     val HANDLER_CONNECT_CODE = 1  //连接成功
     val HANDLER_MSG_CODE = 2    //接收消息
-    val eSocketHashMap: HashMap<String, dataSocket> = HashMap()
 
     //消息处理类
     data class receiveMSG(var ip: String, var code: Int? = null, var msg: String? = null)
+    //通道管理类
+    data class dataSocket(var os: OutputStream? = null, var `in`: InputStream? = null, var receivesThread: Thread? = null)
 
     //客户端多线程管理器
-    data class dataSocket(var os: OutputStream? = null, var `in`: InputStream? = null, var receivesThread: Thread? = null)
+    val eSocketHashMap: HashMap<String, dataSocket> = HashMap()
 
     /**
      * 说明：TCP客户端连接
