@@ -24,10 +24,13 @@ class CoroutineTest {
             delay(1000L)
             println("协成完成")
         }
+
 //        Thread.sleep(2000L)
         runBlocking {
             //阻塞主线程
+            println("阻塞主线程")
             delay(2000L)
+
         }
         println("结束")
     }
@@ -37,9 +40,13 @@ class CoroutineTest {
         println(eTime.eGetCurrentTime("HH:mm:ss"))
         println("开始")
         launch {
-            delay(1000L)
+            //            delay(1000L)
+            for (i in 0..10000) {
+
+            }
             println("协成完成" + eTime.eGetCurrentTime("HH:mm:ss"))
         }
+//        delay(2000L)
         println("主线程执行" + eTime.eGetCurrentTime("HH:mm:ss"))
         delay(2000L)
         println("结束")
@@ -76,7 +83,8 @@ class CoroutineTest {
             println("新协程2" + eTime.eGetCurrentTime("HH:mm:ss"))
         }
         println("runBlocking作用域0" + eTime.eGetCurrentTime("HH:mm:ss"))
-        coroutineScope {//子协程
+        coroutineScope {
+            //子协程
             //会阻塞主协程runBlocking
             launch {
                 delay(500L)
@@ -116,7 +124,7 @@ class CoroutineTest {
 
     @Test   //1s 输出10w World
     fun 全局协程守护() = runBlocking<Unit> {
-     GlobalScope.launch {
+        GlobalScope.launch {
             repeat(1000) {
                 println("协程$it")
                 delay(500L)
@@ -128,12 +136,12 @@ class CoroutineTest {
     @Test   //1s 输出10w World
     fun 取消与超时() = runBlocking {
         val job = launch {
-            repeat(1000) { i ->
+            repeat(10000000) { i ->
                 println("协成$i")
-                delay(200L)
+                delay(1L)
             }
         }
-        delay(3000L)
+        delay(200L)
         println("超时")
         job.cancelAndJoin()
         println("已取消")
@@ -220,6 +228,7 @@ class CoroutineTest {
         delay(2000L)
         //async结构化并发
         val time2 = measureTimeMillis {
+
             println("计算：${concurrentSum()}")
         }
         println("耗时2：$time2")
@@ -231,7 +240,7 @@ class CoroutineTest {
     }
 
     suspend fun doSomethingUsefulTwo(): Int {
-        delay(1000L)
+        delay(5000L)
         return 29
     }
 
@@ -258,5 +267,19 @@ class CoroutineTest {
         }
         delay(1000L)
         println("完成")
+    }
+
+
+    @Test
+    fun 协程骨架() {
+        GlobalScope.launch {
+            println("launch不会阻塞")
+        }
+
+        runBlocking {
+            println("runBlocking会阻塞")
+            delay(2000L)
+        }
+        println("结束")
     }
 }
