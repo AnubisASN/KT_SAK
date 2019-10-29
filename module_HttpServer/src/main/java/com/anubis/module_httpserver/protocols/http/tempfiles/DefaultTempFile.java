@@ -56,7 +56,7 @@ public class DefaultTempFile implements ITempFile {
     private final OutputStream fstream;
 
     public DefaultTempFile(File tempdir) throws IOException {
-        this.file = File.createTempFile("eHTTPD-", "", tempdir);
+        this.file = File.createTempFile("eResolver-", "", tempdir);
         this.fstream = new FileOutputStream(this.file);
     }
 

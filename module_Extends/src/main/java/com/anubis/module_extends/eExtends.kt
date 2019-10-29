@@ -30,9 +30,13 @@ import android.view.KeyEvent
 import android.widget.Toast
 import com.anubis.kt_extends.eString.eInterception
 import com.tencent.bugly.proguard.s
+import com.tencent.bugly.proguard.t
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import org.jetbrains.anko.AnkoAsyncContext
 import org.jetbrains.anko.activityManager
-import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.custom.async
 import org.json.JSONObject
 import java.io.*
 import java.lang.Process
@@ -87,6 +91,13 @@ fun Activity?.eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
 fun eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
     e?.printStackTrace()
     Log.e(TAG, "eNLogE:$str\n$e ")
+}
+
+fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "${eTime.eGetCurrentTime("yyyy-MM-dd")}.log", parame: String = "TAG:I") = async {
+    if (!File(savePath).exists()) {
+        File(savePath).mkdirs()
+    }
+    eShell.eExecShell("logcat -v long AndroidRuntime:E *:S TAG:E $parame *E -d >> $savePath$fileName")
 }
 
 
@@ -224,22 +235,23 @@ fun Bundle.eSetMessage(Sign: String, Message: Any = "") = when (Message) {
 }
 
 //音频播放
+var mp:MediaPlayer?=null
 fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false) {
     try {
-        var mp = MediaPlayer()
-        if (mp.isPlaying) {//确保在prepare()之前调用了stop()
-            mp.stop()
-            mp.reset()
-        }
+        mp?.stop()
+        mp?.release()
         when (music) {
             is Int -> mp = MediaPlayer.create(context, music)//重新设置要播放的音频}
-            is String -> mp.setDataSource(music)
+            is String -> {
+                mp = MediaPlayer()
+                mp?.setDataSource(music)
+                mp?.prepareAsync()
+            }
         }
-        mp.prepare()
-        mp.isLooping = isLoop
-        mp.start()//开始播放
+        mp?.isLooping = isLoop
+        mp?.start()//开始播放
     } catch (e: Exception) {
-        e.printStackTrace()//输出异常信息
+      eLogE("ePlayVoice 错误",e)
     }
 }
 
@@ -795,7 +807,7 @@ object eDevice {
 
     //获取本地IP
     fun eGetHostIP(): String {
-        var hostIp: String="0.0.0.0"
+        var hostIp: String = "0.0.0.0"
         try {
             val nis = NetworkInterface.getNetworkInterfaces()
             var ia: InetAddress? = null

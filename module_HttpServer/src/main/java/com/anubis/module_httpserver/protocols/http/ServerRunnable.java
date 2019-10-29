@@ -44,7 +44,7 @@ import java.util.logging.Level;
  */
 public class ServerRunnable implements Runnable {
 
-    private eHTTPD httpd;
+    private eHTTPD mEHttpd;
 
     private final int timeout;
 
@@ -52,15 +52,15 @@ public class ServerRunnable implements Runnable {
 
     private boolean hasBinded = false;
 
-    public ServerRunnable(eHTTPD httpd, int timeout) {
-        this.httpd = httpd;
+    public ServerRunnable(eHTTPD eHttpd, int timeout) {
+        this.mEHttpd = eHttpd;
         this.timeout = timeout;
     }
 
     @Override
     public void run() {
         try {
-            httpd.getMyServerSocket().bind(httpd.hostname != null ? new InetSocketAddress(httpd.hostname, httpd.myPort) : new InetSocketAddress(httpd.myPort));
+            mEHttpd.getMyServerSocket().bind(mEHttpd.hostname != null ? new InetSocketAddress(mEHttpd.hostname, mEHttpd.myPort) : new InetSocketAddress(mEHttpd.myPort));
             hasBinded = true;
         } catch (IOException e) {
             this.bindException = e;
@@ -68,16 +68,16 @@ public class ServerRunnable implements Runnable {
         }
         do {
             try {
-                final Socket finalAccept = httpd.getMyServerSocket().accept();
+                final Socket finalAccept = mEHttpd.getMyServerSocket().accept();
                 if (this.timeout > 0) {
                     finalAccept.setSoTimeout(this.timeout);
                 }
                 final InputStream inputStream = finalAccept.getInputStream();
-                httpd.asyncRunner.exec(httpd.createClientHandler(finalAccept, inputStream));
+                mEHttpd.asyncRunner.exec(mEHttpd.createClientHandler(finalAccept, inputStream));
             } catch (IOException e) {
                 eHTTPD.LOG.log(Level.FINE, "Communication with the client broken", e);
             }
-        } while (!httpd.getMyServerSocket().isClosed());
+        } while (!mEHttpd.getMyServerSocket().isClosed());
     }
 
     public IOException getBindException() {

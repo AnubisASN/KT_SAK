@@ -41,7 +41,7 @@ import java.util.List;
 
 
 /**
- * Default threading strategy for eHTTPD.
+ * Default threading strategy for eResolver.
  * <p/>
  * <p>
  * By default, the server spawns a new Thread for every incoming request. These

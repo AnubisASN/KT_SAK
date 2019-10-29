@@ -50,7 +50,7 @@ import com.tencent.bugly.Bugly.applicationContext
  *Resource :  'Module'_'ResourceName'_'Mark'
  * /+Id :  'LoayoutName'_'Widget'+FunctionName
  *Router :  /'Module'/'Function'
- *类说明：活体检测+人脸跟踪
+ *类说明：身份证阅读器
  *  @初始化连接方法：otgInit()
  * @param app: Application; APP
  * @param appHandler: Handler；消息回调

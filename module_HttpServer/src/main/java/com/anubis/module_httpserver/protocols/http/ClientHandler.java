@@ -48,14 +48,14 @@ import java.util.logging.Level;
  */
 public class ClientHandler implements Runnable {
 
-    private final eHTTPD httpd;
+    private final eHTTPD mEHttpd;
 
     private final InputStream inputStream;
 
     private final Socket acceptSocket;
 
-    public ClientHandler(eHTTPD httpd, InputStream inputStream, Socket acceptSocket) {
-        this.httpd = httpd;
+    public ClientHandler(eHTTPD eHttpd, InputStream inputStream, Socket acceptSocket) {
+        this.mEHttpd = eHttpd;
         this.inputStream = inputStream;
         this.acceptSocket = acceptSocket;
     }
@@ -70,8 +70,8 @@ public class ClientHandler implements Runnable {
         OutputStream outputStream = null;
         try {
             outputStream = this.acceptSocket.getOutputStream();
-            ITempFileManager tempFileManager = httpd.getTempFileManagerFactory().create();
-            HTTPSession session = new HTTPSession(httpd, tempFileManager, this.inputStream, outputStream, this.acceptSocket.getInetAddress());
+            ITempFileManager tempFileManager = mEHttpd.getTempFileManagerFactory().create();
+            HTTPSession session = new HTTPSession(mEHttpd, tempFileManager, this.inputStream, outputStream, this.acceptSocket.getInetAddress());
             while (!this.acceptSocket.isClosed()) {
                 session.execute();
             }
@@ -90,7 +90,7 @@ public class ClientHandler implements Runnable {
             eHTTPD.safeClose(outputStream);
             eHTTPD.safeClose(this.inputStream);
             eHTTPD.safeClose(this.acceptSocket);
-            httpd.asyncRunner.closed(this);
+            mEHttpd.asyncRunner.closed(this);
         }
     }
 }

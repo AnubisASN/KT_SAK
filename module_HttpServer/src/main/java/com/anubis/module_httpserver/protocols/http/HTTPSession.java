@@ -83,7 +83,7 @@ public class HTTPSession implements IHTTPSession {
 
     public static final int MAX_HEADER_SIZE = 1024;
 
-    private final eHTTPD httpd;
+    private final eHTTPD mEHttpd;
 
     private final ITempFileManager tempFileManager;
 
@@ -113,15 +113,15 @@ public class HTTPSession implements IHTTPSession {
 
     private String protocolVersion;
 
-    public HTTPSession(eHTTPD httpd, ITempFileManager tempFileManager, InputStream inputStream, OutputStream outputStream) {
-        this.httpd = httpd;
+    public HTTPSession(eHTTPD eHttpd, ITempFileManager tempFileManager, InputStream inputStream, OutputStream outputStream) {
+        this.mEHttpd = eHttpd;
         this.tempFileManager = tempFileManager;
         this.inputStream = new BufferedInputStream(inputStream, HTTPSession.BUFSIZE);
         this.outputStream = outputStream;
     }
 
-    public HTTPSession(eHTTPD httpd, ITempFileManager tempFileManager, InputStream inputStream, OutputStream outputStream, InetAddress inetAddress) {
-        this.httpd = httpd;
+    public HTTPSession(eHTTPD eHttpd, ITempFileManager tempFileManager, InputStream inputStream, OutputStream outputStream, InetAddress inetAddress) {
+        this.mEHttpd = eHttpd;
         this.tempFileManager = tempFileManager;
         this.inputStream = new BufferedInputStream(inputStream, HTTPSession.BUFSIZE);
         this.outputStream = outputStream;
@@ -418,7 +418,7 @@ public class HTTPSession implements IHTTPSession {
             // TODO: long body_size = getBodySize();
             // TODO: long pos_before_serve = this.inputStream.totalRead()
             // (requires implementation for totalRead())
-            r = httpd.handle(this);
+            r = mEHttpd.handle(this);
             // TODO: this.inputStream.skip(body_size -
             // (this.inputStream.totalRead() - pos_before_serve))
 

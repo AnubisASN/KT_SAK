@@ -71,7 +71,6 @@ dependencies {
     implementation project(':module_VideoChat')
     implementation project(':module_ArcFace')
     implementation project(':module_CardOTG')
-    implementation project(':module_HttpServer')
     implementation files('libs/XHApi.jar')
     implementation project(':module_UDevice')
     implementation project(':module_QRCode')

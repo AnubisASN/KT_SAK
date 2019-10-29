@@ -1,22 +1,16 @@
 package com.anubis.SwissArmyKnife
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.media.AudioFormat
-import android.media.AudioManager
-import android.media.AudioTrack
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.Message
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +23,6 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.android.xhapimanager.XHApiManager
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
 import com.anubis.SwissArmyKnife.GreenDao.Data
-import com.anubis.SwissArmyKnife.HttpServer.eHTTPDTest
 import com.anubis.SwissArmyKnife.parame.handleMsg
 import com.anubis.SwissArmyKnife.parame.handlePort
 import com.anubis.SwissArmyKnife.parame.handleTCP
@@ -40,8 +33,6 @@ import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
 import com.anubis.kt_extends.eTime.eGetCurrentTime
 import com.anubis.module_asrw.eASRW
-import com.anubis.module_asrw.recognization.IStatus
-import com.anubis.module_asrw.recognization.PidBuilder
 import com.anubis.module_cardotg.eCardOTG
 import com.anubis.module_ewifi.eWiFi
 import com.anubis.module_ftp.FsService
@@ -53,7 +44,6 @@ import com.anubis.module_qrcode.eQRCode
 import com.anubis.module_tcp.eTCP
 import com.anubis.module_tcp.eTCP.eServerSocketHashMap
 import com.anubis.module_tcp.eTCP.eSocketHashMap
-import com.anubis.module_tcp.eTCP.eSocketReceive
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
@@ -62,8 +52,6 @@ import com.anubis.module_usbdevice.eUDevice
 import com.anubis.module_videochat.eVideoChat
 import com.anubis.module_vncs.eVNC
 import com.anubis.utils.util.eToastUtils
-import com.baidu.speech.asr.SpeechConstant
-import com.huashi.otg.sdk.HandlerMsg
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
@@ -77,9 +65,7 @@ import java.io.*
 import java.net.ServerSocket
 import java.net.Socket
 import java.net.URLDecoder
-import java.util.LinkedHashMap
 import kotlin.collections.ArrayList
-import kotlin.collections.set
 import kotlin.concurrent.thread
 
 //                       _oo0oo_
@@ -126,7 +112,7 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt启动Http服务_bt关闭HTTP服务", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接_bt数据发送_btTCP创建", "et_btTCP服务端通道关闭_btTCP服务端线程关闭_btTCP服务端通道重连", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信1_bt串口通信3_bt打开串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接_bt数据发送_btTCP创建", "et_btTCP服务端通道关闭_btTCP服务端线程关闭_btTCP服务端通道重连", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
         if (Build.MODEL == "ZK-R32A")
             XHA = XHApiManager()
@@ -293,14 +279,6 @@ class MainActivity : Activity() {
                                 ?: true}-Float:${eGetSystemSharedPreferences("float", 0f) ?: 0f}}")
                     }
 
-                    getDigit("Http服务") -> {
-                        when (view?.id) {
-                            R.id.bt_item1 ->
-                                Hint("http服务开启:${eHttpServer.eStart(eHTTPDTest::class.java)}")
-
-                            R.id.bt_item2 -> Hint("http服务关闭:${eHttpServer.eStop()}")
-                        }
-                    }
                     getDigit("VNC") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("VNC二进制文件执行:${if (eVNC.startVNCs(this@MainActivity)) "成功：5901" else "失败"}")
                     }

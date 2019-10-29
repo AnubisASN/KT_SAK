@@ -1,2 +1,11 @@
-include ':app', ':app_Picker', ':app_Map', ':module_Extends', ':module_PortMSG', ':module_TTS', ':module_ArcFaceFT', ':module_ArcFace', ':module_Office', ':module_GreenDao', ':module_WiFi', ':module_VNC', ':module_Utils', ':module_ASRW', ':module_VideoChat', ':module_QRCode', ':module_FTP', ':module_CardOTG', ':module_Picker', ':module_HttpServer', ':module_Map', ':module_Navigate', ':moudle_CrashMSG', ':module_UDevice', ':module_TCP', ':app_Coroutine'
+include ':app', ':app_Picker', ':app_Map', ':module_Extends', ':module_PortMSG', ':module_TTS', ':module_ArcFaceFT', ':module_ArcFace', ':module_Office', ':module_GreenDao', ':module_WiFi', ':module_VNC', ':module_Utils', ':module_ASRW', ':module_VideoChat', ':module_QRCode', ':module_FTP', ':module_CardOTG', ':module_Picker', ':module_HttpServer', ':module_Map', ':module_Navigate', ':moudle_CrashMSG', ':module_UDevice', ':module_TCP', ':app_Coroutine', ':app_HServer'
 
+
+
+////新增的代码
+//setBinding(new Binding([gradle: this]))
+//evaluate(new File(
+//        settingsDir.parentFile,
+//        //flutter模块路径
+//        '/flutter_module/.android/include_flutter.groovy'
+//))

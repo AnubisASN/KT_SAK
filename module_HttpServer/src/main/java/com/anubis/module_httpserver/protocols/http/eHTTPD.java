@@ -8,18 +8,18 @@ package com.anubis.module_httpserver.protocols.http;
  * %%
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * 3. Neither the name of the nanohttpd nor the names of its contributors
  *    may be used to endorse or promote products derived from this software without
  *    specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -32,6 +32,8 @@ package com.anubis.module_httpserver.protocols.http;
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
+
+import android.os.Handler;
 
 import com.anubis.module_httpserver.protocols.http.response.Response;
 import com.anubis.module_httpserver.protocols.http.response.Status;
@@ -140,7 +142,15 @@ public abstract class eHTTPD {
     public eHTTPD() {
         this(null, 3334);
     }
-
+    public eHTTPD(String hostname, int myPort) {
+        this(hostname, myPort,null);
+    }
+    public eHTTPD(Handler handler) {
+        this( null,3334,handler);
+    }
+    public eHTTPD(int myPort, Handler handler) {
+        this( null,myPort,handler);
+    }
     public static final class ResponseException extends Exception {
 
         private static final long serialVersionUID = 6569838532917408380L;
@@ -208,8 +218,8 @@ public abstract class eHTTPD {
     }
 
     @SuppressWarnings({
-        "unchecked",
-        "rawtypes"
+            "unchecked",
+            "rawtypes"
     })
     private static void loadMimeTypes(Map<String, String> result, String resourceName) {
         try {
@@ -289,7 +299,7 @@ public abstract class eHTTPD {
 
     /**
      * Get MIME type from file name extension, if possible
-     * 
+     *
      * @param uri
      *            the string representing a file
      * @return the connected mime/type
@@ -322,7 +332,7 @@ public abstract class eHTTPD {
     }
 
     public   String hostname=null;
-
+    public   Handler mHandler=null;
     public   int myPort=8080;
 
     private volatile ServerSocket myServerSocket;
@@ -367,9 +377,10 @@ public abstract class eHTTPD {
     /**
      * Constructs an HTTP server on given hostname and port.
      */
-    public eHTTPD(String hostname, int port) {
+    public eHTTPD(String hostname, int port, Handler handler) {
         this.hostname = hostname;
         this.myPort = port;
+        mHandler=handler;
         setTempFileManagerFactory(new DefaultTempFileManagerFactory());
         setAsyncRunner(new DefaultAsyncRunner());
 
@@ -378,7 +389,7 @@ public abstract class eHTTPD {
 
             @Override
             public Response handle(IHTTPSession input) {
-                return eHTTPD.this.serve(input);
+                return eHTTPD.this.serve(input,mHandler);
             }
         };
     }
@@ -401,7 +412,7 @@ public abstract class eHTTPD {
     /**
      * create a instance of the client handler, subclasses can return a subclass
      * of the ClientHandler.
-     * 
+     *
      * @param finalAccept
      *            the socket the cleint is connected to
      * @param inputStream
@@ -415,7 +426,7 @@ public abstract class eHTTPD {
     /**
      * Instantiate the server runnable, can be overwritten by subclasses to
      * provide a subclass of the ServerRunnable.
-     * 
+     *
      * @param timeout
      *            the socet timeout to use.
      * @return the server runnable.
@@ -428,7 +439,7 @@ public abstract class eHTTPD {
      * Decode parameters from a URL, handing the case where a single parameter
      * name might have been supplied several times, by return lists of values.
      * In general these lists will contain a single element.
-     * 
+     *
      * @param parms
      *            original <b>eHTTPD</b> parameters values, as passed to the
      *            <code>serve()</code> method.
@@ -446,7 +457,7 @@ public abstract class eHTTPD {
      * Decode parameters from a URL, handing the case where a single parameter
      * name might have been supplied several times, by return lists of values.
      * In general these lists will contain a single element.
-     * 
+     *
      * @param queryString
      *            a query string pulled from the URL.
      * @return a map of <code>String</code> (parameter name) to
@@ -474,7 +485,7 @@ public abstract class eHTTPD {
 
     /**
      * Decode percent encoded <code>String</code> values.
-     * 
+     *
      * @param str
      *            the percent encoded <code>String</code>
      * @return expanded form of the input, for example "foo%20bar" becomes
@@ -526,7 +537,7 @@ public abstract class eHTTPD {
      * sure there is a response to every request. You are not supposed to call
      * or override this method in any circumstances. But no one will stop you if
      * you do. I'm a Javadoc, not Code Police.
-     * 
+     *
      * @param session
      *            the incoming session
      * @return a response to the incoming session
@@ -545,19 +556,19 @@ public abstract class eHTTPD {
      * <p/>
      * <p/>
      * (By default, this returns a 404 "Not Found" plain text error response.)
-     * 
+     *
      * @param session
      *            The HTTP session
      * @return HTTP response, see class Response for details
      */
     @Deprecated
-    protected Response serve(IHTTPSession session) {
+    protected Response serve(IHTTPSession session,Handler handler) {
         return Response.newFixedLengthResponse(Status.NOT_FOUND, eHTTPD.MIME_PLAINTEXT, "Not Found");
     }
 
     /**
      * Pluggable strategy for asynchronously executing requests.
-     * 
+     *
      * @param asyncRunner
      *            new strategy for handling threads.
      */
@@ -567,7 +578,7 @@ public abstract class eHTTPD {
 
     /**
      * Pluggable strategy for creating and cleaning up temporary files.
-     * 
+     *
      * @param tempFileManagerFactory
      *            new strategy for handling temp files.
      */
@@ -577,7 +588,7 @@ public abstract class eHTTPD {
 
     /**
      * Start the server.
-     * 
+     *
      * @throws IOException
      *             if the socket is in use.
      */
@@ -594,7 +605,7 @@ public abstract class eHTTPD {
 
     /**
      * Start the server.
-     * 
+     *
      * @param timeout
      *            timeout to use for socket connections.
      * @param daemon
