@@ -1,21 +1,18 @@
 package com.anubis.module_httpserver
 
 
+import android.annotation.TargetApi
+import android.os.Build
 import android.os.Handler
 import com.anubis.kt_extends.eLog
+import com.anubis.module_httpserver.eManage.fileParse
+import com.anubis.module_httpserver.eManage.filePush
 import com.anubis.module_httpserver.protocols.http.IHTTPSession
 import com.anubis.module_httpserver.protocols.http.eHTTPD
-import com.anubis.module_httpserver.protocols.http.request.Method
-import com.anubis.module_httpserver.protocols.http.response.IStatus
 import com.anubis.module_httpserver.protocols.http.response.Response
-
-import java.util.HashMap
-
-import com.anubis.module_httpserver.protocols.http.response.Response.newFixedLengthResponse
-import com.anubis.module_httpserver.protocols.http.response.Status
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import java.io.*
+import com.anubis.module_httpserver.eManage.httpResult
+import com.anubis.module_httpserver.eManage.rawParse
+import com.anubis.module_httpserver.eManage.sessionParse
 
 
 /**
@@ -34,34 +31,27 @@ import java.io.*
  * Router :  /'Module'/'Function'
  * 说明：默认常用解析   可用Handler 回调参数
  */
+@TargetApi(Build.VERSION_CODES.N)
 class eResolver(port: Int = 3335, handler: Handler? = null) : eHTTPD(port, handler) {
-    val path = "/sdcard"
-    var httpResult: String = "HTTP Server 创建成功"
-    var delay = 0L
+
+
     public override fun serve(session: IHTTPSession, handler: Handler?): Response {
-        var json: String? = null
-        try {
-            // 这一句话必须要写，否则在获取数据时，获取不到数据
-//            json = parseBody(session)   //raw 解析
-            session.parseBody(HashMap()) //常用数据解析
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } catch (e: eHTTPD.ResponseException) {
-            e.printStackTrace()
-        }
+        val uri = session.uri.replace("/", "").apply { eLog("uri:$this") }
+        return Response.newFixedLengthResponse(when (uri) {
+            "File" -> if (fileParse(session, "file").apply { eLog("path:$this") } != null)
+                "上传成功"
+            else "上传失败"
+            "Raw" -> rawParse(session)
+            "Data"-> if (sessionParse(session).apply {
+                        eLog("${this?.get("user")}--${this?.get("password")}")
+                    }!=null) "成功" else "解析错误"
+            "" ->return filePush(session, eManage.path + "Test.html")
+            else -> return filePush(session, eManage.path + uri)
 
-        val message = handler?.obtainMessage()
-        message?.obj = session.parms
-        handler?.sendMessage(message)
-        eLog("uri:${session.uri}-")
-        runBlocking {
-            delay(delay)
-        }
-        return newFixedLengthResponse(StringBuilder().append(httpResult).toString())
+        })
+
+
     }
-
-
-
 
 
 }

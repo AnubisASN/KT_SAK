@@ -35,8 +35,8 @@ public class Test {
     @Test
     fun testMSG() {
 
-        val MSG_SIG = "88c638032c4e489899b8bca77d5a3a30b1c873fb57a149afa3ea898d476cc770"
-        val str = eString.eGetEncodeMD5(MSG_SIG + "20181214144314")
+        val MSG_SIG = "123456"
+        val str = eString.eGetEncodeMD5(MSG_SIG )
 
         println(str)
     }

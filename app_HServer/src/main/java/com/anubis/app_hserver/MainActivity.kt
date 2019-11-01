@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             val map = msg.obj as HashMap<*, *>
-            mHttpServer?.httpResult="成功：${map["userAccount"]}"
+//            mHttpServer?.httpResult="成功：${map["userAccount"]}"
         }
     }
 

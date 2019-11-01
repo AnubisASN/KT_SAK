@@ -34,7 +34,7 @@ class ArcFaceFT : Activity() {
         setContentView(R.layout.activity_camera)
         var camera: eArcFaceFT? = null
         try {
-            camera = eArcFaceFT.init(findViewById(R.id.glsurfaceView), findViewById(R.id.surfaceView),false, Color.GREEN, 2, false, 100, 1,0 ,270f, imageView)
+            camera = eArcFaceFT.init(findViewById(R.id.glsurfaceView), findViewById(R.id.surfaceView),false, Color.GREEN, 2, false, 100, 0,0 ,90f, imageView)
         } catch (e: Exception) {
             eLogE("ArcFace:$e")
             eLog("ArcFace$e")

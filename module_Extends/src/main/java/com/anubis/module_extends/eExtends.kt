@@ -1035,6 +1035,53 @@ object eBitmap {
  * 文件转换扩展类--------------------------------------------------------------------------------------
  */
 object eFile {
+
+/**
+ * 复制单个文件
+ * @param oldPathName String 原文件路径+文件名 如：data/user/0/com.test/files/abc.txt
+ * @param newPathName String 复制后路径+文件名 如：data/user/0/com.test/cache/abc.txt
+ * @return <code>true</code> if and only if the file was copied;
+ *         <code>false</code> otherwise
+ */
+
+fun   eCopyFile(  oldPathName:String,newPathName:String):Boolean {
+        try {
+            val oldFile =   File(oldPathName)
+            if (!oldFile.exists()) {
+                eLog("eCopyFile: oldFile 不存在")
+                return false
+            }
+            if (!oldFile.isFile) {
+                eLog("eCopyFile: oldFile 不是文件")
+                return false
+            }
+            if (!oldFile.canRead()) {
+                eLog("eCopyFile: oldFile 无法读取")
+                return false
+            }
+            val newFile=File(if (newPathName.contains("."))newPathName.substring(0,newPathName.lastIndexOf("/"))else newPathName)
+            if (!newFile.exists()){
+                newFile.mkdirs()
+            }
+            val fileInputStream =   FileInputStream(oldPathName)
+            val fileOutputStream =   FileOutputStream(newPathName)
+            val buffer = ByteArray(1024)
+            var byteRead:Int
+            while ( ( fileInputStream.read(buffer).apply { byteRead =this })!=-1) {
+                fileOutputStream.write(buffer, 0, byteRead)
+            }
+            fileInputStream.close()
+            fileOutputStream.flush()
+            fileOutputStream.close()
+            return true
+        } catch (e:Exception ) {
+            e.printStackTrace()
+            return false
+        }
+    }
+
+
+
     //    文件转Base64
     fun eFileToBase64(path: String): String? {
         var inputFile: FileInputStream? = null
