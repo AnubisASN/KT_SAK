@@ -9,12 +9,13 @@ import com.anubis.kt_extends.eDevice
 import com.anubis.kt_extends.eLog
 import com.anubis.module_httpserver.eResolver
 import com.anubis.module_httpserver.eHttpServer
+import com.anubis.module_httpserver.protocols.http.eHTTPD
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.custom.async
 
 @SuppressLint("SetTextI18n")
 class MainActivity : AppCompatActivity() {
-    private var mHttpServer: eResolver? = null
+    private var mHttpServer: eHTTPD? = null
 
     private var httpHandler = @SuppressLint("HandlerLeak")
     object : Handler() {

@@ -4,6 +4,7 @@ import android.os.Handler
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eReflection
+import com.anubis.module_httpserver.protocols.http.eHTTPD
 
 import java.lang.Exception
 
@@ -24,17 +25,17 @@ import java.lang.Exception
  * 说明：
  */
 object eHttpServer {
-    var server: eResolver? = null
-    fun eStart(`class`: Class<*>?=eResolver::class.java, port: Int = 3334, handler: Handler?=null): eResolver? {
+    var server: eHTTPD? = null
+    fun eStart(`class`: Class<*>?=eResolver::class.java, port: Int = 3334, handler: Handler?=null): eHTTPD? {
         if (server == null) {
             try {
                 val con = eReflection.eGetClass(`class`!!.name).getConstructor(Int::class.java,Handler::class.java)
-                server = con.newInstance(port,handler) as eResolver
+                server = con.newInstance(port,handler) as eHTTPD
                 eLog("定义开启HTTP服务成功")
             } catch (e: NoSuchMethodException) {
                 e.printStackTrace()
                 val con = eReflection.eGetClass(`class`!!.name).getConstructor()
-                server = con.newInstance() as eResolver
+                server = con.newInstance() as eHTTPD
                 eLog("定义开启失败,默认配置：3334")
             } catch (e: Exception) {
                 e.printStackTrace()
