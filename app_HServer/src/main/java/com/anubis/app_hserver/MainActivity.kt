@@ -7,8 +7,10 @@ import android.os.Handler
 import android.os.Message
 import com.anubis.kt_extends.eDevice
 import com.anubis.kt_extends.eLog
+import com.anubis.kt_extends.mp
 import com.anubis.module_httpserver.eResolver
 import com.anubis.module_httpserver.eHttpServer
+import com.anubis.module_httpserver.eResolverType
 import com.anubis.module_httpserver.protocols.http.eHTTPD
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.custom.async
@@ -21,8 +23,18 @@ class MainActivity : AppCompatActivity() {
     object : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
-            val map = msg.obj as HashMap<*, *>
-//            mHttpServer?.httpResult="成功：${map["userAccount"]}"
+            when (msg.what) {
+                eResolverType.FILE_PARSE -> eLog("文件路径：${msg.obj}")
+                eResolverType.FILE_PUSH -> eLog("文件推送：${msg.obj}")
+                eResolverType.NULL_PARSE -> eLog("自定义返回：${msg.obj}")
+                eResolverType.RAW_PARSE -> eLog("RAW解析：${msg.obj}")
+                eResolverType.SESSION_PARSE -> {
+                    eLog("常用解析")
+                    (msg.obj as HashMap<*, *>).forEach{
+                        eLog("Key:${it.key}--Value:${it.value}")
+                    }
+                }
+            }
         }
     }
 

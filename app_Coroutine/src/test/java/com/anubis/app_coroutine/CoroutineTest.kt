@@ -2,6 +2,7 @@ package com.anubis.app_coroutine
 
 import com.anubis.kt_extends.eTime
 import kotlinx.coroutines.*
+import kotlinx.coroutines.NonCancellable.isActive
 import org.junit.Test
 
 import org.junit.Assert.*

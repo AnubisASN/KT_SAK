@@ -10,6 +10,7 @@ import com.anubis.kt_extends.eString
 import com.anubis.module_tcp.eTCP.HANDLER_CLOSE_CODE
 import com.anubis.module_tcp.eTCP.HANDLER_MSG_CODE
 import com.anubis.module_tcp.eTCP.eSocketHashMap
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.custom.async
 import java.io.IOException
 import java.io.InputStream
@@ -134,7 +135,6 @@ object eTCP {
                         eSocketReceive(clienIP, tcpHandler, eServerSocketHashMap)
                     }
                 }
-
             } catch (e: IOException) {
                 serverSocket?.close()
                 serverSocket = null
