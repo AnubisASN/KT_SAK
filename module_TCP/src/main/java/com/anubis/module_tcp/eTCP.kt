@@ -9,7 +9,7 @@ import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eString
 import com.anubis.module_tcp.eTCP.HANDLER_CLOSE_CODE
 import com.anubis.module_tcp.eTCP.HANDLER_MSG_CODE
-import com.anubis.module_tcp.eTCP.eSocketHashMap
+import com.anubis.module_tcp.eTCP.eClientHashMap
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.custom.async
 import java.io.IOException
@@ -35,7 +35,7 @@ import java.util.HashMap
  *Router :  /'Module'/'Function'
  *说明：
  */
-object eTCP {
+  object eTCP {
     /**
      *        TCP客户端-----------------------------------------------------------
      */
@@ -47,11 +47,12 @@ object eTCP {
 
     //消息处理类
     data class receiveMSG(var ip: String, var code: Int? = null, var msg: String? = null)
+
     //通道管理类
     data class dataSocket(var os: OutputStream? = null, var `in`: InputStream? = null, var receivesThread: Thread? = null)
 
     //客户端多线程管理器
-    val eSocketHashMap: HashMap<String, dataSocket> = HashMap()
+    val eClientHashMap: HashMap<String, dataSocket> = HashMap()
 
     /**
      * 说明：TCP客户端连接
@@ -70,10 +71,10 @@ object eTCP {
 //                socket.soTimeout = 300
                 val os = PrintStream(socket.getOutputStream(), true, "utf-8")
                 val `in` = socket.getInputStream()
-                eSocketHashMap[ip] = dataSocket(os, `in`)
+                eClientHashMap[ip] = dataSocket(os, `in`)
                 msg?.obj = receiveMSG(ip, HANDLER_CONNECT_CODE, "TCP连接成功")
-                if (isReceove && eSocketHashMap[ip]!!.receivesThread == null)
-                    eSocketReceive(ip, tcpHandler, eSocketHashMap, isReceove)
+                if (isReceove && eClientHashMap[ip]!!.receivesThread == null)
+                    eSocketReceive(ip, tcpHandler, eClientHashMap, isReceove)
                 return@async
             } catch (e: ConnectException) {
                 msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE)
@@ -104,7 +105,7 @@ object eTCP {
     val SHANDLER_CONNECT_CODE = 11  //连接成功
     val SHANDLER_MSG_CODE = 22    //接收消息
     //    服务端多线程管理器
-    val eServerSocketHashMap: HashMap<String, eTCP.dataSocket> = HashMap()
+    val eServerHashMap: HashMap<String, eTCP.dataSocket> = HashMap()
     private var serverSocket: ServerSocket? = null
     /**
      * 说明：TCP服务端创建
@@ -127,12 +128,12 @@ object eTCP {
                     val clienIP = sSocket!!.inetAddress.hostAddress
                     val os = PrintStream(sSocket!!.getOutputStream(), true, "utf-8")
                     val `in` = sSocket!!.getInputStream()
-                    eServerSocketHashMap[clienIP] = eTCP.dataSocket(os, `in`)
+                    eServerHashMap[clienIP] = eTCP.dataSocket(os, `in`)
                     val msg = tcpHandler.obtainMessage()
                     msg.obj = eTCP.receiveMSG(clienIP, SHANDLER_CONNECT_CODE, "有客户端连接成功")
                     tcpHandler.sendMessage(msg)
-                    if (eServerSocketHashMap[clienIP]!!.receivesThread == null) {
-                        eSocketReceive(clienIP, tcpHandler, eServerSocketHashMap)
+                    if (eServerHashMap[clienIP]!!.receivesThread == null) {
+                        eSocketReceive(clienIP, tcpHandler, eServerHashMap)
                     }
                 }
             } catch (e: IOException) {
@@ -160,7 +161,7 @@ object eTCP {
         return try {
             serverSocket?.close()
             serverSocket = null
-            eServerSocketHashMap.clear()
+            eServerHashMap.clear()
             true
         } catch (e: IOException) {
             eLogE("tcp服务端关闭失败", e)
@@ -178,7 +179,7 @@ object eTCP {
      * @param isReceove: Boolean = true: 是否自动运行接收线程
      * @return:Boolean
      */
-    fun eSocketReceive(ip: String, tcpHandler: Handler, hashMap: HashMap<String, dataSocket>, isReceove: Boolean = true): Boolean {
+     fun eSocketReceive(ip: String, tcpHandler: Handler, hashMap: HashMap<String, dataSocket>, isReceove: Boolean = true): Boolean {
         if (hashMap[ip] == null)
             return false
         val mReceiveMSG = receiveMSG(ip)
@@ -188,30 +189,32 @@ object eTCP {
                 while (hashMap[ip] != null) {
                     if (hashMap[ip]!!.receivesThread == null) {
                         val msg = tcpHandler.obtainMessage()
-                        msg.obj = mReceiveMSG.copy(code = if (hashMap == eSocketHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, msg = "TCP 接收线程停止")
+                        msg.obj = mReceiveMSG.copy(code = if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, msg = "TCP 接收线程停止")
                         tcpHandler.sendMessage(msg)
                         return@Thread
                     }
-                    eLog("hashMap.size:${hashMap.size}---${hashMap[ip]!!.receivesThread}")
+//                    eLog("hashMap.size:${hashMap.size}---${hashMap[ip]!!.receivesThread}")
                     val buffer = ByteArray(1024)
                     val count = hashMap[ip]!!.`in`!!.read(buffer)
                     var receiveData = String(buffer, 0, count ?: 0)
-                    receiveData = URLDecoder.decode(receiveData, "utf-8")
+//                    eLog("receiveData0:$receiveData")
+//                    receiveData = URLDecoder.decode(receiveData, "utf-8")
+//                    eLog("receiveData1:$receiveData")
                     val msg = tcpHandler.obtainMessage()
-                    msg.obj = mReceiveMSG.copy(code = if (hashMap == eSocketHashMap) HANDLER_MSG_CODE else SHANDLER_MSG_CODE, msg = receiveData)
+                    msg.obj = mReceiveMSG.copy(code = if (hashMap == eClientHashMap) HANDLER_MSG_CODE else SHANDLER_MSG_CODE, msg = receiveData)
                     tcpHandler.sendMessage(msg)
                 }
                 val msg = tcpHandler.obtainMessage()
-                msg.obj = mReceiveMSG.copy(code = if (hashMap == eSocketHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, msg = "TCP 接收线程停止")
+                msg.obj = mReceiveMSG.copy(code = if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, msg = "TCP 接收线程停止")
                 tcpHandler.sendMessage(msg)
                 eLog("$ip-TCP 接收线程停止")
             } catch (e: StringIndexOutOfBoundsException) {
                 val msg = tcpHandler.obtainMessage()
-                msg.obj = mReceiveMSG.copy(code = if (hashMap == eSocketHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, msg = "StringIndexOutOfBoundsException")
+                msg.obj = mReceiveMSG.copy(code = if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, msg = "StringIndexOutOfBoundsException")
                 tcpHandler.sendMessage(msg)
             } catch (e: Exception) {
                 val msg = tcpHandler.obtainMessage()
-                msg.obj = mReceiveMSG.copy(code = if (hashMap == eSocketHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, msg = "Exception")
+                msg.obj = mReceiveMSG.copy(code = if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, msg = "Exception")
                 tcpHandler.sendMessage(msg)
                 eLogE("$ip  接收线程错误", e)
             }
@@ -231,9 +234,19 @@ object eTCP {
      * @param hashMap: HashMap<String, dataSocket> ;线程管理器
      * @return:Boolean
      */
-    fun eSocketSend(ip: String, str: String, hashMap: HashMap<String, dataSocket>): Boolean {
-        val type = if (hashMap == eSocketHashMap) "客户端" else "服务端"
+    fun eSocketSend(ip: String? = null, str: String, hashMap: HashMap<String, eTCP.dataSocket>,symbol:String= "|"): Boolean {
+        val type = if (hashMap == eTCP.eClientHashMap) "客户端" else "服务端"
         try {
+            if (ip == null) {
+                hashMap.forEach {
+                    val msgs = eString.eInterception(str, symbol =symbol).split(symbol)
+                    for (msg in msgs) {
+                        (it.value.os as PrintStream).print(msg)
+                        eLog("$ip-TCP $type 消息发送:$msg")
+                    }
+                }
+                return true
+            }
             val msgs = eString.eInterception(str, symbol = "|").split("|")
             for (msg in msgs) {
                 (hashMap[ip]!!.os as PrintStream).print(msg)
@@ -241,18 +254,19 @@ object eTCP {
             }
             return true
         } catch (e: Exception) {
-            eLogE("$ip-TCP $type 消息发送错误", e)
+            com.anubis.kt_extends.eLogE("$ip-TCP $type 消息发送错误", e)
             return false
         }
     }
 
     /**
      * 说明：接收线程关闭
-     * @方法：eSocketSend()
+     * @方法：eCloseReceives()
      * @param hashMap: HashMap<String, dataSocket> ;线程管理器
      * @param ip: String；对象IP
      * @param isClear: Boolean = true； 是否启用线程暂停功能
      * @return:Boolean
+     * 说明：用于关闭接收线程，可关闭管理端连接
      */
     fun eCloseReceives(hashMap: HashMap<String, dataSocket>, ip: String? = null, isClear: Boolean = true): Boolean? {
         try {
@@ -269,7 +283,7 @@ object eTCP {
                 return true
             }
         } catch (e: Exception) {
-            eLogE("${if (hashMap == eSocketHashMap) "客户端" else "服务端"}连接关闭错误", e)
+            eLogE("${if (hashMap == eClientHashMap) "客户端" else "服务端"}连接关闭错误", e)
             return false
         }
     }

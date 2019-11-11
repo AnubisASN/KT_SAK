@@ -31,7 +31,12 @@ object eManage {
     var delay = 0L
 
     /**
-     *  文件上传解析
+     *说明： 文件上传解析
+     * @调用方法：fileParse()
+     * @param session: IHTTPSession； 会话通道
+     * @param fileParms: String ; 上传文件属性名
+     * @param savePath: String ; 保存路径
+     * @return: String?
      */
     fun fileParse(session: IHTTPSession, fileParms: String, savePath: String = path): String? {
         val hashMap = HashMap<String, String>()
@@ -44,7 +49,11 @@ object eManage {
     }
 
     /**
-     *  文件推送
+     *说明： 服务端文件推送
+     * @调用方法：filePush()
+     * @param session: IHTTPSession； 会话通道
+     * @param pathName: String ; 文件路径
+     * @return: Response?
      */
     fun filePush(session: IHTTPSession, pathName: String): Response {
         val fis = FileInputStream(pathName)
@@ -69,7 +78,9 @@ object eManage {
     }
 
     /**
-     * Raw 解析
+     *说明：  Raw 解析
+     * @param session: IHTTPSession； 会话通道
+     * @return: String? 结果
      */
     fun rawParse(session: IHTTPSession): String? {
         return rawParseBody(session)
@@ -97,7 +108,9 @@ object eManage {
     }
 
     /**
-     * 常用数据解析
+     *说明：常用数据解析
+     * @param session: IHTTPSession； 会话通道
+     * @return: MutableMap<String, String>? ； 参数集合
      */
     fun sessionParse(session: IHTTPSession) : MutableMap<String, String>? {
         session.parseBody(HashMap())

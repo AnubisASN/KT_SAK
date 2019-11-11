@@ -135,7 +135,7 @@ object eFTPc {
             }
             return true
         } catch (e: ConnectException) {
-            eLogE("错误:$e")
+            eLogE("initFTP错误:",e)
             return false
         }
 

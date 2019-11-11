@@ -11,6 +11,7 @@ import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
@@ -39,6 +40,7 @@ import org.jetbrains.anko.uiThread
 import org.jetbrains.anko.custom.async
 import org.json.JSONObject
 import java.io.*
+import java.lang.Error
 import java.lang.Process
 import java.net.*
 import java.security.MessageDigest
@@ -89,6 +91,16 @@ fun Activity?.eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
 }
 
 fun eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
+    e?.printStackTrace()
+    Log.e(TAG, "eNLogE:$str\n$e ")
+}
+
+fun Activity?.eLogE(str: Any, e: Error, TAG: String = "TAG") {
+    e?.printStackTrace()
+    Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：$str\n$e ")
+}
+
+fun eLogE(str: Any, e: Error, TAG: String = "TAG") {
     e?.printStackTrace()
     Log.e(TAG, "eNLogE:$str\n$e ")
 }
@@ -306,8 +318,7 @@ fun eAssetsToFile(context: Context, assetsName: String, copyName: String): Boole
         }
         return true
     } catch (e: IOException) {
-        e.printStackTrace()
-        eLogE("文件复制错误")
+        eLogE("文件复制错误",e)
         return false
     }
 }
@@ -746,16 +757,12 @@ object eNetWork {
 
 
     // 获取PING延迟
-    fun eGetNetDelayTime(): String {
+    fun eGetNetDelayTime(url:String): String {
         var delay = String()
         var output = ""
         try {
-            val p = Runtime.getRuntime().exec("/system/bin/ping -c 4 " + "www.baidu.com")
-            eLog("p$p")
-            eLog("inputStream${p.inputStream}")
-            eLog("InputStreamReader${InputStreamReader(p.inputStream)}")
+            val p = Runtime.getRuntime().exec("/system/bin/ping -c 4 " + url)
             val buf = BufferedReader(InputStreamReader(p!!.inputStream))
-            eLog("BufferedReader$buf")
             var str: String? = ""
             while (str != null) {
                 str = buf.readLine()
@@ -1029,6 +1036,24 @@ object eBitmap {
             return false
         }
     }
+
+    //Drawable转Bitmap
+    fun eDrawableToBitmap(drawable: Drawable): Bitmap {
+        val w = drawable.intrinsicWidth
+        val h = drawable.intrinsicHeight
+        val config = if (drawable.opacity != PixelFormat.OPAQUE)
+            Bitmap.Config.ARGB_8888
+        else
+            Bitmap.Config.RGB_565
+        val bitmap = Bitmap.createBitmap(w, h, config)
+        //注意，下面三行代码要用到，否则在View或者SurfaceView里的canvas.drawBitmap会看不到图
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, w, h)
+        drawable.draw(canvas)
+        return bitmap
+    }
+
+    fun eGetBitmap(path:String)=BitmapFactory.decodeFile(path)
 }
 
 /**
@@ -1098,37 +1123,7 @@ fun   eCopyFile(  oldPathName:String,newPathName:String):Boolean {
             return null
         }
     }
-//
-//    @Throws(Exception::class)
-//    fun eBase64ToFile(base64Code: String, savePath: String) {
-//        //byte[] buffer = new BASE64Decoder().decodeBuffer(base64Code);
-//        val buffer = Base64.decode(base64Code, Base64.DEFAULT)
-//        val out = FileOutputStream(savePath)
-//        out.write(buffer)
-//        out.close()
-//    }
 
-
-//    public static String encodeBase64File(String path) throws Exception {
-//    File  file = new File(path);
-//    FileInputStream inputFile = new FileInputStream(file);
-//    byte[] buffer = new byte[(int)file.length()];
-//    inputFile.read(buffer);
-//    inputFile.close();
-//    return new BASE64Encoder().encode(buffer);
-//}
-///**
-//* 将base64字符解码保存文件
-//* @param base64Code
-//* @param targetPath
-//* @throws Exception
-//*/
-//public static void decoderBase64File(String base64Code,String targetPath) throws Exception {
-//    byte[] buffer = new BASE64Decoder().decodeBuffer(base64Code);
-//    FileOutputStream out = new FileOutputStream(targetPath);
-//    out.write(buffer);
-//    out.close();
-//}
 
     //    base64字符保存文本文件
     fun eBase64StrToFile(base64Code: String, targetPath: String) {
@@ -1230,7 +1225,7 @@ object eString {
     //字节转十六进字符串
     fun eGetToHexString(byteArray: ByteArray?): String {
         if (byteArray == null || byteArray.isEmpty()) {
-            eLogE("eGetToHexString:传入参数为空")
+            eLog("eGetToHexString:传入参数为空")
             return ""
         }
         val hexString = StringBuilder()

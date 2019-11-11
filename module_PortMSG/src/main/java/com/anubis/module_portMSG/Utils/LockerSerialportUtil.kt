@@ -157,7 +157,7 @@ class LockerSerialportUtil private constructor(private val path: String, private
                     }
                 } catch (e: IOException) {
 //                    ePortMSG.Result=false
-                    eLogE("Thread:$e")
+                    eLogE("Thread:$e",e)
                     return
                 }
 
@@ -218,7 +218,7 @@ class LockerSerialportUtil private constructor(private val path: String, private
             mContext!!.sendBroadcast(Intent("open_fail"))
             ePortMSG.Result=false
         }catch (e:UnsatisfiedLinkError){
-            eLogE("LockerSerialportUtil错误：$e")
+            eLogE("LockerSerialportUtil错误：$e",e)
             mContext?.eShowTip("CUP框架不支持")
             ePortMSG.Result=false
         }

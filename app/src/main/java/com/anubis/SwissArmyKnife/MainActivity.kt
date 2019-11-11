@@ -41,8 +41,8 @@ import com.anubis.module_greendao.eGreenDao
 import com.anubis.module_portMSG.ePortMSG
 import com.anubis.module_qrcode.eQRCode
 import com.anubis.module_tcp.eTCP
-import com.anubis.module_tcp.eTCP.eServerSocketHashMap
-import com.anubis.module_tcp.eTCP.eSocketHashMap
+import com.anubis.module_tcp.eTCP.eClientHashMap
+import com.anubis.module_tcp.eTCP.eServerHashMap
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
@@ -195,10 +195,10 @@ class MainActivity : Activity() {
                     getDigit("TCP连接") -> when (view?.id) {
                         R.id.bt_item1 -> {
                             eTCP.eSocketConnect(MSG?.split("-")?.get(0)?:"192.168.1.110", MSG?.split("-")?.get(1)?.toInt()?:3335, handleTCP)
-                                eLog("个数：${eSocketHashMap.size}")
+                                eLog("个数：${eClientHashMap.size}")
                         }
                         R.id.bt_item2 -> {
-                            eTCP.eSocketSend(MSG?.split("-")?.get(0)?:"192.168.1.110", MSG?.split("-")?.get(1)?:"123",eTCP.eServerSocketHashMap)
+                            eTCP.eSocketSend(MSG?.split("-")?.get(0)?:"192.168.1.110", MSG?.split("-")?.get(1)?:"123",eTCP.eServerHashMap)
                         }
                         R.id.bt_item3->{
                              eTCP.eServerSocket( tcpHandler = handleTCP)
@@ -210,13 +210,13 @@ class MainActivity : Activity() {
 //                            Hint("eSocketHashMap ："+    eTCP.eCloseReceives(eSocketHashMap,MSG))
                         }
                         R.id.bt_item2 -> {
-                            Hint("eServerSocketHashMap ："+ eTCP.eCloseReceives(eServerSocketHashMap,MSG,false))
+                            Hint("eServerSocketHashMap ："+ eTCP.eCloseReceives(eTCP.eServerHashMap,MSG,false))
                         }
                         R.id.bt_item3->{
-                            eTCP.eSocketReceive(MSG?:"192.168.1.110", handleTCP, eServerSocketHashMap)
+                            eTCP.eSocketReceive(MSG?:"192.168.1.107", handleTCP, eTCP.eServerHashMap)
 
-                           Hint("eSocketHashMap ：${eSocketHashMap.size}")
-                            Hint("eServerSocketHashMap ：${eServerSocketHashMap.size}")
+                           Hint("eSocketHashMap ：${eTCP.eClientHashMap.size}")
+                            Hint("eServerSocketHashMap ：${eServerHashMap.size}")
                         }
                     }
 
@@ -663,7 +663,7 @@ class MainActivity : Activity() {
 //                    sSendMSM(Utils.json(type, json).replace("\\", ""))
 //                    APP.resultData = null
                 } catch (e: Exception) {
-                    eLogE(type + "TCP服务端数据异常，无法解析:$e")
+                    eLogE(type + "TCP服务端数据异常，无法解析:$e",e)
                 }
                 return@Handler true
             }
@@ -754,7 +754,7 @@ class MainActivity : Activity() {
             } catch (e: IOException) {
                 serverSocket?.close()
                 serverSocket = null
-                eLogE("initServerSocket错误")
+                eLogE("initServerSocket错误",e)
             }
         }.start()
     }
