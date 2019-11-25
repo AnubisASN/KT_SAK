@@ -123,17 +123,6 @@ object eCardOTG {
                             "身份证无指纹 \n"
                         }
                         var info = ""
-                        if (ici.getcertType() === " ") {
-                            info = ("证件类型：身份证\n" + "姓名："
-                                    + ici.peopleName + "\n" + "性别：" + ici.sex
-                                    + "\n" + "民族：" + ici.people + "\n" + "出生日期："
-                                    + df.format(ici.birthDay) + "\n" + "地址："
-                                    + ici.addr + "\n" + "身份号码：" + ici.idCard
-                                    + "\n" + "签发机关：" + ici.department + "\n"
-                                    + "有效期限：" + ici.strartDate + "-"
-                                    + ici.endDate + "\n" + m_FristPFInfo + "\n"
-                                    + m_SecondPFInfo)
-                        } else {
                             if (ici.getcertType() === "J") {
                                 info = ("证件类型：港澳台居住证（J）\n"
                                         + "姓名：" + ici.peopleName + "\n" + "性别："
@@ -159,9 +148,18 @@ object eCardOTG {
                                             + "申请受理机关：" + ici.department + "\n"
                                             + "有效期限：" + ici.strartDate + "-" + ici.endDate + "\n"
                                             + m_FristPFInfo + "\n" + m_SecondPFInfo)
+                                }else{
+                                    info = ("证件类型：身份证\n" + "姓名："
+                                            + ici.peopleName + "\n" + "性别：" + ici.sex
+                                            + "\n" + "民族：" + ici.people + "\n" + "出生日期："
+                                            + df.format(ici.birthDay) + "\n" + "地址："
+                                            + ici.addr + "\n" + "身份号码：" + ici.idCard
+                                            + "\n" + "签发机关：" + ici.department + "\n"
+                                            + "有效期限：" + ici.strartDate + "-"
+                                            + ici.endDate + "\n" + m_FristPFInfo + "\n"
+                                            + m_SecondPFInfo)
                                 }
                             }
-                        }
                         Test.test("/mnt/sdcard/test.txt4", ici.toString())
                         try {
                             val ret = api!!.Unpack(filepath, ici.getwltdata())// 照片解码
@@ -318,6 +316,10 @@ object eCardOTG {
             else -> return "未知"
         }
     }
+
+//    data class infoData(
+//
+//    )
 
     /*
      * HsOtgApi api = new HsOtgApi(h, eCardOTG.this);初始化

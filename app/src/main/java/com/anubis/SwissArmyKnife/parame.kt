@@ -173,7 +173,7 @@ object parame {
         }
         if (msg.what == HandlerMsg.READ_SUCCESS) {
             eLog("msg读卡成功")
-            eLog(msg.obj)
+            eLog("读卡成功："+msg.obj)
         }
     }
 

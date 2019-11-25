@@ -78,7 +78,7 @@ fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
  */
 
 fun Activity?.eLog(str: Any, TAG: String = "TAG") {
-    Log.i(TAG, "${this?.localClassName ?: "eLog"}-：${str.toString()}\n ")
+    Log.i(TAG, "${this?.localClassName ?: "eLog"}-：$str\n ")
 }
 
 fun eLog(str: Any, TAG: String = "TAG") {
@@ -90,20 +90,37 @@ fun Activity?.eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
     Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：$str\n$e ")
 }
 
-fun eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
-    e?.printStackTrace()
-    Log.e(TAG, "eNLogE:$str\n$e ")
-}
 
 fun Activity?.eLogE(str: Any, e: Error, TAG: String = "TAG") {
     e?.printStackTrace()
     Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：$str\n$e ")
 }
 
-fun eLogE(str: Any, e: Error, TAG: String = "TAG") {
+
+fun eLogE(str: Any, e: Error? = null, TAG: String = "TAG") {
     e?.printStackTrace()
-    Log.e(TAG, "eNLogE:$str\n$e ")
+    Log.e(TAG, "eNLogE:$str\n${eErrorOut(e)}")
 }
+
+fun eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
+    e?.printStackTrace()
+    Log.e(TAG, "eNLogE:$str\n${eErrorOut(e)}")
+}
+
+
+fun eErrorOut(e:Exception?):String?{
+    e?:return null
+    val os = ByteArrayOutputStream()
+    e.printStackTrace(PrintStream(os))
+    return os.toString()
+}
+fun eErrorOut(e:Error?):String?{
+    e?:return null
+    val os = ByteArrayOutputStream()
+    e.printStackTrace(PrintStream(os))
+    return os.toString()
+}
+
 
 fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "${eTime.eGetCurrentTime("yyyy-MM-dd")}.log", parame: String = "TAG:I") = async {
     if (!File(savePath).exists()) {
@@ -714,8 +731,8 @@ object eTime {
     fun eGetCuoFormatTime(dateCuo: Long, format: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(format).format(Date(dateCuo))
 
     //时间转时间戳
-    fun dateToStamp(s: String, type: String = "s"): String {
-        val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s).time.toString()
+    fun eGetCuoTime(date: String= eTime.eGetCurrentTime(), type: String = "s"): String {
+        val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date).time.toString()
         return if (type == "s") date.substring(0, 10) else date
     }
 }
@@ -959,14 +976,14 @@ object eBitmap {
     }
 
     //YUV Bytes字节转文件
-    fun eByteArrayToFile(file: File, yuvBytes: ByteArray, w: Int, h: Int, imageformat: Int = ImageFormat.NV21, rotate: Int = 0, quality: Int = 80): Boolean {
+    fun eByteArrayToFile(tmpFile: File, yuvBytes: ByteArray, w: Int, h: Int, imageformat: Int = ImageFormat.NV21, rotate: Int = 0, quality: Int = 80): Boolean {
         // 通过YuvImage得到Bitmap格式的byte[]
         try {
-            if (!file.exists())
-                file.createNewFile()
+            if (!tmpFile.exists())
+                tmpFile.createNewFile()
             val yuvImage = YuvImage(yuvBytes, imageformat, w, h, null)
             val out = ByteArrayOutputStream()
-            yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 10, out)
+            yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), rotate, out)
             val dataBmp = out.toByteArray()
             // 生成Bitmap
             val bitmap = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
@@ -976,12 +993,12 @@ object eBitmap {
             matrix.setRotate(rotate.toFloat())
             val bmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
             bitmap.recycle()
-            val fos = FileOutputStream(file)
+            val fos = FileOutputStream(tmpFile)
             bmp.compress(Bitmap.CompressFormat.JPEG, quality, fos)
             return true
         } catch (e: Exception) {
             e.printStackTrace()
-            eLogE("保存失败", e)
+            com.anubis.kt_extends.eLogE("保存失败", e)
             return false
         }
     }
