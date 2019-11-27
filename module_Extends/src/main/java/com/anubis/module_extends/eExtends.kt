@@ -78,22 +78,31 @@ fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
  */
 
 fun Activity?.eLog(str: Any, TAG: String = "TAG") {
-    Log.i(TAG, "${this?.localClassName ?: "eLog"}-：$str\n ")
+    Log.d(TAG, "${this?.localClassName ?: "eLogD"}：$str\n ")
 }
 
 fun eLog(str: Any, TAG: String = "TAG") {
-    Log.i(TAG, "eNLog:$str\n ")
+    Log.d(TAG, "eLogD:$str\n ")
+}
+
+
+fun Activity?.eLogI(str: Any, TAG: String = "TAG") {
+    Log.i(TAG, "${this?.localClassName ?: "eLogI"}-：$str\n ")
+}
+
+fun eLogI(str: Any, TAG: String = "TAG") {
+    Log.i(TAG, "eLogI:$str\n ")
 }
 
 fun Activity?.eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
     e?.printStackTrace()
-    Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：$str\n$e ")
+    Log.e(TAG, "${this?.localClassName ?: "eLogE"}：$str\n$e ")
 }
 
 
 fun Activity?.eLogE(str: Any, e: Error, TAG: String = "TAG") {
     e?.printStackTrace()
-    Log.e(TAG, "${this?.localClassName ?: "eLogE"}-：$str\n$e ")
+    Log.e(TAG, "${this?.localClassName ?: "eLogE"}：$str\n$e ")
 }
 
 
@@ -104,7 +113,7 @@ fun eLogE(str: Any, e: Error? = null, TAG: String = "TAG") {
 
 fun eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
     e?.printStackTrace()
-    Log.e(TAG, "eNLogE:$str\n${eErrorOut(e)}")
+    Log.e(TAG, "eLogE:$str\n${eErrorOut(e)}")
 }
 
 
@@ -122,11 +131,11 @@ fun eErrorOut(e:Error?):String?{
 }
 
 
-fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "${eTime.eGetCurrentTime("yyyy-MM-dd")}.log", parame: String = "TAG:I") = async {
+fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "${eTime.eGetCurrentTime("yyyy-MM-dd")}.log", parame: String = "-v long AndroidRuntime:E *:S TAG:E TAG:I *E") = async {
     if (!File(savePath).exists()) {
         File(savePath).mkdirs()
     }
-    eShell.eExecShell("logcat -v long AndroidRuntime:E *:S TAG:E $parame *E -d >> $savePath$fileName")
+    eShell.eExecShell("logcat $parame -d >> $savePath$fileName")
 }
 
 
@@ -347,7 +356,16 @@ fun eAssetsToFile(context: Context, assetsName: String, copyName: String): Boole
 object eJson {
     //Object Json解析扩展
     fun eGetJsonObject(json: String, resultKey: String) = JSONObject(json).optString(resultKey)
-
+    fun eGetJsonObject(json: String, resultKey: String,default: Any=""):Any{
+        return  when(default){
+            is String-> JSONObject(json).optString(resultKey,default)
+            is Int->JSONObject(json).optInt(resultKey,default)
+            is Long->JSONObject(json).optLong(resultKey,default)
+            is Boolean->JSONObject(json).optBoolean(resultKey,default)
+            is Double->JSONObject(json).optDouble(resultKey,default)
+            else->default
+        }
+    }
     //Array Json解析扩展
     fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).optJSONArray(resultKey).getJSONObject(i).toString()
 
@@ -731,8 +749,8 @@ object eTime {
     fun eGetCuoFormatTime(dateCuo: Long, format: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(format).format(Date(dateCuo))
 
     //时间转时间戳
-    fun eGetCuoTime(date: String= eTime.eGetCurrentTime(), type: String = "s"): String {
-        val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date).time.toString()
+    fun eGetCuoTime(date: String= eTime.eGetCurrentTime(),pattern:String="yyyy-MM-dd HH:mm:ss", type: String = "s"): String {
+        val date = SimpleDateFormat(pattern).parse(date).time.toString()
         return if (type == "s") date.substring(0, 10) else date
     }
 }
