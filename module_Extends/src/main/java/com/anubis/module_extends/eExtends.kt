@@ -105,6 +105,10 @@ fun Activity?.eLogE(str: Any, e: Error, TAG: String = "TAG") {
     Log.e(TAG, "${this?.localClassName ?: "eLogE"}：$str\n$e ")
 }
 
+fun eLogE(str: Any , TAG: String = "TAG") {
+    Log.e(TAG, "eNLogE:$str\n")
+}
+
 
 fun eLogE(str: Any, e: Error? = null, TAG: String = "TAG") {
     e?.printStackTrace()

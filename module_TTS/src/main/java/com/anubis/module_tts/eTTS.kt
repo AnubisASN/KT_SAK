@@ -105,7 +105,7 @@ object eTTS {
                     ?: SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE
             val offlineResource = createOfflineResource(offlineVoice)
             if (offlineResource == null) {
-                eLogE("offlineResource==null")
+                eLog("offlineResource==null")
             }
             params[SpeechSynthesizer.PARAM_TTS_TEXT_MODEL_FILE] = offlineResource?.textFilename.toString()
             params[SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE] = offlineResource?.modelFilename.toString()
@@ -144,7 +144,7 @@ object eTTS {
         try {
             init(listener)
         } catch (e: Exception) {
-            eLogE("initTTS错误：$e")
+            eLogE("initTTS错误",e)
             ttsDestroy()
             init(listener)
         }
@@ -263,7 +263,7 @@ object eTTS {
     //检查回调方法
     private fun checkResult(result: Int, method: String): Boolean {
         if (result != 0) {
-            eLogE("error code :$result method:$method, 错误码文档:http://yuyin.baidu.com/docs/tts/122 ")
+            eLog("error code :$result method:$method, 错误码文档:http://yuyin.baidu.com/docs/tts/122 ")
             return false
         }
         return true
