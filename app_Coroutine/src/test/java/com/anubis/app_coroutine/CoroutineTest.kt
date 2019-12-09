@@ -1,6 +1,8 @@
 package com.anubis.app_coroutine
 
+import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eTime
+import com.tencent.bugly.proguard.w
 import kotlinx.coroutines.*
 import kotlinx.coroutines.NonCancellable.isActive
 import org.junit.Test
@@ -77,7 +79,7 @@ class CoroutineTest {
     }
 
     @Test
-    fun 作用域构建器() = runBlocking {
+    fun 作用域构建器1() = runBlocking {
         println(eTime.eGetCurrentTime("HH:mm:ss"))
         launch {
             delay(200L)
@@ -98,6 +100,47 @@ class CoroutineTest {
         println("runBlocking作用域4" + eTime.eGetCurrentTime("HH:mm:ss"))
     }
 
+    @Test
+    fun 作用域关闭() = runBlocking {
+        var job: Job? = null
+            launch {
+                delay(10000)
+//            job1?.cancelAndJoin()
+                job?.cancel()
+
+                println( eTime.eGetCurrentTime("HH:mm:ss")+"cancel")
+            }
+
+            job = launch {
+                supervisorScope {
+                    try {
+                         launch {
+                            try {
+                                while (isActive){
+                                    println(eTime.eGetCurrentTime("HH:mm:ss")+"等待关闭")
+                                    delay(1000L)
+                                }
+                            } catch (e: Exception) {
+                                println("伴程关闭；$e")
+//                                val s:Int="ss".toInt()
+                            }
+                        }
+
+                        while (isActive) {
+                            println(eTime.eGetCurrentTime("HH:mm:ss")+"开始接收-----")
+                            delay(6000L)
+                            println(eTime.eGetCurrentTime("HH:mm:ss")+"接收完成------")
+                        }
+                    } catch (e: Exception) {
+                         println(eTime.eGetCurrentTime("HH:mm:ss")+"job关闭")
+                    }
+
+                }
+            }
+
+        delay(20000L)
+        println(eTime.eGetCurrentTime("HH:mm:ss")+"结束")
+    }
 
     @Test
     fun 提取函数重构() = runBlocking {

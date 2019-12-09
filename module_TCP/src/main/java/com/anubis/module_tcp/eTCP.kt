@@ -74,21 +74,21 @@ object eTCP {
                 val os = PrintStream(socket.getOutputStream(), true, "utf-8")
                 val `in` = socket.getInputStream()
                 eClientHashMap[ip] = dataSocket(os, `in`)
-                msg?.obj = receiveMSG(ip, HANDLER_CONNECT_CODE, "TCP连接成功")
+                msg?.obj = receiveMSG(ip, HANDLER_CONNECT_CODE, "$port  -TCP连接成功")
                 if (isReceove && eClientHashMap[ip]!!.receivesThread == null)
                     eSocketReceive(ip, tcpHandler, eClientHashMap,condition, isReceove)
                 return@async
             } catch (e: ConnectException) {
-                msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE)
-                eLogE("连接失败", e)
+                msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE,port.toString())
+                eLogE("连接失败:$e")
                 return@async
             } catch (e: UnknownHostException) {
-                msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE)
-                eLogE("未知主机异常", e)
+                msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE,port.toString())
+                eLogE("未知主机异常:$e" )
                 return@async
             } catch (e: Exception) {
                 e.printStackTrace()
-                eLogE("连接异常", e)
+                eLogE("连接异常:$e")
                 return@async
             } finally {
                 tcpHandler.sendMessage(msg)

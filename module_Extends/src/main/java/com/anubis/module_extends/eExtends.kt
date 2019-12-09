@@ -34,6 +34,8 @@ import com.tencent.bugly.proguard.s
 import com.tencent.bugly.proguard.t
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.AnkoAsyncContext
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.uiThread
@@ -139,8 +141,24 @@ fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "
     if (!File(savePath).exists()) {
         File(savePath).mkdirs()
     }
+    GlobalScope.launch {
+    val psResult = eShell.eExecShell("ps logcat")
+    psResult.split("\n").forEach {
+        if (!it.contains("shell"))
+            coroutineScope {
+                it.split(" ").forEach {
+                    try {
+                        val pid= it.replace(" ","").toInt()
+                        eLog("PID:$pid")
+                        eShell.eExecShell("kill $pid")
+                        return@coroutineScope
+                    } catch (e: Exception) {
+                    }
+                }
+            }
+    }
     eShell.eExecShell("logcat $parame -d >> $savePath$fileName")
-}
+}}
 
 
 /**
