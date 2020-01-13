@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import com.anubis.app_map.sdkdemo.activity.DemoMainActivity
 import com.anubis.module_navi.eNavigate
-import com.baidu.navisdk.adapter.BNRoutePlanNode
 import kotlinx.android.synthetic.main.map.*
 
 

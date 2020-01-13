@@ -5,7 +5,7 @@
       <GradleProjectSettings>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../Android/Gradle/gradle-4.5-all" />
+        <option name="gradleHome" value="/Android/Gradle/gradle-4.5-all" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -14,6 +14,8 @@
             <option value="$PROJECT_DIR$/app_HServer" />
             <option value="$PROJECT_DIR$/app_Map" />
             <option value="$PROJECT_DIR$/app_Picker" />
+            <option value="$PROJECT_DIR$/app_TextR" />
+            <option value="$PROJECT_DIR$/app_Videochat" />
             <option value="$PROJECT_DIR$/module_ASRW" />
             <option value="$PROJECT_DIR$/module_ArcFace" />
             <option value="$PROJECT_DIR$/module_ArcFaceFT" />
@@ -30,12 +32,12 @@
             <option value="$PROJECT_DIR$/module_QRCode" />
             <option value="$PROJECT_DIR$/module_TCP" />
             <option value="$PROJECT_DIR$/module_TTS" />
+            <option value="$PROJECT_DIR$/module_TextRecognition" />
             <option value="$PROJECT_DIR$/module_UDevice" />
             <option value="$PROJECT_DIR$/module_Utils" />
             <option value="$PROJECT_DIR$/module_VNC" />
             <option value="$PROJECT_DIR$/module_VideoChat" />
             <option value="$PROJECT_DIR$/module_WiFi" />
-            <option value="$PROJECT_DIR$/moudle_CrashMSG" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

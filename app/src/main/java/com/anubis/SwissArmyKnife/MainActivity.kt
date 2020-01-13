@@ -48,7 +48,7 @@ import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
 import com.anubis.module_tts.listener.FileSaveListener
 import com.anubis.module_usbdevice.eUDevice
-import com.anubis.module_videochat.eVideoChat
+import com.anubis.module_videochat.eVideoChatUI
 import com.anubis.module_vncs.eVNC
 import com.anubis.utils.util.eToastUtils
 import com.lzy.okgo.OkGo
@@ -282,8 +282,8 @@ class MainActivity : Activity() {
                         R.id.bt_item1 -> Hint("VNC二进制文件执行:${if (eVNC.startVNCs(this@MainActivity)) "成功：5901" else "失败"}")
                     }
                     getDigit("音视频") -> {
-                        val intent = Intent(this@MainActivity, eVideoChat::class.java)
-                        intent.putExtra("ChannelName", MSG)
+                        val intent = Intent(this@MainActivity, eVideoChatUI::class.java)
+                        intent.putExtra("channelName",MSG)
                         startActivity(intent)
                     }
 //                        ARouter.getInstance().build("/module_videochat/eVideoChat")

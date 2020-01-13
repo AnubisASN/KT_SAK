@@ -3,10 +3,13 @@ package com.anubis.SwissArmyKnife
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.os.Environment
 import android.support.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
+import com.anubis.kt_extends.eCrash
 import com.anubis.module_ftp.eDataFTP
 import com.tencent.bugly.crashreport.CrashReport
+import java.io.File
 
 /**
  * Author  ： AnubisASN   on 2018-07-21 17:03.
@@ -25,13 +28,14 @@ import com.tencent.bugly.crashreport.CrashReport
  */
 
 class APP : Application() {
-    var mActivityList: ArrayList<Activity>?=null
-    companion object {
-        private   var mInit: APP? = null
-        val  mAPP :APP get() = mInit!!
-        val mActivityList: ArrayList<Activity> =  ArrayList()
+    var mActivityList: ArrayList<Activity>? = null
 
+    companion object {
+        private var mInit: APP? = null
+        val mAPP: APP get() = mInit!!
+        val mActivityList: ArrayList<Activity> = ArrayList()
     }
+
     override fun onCreate() {
         super.onCreate()
         mInit = this
@@ -40,11 +44,10 @@ class APP : Application() {
         ARouter.openLog()
         ARouter.openDebug()
         ARouter.init(mInit)
-        eDataFTP.init(mInit!!,3335,"anubis","anubis")
+        eDataFTP.init(mInit!!, 3335, "anubis", "anubis")
 //        createDir()
-        }
-
-
+        eCrash()
+    }
 
 
     //---------------------------------------分割线   FTP---------------------------------------------

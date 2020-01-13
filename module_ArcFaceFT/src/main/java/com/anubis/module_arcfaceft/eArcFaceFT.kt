@@ -67,7 +67,7 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
     private var mCameraID: Int = 1
     private var mCameraRotate: Int = 0
     private var mCameraMirror: Boolean = false
-    private var mImageNV21: ByteArray? = null
+    var mImageNV21: ByteArray? = null
     var mFaceNum: Int = 0
     var mBitmap: Bitmap? = null
     var mAFT_FSDKFace: AFT_FSDKFace? = null

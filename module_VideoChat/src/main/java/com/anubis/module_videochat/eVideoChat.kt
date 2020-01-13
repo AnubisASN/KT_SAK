@@ -1,76 +1,80 @@
 package com.anubis.module_videochat
 
-import android.Manifest
-import android.content.Intent
-import android.content.pm.PackageManager
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.graphics.Color
 import android.graphics.PorterDuff
-import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.KeyEvent
 import android.view.SurfaceView
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.Toast
-import com.alibaba.android.arouter.facade.annotation.Autowired
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
+import com.lzy.okgo.utils.HttpUtils.runOnUiThread
 
 import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
 import io.agora.rtc.video.VideoCanvas
 import io.agora.rtc.video.VideoEncoderConfiguration
-import kotlinx.android.synthetic.main.activity_video_chat_view.*
-import org.jetbrains.anko.startActivity
-import java.util.*
 
-@Route(path = "/module_videochat/eVideoChat")
-class eVideoChat : AppCompatActivity() {
-   private var channelName="demoChannel1"
-//    @Autowired
-//     var init1=Bundle()
-//    @Autowired
-//     var init2 =Bundle()
-      var mRtcEngine: RtcEngine? = null // Tutorial Step 1
-      val mRtcEventHandler = object : IRtcEngineEventHandler() { // Tutorial Step 1
+@SuppressLint("StaticFieldLeak")
+object eVideoChat {
+    private var mAppID = "02fb80262bcc46dd95d075a88404b24b"
+    private var mChannelName = "demoChannel1"
+    private var mLocalContainer: FrameLayout? = null
+    private var mRemoteContainer: FrameLayout? = null
+    private var mContext: Context? = null
+    private var mHandler: Handler? = null
+    private var mRtcEngine: RtcEngine? = null // Tutorial Step 1
+    val HANDLER_FAILURE_CODE = -1  //连接失败
+    val HANDLER_ERROR_CODE = -2   //连接错误
+    val HANDLER_CLOSE_CODE = 0     //关闭连接
+    val HANDLER_CONNECT_CODE = 1  //连接成功
+    private val mRtcEventHandler: IRtcEngineEventHandler = object : IRtcEngineEventHandler() { // Tutorial Step 1
         override fun onFirstRemoteVideoDecoded(uid: Int, width: Int, height: Int, elapsed: Int) { // Tutorial Step 5
-            runOnUiThread { setupRemoteVideo(uid) }
+            eLog("第一次连接")
+            runOnUiThread { setupRemoteVideo(uid, mRemoteContainer!!) }
+        }
+
+        override fun onUserJoined(uid: Int, elapsed: Int) {
+            eLog("用户加入")
+            val msg = mHandler?.obtainMessage()
+            msg?.what=HANDLER_CONNECT_CODE
+            msg?.obj="连接成功"
+            mHandler?.sendMessage(msg)
         }
 
         override fun onUserOffline(uid: Int, reason: Int) { // Tutorial Step 7
-            runOnUiThread { onRemoteUserLeft() }
+            eLog("用户离线")
+            val msg = mHandler?.obtainMessage()
+            msg?.what=HANDLER_CLOSE_CODE
+            msg?.obj="关闭连接"
+            mHandler?.sendMessage(msg)
+            runOnUiThread { onRemoteUserLeft(mRemoteContainer!!) }
         }
 
         override fun onUserMuteVideo(uid: Int, muted: Boolean) { // Tutorial Step 10
-            runOnUiThread { onRemoteUserVideoMuted(uid, muted) }
+            eLog("用户静音")
+            runOnUiThread { onRemoteUserVideoMuted(uid, muted, mRemoteContainer!!) }
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_video_chat_view)
-         channelName = intent.getStringExtra("ChannelName")
-        mInit = this
-        if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
-                checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID) &&
-                checkSelfPermission(REQUESTED_PERMISSIONS[2], PERMISSION_REQ_ID)) {
-            initAgoraEngineAndJoinChannel()
-        }
-        init()
-        //默认关闭-
-//        onLocalVideo.isSelected=false
-//        onLocalVideoMuteClicked(onLocalVideo)
-//        Handler().postDelayed({
-//            startActivity(Intent(this@VideoChatViewActivity, IVA::class.java))
-//        }, 3000)
-    }
-
-    private fun init() {
+    fun init(context: Context, localContainer: FrameLayout, remoteContainer: FrameLayout, appID: String? = mAppID, channelName: String? = mChannelName, handler: Handler? = null) {
+        if (appID!=null)
+        mAppID = appID
+        if (channelName!=null)
+        mChannelName = channelName
+        mContext = context
+        mLocalContainer = localContainer
+        mRemoteContainer = remoteContainer
+        mHandler = handler
+        initializeAgoraEngine()
+        setupVideoProfile()
+        setupLocalVideo(mLocalContainer!!)
+        joinChannel()
 
 //        onVideo.visibility = if (init1!!.getBoolean("video")== false) View.GONE else View.VISIBLE
 //        onAudio.visibility = if (init1["audio"] == false) View.GONE else View.VISIBLE
@@ -83,191 +87,115 @@ class eVideoChat : AppCompatActivity() {
 //            onLocalAudioMuteClicked(onAudio)
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == 15 || keyCode == 10) {
-            finish()
-        }
-        return true
-    }
-    private fun initAgoraEngineAndJoinChannel() {
-        initializeAgoraEngine()     // Tutorial Step 1
-        setupVideoProfile()         // Tutorial Step 2
-        setupLocalVideo()           // Tutorial Step 3
-        joinChannel()               // Tutorial Step 4
-    }
-
-    fun checkSelfPermission(permission: String, requestCode: Int): Boolean {
-        Log.i(LOG_TAG, "checkSelfPermission $permission $requestCode")
-        if (ContextCompat.checkSelfPermission(this,
-                        permission) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    REQUESTED_PERMISSIONS,
-                    requestCode)
-            return false
-        }
-        return true
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
-        Log.i(LOG_TAG, "onRequestPermissionsResult " + grantResults[0] + " " + requestCode)
-
-        when (requestCode) {
-            PERMISSION_REQ_ID -> {
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED || grantResults[1] != PackageManager.PERMISSION_GRANTED || grantResults[2] != PackageManager.PERMISSION_GRANTED) {
-                    showLongToast("Need permissions " + Manifest.permission.RECORD_AUDIO + "/" + Manifest.permission.CAMERA + "/" + Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    finish()
-                }
-
-                initAgoraEngineAndJoinChannel()
-            }
-        }
-    }
-
-    fun showLongToast(msg: String) {
-        this.runOnUiThread { Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG).show() }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        leaveChannel()
-        RtcEngine.destroy()
-        mRtcEngine = null
-    }
 
     // 频暂停
-    fun onLocalVideoMuteClicked(view: View) {
-        val iv = view as ImageView
+    fun onVideoPause(iv: ImageView, localContainer: FrameLayout = mLocalContainer!!) {
         if (iv.isSelected) {
             iv.isSelected = false
             iv.clearColorFilter()
         } else {
             iv.isSelected = true
-            iv.setColorFilter(resources.getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY)
+            iv.setColorFilter(Color.parseColor("#3F51B5"), PorterDuff.Mode.MULTIPLY)
         }
-
         mRtcEngine!!.muteLocalVideoStream(iv.isSelected)
-
-        val container = findViewById<View>(R.id.local_video_view_container) as FrameLayout
-        val surfaceView = container.getChildAt(0) as SurfaceView
+        val surfaceView = localContainer.getChildAt(0) as SurfaceView
         surfaceView.setZOrderMediaOverlay(!iv.isSelected)
         surfaceView.visibility = if (iv.isSelected) View.GONE else View.VISIBLE
     }
 
     //音暂停
-    fun onLocalAudioMuteClicked(view: View) {
-        val iv = view as ImageView
+    fun onAudioPause(iv: ImageView) {
         if (iv.isSelected) {
             iv.isSelected = false
             iv.clearColorFilter()
         } else {
             iv.isSelected = true
-            iv.setColorFilter(resources.getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY)
+            iv.setColorFilter(Color.parseColor("#3F51B5"), PorterDuff.Mode.MULTIPLY)
         }
-
         mRtcEngine!!.muteLocalAudioStream(iv.isSelected)
     }
 
     //相机切换
-    fun onSwitchCameraClicked(view: View) {
+    fun onSwitchCamera() {
         mRtcEngine!!.switchCamera()
     }
 
     //挂断
-    fun onEncCallClicked(view: View) {
-        finish()
+    fun onVideoClose() {
+        leaveChannel()
+        RtcEngine.destroy()
+        mRtcEngine = null
+        (mContext as Activity).finish()
     }
 
-    // Tutorial Step 1
+
+    //Step 1 初始化
     private fun initializeAgoraEngine() {
         try {
-            mRtcEngine = RtcEngine.create(baseContext, getString(R.string.agora_app_id), mRtcEventHandler)
+            mRtcEngine = RtcEngine.create(mContext, mAppID, mRtcEventHandler)
         } catch (e: Exception) {
-            Log.e(LOG_TAG, Log.getStackTraceString(e))
-
+            eLogE("initializeAgoraEngine", e)
             throw RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e))
         }
 
     }
 
-    // Tutorial Step 2
+    // Step 2  设置视频配置文件
     private fun setupVideoProfile() {
         mRtcEngine!!.enableVideo()
-        //      mRtcEngine.setVideoProfile(Constants.VIDEO_PROFILE_360P, false); // Earlier than 2.3.0
         mRtcEngine!!.setVideoEncoderConfiguration(VideoEncoderConfiguration(VideoEncoderConfiguration.VD_640x360, VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
                 VideoEncoderConfiguration.STANDARD_BITRATE,
                 VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT))
     }
 
     // Tutorial Step 3
-    private fun setupLocalVideo() {
-        val container = findViewById<View>(R.id.local_video_view_container) as FrameLayout
-        val surfaceView = RtcEngine.CreateRendererView(baseContext)
+    private fun setupLocalVideo(localContainer: FrameLayout) {
+        val surfaceView = RtcEngine.CreateRendererView(mContext)
         surfaceView.setZOrderMediaOverlay(true)
-        container.addView(surfaceView)
+        localContainer.addView(surfaceView)
         mRtcEngine!!.setupLocalVideo(VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0))
     }
 
-    // Tutorial Step 4
+    // Step 4 加入频道
     private fun joinChannel() {
-        mRtcEngine!!.joinChannel(null, channelName, "Extra Optional Data", 0) // if you do not specify the uid, we will generate the uid for you
+        mRtcEngine!!.joinChannel(null, mChannelName, "Extra Optional Data", 0) // if you do not specify the uid, we will generate the uid for you
     }
 
-    // Tutorial Step 5
-    private fun setupRemoteVideo(uid: Int) {
-        val container = findViewById<View>(R.id.remote_video_view_container) as FrameLayout
-
-        if (container.childCount >= 1) {
+    //Step 5  设置远程视频
+    private fun setupRemoteVideo(uid: Int, remoteContainer: FrameLayout) {
+        if (remoteContainer.childCount >= 1) {
             return
         }
-
-        val surfaceView = RtcEngine.CreateRendererView(baseContext)
-        container.addView(surfaceView)
+        val surfaceView = RtcEngine.CreateRendererView(mContext)
+        remoteContainer.addView(surfaceView)
         mRtcEngine!!.setupRemoteVideo(VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid))
 
         surfaceView.tag = uid // for mark purpose
     }
 
-    // Tutorial Step 6
+    //Step 6 离开频道
     private fun leaveChannel() {
         mRtcEngine!!.leaveChannel()
     }
 
     // Tutorial Step 7
-    private fun onRemoteUserLeft() {
-        val container = findViewById<View>(R.id.remote_video_view_container) as FrameLayout
-        container.removeAllViews()
+    private fun onRemoteUserLeft(remoteContainer: FrameLayout) {
+        remoteContainer.removeAllViews()
 
     }
 
     // Tutorial Step 10
-    private fun onRemoteUserVideoMuted(uid: Int, muted: Boolean) {
-        val container = findViewById<View>(R.id.remote_video_view_container) as FrameLayout
-
+    private fun onRemoteUserVideoMuted(uid: Int, muted: Boolean, remoteContainer: FrameLayout) {
         val surfaceView: SurfaceView
         try {
-            surfaceView = container.getChildAt(0) as SurfaceView
+            surfaceView = remoteContainer.getChildAt(0) as SurfaceView
             val tag = surfaceView.tag
             if (tag != null && tag as Int == uid) {
                 surfaceView.visibility = if (muted) View.GONE else View.VISIBLE
             }
         } catch (e: Exception) {
-            this.eLogE(e)
-
+            eLogE("onRemoteUserVideoMuted", e)
         }
-
-
     }
 
-    companion object {
-
-        private val LOG_TAG = eVideoChat::class.java.simpleName
-        private val PERMISSION_REQ_ID = 22
-        private var mInit: eVideoChat? = null
-        val getInit: eVideoChat get() = mInit!!
-        // permission WRITE_EXTERNAL_STORAGE is not mandatory for Agora RTC SDK, just incase if you wanna save logs to external sdcard
-        private val REQUESTED_PERMISSIONS = arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    }
 }

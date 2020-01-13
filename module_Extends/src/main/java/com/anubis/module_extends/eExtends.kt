@@ -107,7 +107,7 @@ fun Activity?.eLogE(str: Any, e: Error, TAG: String = "TAG") {
     Log.e(TAG, "${this?.localClassName ?: "eLogE"}：$str\n$e ")
 }
 
-fun eLogE(str: Any , TAG: String = "TAG") {
+fun eLogE(str: Any, TAG: String = "TAG") {
     Log.e(TAG, "eNLogE:$str\n")
 }
 
@@ -123,14 +123,15 @@ fun eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
 }
 
 
-fun eErrorOut(e:Exception?):String?{
-    e?:return null
+fun eErrorOut(e: Exception?): String? {
+    e ?: return null
     val os = ByteArrayOutputStream()
     e.printStackTrace(PrintStream(os))
     return os.toString()
 }
-fun eErrorOut(e:Error?):String?{
-    e?:return null
+
+fun eErrorOut(e: Error?): String? {
+    e ?: return null
     val os = ByteArrayOutputStream()
     e.printStackTrace(PrintStream(os))
     return os.toString()
@@ -142,23 +143,49 @@ fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "
         File(savePath).mkdirs()
     }
     GlobalScope.launch {
-    val psResult = eShell.eExecShell("ps logcat")
-    psResult.split("\n").forEach {
-        if (!it.contains("shell"))
-            coroutineScope {
-                it.split(" ").forEach {
-                    try {
-                        val pid= it.replace(" ","").toInt()
-                        eLog("PID:$pid")
-                        eShell.eExecShell("kill $pid")
-                        return@coroutineScope
-                    } catch (e: Exception) {
+        val psResult = eShell.eExecShell("ps logcat")
+        psResult.split("\n").forEach {
+            if (!it.contains("shell"))
+                coroutineScope {
+                    it.split(" ").forEach {
+                        try {
+                            val pid = it.replace(" ", "").toInt()
+                            eLog("PID:$pid")
+                            eShell.eExecShell("kill $pid")
+                            return@coroutineScope
+                        } catch (e: Exception) {
+                        }
                     }
                 }
-            }
+        }
+        eShell.eExecShell("logcat $parame -d >> $savePath$fileName")
     }
-    eShell.eExecShell("logcat $parame -d >> $savePath$fileName")
-}}
+}
+
+fun   Application.eCrash(saveFile:File= File("${Environment.getExternalStorageDirectory()}/errorLogs.log")){
+    //记录崩溃信息
+    val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+    Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+        //获取崩溃时的UNIX时间戳
+        //将时间戳转换成人类能看懂的格式，建立一个String拼接器
+        val stringBuilder =StringBuilder(eTime.eGetCurrentTime("yyyy/MM/dd HH:mm:ss"))
+        stringBuilder.append(":\n")
+        //获取错误信息退票手续费
+        stringBuilder.append(throwable.message)
+        stringBuilder.append("\n")
+        //获取堆栈信息
+        val sw = StringWriter()
+        val pw = PrintWriter(sw)
+        throwable.printStackTrace(pw)
+        stringBuilder.append(sw.toString())
+
+        //这就是完整的错误信息了，你可以拿来上传服务器，或者做成本地文件保存等等等等
+        val errorLog = stringBuilder.toString()
+        saveFile.appendText(errorLog)
+        //最后如何处理这个崩溃，这里使用默认的处理方式让APP停止运行
+        defaultHandler.uncaughtException(thread, throwable)
+    }
+}
 
 
 /**
@@ -295,7 +322,8 @@ fun Bundle.eSetMessage(Sign: String, Message: Any = "") = when (Message) {
 }
 
 //音频播放
-var mp:MediaPlayer?=null
+var mp: MediaPlayer? = null
+
 fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false) {
     try {
         mp?.stop()
@@ -311,7 +339,7 @@ fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false) {
         mp?.isLooping = isLoop
         mp?.start()//开始播放
     } catch (e: Exception) {
-      eLogE("ePlayVoice 错误",e)
+        eLogE("ePlayVoice 错误", e)
     }
 }
 
@@ -366,7 +394,7 @@ fun eAssetsToFile(context: Context, assetsName: String, copyName: String): Boole
         }
         return true
     } catch (e: IOException) {
-        eLogE("文件复制错误",e)
+        eLogE("文件复制错误", e)
         return false
     }
 }
@@ -378,16 +406,18 @@ fun eAssetsToFile(context: Context, assetsName: String, copyName: String): Boole
 object eJson {
     //Object Json解析扩展
     fun eGetJsonObject(json: String, resultKey: String) = JSONObject(json).optString(resultKey)
-    fun eGetJsonObject(json: String, resultKey: String,default: Any=""):Any{
-        return  when(default){
-            is String-> JSONObject(json).optString(resultKey,default)
-            is Int->JSONObject(json).optInt(resultKey,default)
-            is Long->JSONObject(json).optLong(resultKey,default)
-            is Boolean->JSONObject(json).optBoolean(resultKey,default)
-            is Double->JSONObject(json).optDouble(resultKey,default)
-            else->default
+
+    fun eGetJsonObject(json: String, resultKey: String, default: Any = ""): Any {
+        return when (default) {
+            is String -> JSONObject(json).optString(resultKey, default)
+            is Int -> JSONObject(json).optInt(resultKey, default)
+            is Long -> JSONObject(json).optLong(resultKey, default)
+            is Boolean -> JSONObject(json).optBoolean(resultKey, default)
+            is Double -> JSONObject(json).optDouble(resultKey, default)
+            else -> default
         }
     }
+
     //Array Json解析扩展
     fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).optJSONArray(resultKey).getJSONObject(i).toString()
 
@@ -771,7 +801,7 @@ object eTime {
     fun eGetCuoFormatTime(dateCuo: Long, format: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(format).format(Date(dateCuo))
 
     //时间转时间戳
-    fun eGetCuoTime(date: String= eTime.eGetCurrentTime(),pattern:String="yyyy-MM-dd HH:mm:ss", type: String = "s"): String {
+    fun eGetCuoTime(date: String = eTime.eGetCurrentTime(), pattern: String = "yyyy-MM-dd HH:mm:ss", type: String = "s"): String {
         val date = SimpleDateFormat(pattern).parse(date).time.toString()
         return if (type == "s") date.substring(0, 10) else date
     }
@@ -814,7 +844,7 @@ object eNetWork {
 
 
     // 获取PING延迟
-    fun eGetNetDelayTime(url:String): String {
+    fun eGetNetDelayTime(url: String): String {
         var delay = String()
         var output = ""
         try {
@@ -1110,7 +1140,7 @@ object eBitmap {
         return bitmap
     }
 
-    fun eGetBitmap(path:String)=BitmapFactory.decodeFile(path)
+    fun eGetBitmap(path: String) = BitmapFactory.decodeFile(path)
 }
 
 /**
@@ -1118,17 +1148,17 @@ object eBitmap {
  */
 object eFile {
 
-/**
- * 复制单个文件
- * @param oldPathName String 原文件路径+文件名 如：data/user/0/com.test/files/abc.txt
- * @param newPathName String 复制后路径+文件名 如：data/user/0/com.test/cache/abc.txt
- * @return <code>true</code> if and only if the file was copied;
- *         <code>false</code> otherwise
- */
+    /**
+     * 复制单个文件
+     * @param oldPathName String 原文件路径+文件名 如：data/user/0/com.test/files/abc.txt
+     * @param newPathName String 复制后路径+文件名 如：data/user/0/com.test/cache/abc.txt
+     * @return <code>true</code> if and only if the file was copied;
+     *         <code>false</code> otherwise
+     */
 
-fun   eCopyFile(  oldPathName:String,newPathName:String):Boolean {
+    fun eCopyFile(oldPathName: String, newPathName: String): Boolean {
         try {
-            val oldFile =   File(oldPathName)
+            val oldFile = File(oldPathName)
             if (!oldFile.exists()) {
                 eLog("eCopyFile: oldFile 不存在")
                 return false
@@ -1141,27 +1171,26 @@ fun   eCopyFile(  oldPathName:String,newPathName:String):Boolean {
                 eLog("eCopyFile: oldFile 无法读取")
                 return false
             }
-            val newFile=File(if (newPathName.contains("."))newPathName.substring(0,newPathName.lastIndexOf("/"))else newPathName)
-            if (!newFile.exists()){
+            val newFile = File(if (newPathName.contains(".")) newPathName.substring(0, newPathName.lastIndexOf("/")) else newPathName)
+            if (!newFile.exists()) {
                 newFile.mkdirs()
             }
-            val fileInputStream =   FileInputStream(oldPathName)
-            val fileOutputStream =   FileOutputStream(newPathName)
+            val fileInputStream = FileInputStream(oldPathName)
+            val fileOutputStream = FileOutputStream(newPathName)
             val buffer = ByteArray(1024)
-            var byteRead:Int
-            while ( ( fileInputStream.read(buffer).apply { byteRead =this })!=-1) {
+            var byteRead: Int
+            while ((fileInputStream.read(buffer).apply { byteRead = this }) != -1) {
                 fileOutputStream.write(buffer, 0, byteRead)
             }
             fileInputStream.close()
             fileOutputStream.flush()
             fileOutputStream.close()
             return true
-        } catch (e:Exception ) {
+        } catch (e: Exception) {
             e.printStackTrace()
             return false
         }
     }
-
 
 
     //    文件转Base64
@@ -1191,7 +1220,7 @@ fun   eCopyFile(  oldPathName:String,newPathName:String):Boolean {
     }
 
     //Base64转文件
-    fun eBase64ToFile(base64: String, file: File): File {
+    fun eBase64ToFile(base64: String, file: File): File? {
         var out: FileOutputStream? = null
         try {
             // 解码，然后将字节转换为文件
@@ -1210,6 +1239,7 @@ fun   eCopyFile(  oldPathName:String,newPathName:String):Boolean {
         } catch (ioe: Exception) {
             out?.close()
             eLogE("转换异常", ioe)
+            return null
         }
         return file
     }

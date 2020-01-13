@@ -13,6 +13,7 @@ import java.lang.Exception
 import java.lang.Thread.sleep
 import java.util.*
 import kotlin.system.measureTimeMillis
+import kotlin.text.Typography.times
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -103,43 +104,43 @@ class CoroutineTest {
     @Test
     fun 作用域关闭() = runBlocking {
         var job: Job? = null
-            launch {
-                delay(10000)
+        launch {
+            delay(10000)
 //            job1?.cancelAndJoin()
-                job?.cancel()
+            job?.cancel()
 
-                println( eTime.eGetCurrentTime("HH:mm:ss")+"cancel")
-            }
+            println(eTime.eGetCurrentTime("HH:mm:ss") + "cancel")
+        }
 
-            job = launch {
-                supervisorScope {
-                    try {
-                         launch {
-                            try {
-                                while (isActive){
-                                    println(eTime.eGetCurrentTime("HH:mm:ss")+"等待关闭")
-                                    delay(1000L)
-                                }
-                            } catch (e: Exception) {
-                                println("伴程关闭；$e")
-//                                val s:Int="ss".toInt()
+        job = launch {
+            supervisorScope {
+                try {
+                    launch {
+                        try {
+                            while (isActive) {
+                                println(eTime.eGetCurrentTime("HH:mm:ss") + "等待关闭")
+                                delay(1000L)
                             }
+                        } catch (e: Exception) {
+                            println("伴程关闭；$e")
+//                                val s:Int="ss".toInt()
                         }
-
-                        while (isActive) {
-                            println(eTime.eGetCurrentTime("HH:mm:ss")+"开始接收-----")
-                            delay(6000L)
-                            println(eTime.eGetCurrentTime("HH:mm:ss")+"接收完成------")
-                        }
-                    } catch (e: Exception) {
-                         println(eTime.eGetCurrentTime("HH:mm:ss")+"job关闭")
                     }
 
+                    while (isActive) {
+                        println(eTime.eGetCurrentTime("HH:mm:ss") + "开始接收-----")
+                        delay(6000L)
+                        println(eTime.eGetCurrentTime("HH:mm:ss") + "接收完成------")
+                    }
+                } catch (e: Exception) {
+                    println(eTime.eGetCurrentTime("HH:mm:ss") + "job关闭")
                 }
+
             }
+        }
 
         delay(20000L)
-        println(eTime.eGetCurrentTime("HH:mm:ss")+"结束")
+        println(eTime.eGetCurrentTime("HH:mm:ss") + "结束")
     }
 
     @Test
@@ -165,6 +166,19 @@ class CoroutineTest {
 
         }
     }
+
+    @Test
+    fun 倒计时() = runBlocking{
+        GlobalScope.launch {
+            repeat(10) {
+                println("倒计时:${10 - it}")
+                delay(1000L)
+            }
+           println("倒计时完成")
+        }
+        delay(20000)
+    }
+
 
     @Test   //1s 输出10w World
     fun 全局协程守护() = runBlocking<Unit> {
