@@ -27,21 +27,21 @@ class ExampleUnitTest {
         println("结束")
     }
 
-    @Test
-      fun 协程延迟() {
-        println("开始")
-        GlobalScope.launch {
-            delay(1000L)
-            println("协成完成")
-        }
-//        Thread.sleep(2000L)
-        launch{
-        coroutineScope{
-            //阻塞主线程
-            println("阻塞主线程")
-            delay(2000L)
-        }
-        }
-        println("结束")
-    }
+//    @Test
+//      fun 协程延迟() {
+//        println("开始")
+//        GlobalScope.launch {
+//            delay(1000L)
+//            println("协成完成")
+//        }
+////        Thread.sleep(2000L)
+//        launch{
+//        coroutineScope{
+//            //阻塞主线程
+//            println("阻塞主线程")
+//            delay(2000L)
+//        }
+//        }
+//        println("结束")
+//    }
 }

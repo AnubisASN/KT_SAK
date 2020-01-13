@@ -1,10 +1,12 @@
 package com.anubis.module_tcp
 
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import android.os.Handler
+import com.anubis.module_tcp.eTCP.eSocketConnect
+import kotlinx.coroutines.*
+import org.jetbrains.anko.custom.async
 import org.junit.Test
+import java.io.PrintStream
+import java.net.Socket
 
 /**
  * Author  ： AnubisASN   on 19-9-30 下午3:43.
@@ -55,4 +57,46 @@ class Test {
             delay(1000L)
         }
     }
+    @Test
+    fun s(){
+        val ha: HashMap<String, String?> = HashMap()
+        ha["1"]="01"
+        ha["2"]=null
+        println(ha["1"])
+        println(ha["2"])
+        println(ha["3"])
+        println(ha.containsKey("1"))
+    }
+
+
+    @Test
+    fun ss(){
+      val s1=  eSocketConnect("192.168.1.110",3335, Handler())
+        val s2=  eSocketConnect("192.168.1.123",3335, Handler())
+        GlobalScope.launch {
+            delay(10000)
+            println("关闭通道")
+//            s1.close()
+        }
+        runBlocking {
+            delay(120*1000)
+        }
+    }
+    fun connect(ip:String,port:Int):Socket{
+        println("$ip 开始连接")
+        val socket = Socket(ip, port)
+        val os = PrintStream(socket.getOutputStream(), true, "utf-8")
+        val `in` = socket.getInputStream()
+        println("$ip 连接成功")
+        GlobalScope.launch {
+            while (true) {
+                val buffer = ByteArray(1024)
+                val count = `in`.read(buffer)
+                val receiveData = String(buffer, 0, count ?: 0)
+                println("$ip 接收到:$receiveData")
+            }
+        }
+        return socket
+    }
+
 }
