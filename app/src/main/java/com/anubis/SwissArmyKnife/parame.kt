@@ -189,32 +189,33 @@ object parame {
     }
 
     private fun handleTCP(msg: Message) {
-        val obj = msg.obj as eTCP.receiveMSG
-        when (obj.code) {
-//                val HANDLER_FAILURE_CODE = -1  //连接失败
-            eTCP.HANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接失败")
-//                val HANDLER_ERROR_CODE = -2   //连接错误
-            eTCP.HANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接错误")
-//                val HANDLER_CLOSE_CODE = 0     //关闭连接
-            eTCP.HANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接关闭")
-//                val HANDLER_CONNECT_CODE = 1  //连接成功
-            eTCP.HANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接成功")
-//                val HANDLER_MSG_CODE = 2    //接收消息
-            eTCP.HANDLER_MSG_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：接收到 ${obj.msg}")
-
-//                val SHANDLER_FAILURE_CODE = -11  //创建失败
-            eTCP.SHANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建失败")
-//                val SHANDLER_ERROR_CODE = -22   //创建错误
-            eTCP.SHANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建错误")
-//                val SHANDLER_CLOSE_CODE = -33     //连接关闭
-            eTCP.SHANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  连接关闭")
-//                val SHANDLER_SUCCEED_CODE = 33     //创建成功
-            eTCP.SHANDLER_SUCCEED_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建成功")
-//                val SHANDLER_CONNECT_CODE = 11  //连接成功
-            eTCP.SHANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  连接成功")
-//                val SHANDLER_MSG_CODE = 22    //接收消息
-            eTCP.SHANDLER_MSG_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：接收到${obj.msg}")
-        }
+        mainActivity?.Hint("TCP:${msg.obj}")
+//        val reMsg = msg.obj as eTCP.receiveMSG
+//        when (reMsg.code) {
+////                val HANDLER_FAILURE_CODE = -1  //连接失败
+//            eTCP.HANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.ip}：${reMsg.msg}  连接失败")
+////                val HANDLER_ERROR_CODE = -2   //连接错误
+//            eTCP.HANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.ip}：${reMsg.msg}  连接错误")
+////                val HANDLER_CLOSE_CODE = 0     //关闭连接
+//            eTCP.HANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.ip}：${reMsg.msg}  连接关闭")
+////                val HANDLER_CONNECT_CODE = 1  //连接成功
+//            eTCP.HANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.ip}：${reMsg.msg}  连接成功")
+////                val HANDLER_MSG_CODE = 2    //接收消息
+//            eTCP.HANDLER_MSG_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.ip}：接收到 ${reMsg.msg}")
+//
+////                val SHANDLER_FAILURE_CODE = -11  //创建失败
+////            eTCP.SHANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建失败")
+//////                val SHANDLER_ERROR_CODE = -22   //创建错误
+////            eTCP.SHANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建错误")
+//////                val SHANDLER_CLOSE_CODE = -33     //连接关闭
+////            eTCP.SHANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  连接关闭")
+//////                val SHANDLER_SUCCEED_CODE = 33     //创建成功
+////            eTCP.SHANDLER_SUCCEED_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建成功")
+//////                val SHANDLER_CONNECT_CODE = 11  //连接成功
+////            eTCP.SHANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  连接成功")
+//////                val SHANDLER_MSG_CODE = 22    //接收消息
+////            eTCP.SHANDLER_MSG_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：接收到${obj.msg}")
+//        }
     }
 
     private fun handleUSB(msg: Message) {

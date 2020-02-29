@@ -26,6 +26,10 @@ import java.net.Socket
  */
 class Test {
     @Test
+    fun C(){
+//        eSocketConnect("192.168.1.124",3335,Handler{})
+    }
+    @Test
     fun main() = runBlocking<Unit> {
         launch (){
             sA()
@@ -62,26 +66,21 @@ class Test {
         val ha: HashMap<String, String?> = HashMap()
         ha["1"]="01"
         ha["2"]=null
+        ha.clear()
         println(ha["1"])
         println(ha["2"])
         println(ha["3"])
         println(ha.containsKey("1"))
+        println(ha.containsKey("2"))
+        println(ha.containsKey("3"))
+        ha.remove("1")
+        println(ha.containsKey("1"))
+        println(ha.containsKey("2"))
+        println(ha.containsKey("3"))
     }
 
 
-    @Test
-    fun ss(){
-      val s1=  eSocketConnect("192.168.1.110",3335, Handler())
-        val s2=  eSocketConnect("192.168.1.123",3335, Handler())
-        GlobalScope.launch {
-            delay(10000)
-            println("关闭通道")
-//            s1.close()
-        }
-        runBlocking {
-            delay(120*1000)
-        }
-    }
+
     fun connect(ip:String,port:Int):Socket{
         println("$ip 开始连接")
         val socket = Socket(ip, port)

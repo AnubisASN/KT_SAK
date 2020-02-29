@@ -1,27 +1,17 @@
 package com.anubis.module_tcp
 
-import android.animation.TypeConverter
 import android.os.Handler
 import android.os.Message
-import android.view.View
-import android.widget.Spinner
 import com.anubis.kt_extends.eDevice
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eString
-import com.anubis.module_tcp.eTCP.HANDLER_CLOSE_CODE
-import com.anubis.module_tcp.eTCP.HANDLER_MSG_CODE
 import com.anubis.module_tcp.eTCP.eClientHashMap
+import com.anubis.module_tcp.eTCP.eServerHashMap
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.NonCancellable.isActive
-import kotlinx.coroutines.NonCancellable.isCancelled
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.custom.async
 import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.io.PrintStream
 import java.net.*
 import java.util.HashMap
@@ -59,6 +49,7 @@ object eTCP {
     //客户端多线程管理器
     val eClientHashMap: HashMap<String, Socket?> = HashMap()
 
+
     /**
      * 说明：TCP客户端连接
      * @方法：eSocketConnect()
@@ -68,107 +59,107 @@ object eTCP {
      * @param isReceove: Boolean = true: 是否运行接收线程
      * @return: NULL
      */
-    fun eSocketConnect(ip: String, port: Int, tcpHandler: Handler, condition: ICallBack? = null, isReceove: Boolean = true) {
-            val msg = tcpHandler.obtainMessage()
-            try {
-                val socket = Socket(ip, port)
+    suspend fun eSocketConnect(ip: String, port: Int, tcpHandler: Handler, condition: ICallBack? = null, isReceove: Boolean = true) {
+        val msg = Message()
+        try {
+            eLog("ip:$ip--port:$port")
+            val socket = Socket(ip, port)
 //                val os = PrintStream(socket.getOutputStream(), true, "utf-8")
 //                val `in` = socket.getInputStream()
-                msg?.obj = receiveMSG(ip, HANDLER_CONNECT_CODE, "$port  -TCP连接成功")
-                if (isReceove && eClientHashMap[ip] == null)
-                    eSocketReceive(ip, socket, tcpHandler, eClientHashMap, condition)
-                return
-            } catch (e: ConnectException) {
-                msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE, port.toString())
-                eLogE("连接失败:$e")
-                return
-            } catch (e: UnknownHostException) {
-                msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE, port.toString())
-                eLogE("未知主机异常:$e")
-                return
-            } catch (e: Exception) {
-                e.printStackTrace()
-                eLogE("连接异常:$e")
-                return
-            } finally {
-                tcpHandler.sendMessage(msg)
+            msg?.obj = receiveMSG(ip, HANDLER_CONNECT_CODE, "$port  -TCP连接成功")
+            if (isReceove && eClientHashMap[ip] == null) {
+                eLog("启动接收线程")
+                eSocketReceive(ip, socket, tcpHandler, eClientHashMap, condition)
             }
+            return
+        } catch (e: ConnectException) {
+            msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE, port.toString())
+            eLogE("连接失败:$e")
+            return
+        } catch (e: UnknownHostException) {
+            msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE, port.toString())
+            eLogE("未知主机异常:$e")
+            return
+        } catch (e: Exception) {
+            msg?.obj = receiveMSG(ip, HANDLER_ERROR_CODE, port.toString())
+            e.printStackTrace()
+            eLogE("连接异常:$e")
+            return
+        } finally {
+            tcpHandler.sendMessage(msg)
+        }
 
     }
 
 
-//    /**
+    //    /**
 //     *  TCP服务端-----------------------------------------------------------------------
 //     */
-//    val SHANDLER_FAILURE_CODE = -11  //创建失败
-//    val SHANDLER_ERROR_CODE = -22   //创建错误
-//    val SHANDLER_CLOSE_CODE = -33     //连接关闭
-//    val SHANDLER_SUCCEED_CODE = 33     //创建成功
-//    val SHANDLER_CONNECT_CODE = 11  //连接成功
-//    val SHANDLER_MSG_CODE = 22    //接收消息
-//    //    服务端多线程管理器
-//    val eServerHashMap: HashMap<String, eTCP.dataSocket> = HashMap()
-//    private var serverSocket: ServerSocket? = null
-//    /**
-//     * 说明：TCP服务端创建
-//     * @方法：eServerSocket()
-//     * @param port: Int = 3335;本地开启端口
-//     * @param tcpHandler: Handler;消息回调
-//     * @return:NULL
-//     */
-//    fun eServerSocket(port: Int = 3335, tcpHandler: Handler,condition:ICallBack?=null) {
-//        var sSocket: Socket? = null
-//        async {
-//            val msg = tcpHandler.obtainMessage()
-//            try {
-//                if (serverSocket == null)
-//                    serverSocket = ServerSocket(3335)
-//                msg.obj = eTCP.receiveMSG(eDevice.eGetHostIP(), SHANDLER_SUCCEED_CODE, "serverSocket创建成功")
-//                tcpHandler.sendMessage(msg)
-//                while (serverSocket?.isClosed == false) {
-//                    sSocket = serverSocket!!.accept()
-//                    val clienIP = sSocket!!.inetAddress.hostAddress
-//
-//
-//                    val msg = tcpHandler.obtainMessage()
-//                    msg.obj = eTCP.receiveMSG(clienIP, SHANDLER_CONNECT_CODE, "有客户端连接成功")
-//                    tcpHandler.sendMessage(msg)
-//                    if (eServerHashMap[clienIP]!!.receivesThread == null) {
-//                        eSocketReceive(clienIP, tcpHandler, eServerHashMap,condition)
-//                    }
-//                }
-//            } catch (e: IOException) {
-//                serverSocket?.close()
-//                serverSocket = null
-//                msg.obj = eTCP.receiveMSG(sSocket!!.inetAddress.hostAddress, SHANDLER_ERROR_CODE, "serverSocket创建失败")
-//                tcpHandler.sendMessage(msg)
-//                eLogE("initServerSocket IOException错误", e)
-//            } catch (e: Exception) {
-//                serverSocket?.close()
-//                serverSocket = null
-//                msg.obj = eTCP.receiveMSG(sSocket!!.inetAddress.hostAddress, SHANDLER_ERROR_CODE, "serverSocket客户端连接失败")
-//                tcpHandler.sendMessage(msg)
-//                eLogE("initServerSocket Exception错误", e)
-//            }
-//        }
-//    }
+    val SHANDLER_FAILURE_CODE = -11  //创建失败
+    val SHANDLER_ERROR_CODE = -22   //创建错误
+    val SHANDLER_CLOSE_CODE = -33     //连接关闭
+    val SHANDLER_SUCCEED_CODE = 33     //创建成功
+    val SHANDLER_CREATE_CLOSE_CODE = 44  //创建关闭
+    val SHANDLER_CONNECT_CODE = 11  //连接成功
+    val SHANDLER_MSG_CODE = 22    //接收消息
+    //    //    服务端多线程管理器
+//服务端多线程管理器
+    val eServerHashMap: HashMap<String, Socket?> = HashMap()
+    private var serverSocket: ServerSocket? = null
+    /**
+     * 说明：TCP服务端创建
+     * @方法：eServerSocket()
+     * @param port: Int = 3335;本地开启端口
+     * @param tcpHandler: Handler;消息回调
+     * @return:NULL
+     */
+    fun eServerSocket(tcpHandler: Handler, port: Int = 3335, condition: ICallBack? = null) {
+        var sSocket: Socket? = null
+        val msg = Message()
+        try {
+            if (serverSocket == null){
+                serverSocket = ServerSocket(3335)
+            msg.obj = eTCP.receiveMSG(eDevice.eGetHostIP(), SHANDLER_SUCCEED_CODE, "serverSocket创建成功")
+            tcpHandler.sendMessage(msg)
+            while (serverSocket?.isClosed == false) {
+                sSocket = serverSocket!!.accept()
+                val clienIP = sSocket!!.inetAddress.hostAddress
+                val msg = Message()
+                msg.obj = eTCP.receiveMSG(clienIP, SHANDLER_CONNECT_CODE, "有客户端连接成功")
+                tcpHandler.sendMessage(msg)
+                if (eServerHashMap[clienIP] == null) {
+                    eSocketReceive(clienIP, sSocket, tcpHandler, eServerHashMap, condition)
+                }
+            }}
+        }   catch (e: IOException) {
+            serverSocket?.close()
+            serverSocket = null
+            eLogE("serverSocket服务端关闭", e)
+        } catch (e: Exception) {
+            serverSocket?.close()
+            serverSocket = null
+            msg.obj = eTCP.receiveMSG(sSocket!!.inetAddress.hostAddress, SHANDLER_ERROR_CODE, "serverSocket客户端连接失败")
+            eLogE("initServerSocket Exception错误", e)
+            tcpHandler.sendMessage(msg)
+        }
+    }
 
     /**
      * 说明：TCP服务端关闭
      * @方法：eCloseServer()
      * @return:Boolean
      */
-//    fun eCloseServer(): Boolean {
-//        return try {
-//            serverSocket?.close()
-//            serverSocket = null
-//            eServerHashMap.clear()
-//            true
-//        } catch (e: IOException) {
-//            eLogE("tcp服务端关闭失败", e)
-//            false
-//        }
-//    }
+    fun eCloseServer(): Boolean {
+        return try {
+            eCloseReceives(eServerHashMap)
+            serverSocket?.close()
+            serverSocket = null
+            true
+        } catch (e: IOException) {
+            eLogE("tcp服务端关闭失败", e)
+            false
+        }
+    }
 
 
     /**
@@ -180,18 +171,32 @@ object eTCP {
      * @param isReceove: Boolean = true: 是否自动运行接收线程
      * @return:Boolean
      */
-    fun eSocketReceive( ip: String,socket: Socket, tcpHandler: Handler, hashMap: HashMap<String, Socket?>, condition: ICallBack? = null): Boolean {
+    fun eSocketReceive(ip: String, socket: Socket, tcpHandler: Handler, hashMap: HashMap<String, Socket?>, condition: ICallBack? = null): Boolean {
         return try {
+            eLog("启动接收")
+            val msg = tcpHandler.obtainMessage()
             val `in` = socket.getInputStream()
             val buffer = ByteArray(1024)
+            hashMap[ip] = socket
             async {
-                while (true) {
-                    val count = `in`!!.read(buffer)
-                    val receiveData = String(buffer, 0, count)
-                    eLog("$ip 接收到:$receiveData")
+                try {
+                    while (hashMap.containsKey(ip)) {
+                        val count = `in`!!.read(buffer)
+                        val receiveData = String(buffer, 0, count)
+                        val msg = Message()
+                        msg.obj = receiveMSG(ip, if (hashMap == eClientHashMap) HANDLER_MSG_CODE else SHANDLER_MSG_CODE, receiveData)
+                        tcpHandler.sendMessage(msg)
+                    }
+                } catch (e: StringIndexOutOfBoundsException) {
+                    msg.obj = receiveMSG(ip, if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, "StringIndexOutOfBoundsException")
+                } catch (e: Exception) {
+                    msg.obj = receiveMSG(ip, if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, "Exception")
+                    eLogE("$ip  接收线程错误", e)
+                } finally {
+                    hashMap[ip] = null
+                    tcpHandler.sendMessage(msg)
                 }
             }
-            hashMap[ip]=socket
             true
         } catch (e: Exception) {
             false
@@ -207,24 +212,28 @@ object eTCP {
      * @param hashMap: HashMap<String, dataSocket> ;线程管理器
      * @return:Boolean
      */
-    fun eSocketSend(ip: String? = null, str: String, hashMap: HashMap<String, Socket>, symbol: String = "|"): Boolean {
-        val type = if (hashMap == eTCP.eClientHashMap) "客户端" else "服务端"
+    fun eSocketSend(str: String, ip: String? = null, hashMap: HashMap<String, Socket?> = eServerHashMap, symbol: String = "|"): Boolean {
+        //指定发送
+        eLog("str:$str--ip:$ip")
+        val type = if (hashMap == eTCP.eServerHashMap) "服务端" else "客户端"
         try {
             if (ip == null) {
                 hashMap.forEach {
-                    val msgs = eString.eInterception(str, symbol = symbol).split(symbol)
-                    val os=  PrintStream(it.value.getOutputStream(), true, "utf-8")
-                    for (msg in msgs) {
-                        os.print(msg)
+                    if (it.value != null) {
+                        val msgs = eString.eInterception(str, symbol = symbol).split(symbol)
+                        val os = PrintStream(it.value!!.getOutputStream(), true, "utf-8")
+                        for (msg in msgs) {
+                            os.print(msg)
+                        }
                     }
                 }
                 return true
             }
-            if (hashMap[ip]==null){
+            if (hashMap[ip] == null) {
                 return false
             }
             val msgs = eString.eInterception(str, symbol = "|").split("|")
-            val os=  PrintStream(hashMap[ip]!!.getOutputStream(), true, "utf-8")
+            val os = PrintStream(hashMap[ip]!!.getOutputStream(), true, "utf-8")
             for (msg in msgs) {
                 os.print(msg)
             }
@@ -244,21 +253,20 @@ object eTCP {
      * @return:Boolean
      * 说明：用于关闭接收线程，可关闭管理端连接
      */
-    fun eCloseReceives(hashMap: HashMap<String, Socket>, ip: String? = null, isClear: Boolean = true): Boolean? {
+    fun eCloseReceives(hashMap: HashMap<String, Socket?>, ip: String? = null): Boolean {
         try {
             if (ip == null || ip.isEmpty()) {
                 hashMap.forEach {
-                    it.value.close()
+                    it.value?.close()
                     hashMap.remove(it.key)
                 }
                 return true
             } else {
                 if (hashMap[ip] == null) {
-                    return null
+                    return false
                 }
                 hashMap[ip]!!.close()
-                if (isClear)
-                    hashMap.remove(ip)
+                hashMap.remove(ip)
                 return true
             }
         } catch (e: Exception) {

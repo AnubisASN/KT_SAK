@@ -146,17 +146,20 @@ class LockerSerialportUtil private constructor(private val path: String, private
             while (boxFlag) {
                 val size: Int
                 try {
-                    val buffer = ByteArray(64)
+                    val buffer = ByteArray(512)
                     if (mInputStreamBox == null) return
                     /* read会一直等待数据，如果要判断是否接受完成，只有设置结束标识，或作其他特殊的处理 */
                     //Log.i("SerialPort", mReadThreadBox.getName() + "---locker port------读取中");
                     size = mInputStreamBox!!.read(buffer)
                     //                    sendMessage();
                     if (size > 0) {
-                        sportInterface!!.onLockerDataReceived(buffer, size, path)
+                        val bytes= ByteArray(size)
+                        for (i in 0 until size){
+                            bytes[i]=buffer[i]
+                        }
+                        sportInterface!!.onLockerDataReceived(bytes, size, path)
                     }
                 } catch (e: IOException) {
-//                    ePortMSG.Result=false
                     eLogE("Thread:$e",e)
                     return
                 }

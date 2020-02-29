@@ -11,7 +11,10 @@ import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eString
 import com.anubis.module_portMSG.Utils.LockerPortInterface
 import com.anubis.module_portMSG.Utils.LockerSerialportUtil
+import kotlinx.coroutines.*
 import java.io.OutputStream
+import java.util.*
+import javax.security.auth.callback.Callback
 import kotlin.experimental.and
 import kotlin.experimental.or
 
@@ -36,16 +39,8 @@ object ePortMSG : LockerPortInterface {
     private var PATH: String? = null //串口名称         RS485开门方式
     private var BAUDRATE: Int? = null            //波特率
     private var outputStream: OutputStream? = null     //发送串口的输出流
-    //    private var activity: Activity? = null
     internal var Result: Boolean = true
-    private var mHandle: Handler? = null
-//    private companion object {
-//        var init: ePortMSG? = null
-//    }
-//
-//    init {
-//        init = this@ePortMSG
-//    }
+    private var mCallback: ICallBack? = null
     /**
      * 方法说明：串口数据发送
      * @调用方法：sendMSG()
@@ -55,10 +50,17 @@ object ePortMSG : LockerPortInterface {
      * @param BAUDRATE：Int；波动
      * @return: Boolean
      */
+
+    interface ICallBack {
+        @Throws(Exception::class)
+        fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String)
+    }
+
     @Throws(Exception::class)
-    fun sendMSG(activity: Activity, msg: Any = "A", mPATH: String = "/dev/ttyS3", BAUDRATE: Int = 9600): Boolean {
+    fun sendMSG(activity: Activity,  msg: Any = "A", mPATH: String = "/dev/ttyS3", BAUDRATE: Int = 9600,callback: ICallBack?=null): Boolean {
         PATH = mPATH
         this.BAUDRATE = BAUDRATE
+        this.mCallback = callback
         openPort(activity)
         when (msg) {
             is String -> sendParams(msg)
@@ -67,10 +69,6 @@ object ePortMSG : LockerPortInterface {
                 sendParams(msg.toString())
             }
         }
-//            } catch (e: Exception) {
-//                eLogE("MyException：$e")
-//            }
-//        }).start()
         return Result
     }
 
@@ -84,10 +82,10 @@ object ePortMSG : LockerPortInterface {
      * @return: Boolean
      */
     @Throws(Exception::class)
-    fun getMSG(activity: Activity, mHandle: Handler, mPATH: String = "/dev/ttyS3", BAUDRATE: Int = 9600): Boolean {
+    fun getMSG(activity: Activity,callback: ICallBack, mPATH: String = "/dev/ttyS3", BAUDRATE: Int = 9600): Boolean {
         PATH = mPATH
         this.BAUDRATE = BAUDRATE
-        this.mHandle = mHandle
+        this.mCallback = callback
         openPort(activity)
         return Result
     }
@@ -112,7 +110,7 @@ object ePortMSG : LockerPortInterface {
      * 发送指令
      * @param msg
      */
-    private fun sendParams(msg: String) {
+    fun sendParams(msg: String) {
 
         if (outputStream == null) {
             return
@@ -120,7 +118,7 @@ object ePortMSG : LockerPortInterface {
         outputStream!!.write(eString.eGetHexStringToBytes(msg))
     }
 
-    private fun sendParams(msg: ByteArray) {
+    fun sendParams(msg: ByteArray) {
 
         if (outputStream == null) {
             return
@@ -135,23 +133,8 @@ object ePortMSG : LockerPortInterface {
      * @param size   返回的字节长度
      * @param path   串口名，如果有多个串口需要识别是哪个串口返回的数据（传或不传可以根据自己的编码习惯）
      */
-    private var data = ""
-
     override fun onLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
-        val temporaryData = String(buffer, 0, size)
-        eLog("串口监听：$temporaryData---${temporaryData.isNotBlank()}")
-        if (temporaryData.isNotBlank()) {
-            data += temporaryData
-        } else {
-            if (data.isNotBlank()|| data.isNotEmpty()) {
-                val message = Message()
-                eLog("发送：$path---$data")
-                message.obj = "$path---$data"
-                mHandle?.sendMessage(message)
-                data=""
-            }
-
-        }
+        mCallback?.IonLockerDataReceived(buffer,size,path)
     }
 
     fun convertTwoUnSignInt(byteArray: ByteArray): Int =
@@ -175,6 +158,24 @@ object ePortMSG : LockerPortInterface {
                 or (src[offset + 9].toInt() and 0xff shl 61)
                 or (src[offset + 10].toInt() and 0x03 shl 64))
         return value
+    }
+    fun byteArrToHexStr(byteArr: ByteArray): String {
+        val iLen = byteArr.size
+        // 每个byte用两个字符才能表示，所以字符串的长度是数组长度的两倍
+        val sb = StringBuffer(iLen * 2)
+        for (i in 0 until iLen) {
+            var intTmp = byteArr[i].toInt()
+            // 把负数转换为正数
+            while (intTmp < 0) {
+                intTmp = intTmp + 256
+            }
+            // 小于0F的数需要在前面补0
+            if (intTmp < 16) {
+                sb.append("0")
+            }
+            sb.append(Integer.toString(intTmp, 16))
+        }
+        return sb.toString()
     }
 }
 

@@ -1,6 +1,7 @@
 package com.anubis.app_hserver
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -12,8 +13,10 @@ import com.anubis.module_httpserver.eResolver
 import com.anubis.module_httpserver.eHttpServer
 import com.anubis.module_httpserver.eResolverType
 import com.anubis.module_httpserver.protocols.http.eHTTPD
+import com.anubis.module_portMSG.ePortMSG
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.startActivity
 
 @SuppressLint("SetTextI18n")
 class MainActivity : AppCompatActivity() {
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity() {
                         eLog("Key:${it.key}--Value:${it.value}")
                     }
                 }
+                else->{}
             }
         }
     }
