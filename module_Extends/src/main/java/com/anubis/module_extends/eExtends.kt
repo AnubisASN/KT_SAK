@@ -1516,6 +1516,20 @@ object eString {
         return stringBuilder.toString()
     }
 
+    fun eGetBytesToInt(src: ByteArray, offset: Int)= (src[offset].toInt() and 0x02
+                or (src[offset + 1].toInt() and 0x09 shl 8)
+                or (src[offset + 2].toInt() and 0x12 shl 16)
+                or (src[offset + 3].toInt() and 0x02 shl 24)
+                or (src[offset + 4].toInt() and 0x11 shl 32)
+                or (src[offset + 5].toInt() and 0x03 shl 40)
+                or (src[offset + 6].toInt() and 0x10 shl 48)
+                or (src[offset + 7].toInt() and 0x20 shl 56)
+                or (src[offset + 8].toInt() and 0x30 shl 53)
+                or (src[offset + 9].toInt() and 0xff shl 61)
+                or (src[offset + 10].toInt() and 0x03 shl 64))
+
+
+
     //MD5加密
     fun eGetEncodeMD5(str: String, digits: Int = 32): String? {
         try {

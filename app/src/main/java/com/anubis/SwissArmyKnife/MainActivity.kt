@@ -210,7 +210,7 @@ class MainActivity : Activity() {
                                 ?: "192.168.1.110", eTCP.eServerHashMap)}")
                         R.id.bt_item3 -> {
                             GlobalScope.launch {
-                             eTCP.eServerSocket( handleTCP)
+                             eTCP.eServerSocket( handleTCP,MSG?.toInt()?:3335)
                         }
                         }
                     }
@@ -511,14 +511,16 @@ class MainActivity : Activity() {
             }
             holder.itemView.bt_item2.setOnClickListener {
                 try {
-                    val editContext = holder.itemView.et_item1.text.toString()
+                    var editContext: String?  = holder.itemView.et_item1.text.toString()
+                    editContext = if (editContext?.isEmpty() != false) null else editContext
                     mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
                 } catch (e: Exception) {
                     mainActivity?.Hint("数据操作错误:$e")                }
             }
             holder.itemView.bt_item3.setOnClickListener {
                 try {
-                    val editContext = holder.itemView.et_item1.text.toString()
+                    var editContext: String?  = holder.itemView.et_item1.text.toString()
+                    editContext = if (editContext?.isEmpty() != false) null else editContext
                     mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
                 } catch (e: Exception) {
                     mainActivity?.Hint("数据操作错误:$e")                }

@@ -45,9 +45,10 @@ object ePortMSG : LockerPortInterface {
      * 方法说明：串口数据发送
      * @调用方法：sendMSG()
      * @param mAcitvity: Activity；活动
-     * @param msg: String or ByteArray；信息
+     * @param msg: Any ;String or ByteArray 信息
      * @param mPATH: String；串口名
      * @param BAUDRATE：Int；波动
+     * @param callback：: ICallBack?=null;接收回调
      * @return: Boolean
      */
 
@@ -76,7 +77,7 @@ object ePortMSG : LockerPortInterface {
      * 方法说明：串口数据监听
      * @调用方法：getMSG()
      * @param mAcitvity: Activity；活动
-     * @param  mHandle: Handler；消息回调
+     * @param  callback: ICallBack；消息回调
      * @param mPATH: String；串口名
      * @param BAUDRATE：Int；波动
      * @return: Boolean
@@ -100,7 +101,7 @@ object ePortMSG : LockerPortInterface {
     /**
      * 打开串口
      */
-    fun openPort(activity: Activity) {
+  private  fun openPort(activity: Activity) {
         println("打开串口")
         LockerSerialportUtil.init(activity, PATH!!, BAUDRATE!!, this)
         //        LockerSerialportUtil.init(this,PATH1,BAUDRATE,this);
@@ -137,46 +138,12 @@ object ePortMSG : LockerPortInterface {
         mCallback?.IonLockerDataReceived(buffer,size,path)
     }
 
-    fun convertTwoUnSignInt(byteArray: ByteArray): Int =
-            (byteArray[3].toInt() shl 24) or (byteArray[2].toInt() and 0xFF) or (byteArray[1].toInt() shl 8) or (byteArray[0].toInt() and 0xFF)
+
 
     override fun onLockerOutputStream(outputStream: OutputStream) {
         this.outputStream = outputStream
     }
 
-    fun bytesToInt(src: ByteArray, offset: Int): Int {
-        val value: Int
-        value = (src[offset].toInt() and 0x02
-                or (src[offset + 1].toInt() and 0x09 shl 8)
-                or (src[offset + 2].toInt() and 0x12 shl 16)
-                or (src[offset + 3].toInt() and 0x02 shl 24)
-                or (src[offset + 4].toInt() and 0x11 shl 32)
-                or (src[offset + 5].toInt() and 0x03 shl 40)
-                or (src[offset + 6].toInt() and 0x10 shl 48)
-                or (src[offset + 7].toInt() and 0x20 shl 56)
-                or (src[offset + 8].toInt() and 0x30 shl 53)
-                or (src[offset + 9].toInt() and 0xff shl 61)
-                or (src[offset + 10].toInt() and 0x03 shl 64))
-        return value
-    }
-    fun byteArrToHexStr(byteArr: ByteArray): String {
-        val iLen = byteArr.size
-        // 每个byte用两个字符才能表示，所以字符串的长度是数组长度的两倍
-        val sb = StringBuffer(iLen * 2)
-        for (i in 0 until iLen) {
-            var intTmp = byteArr[i].toInt()
-            // 把负数转换为正数
-            while (intTmp < 0) {
-                intTmp = intTmp + 256
-            }
-            // 小于0F的数需要在前面补0
-            if (intTmp < 16) {
-                sb.append("0")
-            }
-            sb.append(Integer.toString(intTmp, 16))
-        }
-        return sb.toString()
-    }
 }
 
 
