@@ -168,13 +168,13 @@ class CoroutineTest {
     }
 
     @Test
-    fun 倒计时() = runBlocking{
+    fun 倒计时() = runBlocking {
         GlobalScope.launch {
             repeat(10) {
                 println("倒计时:${10 - it}")
                 delay(1000L)
             }
-           println("倒计时完成")
+            println("倒计时完成")
         }
         delay(20000)
     }
@@ -271,6 +271,18 @@ class CoroutineTest {
             "执行完成"
         }
         println("Result:$result")
+    }
+
+    @Test
+    fun test()= runBlocking {
+       var tempStatus:Boolean?=null
+        tempStatus=withTimeout(500L) {
+            while (tempStatus == null) {
+                delay(10)
+            }
+             true
+        }
+        println(tempStatus)
     }
 
     @Test //并发计算 惰性协程

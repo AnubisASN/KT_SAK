@@ -45,7 +45,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ArcFaceFT" />
-        <activity android:name="com.anubis.module_videochat.eVideoChat" />
         <activity android:name=".ArcFace" />
 
         <service

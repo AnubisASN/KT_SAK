@@ -162,13 +162,13 @@ fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "
     }
 }
 
-fun   Application.eCrash(saveFile:File= File("${Environment.getExternalStorageDirectory()}/errorLogs.log")){
+fun Application.eCrash(saveFile: File = File("${Environment.getExternalStorageDirectory()}/errorLogs.log")) {
     //记录崩溃信息
     val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
     Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
         //获取崩溃时的UNIX时间戳
         //将时间戳转换成人类能看懂的格式，建立一个String拼接器
-        val stringBuilder =StringBuilder(eTime.eGetCurrentTime("yyyy/MM/dd HH:mm:ss"))
+        val stringBuilder = StringBuilder(eTime.eGetCurrentTime("yyyy/MM/dd HH:mm:ss"))
         stringBuilder.append(":\n")
         //获取错误信息退票手续费
         stringBuilder.append(throwable.message)
@@ -1028,7 +1028,7 @@ object eBitmap {
         return BitmapFactory.decodeByteArray(decode, 0, decode.size)
     }
 
-    //NV21 Bytes字节转文件
+    //NV21 Bytes字节转Bitmap
     fun eByteArrayToBitmp(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect = Rect(0, 0, width, height), rotate: Float = 0f, quality: Int = 80): Bitmap? {
         var mBitmap: Bitmap? = null
         try {
@@ -1091,6 +1091,23 @@ object eBitmap {
         return newBM
     }
 
+    //Bitmap压缩 (设置压缩率或者 设置大小)
+    fun eBitmapCompress(bitmap: Bitmap, quality: Int = 100, size: Int? = null): Bitmap? {
+        var baos = ByteArrayOutputStream()
+        if (size == null) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos)
+        } else {
+            var options = 100
+            while (baos.toByteArray().size / 1024 > size) {
+                baos.reset()//重置baos即清空baos
+                bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos)
+                options -= 10
+            }
+        }
+        val isBm = ByteArrayInputStream(baos.toByteArray())
+        return BitmapFactory.decodeStream(isBm, null, null)
+    }
+
     //Bitmap转文件
     fun eBitmapToFile(bitmap: Bitmap, absPath: String, quality: Int = 80): Boolean {
         return eBitmapToFile(bitmap, File(absPath), quality)
@@ -1144,11 +1161,10 @@ object eBitmap {
 }
 
 
-
 /**
  * Imagg图片处理辅助扩展类--------------------------------------------------------------------------------------
  */
-object ImageHelper {
+object eImage {
 
     /**
      * 利用 rgba 来修改图片
@@ -1158,7 +1174,7 @@ object ImageHelper {
      * @param lum           亮度
      * @return              修改完成的图片
      */
-    fun getHandleImageForARGB(bm: Bitmap, hue: Float, saturation: Float, lum: Float): Bitmap {
+    fun eGetHandleImageForARGB(bm: Bitmap, hue: Float, saturation: Float, lum: Float): Bitmap {
         val bmp = Bitmap.createBitmap(bm.width, bm.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bmp)
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -1189,7 +1205,7 @@ object ImageHelper {
     }
 
     //底片效果
-    fun handleImageNegative(bm: Bitmap): Bitmap {
+    fun eGetHandleImageNegative(bm: Bitmap): Bitmap {
         val width = bm.width
         val height = bm.height
         var color: Int
@@ -1214,9 +1230,9 @@ object ImageHelper {
             b = Color.blue(color)
             a = Color.alpha(color)
 
-            r1 = getJudgedData(255 - r)
-            g1 = getJudgedData(255 - g)
-            b1 = getJudgedData(255 - b)
+            r1 = eGetJudgedData(255 - r)
+            g1 = eGetJudgedData(255 - g)
+            b1 = eGetJudgedData(255 - b)
             newPx[i] = Color.argb(a, r1, g1, b1)
         }
         bmp.setPixels(newPx, 0, width, 0, 0, width, height)
@@ -1224,7 +1240,7 @@ object ImageHelper {
     }
 
     //老照片
-    fun handleImagePixelsOldPhoto(bm: Bitmap): Bitmap {
+    fun eGetHandleImagePixelsOldPhoto(bm: Bitmap): Bitmap {
         val bmp = Bitmap.createBitmap(bm.width, bm.height,
                 Bitmap.Config.ARGB_8888)
         val width = bm.width
@@ -1249,9 +1265,9 @@ object ImageHelper {
             g = Color.green(color)
             b = Color.blue(color)
 
-            r1 = getJudgedData((0.393 * r + 0.769 * g + 0.189 * b).toInt())
-            g1 = getJudgedData((0.349 * r + 0.686 * g + 0.168 * b).toInt())
-            b1 = getJudgedData((0.272 * r + 0.534 * g + 0.131 * b).toInt())
+            r1 = eGetJudgedData((0.393 * r + 0.769 * g + 0.189 * b).toInt())
+            g1 = eGetJudgedData((0.349 * r + 0.686 * g + 0.168 * b).toInt())
+            b1 = eGetJudgedData((0.272 * r + 0.534 * g + 0.131 * b).toInt())
 
             newPx[i] = Color.argb(a, r1, g1, b1)
         }
@@ -1260,7 +1276,7 @@ object ImageHelper {
     }
 
     //浮雕效果
-    fun handleImagePixelsRelief(bm: Bitmap): Bitmap {
+    fun eGetHandleImagePixelsRelief(bm: Bitmap): Bitmap {
         val bmp = Bitmap.createBitmap(bm.width, bm.height,
                 Bitmap.Config.ARGB_8888)
         val width = bm.width
@@ -1291,16 +1307,16 @@ object ImageHelper {
             g1 = Color.green(color)
             b1 = Color.blue(color)
 
-            r = getJudgedData(r - r1 + 127)
-            g = getJudgedData(g - g1 + 127)
-            b = getJudgedData(b - b1 + 127)
+            r = eGetJudgedData(r - r1 + 127)
+            g = eGetJudgedData(g - g1 + 127)
+            b = eGetJudgedData(b - b1 + 127)
             newPx[i] = Color.argb(a, r, g, b)
         }
         bmp.setPixels(newPx, 0, width, 0, 0, width, height)
         return bmp
     }
 
-    private fun getJudgedData(oldData: Int): Int {
+     fun eGetJudgedData(oldData: Int): Int {
         var newData = oldData
         if (newData > 255) {
             newData = 255
@@ -1310,6 +1326,7 @@ object ImageHelper {
         return newData
     }
 }
+
 /**
  * 文件转换扩展类--------------------------------------------------------------------------------------
  */
@@ -1516,18 +1533,17 @@ object eString {
         return stringBuilder.toString()
     }
 
-    fun eGetBytesToInt(src: ByteArray, offset: Int)= (src[offset].toInt() and 0x02
-                or (src[offset + 1].toInt() and 0x09 shl 8)
-                or (src[offset + 2].toInt() and 0x12 shl 16)
-                or (src[offset + 3].toInt() and 0x02 shl 24)
-                or (src[offset + 4].toInt() and 0x11 shl 32)
-                or (src[offset + 5].toInt() and 0x03 shl 40)
-                or (src[offset + 6].toInt() and 0x10 shl 48)
-                or (src[offset + 7].toInt() and 0x20 shl 56)
-                or (src[offset + 8].toInt() and 0x30 shl 53)
-                or (src[offset + 9].toInt() and 0xff shl 61)
-                or (src[offset + 10].toInt() and 0x03 shl 64))
-
+    fun eGetBytesToInt(src: ByteArray, offset: Int) = (src[offset].toInt() and 0x02
+            or (src[offset + 1].toInt() and 0x09 shl 8)
+            or (src[offset + 2].toInt() and 0x12 shl 16)
+            or (src[offset + 3].toInt() and 0x02 shl 24)
+            or (src[offset + 4].toInt() and 0x11 shl 32)
+            or (src[offset + 5].toInt() and 0x03 shl 40)
+            or (src[offset + 6].toInt() and 0x10 shl 48)
+            or (src[offset + 7].toInt() and 0x20 shl 56)
+            or (src[offset + 8].toInt() and 0x30 shl 53)
+            or (src[offset + 9].toInt() and 0xff shl 61)
+            or (src[offset + 10].toInt() and 0x03 shl 64))
 
 
     //MD5加密

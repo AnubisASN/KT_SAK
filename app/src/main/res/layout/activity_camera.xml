@@ -27,5 +27,18 @@
         android:layout_marginEnd="253dp"
         />
 
+    <TextView
+        android:id="@+id/tvHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="150dp"
+        android:text="没戴口罩"
+        android:textColor="#ff0000"
+        android:textSize="@dimen/dp_20"
+        android:textStyle="bold"/>
+
 
 </RelativeLayout>

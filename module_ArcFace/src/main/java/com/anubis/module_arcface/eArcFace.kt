@@ -23,7 +23,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
-import com.anubis.module_arcface.eArcFace0.SDK_KEY
 import com.anubis.module_arcface.model.DrawInfo
 import com.anubis.module_arcface.util.ConfigUtil
 import com.anubis.module_arcface.util.DrawHelper

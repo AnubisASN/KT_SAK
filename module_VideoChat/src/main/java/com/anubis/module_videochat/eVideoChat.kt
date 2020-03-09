@@ -24,15 +24,11 @@ import io.agora.rtc.video.VideoEncoderConfiguration
 object eVideoChat {
     private var mAppID = "02fb80262bcc46dd95d075a88404b24b"
     private var mChannelName = "demoChannel1"
-    private var mLocalContainer: FrameLayout? = null
-    private var mRemoteContainer: FrameLayout? = null
+    private var mLocalContainer: FrameLayout? = null //本地视频预览控件
+    private var mRemoteContainer: FrameLayout? = null //远程视频预览控件
     private var mContext: Context? = null
     private var mHandler: Handler? = null
     private var mRtcEngine: RtcEngine? = null // Tutorial Step 1
-    val HANDLER_FAILURE_CODE = -1  //连接失败
-    val HANDLER_ERROR_CODE = -2   //连接错误
-    val HANDLER_CLOSE_CODE = 0     //关闭连接
-    val HANDLER_CONNECT_CODE = 1  //连接成功
     private val mRtcEventHandler: IRtcEngineEventHandler = object : IRtcEngineEventHandler() { // Tutorial Step 1
         override fun onFirstRemoteVideoDecoded(uid: Int, width: Int, height: Int, elapsed: Int) { // Tutorial Step 5
             eLog("第一次连接")
@@ -42,7 +38,7 @@ object eVideoChat {
         override fun onUserJoined(uid: Int, elapsed: Int) {
             eLog("用户加入")
             val msg = mHandler?.obtainMessage()
-            msg?.what=HANDLER_CONNECT_CODE
+//            msg?.what=HANDLER_CONNECT_CODE
             msg?.obj="连接成功"
             mHandler?.sendMessage(msg)
         }
@@ -50,7 +46,7 @@ object eVideoChat {
         override fun onUserOffline(uid: Int, reason: Int) { // Tutorial Step 7
             eLog("用户离线")
             val msg = mHandler?.obtainMessage()
-            msg?.what=HANDLER_CLOSE_CODE
+//            msg?.what=HANDLER_CLOSE_CODE
             msg?.obj="关闭连接"
             mHandler?.sendMessage(msg)
             runOnUiThread { onRemoteUserLeft(mRemoteContainer!!) }
@@ -126,6 +122,7 @@ object eVideoChat {
         RtcEngine.destroy()
         mRtcEngine = null
         (mContext as Activity).finish()
+
     }
 
 
@@ -197,5 +194,12 @@ object eVideoChat {
             eLogE("onRemoteUserVideoMuted", e)
         }
     }
-
+    interface ICallBack {
+        //        关闭
+        fun IVideoClose()
+        //    启动
+        fun IVideoStart()
+        //        连接成功
+        fun IVideoConnectSucceed(uid: Int, width: Int, height: Int, elapsed: Int)
+    }
 }
