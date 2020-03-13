@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import com.anubis.kt_extends.eAssetsToFile
 import com.anubis.kt_extends.eDevice
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.mp
@@ -17,6 +18,7 @@ import com.anubis.module_portMSG.ePortMSG
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.startActivity
+import java.io.File
 
 @SuppressLint("SetTextI18n")
 class MainActivity : AppCompatActivity() {
@@ -45,6 +47,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        File("/sdcard/Web").apply { if (!this.exists()) this.mkdirs() }
+        eAssetsToFile(this, "Web/index.html", "/sdcard/Web/index.html")
+        eAssetsToFile(this, "Web/base64.js", "/sdcard/Web/base64.js")
+        eAssetsToFile(this, "Web/index.js", "/sdcard/Web/index.js")
+        eAssetsToFile(this, "Web/jquery.js", "/sdcard/Web/jquery.js")
+        eAssetsToFile(this, "Web/Vysor5.5.5.crx", "/sdcard/Web/Vysor5.5.5.crx")
+        eAssetsToFile(this, "Web/Vysor.zip", "/sdcard/Web/Vysor.zip")
         mHttpServer = eHttpServer.eStart(eResolver::class.java, handler = httpHandler)
     }
 

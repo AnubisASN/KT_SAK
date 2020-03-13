@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.anubis.demo">
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
+    <application
+        android:name="com.anubis.module_webRTC.App"
+        android:allowBackup="true"
+        android:icon="@drawable/star_fox_500"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
+        <activity
+            android:name="com.anubis.module_webRTC.demo.SplashActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- starAvSdk -->
+        <!-- 【必须】消息收发service -->
+        <!--
+            <service
+            android:name="com.starrtc.starrtcsdk.core.service.StarService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="cn.starav.staravsdk.service.StarService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.starrtc.starrtcsdk.core.service.StarAssistService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.starav.staravsdk.service.StarAssistService" />
+            </intent-filter>
+        </service>
+        -->
+        <!-- starAvSdk -->
+
+        <service android:name="com.anubis.module_webRTC.demo.service.KeepLiveService">
+            <intent-filter>
+                <action android:name="com.starrtc.demo.service.KeepLiveService"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.anubis.module_webRTC.demo.service.FloatWindowsService"
+            android:exported="false"></service>
+
+        <activity
+            android:name="com.anubis.module_webRTC.demo.StarAvDemoActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 设置 -->
+        <activity
+            android:name="com.anubis.module_webRTC.demo.setting.AboutActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.setting.SettingActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- VOIP -->
+        <activity
+            android:name="com.anubis.module_webRTC.demo.voip.VoipListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.voip.VoipActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.voip.VoipAudioActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.voip.VoipCreateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.voip.VoipRingingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.voip.VoipAudioRingingActivity"
+            android:screenOrientation="portrait" />
+        <!-- P2P直连 -->
+        <activity android:name="com.anubis.module_webRTC.demo.p2p.VoipP2PDemoActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name="com.anubis.module_webRTC.demo.p2p.VoipP2PCreateActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name="com.anubis.module_webRTC.demo.p2p.VoipP2PRingingActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name="com.anubis.module_webRTC.demo.p2p.VoipP2PActivity"
+            android:screenOrientation="landscape"/>
+        <!-- 视频互动直播 -->
+        <activity
+            android:name="com.anubis.module_webRTC.demo.videolive.VideoLiveListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.videolive.VideoLiveCreateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.videolive.VideoLiveActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 视频会议 -->
+        <activity
+            android:name="com.anubis.module_webRTC.demo.videomeeting.VideoMeetingActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.videomeeting.VideoMeetingListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.videomeeting.VideoMeetingCreateActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 超级聊天室 -->
+        <activity
+            android:name="com.anubis.module_webRTC.demo.superroom.SuperRoomActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.superroom.SuperRoomCreateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.superroom.SuperRoomListActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 测试 -->
+        <activity
+            android:name="com.anubis.module_webRTC.demo.test.LoopTestActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- IM -->
+        <activity
+            android:name="com.anubis.module_webRTC.demo.im.chatroom.ChatroomActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.im.chatroom.ChatroomCreateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.im.chatroom.ChatroomListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.im.IMDemoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.im.c2c.C2CActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.im.group.MessageGroupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.im.group.MessageGroupCreateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.im.group.MessageGroupListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.im.c2c.C2CListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.im.c2c.C2CCreateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.im.group.MessageGroupSettingActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 音频互动直播 -->
+        <activity
+            android:name="com.anubis.module_webRTC.demo.audiolive.AudioLiveListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.audiolive.AudioLiveCreateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.audiolive.AudioLiveActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 小班课 -->
+        <activity
+            android:name="com.anubis.module_webRTC.demo.miniclass.MiniClassCreateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.miniclass.MiniClassListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.miniclass.MiniClassActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name="com.anubis.module_webRTC.demo.setting.SetupServerHostActivity"></activity>
+
+        <!--rtsp转发测试-->
+        <activity
+            android:name="com.anubis.module_webRTC.demo.thirdstream.RtspTestActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.anubis.module_webRTC.demo.thirdstream.RtspTestListActivity"
+            android:screenOrientation="portrait" />
+    </application>
+
+</manifest>

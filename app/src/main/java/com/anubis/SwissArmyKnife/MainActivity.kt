@@ -116,7 +116,7 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信r_bt串口通信s_bt监听串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
             init()
         if (Build.MODEL == "ZK-R32A")
             XHA = XHApiManager()
@@ -344,25 +344,19 @@ class MainActivity : Activity() {
                     getDigit("串口通信") -> {
                         val msg = "A55501FB"
                         when (view?.id) {
-                            R.id.bt_item1 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, msg, "/dev/ttyS1", 115200, object : ePortMSG.ICallBack {
+                            R.id.bt_item1 -> Hint("串口数据发送：" + ePortMSG.sendMSG(this@MainActivity, msg, "/dev/ttyS1", 115200, object : ePortMSG.ICallBack {
                                 override fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
-                                    Hint("串口接收:${eString.eGetByteArrToHexStr(buffer)}--$path")
+                                    Hint("串口数据接收:${eString.eGetByteArrToHexStr(buffer)}--$path")
                                 }
                             }))
-                            R.id.bt_item2 -> Hint("串口通讯状态：" + ePortMSG.sendMSG(this@MainActivity, MSG?.split("-")?.get(0)
-                                    ?: "A".toByteArray(), MSG?.split("-")?.get(1)
-                                    ?: "/dev/ttyS3", callback = object : ePortMSG.ICallBack {
-                                override fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
-                                    Hint("串口接收:${eString.eGetByteArrToHexStr(buffer)}--$path")
-                                }
-                            }))
-                            R.id.bt_item3 -> Hint("串口通讯状态：" + ePortMSG.getMSG(this@MainActivity, callback = object : ePortMSG.ICallBack {
+                            R.id.bt_item2 -> Hint("串口监听：" + ePortMSG.getMSG(this@MainActivity, callback = object : ePortMSG.ICallBack {
                                 override fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
                                     Hint("串口接收:${eString.eGetByteArrToHexStr(buffer)}--$path")
                                 }
                             }, mPATH = MSG?.split("-")?.get(0)
                                     ?: "/dev/ttyS3", BAUDRATE = MSG?.split("-")?.get(1)?.toInt()
                                     ?: 9600))
+                            R.id.bt_item3 -> Hint("串口关闭：" + ePortMSG.closeMSG())
                         }
                     }
 

@@ -45,7 +45,7 @@ object eManage {
         eLog("tmpFilePath:$tmpFilePath--${session.parms[fileParms]}")
         val tmpFile = File(tmpFilePath)
         val targetFile = File("$savePath${session.parms[fileParms]}")
-        return if (eCopyFile(tmpFile.path, targetFile.path))targetFile.path else null
+        return if (eCopyFile(tmpFile.path, targetFile.path)) targetFile.path else null
     }
 
     /**
@@ -102,7 +102,7 @@ object eManage {
             body = hin.readLine()
             return body
         } catch (ioe: IOException) {
-            eLogE("IOException: $ioe",ioe)
+            eLogE("IOException: $ioe", ioe)
             return "IOException: $ioe"
         }
     }
@@ -112,8 +112,22 @@ object eManage {
      * @param session: IHTTPSession； 会话通道
      * @return: MutableMap<String, String>? ； 参数集合
      */
-    fun sessionParse(session: IHTTPSession) : MutableMap<String, String>? {
+    fun sessionParse(session: IHTTPSession): MutableMap<String, String>? {
         session.parseBody(HashMap())
         return session.parms
+    }
+
+    /**
+     *说明：文件下载
+     * @param session: IHTTPSession； 会话通道
+     * @return: MutableMap<String, String>? ； 参数集合
+     */
+    fun fileDownload(file: File):Response? {
+        if (!file.exists()){
+            eLogE("文件不存在")
+            return null
+        }
+        val fis=FileInputStream(file)
+        return Response.newFixedLengthResponse(Status.OK, "application/octet-stream", fis, fis.available().toLong());
     }
 }

@@ -22,7 +22,7 @@ import io.agora.rtc.video.VideoEncoderConfiguration
 
 @SuppressLint("StaticFieldLeak")
 object eVideoChat {
-    private var mAppID = "02fb80262bcc46dd95d075a88404b24b"
+    private var mAppID = "31c210b382c44f3d91a04da33a4e6277"
     private var mChannelName = "demoChannel1"
     private var mLocalContainer: FrameLayout? = null //本地视频预览控件
     private var mRemoteContainer: FrameLayout? = null //远程视频预览控件

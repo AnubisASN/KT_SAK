@@ -378,11 +378,11 @@ fun ePlayPCM(path: String) {
 }
 
 //assets文件复制
-fun eAssetsToFile(context: Context, assetsName: String, copyName: String): Boolean {
+fun eAssetsToFile(context: Context, assetsName: String, copyFilePath: String): Boolean {
     try {
-        if (!File(copyName).exists()) {
+        if (!File(copyFilePath).exists()) {
             val inputStream = context.getResources().getAssets().open(assetsName)// assets文件夹下的文件
-            val fileOutputStream = FileOutputStream(copyName)// 保存到本地的文件夹下的文件
+            val fileOutputStream = FileOutputStream(copyFilePath)// 保存到本地的文件夹下的文件
             val buffer = ByteArray(1024)
             var count = 0
             while (inputStream.read(buffer).apply { count = this } > 0) {

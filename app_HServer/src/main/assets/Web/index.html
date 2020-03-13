@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML独立管理_调试界面</title>
+</head>
+<script type="text/javascript" src="base64.js"></script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="index.js"></script>
+<body>
+<h1>HTML独立管理_调试界面</h1>
+<script>
+    getSetting();
+    setTimeout(function () {
+        getNewDate();
+    }, 1000);
+</script>
+<div>
+    <div style="float: left;margin:0 auto;margin-left:130px">
+        <form id="form_input_register" action="File/" method="post"
+              enctype="multipart/form-data"
+              onsubmit="false">
+            <img style="margin-left: 30px" id="img" src="http://193.112.46.153/web/images/cycle.png" alt="100x100"
+                 width="100px"
+                 height="100px">
+            <p><input id="file" type="file" name="file" onchange="showPicture(this)"></p>
+            <p>姓名：<input id="name" type="text" name="name"></p>
+            <p>卡号：<input id="card" type="text" name="card"></p>
+            <p><input type="button" value="提交" onclick="base64()"></p>
+        </form>
+        <hr style=" margin-top: 35px;margin-bottom:35px;">
+
+        <div style="float: left">
+            <form action="getFaceInfo/" method="post"
+                  enctype="multipart/form-data">
+                <input type="submit" value="人员查询"/>
+            </form>
+            <form action="getRecord/" method="post"
+                  enctype="multipart/form-data">
+                <input type="submit" value="记录查询"/>
+            </form>
+        </div>
+        <input style="margin-left: 10%;margin-right: 10%" type="submit" onclick="projection()"
+               value="设备远程控制"/>
+        <div style="float: right">
+            <form action="getAppLogs/" method="post"
+                  enctype="multipart/form-data">
+                <input type="submit" value="软件日志查询"/>
+            </form>
+            <form action="getSystemLogs/" method="post"
+                  enctype="multipart/form-data">
+                <input type="submit" value="系统日志查询"/>
+            </form>
+        </div>
+        <hr style=" margin-top: 100px;margin-bottom:35px;">
+        <div>
+            <p style="color: red">时间格式:yyyy-MM-dd&nbsp;&nbsp;HH:mm:ss</p>
+            <input id="time" type="text"> <input type="submit" onclick="setTime()"
+                                                 value="时间同步"/>
+        </div>
+        <br>
+        <p style="color: red">提示:如果未选择更新包点击'设备软件更新',设备会在因特网环境下自动下载升级<br>
+            <input id="upFile" type="file" name="file">
+            <input style="margin-top: 20px" type="submit" onclick="getUpdate()" value="设备软件更新"/></p>
+    </div>
+
+
+    <div id="setting_ui" style="float: right;width: 40%;">
+        <form>
+            <h2>系统设置
+                <hr style=" margin-top: 35px;margin-bottom:35px;">
+            </h2>
+            <p>服务器IP：<input id="serverIp" type="text" value=""></p>
+            <p>服务器端口：<input id="serverPort" type="text"/></p>
+
+            <input type="button" style="margin-top:30px;margin-left: 40%" onclick="setting()" value="设置">
+        </form>
+        <hr style=" margin-top: 35px;margin-bottom:35px;">
+        <p>RAW数据：<textarea style="width: 500px ;height: 200px" id="raw_data"></textarea></p>
+        <input type="button" style="margin-top:30px;margin-left: 35%" onclick="tcpData()" value="自定义数据(RAW)">
+    </div>
+</div>
+
+
+</body>
+</html>
