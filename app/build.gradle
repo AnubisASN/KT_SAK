@@ -75,6 +75,7 @@ dependencies {
     implementation project(':module_QRCode')
     implementation project(':module_ArcFaceFT')
     implementation project(':module_TCP')
+    compile project(path: ':module_VideoChat')
 }
 repositories {
     mavenCentral()

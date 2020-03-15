@@ -58,28 +58,28 @@ public class KeepLiveService extends Service implements IEventListener {
     }
 
     private void initSDK(){
-        MLOC.init(this);
+        MLOC.INSTANCE.init(this);
         initFree();
     }
 
     private boolean isLogin = false;
     //开放版SDK初始化
     private void initFree(){
-        MLOC.d("KeepLiveService","initFree");
+        MLOC.INSTANCE.d("KeepLiveService","initFree");
         isLogin = XHClient.getInstance().getIsOnline();
         if(!isLogin){
-            if(MLOC.userId.equals("")){
-                MLOC.userId = ""+(new Random().nextInt(900000)+100000);
-                MLOC.saveUserId(MLOC.userId);
+            if(MLOC.INSTANCE.getUserId().equals("")){
+                MLOC.INSTANCE.setUserId("" + (new Random().nextInt(900000) + 100000));
+                MLOC.INSTANCE.saveUserId(MLOC.INSTANCE.getUserId());
             }
             addListener();
 
             XHCustomConfig customConfig =  XHCustomConfig.getInstance(this);
-            customConfig.setChatroomServerUrl(MLOC.CHATROOM_SERVER_URL);
-            customConfig.setLiveSrcServerUrl(MLOC.LIVE_SRC_SERVER_URL);
-            customConfig.setLiveVdnServerUrl(MLOC.LIVE_VDN_SERVER_URL);
-            customConfig.setImServerUrl(MLOC.IM_SERVER_URL);
-            customConfig.setVoipServerUrl(MLOC.VOIP_SERVER_URL);
+            customConfig.setChatroomServerUrl(MLOC.INSTANCE.getCHATROOM_SERVER_URL());
+            customConfig.setLiveSrcServerUrl(MLOC.INSTANCE.getLIVE_SRC_SERVER_URL());
+            customConfig.setLiveVdnServerUrl(MLOC.INSTANCE.getLIVE_VDN_SERVER_URL());
+            customConfig.setImServerUrl(MLOC.INSTANCE.getIM_SERVER_URL());
+            customConfig.setVoipServerUrl(MLOC.INSTANCE.getVOIP_SERVER_URL());
 //            customConfig.setLogEnable(false); //关闭SDK调试日志
 //            customConfig.setDefConfigOpenGLESEnable(false);
 //            customConfig.setDefConfigCameraId(1);//设置默认摄像头方向  0后置  1前置
@@ -87,11 +87,11 @@ public class KeepLiveService extends Service implements IEventListener {
 //            customConfig.setLogDirPath(Environment.getExternalStorageDirectory().getPath()+"/starrtcLog");
 //            customConfig.setDefConfigCamera2Enable(false);
 //            StarCamera.setFrameBufferEnable(false);
-            customConfig.initSDKForFree(MLOC.userId, new IXHErrorCallback() {
+            customConfig.initSDKForFree(MLOC.INSTANCE.getUserId(), new IXHErrorCallback() {
                 @Override
                 public void error(final String errMsg, Object data) {
-                    MLOC.e("KeepLiveService","error:"+errMsg);
-                    MLOC.showMsg(KeepLiveService.this,errMsg);
+                    MLOC.INSTANCE.e("KeepLiveService","error:"+errMsg);
+                    MLOC.INSTANCE.showMsg(KeepLiveService.this,errMsg);
                 }
             },new Handler());
 
@@ -105,13 +105,13 @@ public class KeepLiveService extends Service implements IEventListener {
             XHClient.getInstance().getLoginManager().loginFree(new IXHResultCallback() {
                 @Override
                 public void success(Object data) {
-                    MLOC.d("KeepLiveService","loginSuccess");
+                    MLOC.INSTANCE.d("KeepLiveService","loginSuccess");
                     isLogin = true;
                 }
                 @Override
                 public void failed(final String errMsg) {
-                    MLOC.d("KeepLiveService","loginFailed "+errMsg);
-                    MLOC.showMsg(KeepLiveService.this,errMsg);
+                    MLOC.INSTANCE.d("KeepLiveService","loginFailed "+errMsg);
+                    MLOC.INSTANCE.showMsg(KeepLiveService.this,errMsg);
                 }
             });
         }
@@ -135,7 +135,7 @@ public class KeepLiveService extends Service implements IEventListener {
             }
             break;
             case AEvent.AEVENT_VOIP_P2P_REV_CALLING:
-                if(MLOC.canPickupVoip){
+                if(MLOC.INSTANCE.getCanPickupVoip()){
                     Intent intent = new Intent(this, VoipP2PRingingActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                     intent.putExtra("targetId",eventObj.toString());
@@ -143,7 +143,7 @@ public class KeepLiveService extends Service implements IEventListener {
                 }
                 break;
             case AEvent.AEVENT_VOIP_P2P_REV_CALLING_AUDIO:
-                if(MLOC.canPickupVoip){
+                if(MLOC.INSTANCE.getCanPickupVoip()){
                     Intent intent = new Intent(this, VoipP2PRingingActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
                     intent.putExtra("targetId",eventObj.toString());
@@ -152,10 +152,10 @@ public class KeepLiveService extends Service implements IEventListener {
                 break;
             case AEvent.AEVENT_C2C_REV_MSG:
             case AEvent.AEVENT_REV_SYSTEM_MSG:
-                MLOC.hasNewC2CMsg = true;
+                MLOC.INSTANCE.setHasNewC2CMsg(true);
                 break;
             case AEvent.AEVENT_GROUP_REV_MSG:
-                MLOC.hasNewGroupMsg = true;
+                MLOC.INSTANCE.setHasNewGroupMsg(true);
                 break;
             case AEvent.AEVENT_LOGOUT:
                 removeListener();
@@ -163,17 +163,17 @@ public class KeepLiveService extends Service implements IEventListener {
                 break;
             case AEvent.AEVENT_USER_KICKED:
             case AEvent.AEVENT_CONN_DEATH:
-                MLOC.d("KeepLiveService","AEVENT_USER_KICKED OR AEVENT_CONN_DEATH");
+                MLOC.INSTANCE.d("KeepLiveService","AEVENT_USER_KICKED OR AEVENT_CONN_DEATH");
                 XHClient.getInstance().getLoginManager().loginFree(new IXHResultCallback() {
                     @Override
                     public void success(Object data) {
-                        MLOC.d("KeepLiveService","loginSuccess");
+                        MLOC.INSTANCE.d("KeepLiveService","loginSuccess");
                         isLogin = true;
                     }
                     @Override
                     public void failed(final String errMsg) {
-                        MLOC.d("KeepLiveService","loginFailed "+errMsg);
-                        MLOC.showMsg(KeepLiveService.this,errMsg);
+                        MLOC.INSTANCE.d("KeepLiveService","loginFailed "+errMsg);
+                        MLOC.INSTANCE.showMsg(KeepLiveService.this,errMsg);
                     }
                 });
                 break;

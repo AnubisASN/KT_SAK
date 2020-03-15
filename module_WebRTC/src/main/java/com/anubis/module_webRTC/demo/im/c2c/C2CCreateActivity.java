@@ -30,9 +30,9 @@ public class C2CCreateActivity extends BaseActivity {
             public void onClick(View v) {
                 String inputId = ((EditText)findViewById(com.anubis.module_webRTC.R.id.targetid_input)).getText().toString();
                 if(TextUtils.isEmpty(inputId)){
-                    MLOC.showMsg(C2CCreateActivity.this,"id不能为空");
+                    MLOC.INSTANCE.showMsg(C2CCreateActivity.this,"id不能为空");
                 }else{
-                    MLOC.saveC2CUserId(C2CCreateActivity.this,inputId);
+                    MLOC.INSTANCE.saveC2CUserId(C2CCreateActivity.this,inputId);
                     Intent intent = new Intent(C2CCreateActivity.this,C2CActivity.class);
                     intent.putExtra("targetId",inputId);
                     startActivity(intent);

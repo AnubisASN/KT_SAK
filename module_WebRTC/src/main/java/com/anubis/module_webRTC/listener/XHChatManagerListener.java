@@ -20,14 +20,14 @@ public class XHChatManagerListener implements IXHChatManagerListener {
         historyBean.setLastMsg(message.contentData);
         historyBean.setConversationId(message.fromId);
         historyBean.setNewMsgCount(1);
-        MLOC.addHistory(historyBean,false);
+        MLOC.INSTANCE.addHistory(historyBean,false);
 
         MessageBean messageBean = new MessageBean();
         messageBean.setConversationId(message.fromId);
         messageBean.setTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));
         messageBean.setMsg(message.contentData);
         messageBean.setFromId(message.fromId);
-        MLOC.saveMessage(messageBean);
+        MLOC.INSTANCE.saveMessage(messageBean);
 
         AEvent.notifyListener(AEvent.AEVENT_C2C_REV_MSG,true,message);
 
@@ -41,14 +41,14 @@ public class XHChatManagerListener implements IXHChatManagerListener {
         historyBean.setLastMsg(message.contentData);
         historyBean.setConversationId(message.fromId);
         historyBean.setNewMsgCount(1);
-        MLOC.addHistory(historyBean,false);
+        MLOC.INSTANCE.addHistory(historyBean,false);
 
         MessageBean messageBean = new MessageBean();
         messageBean.setConversationId(message.fromId);
         messageBean.setTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));
         messageBean.setMsg(message.contentData);
         messageBean.setFromId(message.fromId);
-        MLOC.saveMessage(messageBean);
+        MLOC.INSTANCE.saveMessage(messageBean);
 
         AEvent.notifyListener(AEvent.AEVENT_REV_SYSTEM_MSG,true,message);
     }

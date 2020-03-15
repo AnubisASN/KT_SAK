@@ -99,20 +99,20 @@ public class MessageGroupListActivity extends BaseActivity implements AdapterVie
     @Override
     public void onResume(){
         super.onResume();
-        MLOC.hasNewGroupMsg = false;
+        MLOC.INSTANCE.setHasNewGroupMsg(false);
         AEvent.addListener(AEvent.AEVENT_GROUP_GOT_LIST,this);
         queryGroupList();
     }
 
     private void queryGroupList(){
-        if(MLOC.AEventCenterEnable){
-            InterfaceUrls.demoQueryImGroupList(MLOC.userId);
+        if(MLOC.INSTANCE.getAEventCenterEnable()){
+            InterfaceUrls.demoQueryImGroupList(MLOC.INSTANCE.getUserId());
         }else{
             XHClient.getInstance().getGroupManager().queryGroupList(new IXHResultCallback() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void success(final Object data) {
-                    MLOC.d("IM_GROUP", "applyGetGroupList success:" + data);
+                    MLOC.INSTANCE.d("IM_GROUP", "applyGetGroupList success:" + data);
                     try {
                         JSONArray datas = (JSONArray) data;
                         ArrayList<MessageGroupInfo> res = new ArrayList<MessageGroupInfo>();
@@ -133,7 +133,7 @@ public class MessageGroupListActivity extends BaseActivity implements AdapterVie
                 @Override
                 public void failed(String errMsg) {
                     AEvent.notifyListener(AEvent.AEVENT_GROUP_GOT_LIST,false,errMsg);
-                    MLOC.d("IM_GROUP","applyGetGroupList failed:"+errMsg);
+                    MLOC.INSTANCE.d("IM_GROUP","applyGetGroupList failed:"+errMsg);
                 }
             });
         }
@@ -156,7 +156,7 @@ public class MessageGroupListActivity extends BaseActivity implements AdapterVie
         switch (aEventID) {
             case AEvent.AEVENT_GROUP_GOT_LIST:
                 mDatas.clear();
-                List<HistoryBean> historyList = MLOC.getHistoryList(CoreDB.HISTORY_TYPE_GROUP);
+                List<HistoryBean> historyList = MLOC.INSTANCE.getHistoryList(CoreDB.HISTORY_TYPE_GROUP);
                 if (success) {
                     ArrayList<MessageGroupInfo> res = (ArrayList<MessageGroupInfo>) eventObj;
                     //删除已经不再的群
@@ -167,13 +167,13 @@ public class MessageGroupListActivity extends BaseActivity implements AdapterVie
                             if (historyBean.getConversationId().equals(res.get(j).groupId)) {
                                 historyBean.setGroupName(res.get(j).groupName);
                                 historyBean.setGroupCreaterId(res.get(j).createrId);
-                                MLOC.updateHistory(historyBean);
+                                MLOC.INSTANCE.updateHistory(historyBean);
                                 needRemove = false;
                                 break;
                             }
                         }
                         if (needRemove) {
-                            MLOC.removeHistory(historyList.remove(i));
+                            MLOC.INSTANCE.removeHistory(historyList.remove(i));
                         }
                     }
 
@@ -196,7 +196,7 @@ public class MessageGroupListActivity extends BaseActivity implements AdapterVie
                             historyBean.setGroupCreaterId(res.get(i).createrId);
                             historyBean.setLastMsg("");
                             historyBean.setLastTime("");
-                            MLOC.addHistory(historyBean, true);
+                            MLOC.INSTANCE.addHistory(historyBean, true);
                             historyList.add(historyBean);
                         }
                     }
@@ -213,7 +213,7 @@ public class MessageGroupListActivity extends BaseActivity implements AdapterVie
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         HistoryBean clickInfo = mDatas.get(position);
 
-        MLOC.addHistory(clickInfo,true);
+        MLOC.INSTANCE.addHistory(clickInfo,true);
 
         Intent intent = new Intent(MessageGroupListActivity.this, MessageGroupActivity.class);
         intent.putExtra(MessageGroupActivity.TYPE,MessageGroupActivity.GROUP_ID);

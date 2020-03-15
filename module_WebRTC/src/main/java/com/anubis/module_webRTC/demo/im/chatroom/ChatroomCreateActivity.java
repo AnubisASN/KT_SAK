@@ -32,7 +32,7 @@ public class ChatroomCreateActivity extends BaseActivity {
                 String inputId = ((EditText)findViewById(R.id.targetid_input)).getText().toString();
                 XHConstants.XHChatroomType type = XHConstants.XHChatroomType.XHChatroomTypePublic;
                 if(TextUtils.isEmpty(inputId)){
-                    MLOC.showMsg(ChatroomCreateActivity.this,"id不能为空");
+                    MLOC.INSTANCE.showMsg(ChatroomCreateActivity.this,"id不能为空");
                 }else{
                     Intent intent = new Intent(ChatroomCreateActivity.this,ChatroomActivity.class);
                     intent.putExtra(ChatroomActivity.TYPE,ChatroomActivity.CHATROOM_NAME);

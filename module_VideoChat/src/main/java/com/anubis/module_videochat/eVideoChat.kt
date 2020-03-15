@@ -131,7 +131,7 @@ object eVideoChat {
         try {
             mRtcEngine = RtcEngine.create(mContext, mAppID, mRtcEventHandler)
         } catch (e: Exception) {
-            eLogE("initializeAgoraEngine", e)
+            e.eLogE("initializeAgoraEngine")
             throw RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e))
         }
 
@@ -191,7 +191,7 @@ object eVideoChat {
                 surfaceView.visibility = if (muted) View.GONE else View.VISIBLE
             }
         } catch (e: Exception) {
-            eLogE("onRemoteUserVideoMuted", e)
+            e. eLogE("onRemoteUserVideoMuted" )
         }
     }
     interface ICallBack {

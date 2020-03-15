@@ -90,16 +90,16 @@ object eWiFi {
             method2.invoke(mWifiManager, config, false)
             return true
         } catch (e: NoSuchMethodException) {
-            eLogE("关闭热点错误：$e")
+            e.eLogE("关闭热点错误 ")
             return false
         } catch (e: IllegalArgumentException) {
-            eLogE("关闭热点错误：$e")
+            e.  eLogE("关闭热点错误 ")
             return false
         } catch (e: IllegalAccessException) {
-            eLogE("关闭热点错误：$e")
+            e. eLogE("关闭热点错误 ")
             return false
         } catch (e: InvocationTargetException) {
-            eLogE("关闭热点错误：$e")
+            e. eLogE("关闭热点错误 ")
             return false
         }
 

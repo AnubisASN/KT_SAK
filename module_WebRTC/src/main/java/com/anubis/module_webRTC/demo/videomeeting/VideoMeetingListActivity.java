@@ -107,10 +107,10 @@ public class VideoMeetingListActivity extends BaseActivity implements AdapterVie
         queryAllList();
     }
     private void queryAllList(){
-        if(MLOC.AEventCenterEnable){
-            InterfaceUrls.demoQueryList(MLOC.LIST_TYPE_MEETING_ALL);
+        if(MLOC.INSTANCE.getAEventCenterEnable()){
+            InterfaceUrls.demoQueryList(MLOC.INSTANCE.getLIST_TYPE_MEETING_ALL());
         }else{
-            XHClient.getInstance().getMeetingManager().queryList("",MLOC.LIST_TYPE_MEETING_ALL,new IXHResultCallback() {
+            XHClient.getInstance().getMeetingManager().queryList("", MLOC.INSTANCE.getLIST_TYPE_MEETING_ALL(),new IXHResultCallback() {
                 @Override
                 public void success(final Object data) {
                     String[] res = (String[]) data;
@@ -147,7 +147,7 @@ public class VideoMeetingListActivity extends BaseActivity implements AdapterVie
                 }
                 @Override
                 public void failed(String errMsg) {
-                    MLOC.d("VideoMettingListActivity",errMsg);
+                    MLOC.INSTANCE.d("VideoMettingListActivity",errMsg);
                     refreshLayout.setRefreshing(false);
                     mDatas.clear();
                     myListAdapter.notifyDataSetChanged();

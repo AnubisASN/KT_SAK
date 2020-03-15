@@ -23,13 +23,12 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.android.xhapimanager.XHApiManager
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
 import com.anubis.SwissArmyKnife.GreenDao.Data
+import com.anubis.SwissArmyKnife.ParameHandleMSG.handleMsg
+import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTCP
+import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTTS
+import com.anubis.SwissArmyKnife.ParameHandleMSG.uHandler
 import com.anubis.SwissArmyKnife.R.id.sv_Hint
 import com.anubis.SwissArmyKnife.R.id.tv_Hint
-import com.anubis.SwissArmyKnife.parame.handleMsg
-import com.anubis.SwissArmyKnife.parame.handlePort
-import com.anubis.SwissArmyKnife.parame.handleTCP
-import com.anubis.SwissArmyKnife.parame.handleTTS
-import com.anubis.SwissArmyKnife.parame.uHandler
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
@@ -105,6 +104,7 @@ class MainActivity : Activity() {
 
     companion object {
         var mainActivity: MainActivity? = null
+        var mHandler:Handler?=null
     }
 
 
@@ -112,7 +112,8 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mainActivity = this@MainActivity
-        parame.mainActivity = mainActivity
+        mHandler= Handler()
+        ParameHandleMSG.mainActivity = mainActivity
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
@@ -169,7 +170,7 @@ class MainActivity : Activity() {
 
                             }
                             R.id.bt_item2 -> {
-                                parame.asrw = eASRW.start(this@MainActivity, handleMsg)
+                                ParameHandleMSG.asrw = eASRW.start(this@MainActivity, handleMsg)
                                 Hint("语音唤醒激活")
                             }
                             R.id.bt_item3 -> {
@@ -207,7 +208,7 @@ class MainActivity : Activity() {
                         }
                         R.id.bt_item2 -> Hint("数据发送:${eTCP.eSocketSend(MSG?.split("-")?.get(0)
                                 ?: "123", MSG?.split("-")?.get(1)
-                                ?: "192.168.1.110", eTCP.eServerHashMap)}")
+                                ?: "192.168.1.110", eTCP.eClientHashMap)}")
                         R.id.bt_item3 -> {
                             GlobalScope.launch {
                              eTCP.eServerSocket( handleTCP,MSG?.toInt()?:3335)
@@ -318,7 +319,7 @@ class MainActivity : Activity() {
 //                        for (i in 0..5000){
                         async {
                             for (i in 0..5000) {
-                                mHandler.post { progressDialog!!.incrementProgressBy(1) }
+                                mHandler?.post { progressDialog!!.incrementProgressBy(1) }
 //                                handleMsg.sendMessage(msg)
                                 eLog("i$i")
                             }
@@ -603,209 +604,6 @@ class MainActivity : Activity() {
     interface ICallBack {
         fun CallResult(view: View?, numID: Int, MSG: String?, spinner: Spinner)
     }
-
-
-    /**
-     * -----------------------------------------TCP模块——————————————————————————————————————————
-     */
-    val receivedDataThread = Runnable {
-        try {
-            while (true) {
-                val buffer = ByteArray(1024)
-                val count = In?.read(buffer)
-                var receiveData = String(buffer, 0, count ?: 0)
-                receiveData = URLDecoder.decode(receiveData, "gbk")
-                val msg = mHandler.obtainMessage()
-                msg.what = 2
-                msg.obj = receiveData
-                mHandler.sendMessage(msg)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-    //消息处理
-    var In: InputStream? = null
-    var Out: OutputStream? = null
-    var json = ""
-    var mHandler: Handler = Handler {
-        when (it.what) {
-            1 -> {
-                socketState = true
-                //连接成功，启动接收线程
-                eLog("连接成功，启动接收线程")
-                eShowTip("TCP连接成功")
-                Out = (it.obj as IsAndOs).`os`
-                In = (it.obj as IsAndOs).`in`
-                Thread(receivedDataThread).start()
-                thread { sendMSM(msg) }
-                //心跳保活
-                return@Handler true
-            }
-            2 -> {
-                //接收到数据  ,"status":true}
-                val Json = it.obj.toString()
-
-                if (Json.indexOf("\"status\":") == -1 && Json.indexOf("}") == -1) {
-                    json += Json
-                    return@Handler true
-                } else {
-                    json += Json
-                }
-                json = json.replace("\\", "").replace("\n", "").replace("\t", "").trim()
-                Hint("接收到：$json")
-                try {
-                    var fileName = ""
-                    if (eJson.eGetJsonObject(json, "msgType") == "22") {
-                        fileName = eJson.eGetJsonObject(eJson.eGetJsonArray(json, "data")[0].toString(), "imgPath").split("/").last()
-                        val data = "{\"msgType\":\"23\",\"data\":[{\"imgName\":\"$fileName\"}]}"
-                        eLog("获取图片：$data")
-                        thread { sendMSM(data) }
-                    }
-                    if (json.length > 300) {
-                        val imgFile = eJson.eGetJsonObject(eJson.eGetJsonArray(json, "data")[0].toString(), "imgPath")
-                        eLog("imgFile:" + imgFile)
-                        val file = File("/sdcard/0.jpg")
-                        if (!file.exists()) {
-                            file.createNewFile()
-                        }
-                        eFile.eBase64StrToFile(imgFile, "/sdcard/0.jpg")
-                        eLog("创建成功")
-                    }
-                } catch (e: JSONException) {
-                    eLogE("JSON解析错误", e)
-                }
-                json = ""
-                return@Handler true
-            }
-            3 -> {//TCP服务端接收
-                val data = it.obj.toString()
-                eLog("服务端接收到：" + data)
-                Hint("服务端接收到：" + data)
-                var type: String = ""
-                try {
-                    type = eJson.eGetJsonObject(data, "dataType")
-                    Hint("服务端解析type：$type")
-                    //发送接收结果
-                    thread { sSendMSM("{\"msgType\":\"$type\",\"status\":\"接收成功\"}") }
-                    serverSocketState = true
-                    //发送处理结果
-//                    val json=Utils.getInfo(type, data)
-//                    sSendMSM(Utils.json(type, json).replace("\\", ""))
-//                    APP.resultData = null
-                } catch (e: Exception) {
-                    eLogE(type + "TCP服务端数据异常，无法解析:$e", e)
-                }
-                return@Handler true
-            }
-
-            else -> return@Handler true
-        }
-    }
-    //连接服务器
-    var socketState = false
-    var msg = ""
-    fun initClienSocket(str: String) {
-        val info = str.split("-")
-        msg = info[2]
-        eLog("开始连接TCP服务")
-        Thread {
-            try {
-                val socker = Socket(info[0], info[1].toInt())
-                val op = PrintStream(socker?.getOutputStream(), true, "utf-8")
-                val `in` = socker?.getInputStream()
-                IsAndOs.`in` = `in`
-                IsAndOs.os = op
-                val msg = mHandler.obtainMessage()
-                eLog("IsAndOs:$IsAndOs")
-                msg.obj = IsAndOs
-                msg.what = 1
-                mHandler.sendMessage(msg)
-            } catch (e: java.lang.Exception) {
-                socketState = false
-                mHandler.postDelayed({
-                    initClienSocket(str)
-                    eShowTip("TCP服务连接失败，重连")
-                }, 5000)
-            }
-        }.start()
-    }
-
-    //消息发送
-    fun sendMSM(str: String) {
-        (Out as PrintStream).print(str)
-        eLog("消息发送:$str")
-    }
-
-    object IsAndOs {
-        var `in`: InputStream? = null
-        var os: OutputStream? = null
-    }
-
-    //服务端-----------------------------
-    //消息处理
-    var serverSocketState = false
-    var sIn: InputStream? = null
-    var sOut: OutputStream? = null
-    var serverSocket: ServerSocket? = null
-    var sSocket: Socket? = null
-    fun initServerSocket() {
-        // 声明一个ServerSocket对象
-        Thread {
-            try {
-                // 创建一个ServerSocket对象，并让这个Socket在3335端口监听
-                if (serverSocket == null)
-                    serverSocket = ServerSocket(3335)
-                eLog("serverSocket创建成功")
-                // 调用ServerSocket的accept()方法，接受客户端所发送的请求，
-                // 如果客户端没有发送数据，那么该线程就停滞不继续
-                while (true) {
-                    sSocket = serverSocket!!.accept()
-                    eLog("socket创建成功")
-                    onUiThread { Hint("socket创建成功") }
-                    sIsAndOs.os = PrintStream(sSocket!!.getOutputStream(), true, "utf-8")
-                    sIsAndOs.`in` = sSocket!!.getInputStream()
-                    sOut = sIsAndOs.os
-                    // 从Socket当中得到InputStream对象
-                    val inputStream = sSocket!!.getInputStream()
-//                while(APP.tcpsState){
-                    val buffer = ByteArray(1024 * 4)
-                    var temp = 0
-                    async {
-                        // 从InputStream当中读取客户端所发送的数据
-                        while ((inputStream!!.read(buffer)).apply { temp = this } != -1) {
-                            val msg = mHandler.obtainMessage()
-                            msg.what = 3
-                            msg.obj = String(buffer, 0, temp)
-                            mHandler.sendMessage(msg)
-                        }
-                    }
-                }
-
-            } catch (e: IOException) {
-                serverSocket?.close()
-                serverSocket = null
-                eLogE("initServerSocket错误", e)
-            }
-        }.start()
-    }
-
-    object sIsAndOs {
-        var `in`: InputStream? = null
-        var os: OutputStream? = null
-
-    }
-
-    //服务端消息发送
-    fun sSendMSM(str: String) {
-//        val msgs = Utils.eInterception(str, symbol = "|").split("|")
-//        for (msg in msgs) {
-        (sOut as PrintStream).print(str)
-        eLog("消息发送:$str")
-        Hint("消息发送:$str")
-//        }
-    }
-
 
 }
 

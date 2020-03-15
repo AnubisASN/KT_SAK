@@ -123,10 +123,10 @@ public class RtspTestListActivity extends BaseActivity implements AdapterView.On
     }
     private void queryAllList(){
 
-        if(MLOC.AEventCenterEnable){
-            InterfaceUrls.demoQueryList(MLOC.LIST_TYPE_PUSH_ALL);
+        if(MLOC.INSTANCE.getAEventCenterEnable()){
+            InterfaceUrls.demoQueryList(MLOC.INSTANCE.getLIST_TYPE_PUSH_ALL());
         }else{
-            XHClient.getInstance().getChatroomManager().queryList(MLOC.userId,MLOC.LIST_TYPE_PUSH_ALL,new IXHResultCallback() {
+            XHClient.getInstance().getChatroomManager().queryList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_PUSH_ALL(),new IXHResultCallback() {
                 @Override
                 public void success(final Object data) {
                     String[] res = (String[]) data;
@@ -164,7 +164,7 @@ public class RtspTestListActivity extends BaseActivity implements AdapterView.On
                             if(obj.has("listType")){
                                 info.listType = obj.getInt("listType");
                             }else{
-                                info.listType = MLOC.LIST_TYPE_CHATROOM;
+                                info.listType = MLOC.INSTANCE.getLIST_TYPE_CHATROOM();
                             }
                             mDatas.add(info);
                         }
@@ -176,7 +176,7 @@ public class RtspTestListActivity extends BaseActivity implements AdapterView.On
 
                 @Override
                 public void failed(String errMsg) {
-                    MLOC.d("VideoMettingListActivity",errMsg);
+                    MLOC.INSTANCE.d("VideoMettingListActivity",errMsg);
                     refreshLayout.setRefreshing(false);
                     mDatas.clear();
                     myListAdapter.notifyDataSetChanged();
@@ -226,9 +226,9 @@ public class RtspTestListActivity extends BaseActivity implements AdapterView.On
             case AEvent.AEVENT_RTSP_RESUME:
             case AEvent.AEVENT_RTSP_DELETE:
                 if(success){
-                    MLOC.showMsg(RtspTestListActivity.this,"操作成功");
+                    MLOC.INSTANCE.showMsg(RtspTestListActivity.this,"操作成功");
                 }else{
-                    MLOC.showMsg(RtspTestListActivity.this,"操作失败："+eventObj);
+                    MLOC.INSTANCE.showMsg(RtspTestListActivity.this,"操作失败："+eventObj);
                 }
                 queryAllList();
                 break;
@@ -246,19 +246,19 @@ public class RtspTestListActivity extends BaseActivity implements AdapterView.On
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(i==0){
                     //停止
-                    InterfaceUrls.demoStopPushRtsp(MLOC.userId,MLOC.LIVE_PROXY_SERVER_URL,streamInfo.channelID);
+                    InterfaceUrls.demoStopPushRtsp(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIVE_PROXY_SERVER_URL(),streamInfo.channelID);
                 }else if(i==1){
                     //恢复
                     if(!TextUtils.isEmpty(streamInfo.url)){
-                        InterfaceUrls.demoResumePushRtsp(MLOC.userId,MLOC.LIVE_PROXY_SERVER_URL,streamInfo.channelID,streamInfo.url,streamInfo.streamType);
+                        InterfaceUrls.demoResumePushRtsp(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIVE_PROXY_SERVER_URL(),streamInfo.channelID,streamInfo.url,streamInfo.streamType);
                     }
                 }else{
                     //删除
-                    InterfaceUrls.demoDeleteRtsp(MLOC.userId,MLOC.LIVE_PROXY_SERVER_URL,streamInfo.channelID);
-                    if(MLOC.AEventCenterEnable){
-                        InterfaceUrls.demoDeleteFromList(MLOC.userId,streamInfo.listType, streamInfo.liveId);
+                    InterfaceUrls.demoDeleteRtsp(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIVE_PROXY_SERVER_URL(),streamInfo.channelID);
+                    if(MLOC.INSTANCE.getAEventCenterEnable()){
+                        InterfaceUrls.demoDeleteFromList(MLOC.INSTANCE.getUserId(),streamInfo.listType, streamInfo.liveId);
                     }else{
-                        XHClient.getInstance().getChatroomManager().deleteFromList(MLOC.userId,streamInfo.listType, streamInfo.chatroomID, new IXHResultCallback() {
+                        XHClient.getInstance().getChatroomManager().deleteFromList(MLOC.INSTANCE.getUserId(),streamInfo.listType, streamInfo.chatroomID, new IXHResultCallback() {
                             @Override
                             public void success(Object data) {
                                 queryAllList();

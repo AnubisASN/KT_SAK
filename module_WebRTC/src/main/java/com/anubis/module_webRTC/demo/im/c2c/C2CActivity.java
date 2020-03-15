@@ -92,12 +92,12 @@ public class C2CActivity extends Activity implements IEventListener, AdapterView
         XHIMMessage message = XHClient.getInstance().getChatManager().sendMessage(msg, mTargetId, new IXHResultCallback() {
             @Override
             public void success(Object data) {
-                MLOC.d("IM_C2C  成功","消息序号："+data);
+                MLOC.INSTANCE.d("IM_C2C  成功","消息序号："+data);
             }
 
             @Override
             public void failed(String errMsg) {
-                MLOC.d("IM_C2C  失败","消息序号："+errMsg);
+                MLOC.INSTANCE.d("IM_C2C  失败","消息序号："+errMsg);
             }
         });
 
@@ -107,14 +107,14 @@ public class C2CActivity extends Activity implements IEventListener, AdapterView
         historyBean.setLastMsg(message.contentData);
         historyBean.setConversationId(message.targetId);
         historyBean.setNewMsgCount(1);
-        MLOC.addHistory(historyBean,true);
+        MLOC.INSTANCE.addHistory(historyBean,true);
 
         MessageBean messageBean = new MessageBean();
         messageBean.setConversationId(message.targetId);
         messageBean.setTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));
         messageBean.setMsg(message.contentData);
         messageBean.setFromId(message.fromId);
-        MLOC.saveMessage(messageBean);
+        MLOC.INSTANCE.saveMessage(messageBean);
 
         ColorUtils.getColor(this,message.fromId);
         mDatas.add(messageBean);
@@ -138,7 +138,7 @@ public class C2CActivity extends Activity implements IEventListener, AdapterView
     public void onResume(){
         super.onResume();
         mDatas.clear();
-        List<MessageBean> list =  MLOC.getMessageList(mTargetId);
+        List<MessageBean> list =  MLOC.INSTANCE.getMessageList(mTargetId);
         if(list!=null&&list.size()>0){
             mDatas.addAll(list);
         }
@@ -156,7 +156,7 @@ public class C2CActivity extends Activity implements IEventListener, AdapterView
 
     @Override
     public void dispatchEvent(String aEventID, boolean success, final Object eventObj) {
-        MLOC.d("IM_C2C",aEventID+"||"+eventObj);
+        MLOC.INSTANCE.d("IM_C2C",aEventID+"||"+eventObj);
         switch (aEventID){
             case AEvent.AEVENT_C2C_REV_MSG:
             case AEvent.AEVENT_REV_SYSTEM_MSG:
@@ -168,7 +168,7 @@ public class C2CActivity extends Activity implements IEventListener, AdapterView
                     historyBean.setLastMsg(revMsg.contentData);
                     historyBean.setConversationId(revMsg.fromId);
                     historyBean.setNewMsgCount(1);
-                    MLOC.addHistory(historyBean,true);
+                    MLOC.INSTANCE.addHistory(historyBean,true);
 
                     MessageBean messageBean = new MessageBean();
                     messageBean.setConversationId(revMsg.fromId);
@@ -223,7 +223,7 @@ public class C2CActivity extends Activity implements IEventListener, AdapterView
 
         @Override
         public int getItemViewType(int position){
-            return mDatas.get(position).getFromId().equals(MLOC.userId)?0:1;
+            return mDatas.get(position).getFromId().equals(MLOC.INSTANCE.getUserId())?0:1;
         }
 
         @Override
@@ -249,7 +249,7 @@ public class C2CActivity extends Activity implements IEventListener, AdapterView
                 itemSelfHolder.vHeadCover.setCoverColor(Color.parseColor("#f6f6f6"));
                 int cint = DensityUtils.dip2px(C2CActivity.this,20);
                 itemSelfHolder.vHeadCover.setRadians(cint, cint, cint, cint,0);
-                itemSelfHolder.vHeadImage.setImageResource(MLOC.getHeadImage(C2CActivity.this,mDatas.get(position).getFromId()));
+                itemSelfHolder.vHeadImage.setImageResource(MLOC.INSTANCE.getHeadImage(C2CActivity.this,mDatas.get(position).getFromId()));
             }else if(currLayoutType == 1){//别人的信息
                 final ViewHolder itemOtherHolder;
                 if(convertView == null){
@@ -270,7 +270,7 @@ public class C2CActivity extends Activity implements IEventListener, AdapterView
                 itemOtherHolder.vHeadCover.setCoverColor(Color.parseColor("#f6f6f6"));
                 int cint = DensityUtils.dip2px(C2CActivity.this,20);
                 itemOtherHolder.vHeadCover.setRadians(cint, cint, cint, cint,0);
-                itemOtherHolder.vHeadImage.setImageResource(MLOC.getHeadImage(C2CActivity.this,mDatas.get(position).getFromId()));
+                itemOtherHolder.vHeadImage.setImageResource(MLOC.INSTANCE.getHeadImage(C2CActivity.this,mDatas.get(position).getFromId()));
             }
             return convertView;
         }

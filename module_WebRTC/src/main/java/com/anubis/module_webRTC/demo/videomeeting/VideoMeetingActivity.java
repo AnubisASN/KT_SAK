@@ -187,7 +187,7 @@ public class VideoMeetingActivity extends BaseActivity {
             public void onClick(View v) {
                 String rtmpUrl = ((EditText)dialog.findViewById(com.anubis.module_webRTC.R.id.rtmpurl)).getText().toString();
                 if(TextUtils.isEmpty(rtmpUrl)){
-                    MLOC.showMsg(VideoMeetingActivity.this,"推流地址不能为空");
+                    MLOC.INSTANCE.showMsg(VideoMeetingActivity.this,"推流地址不能为空");
                 }else{
                     pushRtmp(rtmpUrl);
                     dialog.dismiss();
@@ -203,14 +203,14 @@ public class VideoMeetingActivity extends BaseActivity {
             @Override
             public void success(Object data) {
                 rtmpPushing = true;
-                MLOC.showMsg(VideoMeetingActivity.this,"推流成功");
+                MLOC.INSTANCE.showMsg(VideoMeetingActivity.this,"推流成功");
                 ((TextView)findViewById(com.anubis.module_webRTC.R.id.push_rtmp)).setText("停止");
             }
 
             @Override
             public void failed(final String errMsg) {
                 rtmpPushing = false;
-                MLOC.showMsg(VideoMeetingActivity.this,"推流失败"+errMsg);
+                MLOC.INSTANCE.showMsg(VideoMeetingActivity.this,"推流失败"+errMsg);
                 ((TextView)findViewById(com.anubis.module_webRTC.R.id.push_rtmp)).setText("RTMP");
             }
         });
@@ -220,19 +220,19 @@ public class VideoMeetingActivity extends BaseActivity {
             @Override
             public void success(Object data) {
                 rtmpPushing = false;
-                MLOC.showMsg(VideoMeetingActivity.this,"停止推流成功");
+                MLOC.INSTANCE.showMsg(VideoMeetingActivity.this,"停止推流成功");
                 ((TextView)findViewById(com.anubis.module_webRTC.R.id.push_rtmp)).setText("RTMP");
             }
 
             @Override
             public void failed(final String errMsg) {
-                MLOC.showMsg(VideoMeetingActivity.this,"停止推流失败"+errMsg);
+                MLOC.INSTANCE.showMsg(VideoMeetingActivity.this,"停止推流失败"+errMsg);
             }
         });
     }
 
     private void init(){
-        if(createrId.equals(MLOC.userId)){
+        if(createrId.equals(MLOC.INSTANCE.getUserId())){
             if(meetingId==null){
                 createNewMeeting();
             }else {
@@ -240,7 +240,7 @@ public class VideoMeetingActivity extends BaseActivity {
             }
         }else{
             if(meetingId==null){
-                MLOC.showMsg(VideoMeetingActivity.this,"会议ID为空");
+                MLOC.INSTANCE.showMsg(VideoMeetingActivity.this,"会议ID为空");
             }else {
                 joinMeeting();
             }
@@ -259,14 +259,14 @@ public class VideoMeetingActivity extends BaseActivity {
                 try {
                     JSONObject info = new JSONObject();
                     info.put("id",meetingId);
-                    info.put("creator",MLOC.userId);
+                    info.put("creator", MLOC.INSTANCE.getUserId());
                     info.put("name",meetingName);
                     String infostr = info.toString();
                     infostr = URLEncoder.encode(infostr,"utf-8");
-                    if(MLOC.AEventCenterEnable){
-                        InterfaceUrls.demoSaveToList(MLOC.userId,MLOC.LIST_TYPE_MEETING,meetingId,infostr);
+                    if(MLOC.INSTANCE.getAEventCenterEnable()){
+                        InterfaceUrls.demoSaveToList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_MEETING(),meetingId,infostr);
                     }else{
-                        meetingManager.saveToList(MLOC.userId,MLOC.LIST_TYPE_MEETING,meetingId,infostr,null);
+                        meetingManager.saveToList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_MEETING(),meetingId,infostr,null);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -277,7 +277,7 @@ public class VideoMeetingActivity extends BaseActivity {
             }
             @Override
             public void failed(final String errMsg) {
-                MLOC.showMsg(VideoMeetingActivity.this,errMsg);
+                MLOC.INSTANCE.showMsg(VideoMeetingActivity.this,errMsg);
                 stopAndFinish();
             }
         });
@@ -292,7 +292,7 @@ public class VideoMeetingActivity extends BaseActivity {
 
             @Override
             public void failed(final String errMsg) {
-                MLOC.showMsg(VideoMeetingActivity.this,errMsg);
+                MLOC.INSTANCE.showMsg(VideoMeetingActivity.this,errMsg);
                 stopAndFinish();
             }
         });
@@ -303,12 +303,12 @@ public class VideoMeetingActivity extends BaseActivity {
         meetingManager.joinMeeting(meetingId, new IXHResultCallback() {
             @Override
             public void success(Object data) {
-                MLOC.d("XHMeetingManager","startLive success "+data);
+                MLOC.INSTANCE.d("XHMeetingManager","startLive success "+data);
             }
             @Override
             public void failed(final String errMsg) {
-                MLOC.d("XHMeetingManager","joinMeeting failed "+errMsg);
-                MLOC.showMsg(VideoMeetingActivity.this,errMsg);
+                MLOC.INSTANCE.d("XHMeetingManager","joinMeeting failed "+errMsg);
+                MLOC.INSTANCE.showMsg(VideoMeetingActivity.this,errMsg);
                 stopAndFinish();
             }
         });
@@ -340,12 +340,12 @@ public class VideoMeetingActivity extends BaseActivity {
     @Override
     public void onResume(){
         super.onResume();
-        MLOC.canPickupVoip = false;
+        MLOC.INSTANCE.setCanPickupVoip(false);
     }
     @Override
     public void onPause(){
         super.onPause();
-        MLOC.canPickupVoip = true;
+        MLOC.INSTANCE.setCanPickupVoip(true);
     }
     @Override
     public void onRestart(){
@@ -668,13 +668,13 @@ public class VideoMeetingActivity extends BaseActivity {
                 break;
             case AEvent.AEVENT_MEETING_ERROR:
                 String errStr = (String) eventObj;
-                MLOC.showMsg(getApplicationContext(),errStr);
+                MLOC.INSTANCE.showMsg(getApplicationContext(),errStr);
                 stopAndFinish();
                 break;
             case AEvent.AEVENT_MEETING_GET_ONLINE_NUMBER:
                 break;
             case AEvent.AEVENT_MEETING_SELF_KICKED:
-                MLOC.showMsg(VideoMeetingActivity.this,"你已被踢出");
+                MLOC.INSTANCE.showMsg(VideoMeetingActivity.this,"你已被踢出");
                 stopAndFinish();
                 break;
             case AEvent.AEVENT_MEETING_SELF_BANNED:
@@ -684,7 +684,7 @@ public class VideoMeetingActivity extends BaseActivity {
             case AEvent.AEVENT_MEETING_REV_PRIVATE_MSG:
                 break;
             case AEvent.AEVENT_MEETING_PUSH_STREAM_ERROR:
-                MLOC.showMsg(VideoMeetingActivity.this,"推流失败");
+                MLOC.INSTANCE.showMsg(VideoMeetingActivity.this,"推流失败");
                 break;
         }
     }

@@ -98,11 +98,11 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
         }else if(type.equals(CHATROOM_NAME)){
             mRoomName = getIntent().getStringExtra(CHATROOM_NAME);
             createType = (XHConstants.XHChatroomType) getIntent().getSerializableExtra(CHATROOM_TYPE);
-            mCreaterId = MLOC.userId;
+            mCreaterId = MLOC.INSTANCE.getUserId();
             createChatroom();
         }
 
-        if(mCreaterId.equals(MLOC.userId)){
+        if(mCreaterId.equals(MLOC.INSTANCE.getUserId())){
             findViewById(R.id.title_right_btn).setVisibility(View.VISIBLE);
             ((ImageView)findViewById(R.id.title_right_icon)).setImageResource(R.drawable.icon_main_setting);
             findViewById(R.id.title_right_btn).setOnClickListener(new View.OnClickListener() {
@@ -115,18 +115,18 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
                             chatroomManager.deleteChatroom(mRoomId, new IXHResultCallback() {
                                 @Override
                                 public void success(Object data) {
-                                    MLOC.d("IM_CHATROOM","聊天室删除成功! "+data);
-                                    if(MLOC.AEventCenterEnable){
-                                        InterfaceUrls.demoDeleteFromList(MLOC.userId,MLOC.LIST_TYPE_CHATROOM,mRoomId);
+                                    MLOC.INSTANCE.d("IM_CHATROOM","聊天室删除成功! "+data);
+                                    if(MLOC.INSTANCE.getAEventCenterEnable()){
+                                        InterfaceUrls.demoDeleteFromList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_CHATROOM(),mRoomId);
                                     }else{
-                                        chatroomManager.deleteFromList(MLOC.userId, MLOC.LIST_TYPE_CHATROOM, mRoomId, null);
+                                        chatroomManager.deleteFromList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_CHATROOM(), mRoomId, null);
                                     }
                                     ChatroomActivity.this.finish();
                                 }
 
                                 @Override
                                 public void failed(String errMsg) {
-                                    MLOC.d("IM_CHATROOM","聊天室删除失败！"+errMsg);
+                                    MLOC.INSTANCE.d("IM_CHATROOM","聊天室删除失败！"+errMsg);
                                 }
                             });
                         }
@@ -178,14 +178,14 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
                 try {
                     JSONObject info = new JSONObject();
                     info.put("id",mRoomId);
-                    info.put("creator",MLOC.userId);
+                    info.put("creator", MLOC.INSTANCE.getUserId());
                     info.put("name",mRoomName);
                     String infostr = info.toString();
                     infostr = URLEncoder.encode(infostr,"utf-8");
-                    if(MLOC.AEventCenterEnable){
-                        InterfaceUrls.demoSaveToList(MLOC.userId,MLOC.LIST_TYPE_CHATROOM,mRoomId,infostr);
+                    if(MLOC.INSTANCE.getAEventCenterEnable()){
+                        InterfaceUrls.demoSaveToList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_CHATROOM(),mRoomId,infostr);
                     }else{
-                        chatroomManager.saveToList(MLOC.userId,MLOC.LIST_TYPE_CHATROOM,mRoomId,infostr, null);
+                        chatroomManager.saveToList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_CHATROOM(),mRoomId,infostr, null);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -199,7 +199,7 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
             @Override
             public void failed(String errMsg) {
                 final String err = errMsg;
-                MLOC.showMsg(ChatroomActivity.this,err.toString());
+                MLOC.INSTANCE.showMsg(ChatroomActivity.this,err.toString());
                 finish();
             }
         });
@@ -215,7 +215,7 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
             @Override
             public void failed(String errMsg) {
                 final String err = errMsg;
-                MLOC.showMsg(ChatroomActivity.this,err.toString());
+                MLOC.INSTANCE.showMsg(ChatroomActivity.this,err.toString());
                 finish();
             }
         });
@@ -288,7 +288,7 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
     @Override
     public void dispatchEvent(String aEventID, boolean success, final Object eventObj) {
         super.dispatchEvent(aEventID,success,eventObj);
-        MLOC.d("IM_CHATROOM",aEventID+"||"+eventObj);
+        MLOC.INSTANCE.d("IM_CHATROOM",aEventID+"||"+eventObj);
         switch (aEventID){
             case AEvent.AEVENT_CHATROOM_REV_MSG:
                 XHIMMessage revMsg = (XHIMMessage) eventObj;
@@ -312,16 +312,16 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
                 break;
             case AEvent.AEVENT_CHATROOM_ERROR:
                 final String err2 = eventObj.toString();
-                MLOC.showMsg(ChatroomActivity.this,err2.toString());
+                MLOC.INSTANCE.showMsg(ChatroomActivity.this,err2.toString());
                 finish();
                 break;
             case AEvent.AEVENT_CHATROOM_SELF_KICKED:
-                MLOC.showMsg(ChatroomActivity.this,"你已被踢出聊天室");
+                MLOC.INSTANCE.showMsg(ChatroomActivity.this,"你已被踢出聊天室");
                 ChatroomActivity.this.finish();
                 break;
             case AEvent.AEVENT_CHATROOM_SELF_BANNED:
                 final String banTime = eventObj.toString();
-                MLOC.showMsg(ChatroomActivity.this,"你已被禁言,"+banTime+"秒后自动解除");
+                MLOC.INSTANCE.showMsg(ChatroomActivity.this,"你已被禁言,"+banTime+"秒后自动解除");
                 break;
             case AEvent.AEVENT_CHATROOM_STOP_OK:
                 ChatroomActivity.this.finish();
@@ -373,7 +373,7 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
 
         @Override
         public int getItemViewType(int position){
-            return mDatas.get(position).fromId.equals(MLOC.userId)?0:1;
+            return mDatas.get(position).fromId.equals(MLOC.INSTANCE.getUserId())?0:1;
         }
 
         @Override
@@ -399,7 +399,7 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
                 itemSelfHolder.vHeadCover.setCoverColor(Color.parseColor("#f6f6f6"));
                 int cint = DensityUtils.dip2px(ChatroomActivity.this,20);
                 itemSelfHolder.vHeadCover.setRadians(cint, cint, cint, cint,0);
-                itemSelfHolder.vHeadImage.setImageResource(MLOC.getHeadImage(ChatroomActivity.this,mDatas.get(position).fromId));
+                itemSelfHolder.vHeadImage.setImageResource(MLOC.INSTANCE.getHeadImage(ChatroomActivity.this,mDatas.get(position).fromId));
             }else if(currLayoutType == 1){//别人的信息
                 final ViewHolder itemOtherHolder;
                 if(convertView == null){
@@ -420,7 +420,7 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
                 itemOtherHolder.vHeadCover.setCoverColor(Color.parseColor("#f6f6f6"));
                 int cint = DensityUtils.dip2px(ChatroomActivity.this,20);
                 itemOtherHolder.vHeadCover.setRadians(cint, cint, cint, cint,0);
-                itemOtherHolder.vHeadImage.setImageResource(MLOC.getHeadImage(ChatroomActivity.this,mDatas.get(position).fromId));
+                itemOtherHolder.vHeadImage.setImageResource(MLOC.INSTANCE.getHeadImage(ChatroomActivity.this,mDatas.get(position).fromId));
             }
             return convertView;
         }
@@ -436,9 +436,9 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
 
 
     private void showManagerDialog(final String userId) {
-        if(!userId.equals(MLOC.userId)){
+        if(!userId.equals(MLOC.INSTANCE.getUserId())){
             AlertDialog.Builder builder=new AlertDialog.Builder(this);
-            if(mCreaterId.equals(MLOC.userId)){
+            if(mCreaterId.equals(MLOC.INSTANCE.getUserId())){
                 final String[] Items={"踢出房间","禁止发言","私信"};
                 builder.setItems(Items, new DialogInterface.OnClickListener() {
                     @Override
@@ -447,12 +447,12 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
                             chatroomManager.kickMember(mRoomId, userId, new IXHResultCallback() {
                                 @Override
                                 public void success(Object data) {
-                                    MLOC.showMsg(ChatroomActivity.this,"踢人成功");
+                                    MLOC.INSTANCE.showMsg(ChatroomActivity.this,"踢人成功");
                                 }
 
                                 @Override
                                 public void failed(final String errMsg) {
-                                    MLOC.showMsg(ChatroomActivity.this,"踢人失败:"+errMsg);
+                                    MLOC.INSTANCE.showMsg(ChatroomActivity.this,"踢人失败:"+errMsg);
                                     finish();
                                 }
                             });
@@ -460,12 +460,12 @@ public class ChatroomActivity extends BaseActivity implements AdapterView.OnItem
                             chatroomManager.muteMember(mRoomId, userId,60, new IXHResultCallback() {
                                 @Override
                                 public void success(Object data) {
-                                    MLOC.showMsg(ChatroomActivity.this,"禁言成功");
+                                    MLOC.INSTANCE.showMsg(ChatroomActivity.this,"禁言成功");
                                 }
 
                                 @Override
                                 public void failed(final String errMsg) {
-                                    MLOC.showMsg(ChatroomActivity.this,"禁言失败:"+errMsg);
+                                    MLOC.INSTANCE.showMsg(ChatroomActivity.this,"禁言失败:"+errMsg);
                                 }
                             });
                         }else if(i==2){

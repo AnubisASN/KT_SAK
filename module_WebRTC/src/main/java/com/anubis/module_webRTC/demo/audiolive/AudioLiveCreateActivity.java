@@ -32,12 +32,12 @@ public class AudioLiveCreateActivity extends BaseActivity {
                 XHConstants.XHLiveType type = XHConstants.XHLiveType.XHLiveTypeGlobalPublic;
 
                 if(TextUtils.isEmpty(inputId)){
-                    MLOC.showMsg(AudioLiveCreateActivity.this,"id不能为空");
+                    MLOC.INSTANCE.showMsg(AudioLiveCreateActivity.this,"id不能为空");
                 }else{
                     Intent intent = new Intent(AudioLiveCreateActivity.this, AudioLiveActivity.class);
                     intent.putExtra(AudioLiveActivity.LIVE_TYPE,type);
                     intent.putExtra(AudioLiveActivity.LIVE_NAME,inputId);
-                    intent.putExtra(AudioLiveActivity.CREATER_ID,MLOC.userId);
+                    intent.putExtra(AudioLiveActivity.CREATER_ID, MLOC.INSTANCE.getUserId());
                     startActivity(intent);
                     finish();
                 }

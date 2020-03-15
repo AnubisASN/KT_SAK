@@ -162,7 +162,7 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
                     ),rotate=rotate)
                 } catch (e: Exception) {
                     eArcFaceFT.mBitmap = eBitmap.eByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height,rotate=rotate)
-                    eLogE("矩阵截取失败$e",e)
+                    e.eLogE("矩阵截取失败")
                 }
             } else {
                 eArcFaceFT.mBitmap = eBitmap.eByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height,rotate = rotate)

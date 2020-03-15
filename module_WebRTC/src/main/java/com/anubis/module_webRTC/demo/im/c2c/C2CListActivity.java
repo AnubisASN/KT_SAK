@@ -58,7 +58,7 @@ public class C2CListActivity extends BaseActivity {
         vHistoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MLOC.addHistory(mHistoryList.get(position),true);
+                MLOC.INSTANCE.addHistory(mHistoryList.get(position),true);
                 mTargetId = (String) mHistoryList.get(position).getConversationId();
                 Intent intent = new Intent(C2CListActivity.this,C2CActivity.class);
                 intent.putExtra("targetId",mTargetId);
@@ -69,9 +69,9 @@ public class C2CListActivity extends BaseActivity {
     @Override
     public void onResume(){
         super.onResume();
-        MLOC.hasNewC2CMsg = false;
+        MLOC.INSTANCE.setHasNewC2CMsg(false);
         mHistoryList.clear();
-       List<HistoryBean> list = MLOC.getHistoryList(CoreDB.HISTORY_TYPE_C2C);
+       List<HistoryBean> list = MLOC.INSTANCE.getHistoryList(CoreDB.HISTORY_TYPE_C2C);
        if(list!=null&&list.size()>0){
             mHistoryList.addAll(list);
        }
@@ -139,7 +139,7 @@ public class C2CListActivity extends BaseActivity {
             itemSelfHolder.vHeadCover.setCoverColor(Color.parseColor("#FFFFFF"));
             int cint = DensityUtils.dip2px(C2CListActivity.this,28);
             itemSelfHolder.vHeadCover.setRadians(cint, cint, cint, cint,0);
-            itemSelfHolder.vHeadImage.setImageResource(MLOC.getHeadImage(C2CListActivity.this,userId));
+            itemSelfHolder.vHeadImage.setImageResource(MLOC.INSTANCE.getHeadImage(C2CListActivity.this,userId));
 
             itemSelfHolder.vTime.setText(historyBean.getLastTime());
             itemSelfHolder.vMessage.setText(historyBean.getLastMsg());

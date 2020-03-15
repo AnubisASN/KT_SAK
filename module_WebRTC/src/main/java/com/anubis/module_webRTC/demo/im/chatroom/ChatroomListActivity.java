@@ -113,10 +113,10 @@ public class ChatroomListActivity extends BaseActivity implements AdapterView.On
     }
 
     private void queryAllList(){
-        if(MLOC.AEventCenterEnable){
-            InterfaceUrls.demoQueryList(""+MLOC.LIST_TYPE_CHATROOM);
+        if(MLOC.INSTANCE.getAEventCenterEnable()){
+            InterfaceUrls.demoQueryList(""+ MLOC.INSTANCE.getLIST_TYPE_CHATROOM());
         }else{
-            XHClient.getInstance().getChatroomManager().queryList("",""+MLOC.LIST_TYPE_CHATROOM,new IXHResultCallback() {
+            XHClient.getInstance().getChatroomManager().queryList("",""+ MLOC.INSTANCE.getLIST_TYPE_CHATROOM(),new IXHResultCallback() {
                 @Override
                 public void success(final Object data) {
                     String[] res = (String[]) data;

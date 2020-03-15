@@ -13,7 +13,6 @@ import com.anubis.kt_extends.eLogE
 import com.anubis.module_arcfaceft.eArcFaceFT
 import kotlinx.android.synthetic.main.activity_camera.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.main_preview.*
 import org.jetbrains.anko.textColor
 
 
@@ -40,10 +39,9 @@ class ArcFaceFT : Activity() {
         setContentView(R.layout.activity_camera)
         var camera: eArcFaceFT? = null
         try {
-            camera = eArcFaceFT.init(findViewById(R.id.glsurfaceView), findViewById(R.id.surfaceView), false, Color.GREEN, 2, false, 100, 0, 0, 90f, imageView)
+            camera = eArcFaceFT.init(findViewById(R.id.glsurfaceView), findViewById(R.id.surfaceView), false, Color.GREEN, 2, false, 100, 1, 0, 270f, imageView)
         } catch (e: Exception) {
-            eLogE("ArcFace:$e")
-            eLog("ArcFace$e")
+            e.eLogE("ArcFace")
         }
         var bitmap: Bitmap?
         mRunnable = Runnable {

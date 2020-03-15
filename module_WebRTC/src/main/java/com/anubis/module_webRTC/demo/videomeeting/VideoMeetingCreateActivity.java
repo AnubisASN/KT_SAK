@@ -32,11 +32,11 @@ public class VideoMeetingCreateActivity extends BaseActivity {
             public void onClick(View v) {
                 String inputId = ((EditText)findViewById(com.anubis.module_webRTC.R.id.targetid_input)).getText().toString();
                 if(TextUtils.isEmpty(inputId)){
-                    MLOC.showMsg(VideoMeetingCreateActivity.this,"id不能为空");
+                    MLOC.INSTANCE.showMsg(VideoMeetingCreateActivity.this,"id不能为空");
                 }else{
                     Intent intent = new Intent(VideoMeetingCreateActivity.this, VideoMeetingActivity.class);
                     intent.putExtra(VideoMeetingActivity.MEETING_NAME,inputId);
-                    intent.putExtra(VideoMeetingActivity.MEETING_CREATER,MLOC.userId);
+                    intent.putExtra(VideoMeetingActivity.MEETING_CREATER, MLOC.INSTANCE.getUserId());
                     intent.putExtra(VideoMeetingActivity.MEETING_TYPE,XHConstants.XHMeetingType.XHMeetingTypeGlobalPublic);
                     startActivity(intent);
                     finish();

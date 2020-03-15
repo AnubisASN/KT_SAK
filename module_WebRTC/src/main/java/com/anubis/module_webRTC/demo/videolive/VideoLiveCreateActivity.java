@@ -36,14 +36,14 @@ public class VideoLiveCreateActivity extends BaseActivity {
             public void onClick(View v) {
                 String inputId = ((EditText)findViewById(com.anubis.module_webRTC.R.id.targetid_input)).getText().toString();
                 if(TextUtils.isEmpty(inputId)){
-                    MLOC.showMsg(VideoLiveCreateActivity.this,"id不能为空");
+                    MLOC.INSTANCE.showMsg(VideoLiveCreateActivity.this,"id不能为空");
                 }else{
                     xhsdkHelper.stopPerview();
                     xhsdkHelper = null;
                     Intent intent = new Intent(VideoLiveCreateActivity.this, VideoLiveActivity.class);
                     intent.putExtra(VideoLiveActivity.LIVE_TYPE,XHConstants.XHLiveType.XHLiveTypeGlobalPublic);
                     intent.putExtra(VideoLiveActivity.LIVE_NAME,inputId);
-                    intent.putExtra(VideoLiveActivity.CREATER_ID,MLOC.userId);
+                    intent.putExtra(VideoLiveActivity.CREATER_ID, MLOC.INSTANCE.getUserId());
                     startActivity(intent);
                     finish();
                 }

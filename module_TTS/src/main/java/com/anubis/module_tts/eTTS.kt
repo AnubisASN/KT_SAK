@@ -80,9 +80,9 @@ object eTTS {
     private val params: HashMap<String, String>
         get() {
             val params = HashMap<String, String>()
-            eLog("设置在线发声音人:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model"))
+            eLog("设置在线发声音人:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model",""))
 //设置本地发音人
-            params[SpeechSynthesizer.PARAM_SPEAKER] = when (mActivity!!.eGetSystemSharedPreferences("set_tts_load_model")) {
+            params[SpeechSynthesizer.PARAM_SPEAKER] = when (mActivity!!.eGetSystemSharedPreferences("set_tts_load_model","")) {
                 "F" -> "0"
                 "M" -> "1"
                 "X" -> "3"
@@ -92,17 +92,14 @@ object eTTS {
                 }
             }
             // 设置合成的音量，0-9 ，默认 9
-            params[SpeechSynthesizer.PARAM_VOLUME] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME").toString()
-                    ?: "9"
+            params[SpeechSynthesizer.PARAM_VOLUME] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME","9")
+
             // 设置合成的语速，0-9 ，默认 5
-            params[SpeechSynthesizer.PARAM_SPEED] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED").toString()
-                    ?: "5"
+            params[SpeechSynthesizer.PARAM_SPEED] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED","5")
             // 设置合成的语调，0-9 ，默认 5
-            params[SpeechSynthesizer.PARAM_PITCH] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH").toString()
-                    ?: "5"
+            params[SpeechSynthesizer.PARAM_PITCH] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH","5")
 //            params[SpeechSynthesizer.PARAM_MIX_MODE] = SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI
-            params[SpeechSynthesizer.PARAM_MIX_MODE] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_MIX_MODE").toString()
-                    ?: SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE
+            params[SpeechSynthesizer.PARAM_MIX_MODE] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_MIX_MODE",SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE)
             val offlineResource = createOfflineResource(offlineVoice)
             if (offlineResource == null) {
                 eLog("offlineResource==null")
@@ -144,7 +141,7 @@ object eTTS {
         try {
             init(listener)
         } catch (e: Exception) {
-            eLogE("initTTS错误",e)
+            e.eLogE("initTTS错误" )
             ttsDestroy()
             init(listener)
         }

@@ -42,7 +42,6 @@ import org.jetbrains.anko.uiThread
 import org.jetbrains.anko.custom.async
 import org.json.JSONObject
 import java.io.*
-import java.lang.Error
 import java.lang.Process
 import java.net.*
 import java.security.MessageDigest
@@ -51,6 +50,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import kotlin.Error
 import kotlin.experimental.and
 
 
@@ -78,62 +78,43 @@ fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
 /**
  * Log i e扩展函数------------------------------------------------------------------------------------
  */
+var eIsTag: Boolean = true
 
-fun Activity?.eLog(str: Any, TAG: String = "TAG") {
-    Log.d(TAG, "${this?.localClassName ?: "eLogD"}：$str\n ")
-}
-
-fun eLog(str: Any, TAG: String = "TAG") {
-    Log.d(TAG, "eLogD:$str\n ")
-}
+fun Any.eIsBaseType() = this is String || this is Int || this is Int || this is Log || this is Double || this is Float || this is Char || this is Short || this is Boolean || this is Byte
 
 
-fun Activity?.eLogI(str: Any, TAG: String = "TAG") {
-    Log.i(TAG, "${this?.localClassName ?: "eLogI"}-：$str\n ")
-}
-
-fun eLogI(str: Any, TAG: String = "TAG") {
-    Log.i(TAG, "eLogI:$str\n ")
-}
-
-fun Activity?.eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
-    e?.printStackTrace()
-    Log.e(TAG, "${this?.localClassName ?: "eLogE"}：$str\n$e ")
+fun <T> T.eLog(hint: Any? = "", TAG: String = "TAGd"): T {
+    if(eIsTag)
+    Log.d(TAG, "${(this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
+    return this
 }
 
 
-fun Activity?.eLogE(str: Any, e: Error, TAG: String = "TAG") {
-    e?.printStackTrace()
-    Log.e(TAG, "${this?.localClassName ?: "eLogE"}：$str\n$e ")
-}
-
-fun eLogE(str: Any, TAG: String = "TAG") {
-    Log.e(TAG, "eNLogE:$str\n")
+fun <T> T.eLogI(hint: Any? = "", TAG: String = "TAGi"): T {
+    Log.d(TAG, "${(this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
+    return this
 }
 
 
-fun eLogE(str: Any, e: Error? = null, TAG: String = "TAG") {
-    e?.printStackTrace()
-    Log.e(TAG, "eNLogE:$str\n${eErrorOut(e)}")
+fun <T> T.eLogE(hint: Any? = "", TAG: String = "TAGe"): T {
+    Log.e(TAG, "${(this as Any).javaClass.name}-$hint\n${eErrorOut(this)} ")
+    return this
 }
 
-fun eLogE(str: Any, e: Exception? = null, TAG: String = "TAG") {
-    e?.printStackTrace()
-    Log.e(TAG, "eLogE:$str\n${eErrorOut(e)}")
+fun eLogE(hint: Any? = "", e: Any? = null, TAG: String = "TAGe") {
+    e.eLogE(hint, TAG)
 }
 
-
-fun eErrorOut(e: Exception?): String? {
+/**
+ * 错误输出
+ */
+fun eErrorOut(e: Any?): String? {
     e ?: return null
     val os = ByteArrayOutputStream()
-    e.printStackTrace(PrintStream(os))
-    return os.toString()
-}
-
-fun eErrorOut(e: Error?): String? {
-    e ?: return null
-    val os = ByteArrayOutputStream()
-    e.printStackTrace(PrintStream(os))
+    when (e) {
+        is Error -> e.printStackTrace(PrintStream(os))
+        is Exception -> e.printStackTrace(PrintStream(os))
+    }
     return os.toString()
 }
 
@@ -196,38 +177,27 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any, sharedPreferences:
     val key = key.toString()
     val editor = sharedPreferences.edit()
     when (value) {
-        is String -> editor.putString(key, value)
         is Boolean -> editor.putBoolean(key, value)
         is Float -> editor.putFloat(key, value)
         is Int -> editor.putInt(key, value)
         is Long -> editor.putLong(key, value)
+        is Set<*> ->editor.putStringSet(key,value as Set<String>)
+        else -> editor.putString(key, value.toString())
     }
     return editor.commit()
 }
 
 //系统数据文件存储读取扩展
-fun Context.eGetSystemSharedPreferences(key: String, value: Any? = null, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) =
-        try {
-            sharedPreferences.getString(key, value as String? ?: "")
-        } catch (e: Exception) {
-            try {
-                sharedPreferences.getBoolean(key, value as Boolean? ?: true)
-            } catch (e: Exception) {
-                try {
-                    sharedPreferences.getInt(key, value as Int? ?: 0)
-                } catch (e: Exception) {
-                    try {
-                        sharedPreferences.getFloat(key, value as Float? ?: 0f)
-                    } catch (e: Exception) {
-                        try {
-                            sharedPreferences.getLong(key, value as Long? ?: 0)
-                        } catch (e: Exception) {
-                            value
-                        }
-                    }
-                }
-            }
-        }
+fun <T> Context.eGetSystemSharedPreferences(key: String, value:T, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) :T=when(value){
+    is Int->sharedPreferences.getInt(key, value)
+    is Long->sharedPreferences.getLong(key, value)
+    is Float->sharedPreferences.getFloat(key, value)
+    is Boolean-> sharedPreferences.getBoolean(key, value)
+    is String-> sharedPreferences.getString(key, value)
+    is Set<*>-> sharedPreferences.getStringSet(key,value as Set<String> )
+    else-> sharedPreferences.getString(key, value.toString())
+}as T
+
 
 
 //用户文件数据存储扩展
@@ -239,32 +209,22 @@ fun Context.eSetUserSharedPreferences(userID: String, key: String, value: Any, s
         is Float -> editor.putFloat(key, value)
         is Int -> editor.putInt(key, value)
         is Long -> editor.putLong(key, value)
+        is Set<*> ->editor.putStringSet(key,value as Set<String>)
+        else -> editor.putString(key, value.toString())
     }
     return editor.commit()
 }
 
 //用户文件数据读取扩展
-fun Context.eGetUserSharedPreferences(userID: String, key: String, value: Any? = null, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) = try {
-    sharedPreferences.getString(key, value as String? ?: "")
-} catch (e: Exception) {
-    try {
-        sharedPreferences.getBoolean(key, value as Boolean? ?: true)
-    } catch (e: Exception) {
-        try {
-            sharedPreferences.getInt(key, value as Int? ?: 0)
-        } catch (e: Exception) {
-            try {
-                sharedPreferences.getFloat(key, value as Float? ?: 0f)
-            } catch (e: Exception) {
-                try {
-                    sharedPreferences.getLong(key, value as Long? ?: 0)
-                } catch (e: Exception) {
-                    value
-                }
-            }
-        }
-    }
-}
+fun <T>Context.eGetUserSharedPreferences(userID: String, key: String, value: T, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) :T=when(value){
+    is Int->sharedPreferences.getInt(key, value )
+    is Long->sharedPreferences.getLong(key, value )
+    is Float->sharedPreferences.getFloat(key, value )
+    is Boolean-> sharedPreferences.getBoolean(key, value)
+    is String-> sharedPreferences.getString(key, value )
+    is Set<*>-> sharedPreferences.getStringSet(key,value as Set<String>)
+    else->sharedPreferences.getString(key, value.toString() )
+}as T
 
 
 //首选项数据文件存储扩展
@@ -276,39 +236,28 @@ fun Context.eSetDefaultSharedPreferences(key: String, value: Any, sharedPref: Sh
         is Float -> editor.putFloat(key, value)
         is Int -> editor.putInt(key, value)
         is Long -> editor.putLong(key, value)
+        is Set<*>->editor.putStringSet(key,value as Set<String>)
+        else ->editor.putString(key, value.toString())
     }
     return editor.commit()
 }
 
 //首选项数据文件读取扩展
-fun Context.eGetDefaultSharedPreferences(key: String, value: Any? = null, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)) = try {
-    sharedPref.getString(key, value as String? ?: "")
-} catch (e: Exception) {
-    try {
-        sharedPref.getBoolean(key, value as Boolean? ?: true)
-    } catch (e: Exception) {
-        try {
-            sharedPref.getInt(key, value as Int? ?: 0)
-        } catch (e: Exception) {
-            try {
-                sharedPref.getFloat(key, value as Float? ?: 0f)
-            } catch (e: Exception) {
-                try {
-                    sharedPref.getLong(key, value as Long? ?: 0)
-                } catch (e: Exception) {
-                    value
-                }
-            }
-        }
-    }
-}
-
+fun <T>Context.eGetDefaultSharedPreferences(key: String, value: T, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)):T=when(value){
+    is Int->sharedPref.getInt(key, value)
+    is Long->sharedPref.getLong(key, value)
+    is Float->sharedPref.getFloat(key, value)
+    is Boolean-> sharedPref.getBoolean(key, value)
+    is String-> sharedPref.getString(key, value)
+    is Set<*>-> sharedPref.getStringSet(key,value as Set<String> )
+    else-> sharedPref.getString(key, value.toString())
+}as T
 
 //Intent Get传递扩展
 fun Intent.eGetMessage(Sign: String): String = getStringExtra(Sign)
 
 
-fun Bundle.eSetMessage(Sign: String, Message: Any = "") = when (Message) {
+fun Bundle.eSetMessage(Sign: String, Message: Any) = when (Message) {
     is String -> putString(Sign, Message)
     is Int -> putInt(Sign, Message)
     is Float -> putFloat(Sign, Message)
@@ -324,7 +273,7 @@ fun Bundle.eSetMessage(Sign: String, Message: Any = "") = when (Message) {
 //音频播放
 var mp: MediaPlayer? = null
 
-fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false) {
+fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false) :Boolean{
     try {
         mp?.stop()
         mp?.release()
@@ -338,15 +287,17 @@ fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false) {
         }
         mp?.isLooping = isLoop
         mp?.start()//开始播放
+        return true
     } catch (e: Exception) {
-        eLogE("ePlayVoice 错误", e)
+        e.eLogE("ePlayVoice 错误")
+        return false
     }
 }
 
 //PCM播放
-fun ePlayPCM(path: String) {
-    val bufferSize = AudioTrack.getMinBufferSize(16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT)
-    var audioTrack: AudioTrack? = AudioTrack(AudioManager.STREAM_MUSIC, 16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM)
+fun ePlayPCM(path: String,sampleRateInHz:Int=16000, channelConfig:Int=AudioFormat.CHANNEL_OUT_MONO,  audioFormat:Int=AudioFormat.ENCODING_PCM_16BIT) {
+    val bufferSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat)
+    var audioTrack: AudioTrack? = AudioTrack(AudioManager.STREAM_MUSIC, sampleRateInHz, channelConfig, audioFormat, bufferSize, AudioTrack.MODE_STREAM)
     var fis: FileInputStream? = null
     var isPlaying = true
     var isStop = false
@@ -359,7 +310,7 @@ fun ePlayPCM(path: String) {
             audioTrack.write(buffer, 0, len)
         }
     } catch (e: Exception) {
-        eLogE("playPCMRecord", e)
+        e.eLogE("playPCMRecord")
     } finally {
         isPlaying = false
         isStop = false
@@ -394,7 +345,7 @@ fun eAssetsToFile(context: Context, assetsName: String, copyFilePath: String): B
         }
         return true
     } catch (e: IOException) {
-        eLogE("文件复制错误", e)
+        e.eLogE("文件复制错误")
         return false
     }
 }
@@ -1067,8 +1018,7 @@ object eBitmap {
             bmp.compress(Bitmap.CompressFormat.JPEG, quality, fos)
             return true
         } catch (e: Exception) {
-            e.printStackTrace()
-            com.anubis.kt_extends.eLogE("保存失败", e)
+            e.eLogE("保存失败")
             return false
         }
     }
@@ -1316,7 +1266,7 @@ object eImage {
         return bmp
     }
 
-     fun eGetJudgedData(oldData: Int): Int {
+    fun eGetJudgedData(oldData: Int): Int {
         var newData = oldData
         if (newData > 255) {
             newData = 255
@@ -1340,29 +1290,32 @@ object eFile {
      *         <code>false</code> otherwise
      */
 
-    fun eCopyFile(oldPathName: String, newPathName: String): Boolean {
+    fun eCopyFile(oldFilePath: String, newFilePath: String): Boolean {
         try {
-            val oldFile = File(oldPathName)
+            val oldFile = File(oldFilePath)
             if (!oldFile.exists()) {
-                eLog("eCopyFile: oldFile 不存在")
+                eLogE("eCopyFile: oldFile 不存在")
                 return false
             }
             if (!oldFile.isFile) {
-                eLog("eCopyFile: oldFile 不是文件")
+                eLogE("eCopyFile: oldFile 不是文件")
                 return false
             }
             if (!oldFile.canRead()) {
-                eLog("eCopyFile: oldFile 无法读取")
+                eLogE("eCopyFile: oldFile 无法读取")
                 return false
             }
-            val newFile = File(if (newPathName.contains(".")) newPathName.substring(0, newPathName.lastIndexOf("/")) else newPathName)
-            if (!newFile.exists()) {
-                newFile.mkdirs()
+            eCheckFile(newFilePath)
+            val newFile = if (File(newFilePath).isDirectory) {
+                newFilePath + "/" + oldFile.name
+            } else {
+                File(newFilePath).path
             }
-            val fileInputStream = FileInputStream(oldPathName)
-            val fileOutputStream = FileOutputStream(newPathName)
+            eCheckFile(newFile)
+            val fileInputStream = FileInputStream(oldFilePath)
+            val fileOutputStream = FileOutputStream(newFile)
             val buffer = ByteArray(1024)
-            var byteRead: Int
+            var byteRead = 0
             while ((fileInputStream.read(buffer).apply { byteRead = this }) != -1) {
                 fileOutputStream.write(buffer, 0, byteRead)
             }
@@ -1376,6 +1329,26 @@ object eFile {
         }
     }
 
+    fun eCheckFile(path: String, isCreate: Boolean = true): Boolean {
+        return eCheckFile(File(path), isCreate)
+    }
+
+    fun eCheckFile(file: File, isCreate: Boolean = true): Boolean {
+        return if (isCreate) {
+            val isDir = if (!file.exists()) {
+                !file.name.contains(".")
+            } else null
+            if (isDir ?: file.isDirectory) {
+                file.mkdirs()
+
+            } else {
+                File(file.parent).mkdirs()
+                File(file.path).createNewFile()
+            }
+        } else {
+            file.exists()
+        }
+    }
 
     //    文件转Base64
     fun eFileToBase64(path: String): String? {
@@ -1389,7 +1362,7 @@ object eFile {
             return Base64.encodeToString(buffer, 0, length, Base64.DEFAULT)
         } catch (e: Exception) {
             inputFile?.close()
-            eLogE("转换错误", e)
+            eLogE("转换错误")
             return null
         }
     }
@@ -1422,7 +1395,7 @@ object eFile {
             }
         } catch (ioe: Exception) {
             out?.close()
-            eLogE("转换异常", ioe)
+            ioe.eLogE("转换异常")
             return null
         }
         return file

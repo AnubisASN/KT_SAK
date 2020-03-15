@@ -161,10 +161,10 @@ public class VideoLiveListActivity extends BaseActivity implements AdapterView.O
         queryAllList();
     }
     private void queryAllList(){
-        if(MLOC.AEventCenterEnable){
-            InterfaceUrls.demoQueryList(MLOC.LIST_TYPE_LIVE_ALL);
+        if(MLOC.INSTANCE.getAEventCenterEnable()){
+            InterfaceUrls.demoQueryList(MLOC.INSTANCE.getLIST_TYPE_LIVE_ALL());
         }else{
-            XHClient.getInstance().getLiveManager().queryList("",MLOC.LIST_TYPE_LIVE_ALL,new IXHResultCallback() {
+            XHClient.getInstance().getLiveManager().queryList("", MLOC.INSTANCE.getLIST_TYPE_LIVE_ALL(),new IXHResultCallback() {
                 @Override
                 public void success(final Object data) {
                     String[] res = (String[]) data;
@@ -201,7 +201,7 @@ public class VideoLiveListActivity extends BaseActivity implements AdapterView.O
                 }
                 @Override
                 public void failed(String errMsg) {
-                    MLOC.d("VideoMettingListActivity",errMsg);
+                    MLOC.INSTANCE.d("VideoMettingListActivity",errMsg);
                     refreshLayout.setRefreshing(false);
                     mDatas.clear();
                     myListAdapter.notifyDataSetChanged();

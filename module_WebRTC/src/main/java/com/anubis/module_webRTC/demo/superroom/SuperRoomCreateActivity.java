@@ -35,12 +35,12 @@ public class SuperRoomCreateActivity extends BaseActivity {
                 String inputId = ((EditText)findViewById(com.anubis.module_webRTC.R.id.targetid_input)).getText().toString();
                 XHConstants.XHSuperRoomType type = XHConstants.XHSuperRoomType.XHSuperRoomTypeGlobalPublic;
                 if(TextUtils.isEmpty(inputId)){
-                    MLOC.showMsg(SuperRoomCreateActivity.this,"id不能为空");
+                    MLOC.INSTANCE.showMsg(SuperRoomCreateActivity.this,"id不能为空");
                 }else{
                     Intent intent = new Intent(SuperRoomCreateActivity.this, SuperRoomActivity.class);
                     intent.putExtra(AudioLiveActivity.LIVE_TYPE,type);
                     intent.putExtra(AudioLiveActivity.LIVE_NAME,inputId);
-                    intent.putExtra(AudioLiveActivity.CREATER_ID,MLOC.userId);
+                    intent.putExtra(AudioLiveActivity.CREATER_ID, MLOC.INSTANCE.getUserId());
                     startActivity(intent);
                     finish();
                 }

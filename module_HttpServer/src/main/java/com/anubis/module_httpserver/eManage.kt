@@ -102,7 +102,7 @@ object eManage {
             body = hin.readLine()
             return body
         } catch (ioe: IOException) {
-            eLogE("IOException: $ioe", ioe)
+            ioe.eLogE("IOException ")
             return "IOException: $ioe"
         }
     }

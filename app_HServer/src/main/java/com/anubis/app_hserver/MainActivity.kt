@@ -1,7 +1,6 @@
 package com.anubis.app_hserver
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -9,15 +8,11 @@ import android.os.Message
 import com.anubis.kt_extends.eAssetsToFile
 import com.anubis.kt_extends.eDevice
 import com.anubis.kt_extends.eLog
-import com.anubis.kt_extends.mp
 import com.anubis.module_httpserver.eResolver
 import com.anubis.module_httpserver.eHttpServer
 import com.anubis.module_httpserver.eResolverType
 import com.anubis.module_httpserver.protocols.http.eHTTPD
-import com.anubis.module_portMSG.ePortMSG
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.custom.async
-import org.jetbrains.anko.startActivity
 import java.io.File
 
 @SuppressLint("SetTextI18n")

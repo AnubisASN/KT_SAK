@@ -38,7 +38,7 @@ public class LoopTestActivity extends BaseActivity{
         starRTCAudioManager.start(new StarRTCAudioManager.AudioManagerEvents() {
             @Override
             public void onAudioDeviceChanged(StarRTCAudioManager.AudioDevice selectedAudioDevice, Set availableAudioDevices) {
-                MLOC.d("onAudioDeviceChanged ",selectedAudioDevice.name());
+                MLOC.INSTANCE.d("onAudioDeviceChanged ",selectedAudioDevice.name());
             }
         });
 

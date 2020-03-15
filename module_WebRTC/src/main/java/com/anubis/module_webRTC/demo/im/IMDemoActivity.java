@@ -53,23 +53,23 @@ public class IMDemoActivity extends BaseActivity {
         XHClient.getInstance().getAliveUserNum(new IXHResultCallback() {
             @Override
             public void success(Object data) {
-                MLOC.d("!!!!!!!!!!!!!",data.toString());
+                MLOC.INSTANCE.d("!!!!!!!!!!!!!",data.toString());
             }
 
             @Override
             public void failed(String errMsg) {
-                MLOC.d("!!!!!!!!!!!!!",errMsg.toString());
+                MLOC.INSTANCE.d("!!!!!!!!!!!!!",errMsg.toString());
             }
         });
         XHClient.getInstance().getAliveUserList(1,new IXHResultCallback() {
             @Override
             public void success(Object data) {
-                MLOC.d("!!!!!!!!!!!!!",data.toString());
+                MLOC.INSTANCE.d("!!!!!!!!!!!!!",data.toString());
             }
 
             @Override
             public void failed(String errMsg) {
-                MLOC.d("!!!!!!!!!!!!!",errMsg.toString());
+                MLOC.INSTANCE.d("!!!!!!!!!!!!!",errMsg.toString());
             }
         });
     }
@@ -77,8 +77,8 @@ public class IMDemoActivity extends BaseActivity {
     @Override
     public void onResume(){
         super.onResume();
-        findViewById(com.anubis.module_webRTC.R.id.c2c_new).setVisibility(MLOC.hasNewC2CMsg?View.VISIBLE:View.INVISIBLE);
-        findViewById(com.anubis.module_webRTC.R.id.group_new).setVisibility(MLOC.hasNewGroupMsg?View.VISIBLE:View.INVISIBLE);
+        findViewById(com.anubis.module_webRTC.R.id.c2c_new).setVisibility(MLOC.INSTANCE.getHasNewC2CMsg() ?View.VISIBLE:View.INVISIBLE);
+        findViewById(com.anubis.module_webRTC.R.id.group_new).setVisibility(MLOC.INSTANCE.getHasNewGroupMsg() ?View.VISIBLE:View.INVISIBLE);
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CoreDB implements IEventListener {
-    public static String APP_DB_PATH = "/data/data/com.starrtc.demo/";
+    public static String APP_DB_PATH = "/data/data/com.anubis.module_webRTC/";
     private final String TEXTTAG = "CoreDB";
     private static final String HISTORY_TABLE = "historyListTable";
     private static final String MSG_TABLE = "allMsgTable";
@@ -27,8 +27,8 @@ public class CoreDB implements IEventListener {
     public CoreDB(){
         AEvent.removeListener(AEvent.AEVENT_RESET,this);
         AEvent.addListener(AEvent.AEVENT_RESET,this);
-        MLOC.d(TEXTTAG,"reset DB:"+MLOC.userId);
-        coreDBM.initCoreDB(APP_DB_PATH +"databases/", MLOC.userId);
+        MLOC.INSTANCE.d(TEXTTAG,"reset DB:"+ MLOC.INSTANCE.getUserId());
+        coreDBM.initCoreDB(APP_DB_PATH +"databases/", MLOC.INSTANCE.getUserId());
         //历史表
         coreDBM.execSQL("create table if not exists "+HISTORY_TABLE+"(" +
                 "id INTEGER PRIMARY KEY," +

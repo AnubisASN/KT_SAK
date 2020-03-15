@@ -85,10 +85,10 @@ public class SuperRoomActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MLOC.d("liveVideoVdn","+==================================================");
-        MLOC.d("liveVideoVdn","+==================================================");
-        MLOC.d("liveVideoVdn","+==================================================");
-        MLOC.d("liveVideoVdn","+==================================================");
+        MLOC.INSTANCE.d("liveVideoVdn","+==================================================");
+        MLOC.INSTANCE.d("liveVideoVdn","+==================================================");
+        MLOC.INSTANCE.d("liveVideoVdn","+==================================================");
+        MLOC.INSTANCE.d("liveVideoVdn","+==================================================");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -110,15 +110,15 @@ public class SuperRoomActivity extends BaseActivity {
         roomType = (XHConstants.XHSuperRoomType) getIntent().getSerializableExtra(LIVE_TYPE);
 
         if(TextUtils.isEmpty(liveId)){
-            if(createrId.equals(MLOC.userId)){
+            if(createrId.equals(MLOC.INSTANCE.getUserId())){
                 if(TextUtils.isEmpty(liveName)||roomType==null){
-                    MLOC.showMsg(this,"没有直播信息");
+                    MLOC.INSTANCE.showMsg(this,"没有直播信息");
                     stopAndFinish();
                     return;
                 }
             }else{
                 if(TextUtils.isEmpty(liveName)||roomType==null){
-                    MLOC.showMsg(this,"没有直播信息");
+                    MLOC.INSTANCE.showMsg(this,"没有直播信息");
                     stopAndFinish();
                     return;
                 }
@@ -260,7 +260,7 @@ public class SuperRoomActivity extends BaseActivity {
     private void init(){
         findViewById(com.anubis.module_webRTC.R.id.audio_container).setVisibility(View.VISIBLE);
         findViewById(com.anubis.module_webRTC.R.id.chat_container).setVisibility(View.GONE);
-        if(createrId.equals(MLOC.userId)){
+        if(createrId.equals(MLOC.INSTANCE.getUserId())){
             if(liveId==null){
                 createNewLive();
             }else {
@@ -280,18 +280,18 @@ public class SuperRoomActivity extends BaseActivity {
             @Override
             public void success(Object data) {
                 liveId = (String) data;
-                MLOC.showMsg(SuperRoomActivity.this,"创建成功");
+                MLOC.INSTANCE.showMsg(SuperRoomActivity.this,"创建成功");
                 try {
                     JSONObject info = new JSONObject();
                     info.put("id",liveId);
-                    info.put("creator",MLOC.userId);
+                    info.put("creator", MLOC.INSTANCE.getUserId());
                     info.put("name",liveName);
                     String infostr = info.toString();
                     infostr = URLEncoder.encode(infostr,"utf-8");
-                    if(MLOC.AEventCenterEnable){
-                        InterfaceUrls.demoSaveToList(MLOC.userId,MLOC.LIST_TYPE_SUPER_ROOM,liveId,infostr);
+                    if(MLOC.INSTANCE.getAEventCenterEnable()){
+                        InterfaceUrls.demoSaveToList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_SUPER_ROOM(),liveId,infostr);
                     }else{
-                        superRoomManager.saveToList(MLOC.userId,MLOC.LIST_TYPE_SUPER_ROOM,liveId,infostr,null);
+                        superRoomManager.saveToList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_SUPER_ROOM(),liveId,infostr,null);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -302,7 +302,7 @@ public class SuperRoomActivity extends BaseActivity {
             }
             @Override
             public void failed(final String errMsg) {
-                MLOC.showMsg(SuperRoomActivity.this,errMsg);
+                MLOC.INSTANCE.showMsg(SuperRoomActivity.this,errMsg);
                 stopAndFinish();
             }
         });
@@ -313,20 +313,20 @@ public class SuperRoomActivity extends BaseActivity {
         superRoomManager.joinSuperRoom(liveId, new IXHResultCallback() {
             @Override
             public void success(Object data) {
-                MLOC.showMsg(SuperRoomActivity.this,"按住下方按钮发言");
-                MLOC.d("XHLiveManager","watchLive success "+data);
+                MLOC.INSTANCE.showMsg(SuperRoomActivity.this,"按住下方按钮发言");
+                MLOC.INSTANCE.d("XHLiveManager","watchLive success "+data);
             }
             @Override
             public void failed(final String errMsg) {
-                MLOC.d("XHLiveManager","watchLive failed "+errMsg);
-                MLOC.showMsg(SuperRoomActivity.this,errMsg);
+                MLOC.INSTANCE.d("XHLiveManager","watchLive failed "+errMsg);
+                MLOC.INSTANCE.showMsg(SuperRoomActivity.this,errMsg);
                 stopAndFinish();
             }
         });
     }
 
     private void sendChatMsg(String msg){
-        MLOC.d("XHLiveManager","sendChatMsg "+msg);
+        MLOC.INSTANCE.d("XHLiveManager","sendChatMsg "+msg);
         if(TextUtils.isEmpty(mPrivateMsgTargetId)){
             XHIMMessage imMessage = superRoomManager.sendMessage(msg,null);
             mDatas.add(imMessage);
@@ -353,12 +353,12 @@ public class SuperRoomActivity extends BaseActivity {
     @Override
     public void onResume(){
         super.onResume();
-        MLOC.canPickupVoip = false;
+        MLOC.INSTANCE.setCanPickupVoip(false);
     }
     @Override
     public void onPause(){
         super.onPause();
-        MLOC.canPickupVoip = true;
+        MLOC.INSTANCE.setCanPickupVoip(true);
     }
 
     private void removeListener(){
@@ -405,7 +405,7 @@ public class SuperRoomActivity extends BaseActivity {
         for(int i = 0;i<mNameArray.length;i++){
             if(mNameArray[i].isEmpty()){
                 mNameArray[i] = addUserID;
-                vHeadArray.get(i).setImageResource(MLOC.getHeadImage(this,addUserID));
+                vHeadArray.get(i).setImageResource(MLOC.INSTANCE.getHeadImage(this,addUserID));
                 break;
             }
         }
@@ -444,7 +444,7 @@ public class SuperRoomActivity extends BaseActivity {
     @Override
     public void dispatchEvent(String aEventID, boolean success, final Object eventObj) {
         super.dispatchEvent(aEventID,success,eventObj);
-        MLOC.d("SuperRoomActivity","dispatchEvent  "+aEventID + eventObj);
+        MLOC.INSTANCE.d("SuperRoomActivity","dispatchEvent  "+aEventID + eventObj);
         switch (aEventID){
             case AEvent.AEVENT_SUPER_ROOM_ADD_UPLOADER:
                 try {
@@ -469,12 +469,12 @@ public class SuperRoomActivity extends BaseActivity {
                 vOnlineNum.setText(onLineUserNumber+" 人在线");
                 break;
             case AEvent.AEVENT_SUPER_ROOM_SELF_KICKED:
-                MLOC.showMsg(SuperRoomActivity.this,"你已被踢出");
+                MLOC.INSTANCE.showMsg(SuperRoomActivity.this,"你已被踢出");
                 stopAndFinish();
                 break;
             case AEvent.AEVENT_SUPER_ROOM_SELF_BANNED:
                 final String banTime = eventObj.toString();
-                MLOC.showMsg(SuperRoomActivity.this,"你已被禁言,"+banTime+"秒后自动解除");
+                MLOC.INSTANCE.showMsg(SuperRoomActivity.this,"你已被禁言,"+banTime+"秒后自动解除");
                 break;
             case AEvent.AEVENT_SUPER_ROOM_REV_MSG:
                 XHIMMessage revMsg = (XHIMMessage) eventObj;
@@ -488,17 +488,17 @@ public class SuperRoomActivity extends BaseActivity {
                 break;
             case AEvent.AEVENT_SUPER_ROOM_ERROR:
                 String errStr = (String) eventObj;
-                MLOC.showMsg(getApplicationContext(),errStr);
+                MLOC.INSTANCE.showMsg(getApplicationContext(),errStr);
                 if(errStr.equals("ERROR_VDN_DISCONNECTED")){
                     superRoomManager.leaveSuperRoom(new IXHResultCallback() {
                         @Override
                         public void success(Object data) {
-                            MLOC.d("SuperRoomActivity","leaveSuperRoom  success");
+                            MLOC.INSTANCE.d("SuperRoomActivity","leaveSuperRoom  success");
                             joinLive();
                         }
                         @Override
                         public void failed(String errMsg) {
-                            MLOC.d("SuperRoomActivity","leaveSuperRoom  failed");
+                            MLOC.INSTANCE.d("SuperRoomActivity","leaveSuperRoom  failed");
                         }
                     });
                 }else if(errStr.equals("ERROR_SRC_DISCONNECTED")){
@@ -511,7 +511,7 @@ public class SuperRoomActivity extends BaseActivity {
                 vAudioBtn.setVisibility(View.GONE);
                 findViewById(com.anubis.module_webRTC.R.id.audio_container).setVisibility(View.GONE);
                 findViewById(com.anubis.module_webRTC.R.id.chat_container).setVisibility(View.VISIBLE);
-                MLOC.showMsg(SuperRoomActivity.this,"你被叫停");
+                MLOC.INSTANCE.showMsg(SuperRoomActivity.this,"你被叫停");
                 break;
         }
     }
@@ -568,9 +568,9 @@ public class SuperRoomActivity extends BaseActivity {
 
 
     private void showManagerDialog(final String userId,final String msgText) {
-        if(!userId.equals(MLOC.userId)){
+        if(!userId.equals(MLOC.INSTANCE.getUserId())){
             AlertDialog.Builder builder=new AlertDialog.Builder(this);
-            if(createrId.equals(MLOC.userId)){
+            if(createrId.equals(MLOC.INSTANCE.getUserId())){
                 Boolean ac = false;
                 if(mPlayerList!=null){
                     for(int i = 0 ;i<mPlayerList.size();i++){
@@ -639,13 +639,13 @@ public class SuperRoomActivity extends BaseActivity {
             @Override
             public void success(Object data) {
                 //踢人成功
-                MLOC.showMsg(SuperRoomActivity.this,"踢人成功");
+                MLOC.INSTANCE.showMsg(SuperRoomActivity.this,"踢人成功");
             }
 
             @Override
             public void failed(String errMsg) {
                 //踢人失败
-                MLOC.showMsg(SuperRoomActivity.this,"踢人失败");
+                MLOC.INSTANCE.showMsg(SuperRoomActivity.this,"踢人失败");
             }
         });
     }
@@ -654,13 +654,13 @@ public class SuperRoomActivity extends BaseActivity {
             @Override
             public void success(Object data) {
                 //禁言成功
-                MLOC.showMsg(SuperRoomActivity.this,"禁言成功");
+                MLOC.INSTANCE.showMsg(SuperRoomActivity.this,"禁言成功");
             }
 
             @Override
             public void failed(String errMsg) {
                 //禁言失败
-                MLOC.showMsg(SuperRoomActivity.this,"禁言失败");
+                MLOC.INSTANCE.showMsg(SuperRoomActivity.this,"禁言失败");
             }
         });
     }
@@ -670,12 +670,12 @@ public class SuperRoomActivity extends BaseActivity {
         superRoomManager.leaveSuperRoom(new IXHResultCallback() {
             @Override
             public void success(Object data) {
-                MLOC.d("SuperRoomActivity","leaveSuperRoom  success");
+                MLOC.INSTANCE.d("SuperRoomActivity","leaveSuperRoom  success");
                 finish();
             }
             @Override
             public void failed(String errMsg) {
-                MLOC.d("SuperRoomActivity","leaveSuperRoom  failed");
+                MLOC.INSTANCE.d("SuperRoomActivity","leaveSuperRoom  failed");
                 finish();
             }
         });

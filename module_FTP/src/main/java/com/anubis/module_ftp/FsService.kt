@@ -139,8 +139,7 @@ class FsService : Service(), Runnable {
             Looper.prepare()
             Handler().post { eDataFTP.mAPP!!.eShowTip(resources.getString(R.string.portOccupancy)) }
             Looper.loop()
-            eLogE("无法打开端口--$e",e)
-            Log.w(TAG, "run: Unable to open port, bailing out.")
+            e.eLogE("无法打开端口--")
             stopSelf()
             sendBroadcast(Intent(ACTION_FAILEDTOSTART))
             return

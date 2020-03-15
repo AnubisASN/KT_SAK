@@ -33,3 +33,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':module_Extends')
 }
+kotlin {
+    experimental {
+        coroutines "error"
+    }
+}

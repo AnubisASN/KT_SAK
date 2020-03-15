@@ -39,7 +39,7 @@ object eHttpServer {
                 eLog("定义开启失败,默认配置：3334")
             } catch (e: Exception) {
                 e.printStackTrace()
-                eLogE("HTTP服务开启失败", e)
+                e.eLogE("HTTP服务开启失败")
             }
             server?.start()
         }else{

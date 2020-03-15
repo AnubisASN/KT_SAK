@@ -98,7 +98,7 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
             mCreaterId = getIntent().getStringExtra(CREATER_ID);
         }else if(type.equals(GROUP_NAME)){
             mGroupName = getIntent().getStringExtra(GROUP_NAME);
-            mCreaterId = MLOC.userId;
+            mCreaterId = MLOC.INSTANCE.getUserId();
             groupManager.createGroup(mGroupName, new IXHResultCallback() {
                 @Override
                 public void success(Object data) {
@@ -108,7 +108,7 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
 
                 @Override
                 public void failed(final String errMsg) {
-                    MLOC.showMsg(MessageGroupActivity.this,errMsg);
+                    MLOC.INSTANCE.showMsg(MessageGroupActivity.this,errMsg);
                     finish();
                 }
 
@@ -151,14 +151,14 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
         historyBean.setLastMsg(imMessage.contentData);
         historyBean.setConversationId(imMessage.targetId);
         historyBean.setNewMsgCount(1);
-        MLOC.addHistory(historyBean,true);
+        MLOC.INSTANCE.addHistory(historyBean,true);
 
         MessageBean messageBean = new MessageBean();
         messageBean.setConversationId(imMessage.targetId);
         messageBean.setTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));
         messageBean.setMsg(imMessage.contentData);
         messageBean.setFromId(imMessage.fromId);
-        MLOC.saveMessage(messageBean);
+        MLOC.INSTANCE.saveMessage(messageBean);
 
         mDatas.add(messageBean);
         mAdapter.notifyDataSetChanged();
@@ -167,8 +167,8 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
     @Override
     public void onResume(){
         super.onResume();
-        if(MLOC.deleteGroup){
-            MLOC.deleteGroup = false;
+        if(MLOC.INSTANCE.getDeleteGroup()){
+            MLOC.INSTANCE.setDeleteGroup(false);
             finish();
         }
 
@@ -176,7 +176,7 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
             queryGroupMemberList();
 
             mDatas.clear();
-            List<MessageBean> list =  MLOC.getMessageList(mGroupId);
+            List<MessageBean> list =  MLOC.INSTANCE.getMessageList(mGroupId);
             if(list!=null&&list.size()>0){
                 mDatas.addAll(list);
             }
@@ -207,7 +207,7 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
 
     @Override
     public void dispatchEvent(String aEventID, boolean success, final Object eventObj) {
-        MLOC.d("IM_GROUP",aEventID+"||"+eventObj);
+        MLOC.INSTANCE.d("IM_GROUP",aEventID+"||"+eventObj);
         switch (aEventID){
             case AEvent.AEVENT_GROUP_REV_MSG:
                 final XHIMMessage revMsg = (XHIMMessage) eventObj;
@@ -218,7 +218,7 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
                     historyBean.setLastMsg(revMsg.contentData);
                     historyBean.setConversationId(revMsg.targetId);
                     historyBean.setNewMsgCount(1);
-                    MLOC.addHistory(historyBean,true);
+                    MLOC.INSTANCE.addHistory(historyBean,true);
 
                     MessageBean messageBean = new MessageBean();
                     messageBean.setConversationId(revMsg.fromId);
@@ -233,21 +233,21 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
             case AEvent.AEVENT_GROUP_GOT_MEMBER_LIST:
                 if(!success){
                     finish();
-                    MLOC.showMsg(MessageGroupActivity.this,"群信息获取失败");
+                    MLOC.INSTANCE.showMsg(MessageGroupActivity.this,"群信息获取失败");
                 }
                 break;
         }
     }
 
     private void queryGroupMemberList(){
-        if(MLOC.AEventCenterEnable){
-            InterfaceUrls.demoQueryImGroupInfo(MLOC.userId,mGroupId);
+        if(MLOC.INSTANCE.getAEventCenterEnable()){
+            InterfaceUrls.demoQueryImGroupInfo(MLOC.INSTANCE.getUserId(),mGroupId);
         }else{
             groupManager.queryGroupInfo(mGroupId, new IXHResultCallback() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void success(final Object data) {
-                    MLOC.d("IM_GROUP","applyGetUserList success:"+data);
+                    MLOC.INSTANCE.d("IM_GROUP","applyGetUserList success:"+data);
                     try {
                         JSONArray datas = ((JSONObject) data).getJSONArray("data");
                         ArrayList<String> res = new ArrayList<String>();
@@ -266,7 +266,7 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
 
                 @Override
                 public void failed(String errMsg) {
-                    MLOC.d("IM_GROUP","applyGetUserList failed:"+errMsg);
+                    MLOC.INSTANCE.d("IM_GROUP","applyGetUserList failed:"+errMsg);
                 }
             });
         }
@@ -313,7 +313,7 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
 
         @Override
         public int getItemViewType(int position){
-            return mDatas.get(position).getFromId().equals(MLOC.userId)?0:1;
+            return mDatas.get(position).getFromId().equals(MLOC.INSTANCE.getUserId())?0:1;
         }
 
         @Override
@@ -339,7 +339,7 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
                 itemSelfHolder.vHeadCover.setCoverColor(Color.parseColor("#f6f6f6"));
                 int cint = DensityUtils.dip2px(MessageGroupActivity.this,20);
                 itemSelfHolder.vHeadCover.setRadians(cint, cint, cint, cint,0);
-                itemSelfHolder.vHeadImage.setImageResource(MLOC.getHeadImage(MessageGroupActivity.this,mDatas.get(position).getFromId()));
+                itemSelfHolder.vHeadImage.setImageResource(MLOC.INSTANCE.getHeadImage(MessageGroupActivity.this,mDatas.get(position).getFromId()));
             }else if(currLayoutType == 1){//别人的信息
                 final ViewHolder itemOtherHolder;
                 if(convertView == null){
@@ -361,7 +361,7 @@ public class MessageGroupActivity extends Activity implements IEventListener, Ad
                 itemOtherHolder.vHeadCover.setCoverColor(Color.parseColor("#f6f6f6"));
                 int cint = DensityUtils.dip2px(MessageGroupActivity.this,20);
                 itemOtherHolder.vHeadCover.setRadians(cint, cint, cint, cint,0);
-                itemOtherHolder.vHeadImage.setImageResource(MLOC.getHeadImage(MessageGroupActivity.this,mDatas.get(position).getFromId()));
+                itemOtherHolder.vHeadImage.setImageResource(MLOC.INSTANCE.getHeadImage(MessageGroupActivity.this,mDatas.get(position).getFromId()));
             }
             return convertView;
         }

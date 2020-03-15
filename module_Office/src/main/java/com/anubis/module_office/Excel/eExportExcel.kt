@@ -56,7 +56,7 @@ class eExportExcel(val mContext: Context, val mTitle: Array<String>, val mDatas:
             ExcelUtils.writeObjListToExcel(recordData, "$sdPath/$pathName/$fileName.xls", mContext)
             eLog("导出成功")
         } catch (e: Exception) {
-            eLogE("数据读取错误$e \n @MethodName：getData ; @Return：Array<String> ",e)
+            e. eLogE("数据读取错误  \n @MethodName：getData ; @Return：Array<String> " )
             mContext.eShowTip("数据读取错误，请在实体类中添加getData方法，详情请看Log")
         }
 

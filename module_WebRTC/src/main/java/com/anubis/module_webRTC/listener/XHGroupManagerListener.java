@@ -41,14 +41,14 @@ public class XHGroupManagerListener implements IXHGroupManagerListener {
         historyBean.setLastMsg(message.contentData);
         historyBean.setConversationId(message.targetId);
         historyBean.setNewMsgCount(1);
-        MLOC.addHistory(historyBean,false);
+        MLOC.INSTANCE.addHistory(historyBean,false);
 
         MessageBean messageBean = new MessageBean();
         messageBean.setConversationId(message.targetId);
         messageBean.setTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));
         messageBean.setMsg(message.contentData);
         messageBean.setFromId(message.fromId);
-        MLOC.saveMessage(messageBean);
+        MLOC.INSTANCE.saveMessage(messageBean);
 
         AEvent.notifyListener(AEvent.AEVENT_GROUP_REV_MSG,true,message);
     }

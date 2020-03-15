@@ -50,13 +50,13 @@ public class RtspTestActivity extends BaseActivity {
         findViewById(com.anubis.module_webRTC.R.id.yes_btn_live).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createAndPush(MLOC.LIST_TYPE_LIVE_PUSH);
+                createAndPush(MLOC.INSTANCE.getLIST_TYPE_LIVE_PUSH());
             }
         });
         findViewById(com.anubis.module_webRTC.R.id.yes_btn_meeting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createAndPush(MLOC.LIST_TYPE_MEETING_PUSH);
+                createAndPush(MLOC.INSTANCE.getLIST_TYPE_MEETING_PUSH());
             }
         });
     }
@@ -85,33 +85,33 @@ public class RtspTestActivity extends BaseActivity {
                             if(createType==1) {
                                 JSONObject info = new JSONObject();
                                 info.put("id",jsonObject.getString("channelId")+roomId);
-                                info.put("creator",MLOC.userId);
+                                info.put("creator", MLOC.INSTANCE.getUserId());
                                 info.put("name",name);
                                 info.put("url",streamUrl);
-                                info.put("listType",MLOC.LIST_TYPE_LIVE_PUSH);
+                                info.put("listType", MLOC.INSTANCE.getLIST_TYPE_LIVE_PUSH());
                                 String infostr = info.toString();
                                 infostr = URLEncoder.encode(infostr,"utf-8");
-                                if(MLOC.AEventCenterEnable){
-                                    InterfaceUrls.demoSaveToList(MLOC.userId,MLOC.LIST_TYPE_LIVE_PUSH,jsonObject.getString("channelId")+roomId,infostr);
+                                if(MLOC.INSTANCE.getAEventCenterEnable()){
+                                    InterfaceUrls.demoSaveToList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_LIVE_PUSH(),jsonObject.getString("channelId")+roomId,infostr);
                                 }else{
-                                    chatroomManager.saveToList(MLOC.userId, MLOC.LIST_TYPE_LIVE_PUSH, roomId, infostr, null);
+                                    chatroomManager.saveToList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_LIVE_PUSH(), roomId, infostr, null);
                                 }
-                                MLOC.showMsg(RtspTestActivity.this,"拉流成功,请到互动直播查看");
+                                MLOC.INSTANCE.showMsg(RtspTestActivity.this,"拉流成功,请到互动直播查看");
                             }else {
                                 JSONObject info = new JSONObject();
                                 info.put("id",jsonObject.getString("channelId")+roomId);
-                                info.put("creator",MLOC.userId);
+                                info.put("creator", MLOC.INSTANCE.getUserId());
                                 info.put("name",name);
                                 info.put("url",streamUrl);
-                                info.put("listType",MLOC.LIST_TYPE_MEETING_PUSH);
+                                info.put("listType", MLOC.INSTANCE.getLIST_TYPE_MEETING_PUSH());
                                 String infostr = info.toString();
                                 infostr = URLEncoder.encode(infostr,"utf-8");
-                                if(MLOC.AEventCenterEnable){
-                                    InterfaceUrls.demoSaveToList(MLOC.userId,MLOC.LIST_TYPE_MEETING_PUSH,jsonObject.getString("channelId")+roomId,infostr);
+                                if(MLOC.INSTANCE.getAEventCenterEnable()){
+                                    InterfaceUrls.demoSaveToList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_MEETING_PUSH(),jsonObject.getString("channelId")+roomId,infostr);
                                 }else {
-                                    chatroomManager.saveToList(MLOC.userId, MLOC.LIST_TYPE_MEETING_PUSH, roomId, infostr, null);
+                                    chatroomManager.saveToList(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIST_TYPE_MEETING_PUSH(), roomId, infostr, null);
                                 }
-                                MLOC.showMsg(RtspTestActivity.this,"拉流成功,请到视频会议查看");
+                                MLOC.INSTANCE.showMsg(RtspTestActivity.this,"拉流成功,请到视频会议查看");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -124,10 +124,10 @@ public class RtspTestActivity extends BaseActivity {
                 }
                 RtspTestActivity.this.finish();
             }else{
-                MLOC.showMsg(RtspTestActivity.this,"拉流失败"+(String)eventObj);
+                MLOC.INSTANCE.showMsg(RtspTestActivity.this,"拉流失败"+(String)eventObj);
             }
         }else if(aEventID .equals(AEvent.AEVENT_CHATROOM_ERROR)){
-            MLOC.showMsg(RtspTestActivity.this,"ERROR:"+eventObj);
+            MLOC.INSTANCE.showMsg(RtspTestActivity.this,"ERROR:"+eventObj);
         }
     }
 
@@ -138,9 +138,9 @@ public class RtspTestActivity extends BaseActivity {
 //        url = "rtmp://liveali.ifeng.com/live/FHZX";
         createType = type;//1 meeting 2 live
         if(TextUtils.isEmpty(name)){
-            MLOC.showMsg(RtspTestActivity.this,"名字不能为空");
+            MLOC.INSTANCE.showMsg(RtspTestActivity.this,"名字不能为空");
         }else if(TextUtils.isEmpty(streamUrl)){
-            MLOC.showMsg(RtspTestActivity.this,"拉流地址不能为空");
+            MLOC.INSTANCE.showMsg(RtspTestActivity.this,"拉流地址不能为空");
         }else{
             chatroomManager = XHClient.getInstance().getChatroomManager();
             chatroomManager.addListener(new XHChatroomManagerListener());
@@ -155,16 +155,16 @@ public class RtspTestActivity extends BaseActivity {
                         streamType = "rtmp";
                     }
                     if(!streamType.equals("")){
-                        InterfaceUrls.demoPushStreamUrl(MLOC.userId,MLOC.LIVE_PROXY_SERVER_URL,name,roomId,type,streamType,streamUrl);
+                        InterfaceUrls.demoPushStreamUrl(MLOC.INSTANCE.getUserId(), MLOC.INSTANCE.getLIVE_PROXY_SERVER_URL(),name,roomId,type,streamType,streamUrl);
                     }else{
-                        MLOC.showMsg(RtspTestActivity.this,"拉流地址不可用");
+                        MLOC.INSTANCE.showMsg(RtspTestActivity.this,"拉流地址不可用");
                     }
                 }
 
                 @Override
                 public void failed(String errMsg) {
                     final String err = errMsg;
-                    MLOC.showMsg(RtspTestActivity.this,err.toString());
+                    MLOC.INSTANCE.showMsg(RtspTestActivity.this,err.toString());
                 }
             });
         }

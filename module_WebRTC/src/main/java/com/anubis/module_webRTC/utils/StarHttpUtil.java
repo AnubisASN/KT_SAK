@@ -74,11 +74,11 @@ public class StarHttpUtil extends AsyncTask<Bundle, Object, Bundle> {
             postConn.setConnectTimeout(TIMEOUT);
 
             if(requestMethod.equals(REQUEST_METHOD_GET)){
-                MLOC.d(TEXTTAG, "====== start request url======" + params[0].getString("url"));
+                MLOC.INSTANCE.d(TEXTTAG, "====== start request url======" + params[0].getString("url"));
                 postConn.setRequestMethod(requestMethod);
                 postConn.connect();
             }else if(requestMethod.equals(REQUEST_METHOD_POST)){
-                MLOC.d(TEXTTAG, "====== start request url======" + params[0].getString("url")+"  "+requestMethod+":"+params[0].getString("data"));
+                MLOC.INSTANCE.d(TEXTTAG, "====== start request url======" + params[0].getString("url")+"  "+requestMethod+":"+params[0].getString("data"));
                 //byte[] data = postData.toString().getBytes();
                 postConn.setRequestMethod(requestMethod);
 //                postConn.setRequestProperty("Content-Type", "application/json");
@@ -153,7 +153,7 @@ public class StarHttpUtil extends AsyncTask<Bundle, Object, Bundle> {
         boolean result = resultBundle.getBoolean("result");
         String content = resultBundle.getString("content");
 
-        MLOC.d(TEXTTAG,"====== post request result ======"+result+"||"+content);
+        MLOC.INSTANCE.d(TEXTTAG,"====== post request result ======"+result+"||"+content);
         if(result) {
             String statusCode;
             try {

@@ -76,16 +76,16 @@ object eTCP {
             return
         } catch (e: ConnectException) {
             msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE, port.toString())
-            eLogE("连接失败:$e")
+            e.eLogE("连接失败 ")
             return
         } catch (e: UnknownHostException) {
             msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE, port.toString())
-            eLogE("未知主机异常:$e")
+            e.eLogE("未知主机异常 ")
             return
         } catch (e: Exception) {
             msg?.obj = receiveMSG(ip, HANDLER_ERROR_CODE, port.toString())
             e.printStackTrace()
-            eLogE("连接异常:$e")
+            e.eLogE("连接异常 ")
             return
         } finally {
             tcpHandler.sendMessage(msg)
@@ -166,7 +166,7 @@ object eTCP {
             serverSocket = null
             true
         } catch (e: IOException) {
-            eLogE("tcp服务端关闭失败", e)
+            e.eLogE("tcp服务端关闭失败" )
             false
         }
     }
@@ -256,7 +256,7 @@ object eTCP {
             }
             return true
         } catch (e: Exception) {
-            com.anubis.kt_extends.eLogE("$ip-TCP $type 消息发送错误", e)
+            e.eLogE("$ip-TCP $type 消息发送错误" )
             return false
         }
     }
@@ -285,7 +285,7 @@ object eTCP {
                 return true
             }
         } catch (e: Exception) {
-            eLogE("${if (hashMap == eClientHashMap) "客户端" else "服务端"}连接关闭错误", e)
+            e.eLogE("${if (hashMap == eClientHashMap) "客户端" else "服务端"}连接关闭错误" )
             return false
         }
     }

@@ -78,12 +78,12 @@ public class MessageGroupSettingActivity extends BaseActivity{
                     groupManager.setPushEnable(mGroupId, true, new IXHResultCallback() {
                         @Override
                         public void success(Object data) {
-                            MLOC.showMsg(MessageGroupSettingActivity.this,"设置成功");
+                            MLOC.INSTANCE.showMsg(MessageGroupSettingActivity.this,"设置成功");
                         }
 
                         @Override
                         public void failed(String errMsg) {
-                            MLOC.showMsg(MessageGroupSettingActivity.this,"设置失败");
+                            MLOC.INSTANCE.showMsg(MessageGroupSettingActivity.this,"设置失败");
                         }
                     });
                 } else {
@@ -91,12 +91,12 @@ public class MessageGroupSettingActivity extends BaseActivity{
                     groupManager.setPushEnable(mGroupId, false, new IXHResultCallback() {
                         @Override
                         public void success(Object data) {
-                            MLOC.showMsg(MessageGroupSettingActivity.this, "设置成功");
+                            MLOC.INSTANCE.showMsg(MessageGroupSettingActivity.this, "设置成功");
                         }
 
                         @Override
                         public void failed(String errMsg) {
-                            MLOC.showMsg(MessageGroupSettingActivity.this, "设置失败");
+                            MLOC.INSTANCE.showMsg(MessageGroupSettingActivity.this, "设置失败");
                         }
 
                     });
@@ -134,14 +134,14 @@ public class MessageGroupSettingActivity extends BaseActivity{
     }
 
     private void queryGroupMemberList(){
-        if(MLOC.AEventCenterEnable){
-            InterfaceUrls.demoQueryImGroupInfo(MLOC.userId,mGroupId);
+        if(MLOC.INSTANCE.getAEventCenterEnable()){
+            InterfaceUrls.demoQueryImGroupInfo(MLOC.INSTANCE.getUserId(),mGroupId);
         }else{
             groupManager.queryGroupInfo(mGroupId, new IXHResultCallback() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void success(final Object data) {
-                    MLOC.d("IM_GROUP","applyGetUserList success:"+data);
+                    MLOC.INSTANCE.d("IM_GROUP","applyGetUserList success:"+data);
                     try {
                         JSONArray datas = ((JSONObject) data).getJSONArray("data");
                         int ignore = ((JSONObject) data).getInt("ignore");
@@ -158,7 +158,7 @@ public class MessageGroupSettingActivity extends BaseActivity{
                             user.put("userId",res.get(i));
                             mMembersDatas.add(user);
                         }
-                        if(mGroupCreaterId.equals(MLOC.userId)){
+                        if(mGroupCreaterId.equals(MLOC.INSTANCE.getUserId())){
                             Map<String,String> user = new HashMap<>();
                             user.put("userId","btnAdd");
                             mMembersDatas.add(user);
@@ -172,7 +172,7 @@ public class MessageGroupSettingActivity extends BaseActivity{
                 }
                 @Override
                 public void failed(String errMsg) {
-                    MLOC.d("IM_GROUP","applyGetUserList failed:"+errMsg);
+                    MLOC.INSTANCE.d("IM_GROUP","applyGetUserList failed:"+errMsg);
                 }
             });
         }
@@ -208,7 +208,7 @@ public class MessageGroupSettingActivity extends BaseActivity{
                         user.put("userId",userIdList[i]);
                         mMembersDatas.add(user);
                     }
-                    if(mGroupCreaterId.equals(MLOC.userId)){
+                    if(mGroupCreaterId.equals(MLOC.INSTANCE.getUserId())){
                         Map<String,String> user = new HashMap<>();
                         user.put("userId","btnAdd");
                         mMembersDatas.add(user);
@@ -227,13 +227,13 @@ public class MessageGroupSettingActivity extends BaseActivity{
         groupManager.addGroupMembers(mGroupId, idList, new IXHResultCallback() {
             @Override
             public void success(Object data) {
-                MLOC.showMsg(MessageGroupSettingActivity.this, "成员添加成功");
+                MLOC.INSTANCE.showMsg(MessageGroupSettingActivity.this, "成员添加成功");
                 queryGroupMemberList();
             }
 
             @Override
             public void failed(String errMsg) {
-                MLOC.showMsg(MessageGroupSettingActivity.this, "成员添加失败");
+                MLOC.INSTANCE.showMsg(MessageGroupSettingActivity.this, "成员添加失败");
             }
         });
     }
@@ -244,13 +244,13 @@ public class MessageGroupSettingActivity extends BaseActivity{
         groupManager.deleteGroupMembers(mGroupId, idList, new IXHResultCallback() {
             @Override
             public void success(Object data) {
-                MLOC.showMsg(MessageGroupSettingActivity.this, "成员删除成功");
+                MLOC.INSTANCE.showMsg(MessageGroupSettingActivity.this, "成员删除成功");
                 queryGroupMemberList();
             }
 
             @Override
             public void failed(String errMsg) {
-                MLOC.showMsg(MessageGroupSettingActivity.this, "成员删除失败");
+                MLOC.INSTANCE.showMsg(MessageGroupSettingActivity.this, "成员删除失败");
             }
         });
     }
@@ -259,14 +259,14 @@ public class MessageGroupSettingActivity extends BaseActivity{
         groupManager.deleteGroup(mGroupId, new IXHResultCallback() {
             @Override
             public void success(Object data) {
-                MLOC.showMsg(MessageGroupSettingActivity.this, "群删除成功");
-                MLOC.deleteGroup = true;
+                MLOC.INSTANCE.showMsg(MessageGroupSettingActivity.this, "群删除成功");
+                MLOC.INSTANCE.setDeleteGroup(true);
                 finish();
             }
 
             @Override
             public void failed(String errMsg) {
-                MLOC.showMsg(MessageGroupSettingActivity.this, "群删除失败");
+                MLOC.INSTANCE.showMsg(MessageGroupSettingActivity.this, "群删除失败");
             }
         });
     }
@@ -283,7 +283,7 @@ public class MessageGroupSettingActivity extends BaseActivity{
             public void onClick(View v) {
                 String addUser = ((EditText)dialog.findViewById(R.id.add_user_id)).getText().toString();
                 if(TextUtils.isEmpty(addUser)){
-                    MLOC.showMsg(MessageGroupSettingActivity.this,"用户ID不能为空");
+                    MLOC.INSTANCE.showMsg(MessageGroupSettingActivity.this,"用户ID不能为空");
                 }else{
                     addUserToGroup(addUser);
                     dialog.dismiss();
@@ -295,8 +295,8 @@ public class MessageGroupSettingActivity extends BaseActivity{
     }
 
     private void showManagerDialog(final String userId) {
-        if(userId.equals(MLOC.userId))return;
-        if(mGroupCreaterId.equals(MLOC.userId)){
+        if(userId.equals(MLOC.INSTANCE.getUserId()))return;
+        if(mGroupCreaterId.equals(MLOC.INSTANCE.getUserId())){
             AlertDialog.Builder builder=new AlertDialog.Builder(this);
             final String[] Items={"视频通话","发消息","踢出群","取消"};
             builder.setTitle(userId);
@@ -306,7 +306,7 @@ public class MessageGroupSettingActivity extends BaseActivity{
                     if(i==0){
                         Intent intent = new Intent(MessageGroupSettingActivity.this,VoipActivity.class);
                         intent.putExtra("targetId",userId);
-                        intent.putExtra(VoipActivity.ACTION,VoipActivity.CALLING);
+                        intent.putExtra(VoipActivity.Companion.getACTION(), VoipActivity.Companion.getCALLING());
                         startActivity(intent);
                     }else if(i==1){
                         Intent intent = new Intent(MessageGroupSettingActivity.this,C2CActivity.class);
@@ -328,13 +328,13 @@ public class MessageGroupSettingActivity extends BaseActivity{
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if(i==0){
-                        MLOC.saveVoipUserId(MessageGroupSettingActivity.this,userId);
+                        MLOC.INSTANCE.saveVoipUserId(MessageGroupSettingActivity.this,userId);
                         Intent intent = new Intent(MessageGroupSettingActivity.this,VoipActivity.class);
                         intent.putExtra("targetId",userId);
-                        intent.putExtra(VoipActivity.ACTION,VoipActivity.CALLING);
+                        intent.putExtra(VoipActivity.Companion.getACTION(), VoipActivity.Companion.getCALLING());
                         startActivity(intent);
                     }else if(i==1){
-                        MLOC.saveC2CUserId(MessageGroupSettingActivity.this,userId);
+                        MLOC.INSTANCE.saveC2CUserId(MessageGroupSettingActivity.this,userId);
                         Intent intent = new Intent(MessageGroupSettingActivity.this,C2CActivity.class);
                         intent.putExtra("targetId",userId);
                         startActivity(intent);
@@ -391,7 +391,7 @@ public class MessageGroupSettingActivity extends BaseActivity{
                 holder.vHeadCover.setCoverColor(Color.parseColor("#FFFFFF"));
                 int cint = DensityUtils.dip2px(MessageGroupSettingActivity.this,26);
                 holder.vHeadCover.setRadians(cint, cint, cint, cint,0);
-                holder.vHeadImage.setImageResource(MLOC.getHeadImage(MessageGroupSettingActivity.this,id));
+                holder.vHeadImage.setImageResource(MLOC.INSTANCE.getHeadImage(MessageGroupSettingActivity.this,id));
                 holder.vHeadImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

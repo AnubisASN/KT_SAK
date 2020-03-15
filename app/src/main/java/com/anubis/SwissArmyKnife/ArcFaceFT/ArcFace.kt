@@ -39,8 +39,7 @@ class ArcFace : Activity() {
         try {
             camera = eArcFace.init(this, findViewById(R.id.texture_preview), findViewById(R.id.face_rect_view))
         } catch (e: Exception) {
-            eLogE("ArcFace:$e")
-            eLog("ArcFace$e")
+            e.eLogE("ArcFace")
         }
         mRunnable = Runnable {
             camera!!.mIsState = true

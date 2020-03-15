@@ -161,10 +161,10 @@ public class SuperRoomListActivity extends BaseActivity implements AdapterView.O
         queryAllList();
     }
     private void queryAllList(){
-        if(MLOC.AEventCenterEnable){
-            InterfaceUrls.demoQueryList(MLOC.LIST_TYPE_SUPER_ROOM_ALL);
+        if(MLOC.INSTANCE.getAEventCenterEnable()){
+            InterfaceUrls.demoQueryList(MLOC.INSTANCE.getLIST_TYPE_SUPER_ROOM_ALL());
         }else{
-            XHClient.getInstance().getSuperRoomManager().queryList("",MLOC.LIST_TYPE_SUPER_ROOM_ALL,new IXHResultCallback() {
+            XHClient.getInstance().getSuperRoomManager().queryList("", MLOC.INSTANCE.getLIST_TYPE_SUPER_ROOM_ALL(),new IXHResultCallback() {
                 @Override
                 public void success(final Object data) {
                     String[] res = (String[]) data;
@@ -202,7 +202,7 @@ public class SuperRoomListActivity extends BaseActivity implements AdapterView.O
 
                 @Override
                 public void failed(String errMsg) {
-                    MLOC.d("VideoMettingListActivity",errMsg);
+                    MLOC.INSTANCE.d("VideoMettingListActivity",errMsg);
                     refreshLayout.setRefreshing(false);
                     mDatas.clear();
                     myListAdapter.notifyDataSetChanged();

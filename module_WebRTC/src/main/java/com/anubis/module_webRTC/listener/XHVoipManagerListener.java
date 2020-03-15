@@ -18,7 +18,7 @@ public class XHVoipManagerListener implements IXHVoipManagerListener {
         historyBean.setLastTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));
         historyBean.setConversationId(fromID);
         historyBean.setNewMsgCount(1);
-        MLOC.addHistory(historyBean,false);
+        MLOC.INSTANCE.addHistory(historyBean,false);
         AEvent.notifyListener(AEvent.AEVENT_VOIP_REV_CALLING,true,fromID);
     }
 
@@ -29,7 +29,7 @@ public class XHVoipManagerListener implements IXHVoipManagerListener {
         historyBean.setLastTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));
         historyBean.setConversationId(fromID);
         historyBean.setNewMsgCount(1);
-        MLOC.addHistory(historyBean,false);
+        MLOC.INSTANCE.addHistory(historyBean,false);
         AEvent.notifyListener(AEvent.AEVENT_VOIP_REV_CALLING_AUDIO,true,fromID);
     }
 
@@ -55,7 +55,7 @@ public class XHVoipManagerListener implements IXHVoipManagerListener {
         historyBean.setLastTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));
         historyBean.setConversationId(fromID);
         historyBean.setNewMsgCount(1);
-        MLOC.addHistory(historyBean,false);
+        MLOC.INSTANCE.addHistory(historyBean,false);
 
         AEvent.notifyListener(AEvent.AEVENT_VOIP_REV_MISS,true,fromID);
     }
