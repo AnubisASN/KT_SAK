@@ -80,24 +80,24 @@ fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
  */
 var eIsTag: Boolean = true
 
-fun Any.eIsBaseType() = this is String || this is Int || this is Int || this is Log || this is Double || this is Float || this is Char || this is Short || this is Boolean || this is Byte
+fun Any?.eIsBaseType() = this is String || this is Int || this is Int || this is Log || this is Double || this is Float || this is Char || this is Short || this is Boolean || this is Byte
 
 
-fun <T> T.eLog(hint: Any? = "", TAG: String = "TAGd"): T {
+fun <T> T?.eLog(hint: Any? = "", TAG: String = "TAGd"): T? {
     if(eIsTag)
-    Log.d(TAG, "${(this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
+    Log.d(TAG, "${if (this==null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
 
 
-fun <T> T.eLogI(hint: Any? = "", TAG: String = "TAGi"): T {
-    Log.d(TAG, "${(this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
+fun <T> T?.eLogI(hint: Any? = "", TAG: String = "TAGi"): T? {
+    Log.d(TAG, "${if (this==null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
 
 
-fun <T> T.eLogE(hint: Any? = "", TAG: String = "TAGe"): T {
-    Log.e(TAG, "${(this as Any).javaClass.name}-$hint\n${eErrorOut(this)} ")
+fun <T> T?.eLogE(hint: Any? = "", TAG: String = "TAGe"): T? {
+    Log.e(TAG, "${if (this==null) "" else (this as Any).javaClass.name}-$hint\n${eErrorOut(this)} ")
     return this
 }
 

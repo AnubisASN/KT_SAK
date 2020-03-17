@@ -95,7 +95,7 @@ object ePortMSG : LockerPortInterface {
      * 关闭串口
      */
     fun closeMSG() {
-        LockerSerialportUtil.instance!!.closeSerialPort()
+        LockerSerialportUtil.instance?.closeSerialPort()
     }
 
     /**

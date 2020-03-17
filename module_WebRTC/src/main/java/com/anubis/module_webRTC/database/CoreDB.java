@@ -1,5 +1,6 @@
 package com.anubis.module_webRTC.database;
 
+import android.content.Context;
 import android.database.Cursor;
 
 import com.anubis.module_webRTC.demo.MLOC;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CoreDB implements IEventListener {
-    public static String APP_DB_PATH = "/data/data/com.anubis.module_webRTC/";
+    public static String APP_DB_PATH = "/data/data/";
     private final String TEXTTAG = "CoreDB";
     private static final String HISTORY_TABLE = "historyListTable";
     private static final String MSG_TABLE = "allMsgTable";
@@ -24,11 +25,11 @@ public class CoreDB implements IEventListener {
 
     public static CoreDBManager coreDBM = new CoreDBManager();
 
-    public CoreDB(){
+    public CoreDB(Context context){
         AEvent.removeListener(AEvent.AEVENT_RESET,this);
         AEvent.addListener(AEvent.AEVENT_RESET,this);
         MLOC.INSTANCE.d(TEXTTAG,"reset DB:"+ MLOC.INSTANCE.getUserId());
-        coreDBM.initCoreDB(APP_DB_PATH +"databases/", MLOC.INSTANCE.getUserId());
+        coreDBM.initCoreDB(APP_DB_PATH +context.getPackageName()+"/databases/", MLOC.INSTANCE.getUserId());
         //历史表
         coreDBM.execSQL("create table if not exists "+HISTORY_TABLE+"(" +
                 "id INTEGER PRIMARY KEY," +

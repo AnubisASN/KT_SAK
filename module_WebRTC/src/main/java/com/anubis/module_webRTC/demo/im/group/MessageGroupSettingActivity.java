@@ -306,7 +306,7 @@ public class MessageGroupSettingActivity extends BaseActivity{
                     if(i==0){
                         Intent intent = new Intent(MessageGroupSettingActivity.this,VoipActivity.class);
                         intent.putExtra("targetId",userId);
-                        intent.putExtra(VoipActivity.Companion.getACTION(), VoipActivity.Companion.getCALLING());
+                        intent.putExtra(VoipActivity.ACTION, VoipActivity.CALLING);
                         startActivity(intent);
                     }else if(i==1){
                         Intent intent = new Intent(MessageGroupSettingActivity.this,C2CActivity.class);
@@ -331,7 +331,7 @@ public class MessageGroupSettingActivity extends BaseActivity{
                         MLOC.INSTANCE.saveVoipUserId(MessageGroupSettingActivity.this,userId);
                         Intent intent = new Intent(MessageGroupSettingActivity.this,VoipActivity.class);
                         intent.putExtra("targetId",userId);
-                        intent.putExtra(VoipActivity.Companion.getACTION(), VoipActivity.Companion.getCALLING());
+                        intent.putExtra(VoipActivity.ACTION, VoipActivity.CALLING);
                         startActivity(intent);
                     }else if(i==1){
                         MLOC.INSTANCE.saveC2CUserId(MessageGroupSettingActivity.this,userId);

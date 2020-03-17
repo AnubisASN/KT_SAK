@@ -95,7 +95,7 @@ object MLOC {
     fun init(context: Context) {
         appContext = context.applicationContext
         if (coreDB == null) {
-            coreDB = CoreDB()
+            coreDB = CoreDB(context)
         }
         userId = loadSharedData(context, "userId", userId)
 

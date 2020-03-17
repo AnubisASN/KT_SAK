@@ -201,13 +201,13 @@ class MainActivity : Activity() {
                     getDigit("TCP创建") -> when (view?.id) {
                         R.id.bt_item1 -> {
                             GlobalScope.launch {
-                                eTCP.eSocketConnect(MSG?.split("-")?.get(0)
-                                        ?: "192.168.1.110", MSG?.split("-")?.get(1)?.toInt()
+                                eTCP.eSocketConnect(MSG?.split("||")?.get(0)
+                                        ?: "192.168.1.110", MSG?.split("||")?.get(1)?.toInt()
                                         ?: 3335, handleTCP)
                             }
                         }
-                        R.id.bt_item2 -> Hint("数据发送:${eTCP.eSocketSend(MSG?.split("-")?.get(0)
-                                ?: "123", MSG?.split("-")?.get(1)
+                        R.id.bt_item2 -> Hint("数据发送:${eTCP.eSocketSend(MSG?.split("||")?.get(0)
+                                ?: "123", MSG?.split("||")?.get(1)
                                 ?: "192.168.1.110", eTCP.eClientHashMap)}")
                         R.id.bt_item3 -> {
                             GlobalScope.launch {
@@ -288,7 +288,8 @@ class MainActivity : Activity() {
                     }
                     getDigit("音视频") -> {
                         val intent = Intent(this@MainActivity, eVideoChatUI::class.java)
-                        intent.putExtra("channelName", MSG)
+                        intent.putExtra("appID", MSG?.split("||")?.get(0))
+                        intent.putExtra("channelName", MSG?.split("||")?.get(1))
                         startActivity(intent)
                     }
 //                        ARouter.getInstance().build("/module_videochat/eVideoChat")
@@ -354,8 +355,8 @@ class MainActivity : Activity() {
                                 override fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
                                     Hint("串口接收:${eString.eGetByteArrToHexStr(buffer)}--$path")
                                 }
-                            }, mPATH = MSG?.split("-")?.get(0)
-                                    ?: "/dev/ttyS3", BAUDRATE = MSG?.split("-")?.get(1)?.toInt()
+                            }, mPATH = MSG?.split("||")?.get(0)
+                                    ?: "/dev/ttyS3", BAUDRATE = MSG?.split("||")?.get(1)?.toInt()
                                     ?: 9600))
                             R.id.bt_item3 -> Hint("串口关闭：" + ePortMSG.closeMSG())
                         }

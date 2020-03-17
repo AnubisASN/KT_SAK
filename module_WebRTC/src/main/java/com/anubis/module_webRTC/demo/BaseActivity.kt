@@ -18,26 +18,26 @@ open class BaseActivity : Activity(), IEventListener {
 
     override fun onResume() {
         super.onResume()
-        if (findViewById<View>(com.anubis.module_webRTC.R.id.c2c_new) != null) {
-            findViewById<View>(com.anubis.module_webRTC.R.id.c2c_new).visibility = if (MLOC.hasNewC2CMsg) View.VISIBLE else View.INVISIBLE
+        if (findViewById<View>(R.id.c2c_new) != null) {
+            findViewById<View>(R.id.c2c_new).visibility = if (MLOC.hasNewC2CMsg) View.VISIBLE else View.INVISIBLE
         }
-        if (findViewById<View>(com.anubis.module_webRTC.R.id.im_new) != null) {
-            findViewById<View>(com.anubis.module_webRTC.R.id.im_new).visibility = if (MLOC.hasNewC2CMsg || MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
+        if (findViewById<View>(R.id.im_new) != null) {
+            findViewById<View>(R.id.im_new).visibility = if (MLOC.hasNewC2CMsg || MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
         }
-        if (findViewById<View>(com.anubis.module_webRTC.R.id.group_new) != null) {
-            findViewById<View>(com.anubis.module_webRTC.R.id.group_new).visibility = if (MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
+        if (findViewById<View>( R.id.group_new) != null) {
+            findViewById<View>(R.id.group_new).visibility = if (MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
         }
-        if (findViewById<View>(com.anubis.module_webRTC.R.id.im_new) != null) {
-            findViewById<View>(com.anubis.module_webRTC.R.id.im_new).visibility = if (MLOC.hasNewC2CMsg || MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
+        if (findViewById<View>(R.id.im_new) != null) {
+            findViewById<View>(R.id.im_new).visibility = if (MLOC.hasNewC2CMsg || MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
         }
-        if (findViewById<View>(com.anubis.module_webRTC.R.id.voip_new) != null) {
-            findViewById<View>(com.anubis.module_webRTC.R.id.voip_new).visibility = if (MLOC.hasNewVoipMsg) View.VISIBLE else View.INVISIBLE
+        if (findViewById<View>(R.id.voip_new) != null) {
+            findViewById<View>(R.id.voip_new).visibility = if (MLOC.hasNewVoipMsg) View.VISIBLE else View.INVISIBLE
         }
-        if (findViewById<View>(com.anubis.module_webRTC.R.id.loading) != null) {
+        if (findViewById<View>(R.id.loading) != null) {
             if (XHClient.getInstance().isOnline) {
-                findViewById<View>(com.anubis.module_webRTC.R.id.loading).visibility = View.INVISIBLE
+                findViewById<View>(R.id.loading).visibility = View.INVISIBLE
             } else {
-                findViewById<View>(com.anubis.module_webRTC.R.id.loading).visibility = View.VISIBLE
+                findViewById<View>(R.id.loading).visibility = View.VISIBLE
             }
         }
         addListener()
@@ -78,11 +78,11 @@ open class BaseActivity : Activity(), IEventListener {
             }
             AEvent.AEVENT_C2C_REV_MSG, AEvent.AEVENT_REV_SYSTEM_MSG -> {
                 MLOC.hasNewC2CMsg = true
-                if (findViewById<View>(com.anubis.module_webRTC.R.id.c2c_new) != null) {
-                    findViewById<View>(com.anubis.module_webRTC.R.id.c2c_new).visibility = if (MLOC.hasNewC2CMsg) View.VISIBLE else View.INVISIBLE
+                if (findViewById<View>(R.id.c2c_new) != null) {
+                    findViewById<View>(R.id.c2c_new).visibility = if (MLOC.hasNewC2CMsg) View.VISIBLE else View.INVISIBLE
                 }
-                if (findViewById<View>(com.anubis.module_webRTC.R.id.im_new) != null) {
-                    findViewById<View>(com.anubis.module_webRTC.R.id.im_new).visibility = if (MLOC.hasNewC2CMsg || MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
+                if (findViewById<View>(R.id.im_new) != null) {
+                    findViewById<View>(R.id.im_new).visibility = if (MLOC.hasNewC2CMsg || MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
                 }
                 try {
                     val revMsg = eventObj as XHIMMessage
@@ -98,11 +98,11 @@ open class BaseActivity : Activity(), IEventListener {
             }
             AEvent.AEVENT_GROUP_REV_MSG -> {
                 MLOC.hasNewGroupMsg = true
-                if (findViewById<View>(com.anubis.module_webRTC.R.id.group_new) != null) {
-                    findViewById<View>(com.anubis.module_webRTC.R.id.group_new).visibility = if (MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
+                if (findViewById<View>(R.id.group_new) != null) {
+                    findViewById<View>(R.id.group_new).visibility = if (MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
                 }
-                if (findViewById<View>(com.anubis.module_webRTC.R.id.im_new) != null) {
-                    findViewById<View>(com.anubis.module_webRTC.R.id.im_new).visibility = if (MLOC.hasNewC2CMsg || MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
+                if (findViewById<View>(R.id.im_new) != null) {
+                    findViewById<View>(R.id.im_new).visibility = if (MLOC.hasNewC2CMsg || MLOC.hasNewGroupMsg) View.VISIBLE else View.INVISIBLE
                 }
                 try {
                     val revMsg = eventObj as XHIMMessage
@@ -118,35 +118,35 @@ open class BaseActivity : Activity(), IEventListener {
             }
             AEvent.AEVENT_USER_OFFLINE -> {
                 MLOC.showMsg(this@BaseActivity, "服务已断开")
-                (findViewById<View>(com.anubis.module_webRTC.R.id.loading) as TextView).text = "连接中..."
-                if (findViewById<View>(com.anubis.module_webRTC.R.id.loading) != null) {
+                (findViewById<View>(R.id.loading) as TextView).text = "连接中..."
+                if (findViewById<View>(R.id.loading) != null) {
                     if (XHClient.getInstance().isOnline) {
-                        findViewById<View>(com.anubis.module_webRTC.R.id.loading).visibility = View.INVISIBLE
+                        findViewById<View>(R.id.loading).visibility = View.INVISIBLE
                     } else {
-                        findViewById<View>(com.anubis.module_webRTC.R.id.loading).visibility = View.VISIBLE
+                        findViewById<View>(R.id.loading).visibility = View.VISIBLE
                     }
                 }
             }
-            AEvent.AEVENT_USER_ONLINE -> if (findViewById<View>(com.anubis.module_webRTC.R.id.loading) != null) {
+            AEvent.AEVENT_USER_ONLINE -> if (findViewById<View>(R.id.loading) != null) {
                 if (XHClient.getInstance().isOnline) {
-                    findViewById<View>(com.anubis.module_webRTC.R.id.loading).visibility = View.INVISIBLE
+                    findViewById<View>(R.id.loading).visibility = View.INVISIBLE
                 } else {
-                    findViewById<View>(com.anubis.module_webRTC.R.id.loading).visibility = View.VISIBLE
+                    findViewById<View>(R.id.loading).visibility = View.VISIBLE
                 }
-                (findViewById<View>(com.anubis.module_webRTC.R.id.userinfo_head) as ImageView).setImageResource(MLOC.getHeadImage(this, MLOC.userId!!))
-                (findViewById<View>(com.anubis.module_webRTC.R.id.userinfo_id) as TextView).text = MLOC.userId
+                (findViewById<View>(R.id.userinfo_head) as ImageView).setImageResource(MLOC.getHeadImage(this, MLOC.userId!!))
+                (findViewById<View>(R.id.userinfo_id) as TextView).text = MLOC.userId
             }
             AEvent.AEVENT_CONN_DEATH -> {
                 MLOC.showMsg(this@BaseActivity, "服务已断开")
-                if (findViewById<View>(com.anubis.module_webRTC.R.id.loading) != null) {
-                    (findViewById<View>(com.anubis.module_webRTC.R.id.loading) as TextView).text = "连接异常，请重新登录"
+                if (findViewById<View>(R.id.loading) != null) {
+                    (findViewById<View>(R.id.loading) as TextView).text = "连接异常，请重新登录"
                     if (XHClient.getInstance().isOnline) {
-                        findViewById<View>(com.anubis.module_webRTC.R.id.loading).visibility = View.INVISIBLE
+                        findViewById<View>(R.id.loading).visibility = View.INVISIBLE
                     } else {
-                        findViewById<View>(com.anubis.module_webRTC.R.id.loading).visibility = View.VISIBLE
+                        findViewById<View>(R.id.loading).visibility = View.VISIBLE
                     }
-                    (findViewById<View>(com.anubis.module_webRTC.R.id.userinfo_head) as ImageView).setImageResource(MLOC.getHeadImage(this, MLOC.userId!!))
-                    (findViewById<View>(com.anubis.module_webRTC.R.id.userinfo_id) as TextView).text = MLOC.userId
+                    (findViewById<View>(R.id.userinfo_head) as ImageView).setImageResource(MLOC.getHeadImage(this, MLOC.userId!!))
+                    (findViewById<View>(R.id.userinfo_id) as TextView).text = MLOC.userId
                 }
             }
         }//                if(!MLOC.canPickupVoip){
