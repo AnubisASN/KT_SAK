@@ -3,9 +3,12 @@ package com.anubis.SwissArmyKnife
 import android.Manifest
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -104,7 +107,7 @@ class MainActivity : Activity() {
 
     companion object {
         var mainActivity: MainActivity? = null
-        var mHandler:Handler?=null
+        var mHandler: Handler? = null
     }
 
 
@@ -112,13 +115,13 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mainActivity = this@MainActivity
-        mHandler= Handler()
+        mHandler = Handler()
         ParameHandleMSG.mainActivity = mainActivity
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
-            init()
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        init()
         if (Build.MODEL == "ZK-R32A")
             XHA = XHApiManager()
         eUDevice.init(mAPP, uHandler)
@@ -211,16 +214,16 @@ class MainActivity : Activity() {
                                 ?: "192.168.1.110", eTCP.eClientHashMap)}")
                         R.id.bt_item3 -> {
                             GlobalScope.launch {
-                             eTCP.eServerSocket( handleTCP,MSG?.toInt()?:3335)
-                        }
+                                eTCP.eServerSocket(handleTCP, MSG?.toInt() ?: 3335)
+                            }
                         }
                     }
                     getDigit("服务关闭") -> when (view?.id) {
                         R.id.bt_item1 -> {
                             Hint("TCP连接C关闭:${eTCP.eCloseReceives(eClientHashMap, MSG)} ")
                         }
-                        R.id.bt_item2 ->    Hint("TCP连接S关闭:${eTCP.eCloseReceives(eServerHashMap, MSG)} ")
-                        R.id.bt_item3 ->   Hint("TCP服务关闭 ："+ eTCP.eCloseServer())
+                        R.id.bt_item2 -> Hint("TCP连接S关闭:${eTCP.eCloseReceives(eServerHashMap, MSG)} ")
+                        R.id.bt_item3 -> Hint("TCP服务关闭 ：" + eTCP.eCloseServer())
                     }
 
 
@@ -292,12 +295,35 @@ class MainActivity : Activity() {
                         intent.putExtra("channelName", MSG?.split("||")?.get(1))
                         startActivity(intent)
                     }
-//                        ARouter.getInstance().build("/module_videochat/eVideoChat")
-////                                .withBundle("init1",b1)
-//                                .withString("init1", "00")
-////                                .withBundle("init2",b2)
-//                                .navigation()
-
+                    getDigit("跨AP") -> when (view?.id) {
+                        R.id.bt_item1 -> {
+                            val intent = Intent()
+                            if (MSG == null)
+                                intent.data = Uri.parse("asn://com.anubis.app_webrtc?url=119.23.77.41&localId=123&type=SET")
+                            else
+                            intent.data = Uri.parse("asn://com.anubis.app_webrtc?targetId=${MSG?.split("||")?.get(0)}&maxTime=${MSG?.split("||")?.get(1)}&cameraId=${MSG?.split("||")?.get(2)}&type=CALL")
+                            startActivity(intent)
+                        }
+                        R.id.bt_item2 -> {
+                            Hint("运行状态:${eApp.eIsAppRunning(this@MainActivity, "com.anubis.app_webrtc")}")
+                            Hint("安装状态:${eApp.eIsAppInstall(this@MainActivity, "com.anubis.app_webrtc")}")
+                            val intent = Intent()
+                            intent.data = Uri.parse("asn://com.anubis.app_webrtc?targetId=${MSG?.split("||")?.get(0)}&maxTime=${MSG?.split("||")?.get(1)}&cameraId=${MSG?.split("||")?.get(2)}&type=CALL")
+                            startActivity(intent)
+                        }
+//                        R.id.bt_item2 -> {
+//                        挂断
+//                            val intent = Intent()
+//                            intent.data= Uri.parse("asn://com.anubis.app_webrtc?type=HANG")
+//                            startActivity(intent)
+//                        }
+                        R.id.bt_item3 -> {
+                            val intent = Intent()
+                            intent.data = Uri.parse("asn://com.anubis.app_webrtc?type=SETUI")
+                            startActivity(intent)
+                        }
+                    }
+//
                     getDigit("CPU") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("CPU架构:${android.os.Build.CPU_ABI}")
                     }
@@ -466,7 +492,7 @@ class MainActivity : Activity() {
     fun Hint(str: String) {
         tv_Hint.post {
             val Str = "${eGetCurrentTime("MM-dd HH:mm:ss")}： $str\n\n\n"
-            eLog(Str, "SAK")
+            str.eLog()
             tv_Hint.append(Str)
             sv_Hint.fullScroll(ScrollView.FOCUS_DOWN)
         }
@@ -503,23 +529,26 @@ class MainActivity : Activity() {
                     editContext = if (editContext?.isEmpty() != false) null else editContext
                     mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
                 } catch (e: Exception) {
-                    mainActivity?.Hint("数据操作错误-:$e")                }
+                    mainActivity?.Hint("数据操作错误-:$e")
+                }
             }
             holder.itemView.bt_item2.setOnClickListener {
                 try {
-                    var editContext: String?  = holder.itemView.et_item1.text.toString()
+                    var editContext: String? = holder.itemView.et_item1.text.toString()
                     editContext = if (editContext?.isEmpty() != false) null else editContext
                     mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
                 } catch (e: Exception) {
-                    mainActivity?.Hint("数据操作错误:$e")                }
+                    mainActivity?.Hint("数据操作错误:$e")
+                }
             }
             holder.itemView.bt_item3.setOnClickListener {
                 try {
-                    var editContext: String?  = holder.itemView.et_item1.text.toString()
+                    var editContext: String? = holder.itemView.et_item1.text.toString()
                     editContext = if (editContext?.isEmpty() != false) null else editContext
                     mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
                 } catch (e: Exception) {
-                    mainActivity?.Hint("数据操作错误:$e")                }
+                    mainActivity?.Hint("数据操作错误:$e")
+                }
             }
 
         }

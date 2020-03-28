@@ -80,6 +80,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.anubis.module_webRTC.demo.voip.VoipActivity"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.anubis.module_webRTC.demo.voip.VoipAudioActivity"

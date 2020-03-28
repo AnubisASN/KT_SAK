@@ -9,7 +9,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             moduleName "app"
@@ -39,6 +38,6 @@ android {
 
 
 dependencies {
-    implementation files('libs/star_rtc_sdk.jar')
+    api files('libs/star_rtc_sdk.jar')
     api project(':module_Extends')
 }

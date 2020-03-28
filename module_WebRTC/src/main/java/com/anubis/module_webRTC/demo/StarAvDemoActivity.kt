@@ -68,7 +68,8 @@ class StarAvDemoActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            com.anubis.module_webRTC.R.id.btn_main_voip -> startActivity(Intent(this, VoipListActivity::class.java))
+            com.anubis.module_webRTC.R.id.btn_main_voip -> startActivity(Intent(this,
+                    VoipListActivity::class.java))
             com.anubis.module_webRTC.R.id.btn_main_meeting -> startActivity(Intent(this, VideoMeetingListActivity::class.java))
             com.anubis.module_webRTC.R.id.btn_main_live -> {
                 val intent3 = Intent(this, VideoLiveListActivity::class.java)

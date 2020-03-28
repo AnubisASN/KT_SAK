@@ -1,10 +1,12 @@
 package com.anubis.module_webRTC.demo.voip;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +20,8 @@ import com.anubis.module_webRTC.database.CoreDB;
 import com.anubis.module_webRTC.database.HistoryBean;
 import com.anubis.module_webRTC.demo.BaseActivity;
 import com.anubis.module_webRTC.demo.MLOC;
+import com.anubis.module_webRTC.demo.service.FloatWindowsService;
+import com.anubis.module_webRTC.demo.service.KeepLiveService;
 import com.anubis.module_webRTC.utils.AEvent;
 import com.starrtc.starrtcsdk.api.XHClient;
 import com.starrtc.starrtcsdk.api.XHConstants;
@@ -32,6 +36,8 @@ import com.starrtc.starrtcsdk.core.pusher.XHScreenRecorder;
 
 import java.text.SimpleDateFormat;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.anubis.kt_extends.EExtendsKt.eLog;
 
@@ -40,15 +46,24 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
     private XHVoipManager voipManager;
     private StarPlayer targetPlayer;
     private StarPlayer selfPlayer;
-    private Chronometer timer;
+    public static VoipActivity mVoipActivity = null;
     public static String ACTION = "ACTION";
     public static String RING = "RING";
     public static String CALLING = "CALLING";
     private String action;
     private String targetId;
+    private Long outTime;
     private Boolean isTalking = false;
+    private Handler mHandler;
+    private TextView tvOutTime;
+    private int cameraId = 0;
+    private Boolean isRemoteVideo=false;
+    private TextView tvTimer;
     private StarRTCAudioManager starRTCAudioManager;
     private XHSDKHelper xhsdkHelper;
+    private TimerTask mTimerTask;
+    private TimerTask mTalkingTiTask;
+
 
 //    private PushUVCTest pushUVCTest;
 
@@ -59,29 +74,53 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
         starRTCAudioManager.start(new StarRTCAudioManager.AudioManagerEvents() {
             @Override
             public void onAudioDeviceChanged(StarRTCAudioManager.AudioDevice selectedAudioDevice, Set availableAudioDevices) {
-                eLog(this,selectedAudioDevice.name() ,"T");
+                eLog(this, selectedAudioDevice.name(), "T");
             }
         });
         starRTCAudioManager.setDefaultAudioDevice(StarRTCAudioManager.AudioDevice.SPEAKER_PHONE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN ,
-                WindowManager.LayoutParams. FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_voip);
+        mVoipActivity = this;
         voipManager = XHClient.getInstance().getVoipManager();
         voipManager.setRecorder(new XHCameraRecorder());
         voipManager.setRtcMediaType(XHConstants.XHRtcMediaTypeEnum.STAR_RTC_MEDIA_TYPE_VIDEO_AND_AUDIO);
         addListener();
+        mHandler = new Handler();
+        tvOutTime = (TextView) findViewById(R.id.tv_outtime);
         targetId = getIntent().getStringExtra("targetId");
+        cameraId = getIntent().getIntExtra("cameraId",0);
+        isRemoteVideo=getIntent().getBooleanExtra("isisRemoteVideo",false);
+        outTime = getIntent().getLongExtra("outTime", 60);
+        final Long[] time = {outTime};
+        mTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                time[0]--;
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvOutTime.setText("等待倒计时:" + time[0]);
+                        if (time[0] == 0) {
+                            eLog(this,"倒计时关闭","TAG");
+                            onClick(findViewById(R.id.calling_hangup));
+                        }
+                    }
+                });
+            }
+        };
+        new Timer().schedule(mTimerTask, outTime, 1000L);
         action = getIntent().getStringExtra(ACTION);
         targetPlayer = (StarPlayer) findViewById(R.id.voip_surface_target);
         selfPlayer = (StarPlayer) findViewById(R.id.voip_surface_self);
         selfPlayer.setZOrderMediaOverlay(true);
-        timer = (Chronometer) findViewById(R.id.timer);
+        tvTimer = (TextView) findViewById(R.id.timer);
         targetPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isTalking){
-                    findViewById(R.id.talking_view).setVisibility(findViewById(R.id.talking_view).getVisibility()==View.VISIBLE?View.INVISIBLE:View.VISIBLE);
+                if (isTalking) {
+                    findViewById(R.id.talking_view).setVisibility(findViewById(R.id.talking_view).getVisibility() == View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
                 }
             }
         });
@@ -92,7 +131,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
 //        pushUVCTest.startRecoder();
 
 
-        ((TextView)findViewById(R.id.targetid_text)).setText(targetId);
+        ((TextView) findViewById(R.id.targetid_text)).setText(targetId);
 //        ((ImageView)findViewById(R.id.head_img)).setImageResource(MLOC.getHeadImage(VoipActivity.this,targetId));
         findViewById(R.id.calling_hangup).setOnClickListener(this);
         findViewById(R.id.talking_hangup).setOnClickListener(this);
@@ -110,99 +149,105 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.speaker_on_btn).setOnClickListener(this);
         findViewById(R.id.speaker_off_btn).setOnClickListener(this);
 
-        if(action.equals(CALLING)){
+        if (action.equals(CALLING)) {
             showCallingView();
-            eLog(this,"newVoip-CALLING","TAG");
+            eLog(this, "newVoip-CALLING", "TAG");
             xhsdkHelper = new XHSDKHelper();
-            xhsdkHelper.setDefaultCameraId(1);
-            xhsdkHelper.startPerview(this,((StarPlayer)findViewById(R.id.voip_surface_target)));
+            xhsdkHelper.setDefaultCameraId(cameraId);
+            xhsdkHelper.startPerview(this, ((StarPlayer) findViewById(R.id.voip_surface_target)));
 
-            voipManager.call(this,targetId, new IXHResultCallback() {
+            voipManager.call(this, targetId, new IXHResultCallback() {
                 @Override
                 public void success(Object data) {
                     xhsdkHelper.stopPerview();
                     xhsdkHelper = null;
-                    eLog(data,"newVoip-call success! RecSessionId:","TAG");
+                    eLog(data, "newVoip-call success! RecSessionId:", "TAG");
                 }
+
                 @Override
                 public void failed(String errMsg) {
-                    eLog(this,"newVoip","TAG");
+                    eLog(this, "newVoip", "TAG");
                     stopAndFinish();
                 }
             });
-        }else{
-            eLog(this,"newVoip","TAG");
+        } else {
+            eLog(this, "newVoip", "TAG");
             onPickup();
         }
+//        if (isRemoteVideo){
+//            onClick(findViewById(R.id.camera_btn));
+//        }
     }
 
-    private void setupViews(){
+    private void setupViews() {
         voipManager.setupView(selfPlayer, targetPlayer, new IXHResultCallback() {
             @Override
             public void success(Object data) {
-                eLog(data,"newVoip- setupView success","TAG");
+                eLog(data, "newVoip- setupView success", "TAG");
             }
 
             @Override
             public void failed(String errMsg) {
-                eLog(errMsg,"setupView failed","TAG");
+                eLog(errMsg, "setupView failed", "TAG");
                 stopAndFinish();
             }
         });
     }
 
-    public void addListener(){
-        AEvent.addListener(AEvent.AEVENT_VOIP_INIT_COMPLETE,this);
-        AEvent.addListener(AEvent.AEVENT_VOIP_REV_BUSY,this);
-        AEvent.addListener(AEvent.AEVENT_VOIP_REV_REFUSED,this);
-        AEvent.addListener(AEvent.AEVENT_VOIP_REV_HANGUP,this);
-        AEvent.addListener(AEvent.AEVENT_VOIP_REV_CONNECT,this);
-        AEvent.addListener(AEvent.AEVENT_VOIP_REV_ERROR,this);
-        AEvent.addListener(AEvent.AEVENT_VOIP_TRANS_STATE_CHANGED,this);
+    public void addListener() {
+        AEvent.addListener(AEvent.AEVENT_VOIP_INIT_COMPLETE, this);
+        AEvent.addListener(AEvent.AEVENT_VOIP_REV_BUSY, this);
+        AEvent.addListener(AEvent.AEVENT_VOIP_REV_REFUSED, this);
+        AEvent.addListener(AEvent.AEVENT_VOIP_REV_HANGUP, this);
+        AEvent.addListener(AEvent.AEVENT_VOIP_REV_CONNECT, this);
+        AEvent.addListener(AEvent.AEVENT_VOIP_REV_ERROR, this);
+        AEvent.addListener(AEvent.AEVENT_VOIP_TRANS_STATE_CHANGED, this);
     }
 
-    public void removeListener(){
-        MLOC.INSTANCE.setCanPickupVoip(true) ;
-        AEvent.removeListener(AEvent.AEVENT_VOIP_INIT_COMPLETE,this);
-        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_BUSY,this);
-        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_REFUSED,this);
-        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_HANGUP,this);
-        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_CONNECT,this);
-        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_ERROR,this);
-        AEvent.removeListener(AEvent.AEVENT_VOIP_TRANS_STATE_CHANGED,this);
+    public void removeListener() {
+        MLOC.INSTANCE.setCanPickupVoip(true);
+        AEvent.removeListener(AEvent.AEVENT_VOIP_INIT_COMPLETE, this);
+        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_BUSY, this);
+        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_REFUSED, this);
+        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_HANGUP, this);
+        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_CONNECT, this);
+        AEvent.removeListener(AEvent.AEVENT_VOIP_REV_ERROR, this);
+        AEvent.removeListener(AEvent.AEVENT_VOIP_TRANS_STATE_CHANGED, this);
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        MLOC.INSTANCE.setCanPickupVoip(false) ;
+        MLOC.INSTANCE.setCanPickupVoip(false);
         HistoryBean historyBean = new HistoryBean();
         historyBean.setType(CoreDB.HISTORY_TYPE_VOIP);
         historyBean.setLastTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));
         historyBean.setConversationId(targetId);
         historyBean.setNewMsgCount(1);
-        MLOC.INSTANCE.addHistory(historyBean,true);
+        MLOC.INSTANCE.addHistory(historyBean, true);
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
     }
 
     @Override
-    public void onRestart(){
+    public void onRestart() {
         super.onRestart();
         addListener();
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
+        stopService(new Intent(this, KeepLiveService.class));
+        stopService(new Intent(this, FloatWindowsService.class));
         removeListener();
         super.onDestroy();
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         new AlertDialog.Builder(VoipActivity.this).setCancelable(true)
                 .setTitle("是否挂断?")
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -213,7 +258,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
                 }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        timer.stop();
+                        mTalkingTiTask.cancel();
                         voipManager.hangup(new IXHResultCallback() {
                             @Override
                             public void success(Object data) {
@@ -223,85 +268,105 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
 
                             @Override
                             public void failed(final String errMsg) {
-                                eLog(errMsg,"AEVENT_VOIP_ON_STOP errMsg:","TAG");
-                                MLOC.INSTANCE.showMsg(VoipActivity.this,errMsg);
+                                eLog(errMsg, "AEVENT_VOIP_ON_STOP errMsg:", "TAG");
+                                MLOC.INSTANCE.showMsg(VoipActivity.this, errMsg);
                             }
                         });
                     }
-                 }
+                }
         ).show();
     }
 
     @Override
     public void dispatchEvent(String aEventID, boolean success, final Object eventObj) {
-        super.dispatchEvent(aEventID,success,eventObj);
-        switch (aEventID){
+        super.dispatchEvent(aEventID, success, eventObj);
+        switch (aEventID) {
             case AEvent.AEVENT_VOIP_REV_BUSY:
-                eLog(this,"对方线路忙","TAG");
-                MLOC.INSTANCE.showMsg(VoipActivity.this,"对方线路忙");
-                if(xhsdkHelper!=null){
+                eLog(this, "对方线路忙", "TAG");
+                MLOC.INSTANCE.showMsg(VoipActivity.this, "对方线路忙");
+                if (xhsdkHelper != null) {
                     xhsdkHelper.stopPerview();
                     xhsdkHelper = null;
                 }
                 stopAndFinish();
                 break;
             case AEvent.AEVENT_VOIP_REV_REFUSED:
-                eLog(this,"对方拒绝通话","TAG");
-                MLOC.INSTANCE.showMsg(VoipActivity.this,"对方拒绝通话");
-                if(xhsdkHelper!=null){
+                eLog(this, "对方拒绝通话", "TAG");
+                MLOC.INSTANCE.showMsg(VoipActivity.this, "对方拒绝通话");
+                if (xhsdkHelper != null) {
                     xhsdkHelper.stopPerview();
                     xhsdkHelper = null;
                 }
                 stopAndFinish();
                 break;
             case AEvent.AEVENT_VOIP_REV_HANGUP:
-                eLog(this,"对方已挂断","TAG");
-                MLOC.INSTANCE.showMsg(VoipActivity.this,"对方已挂断");
-                timer.stop();
+                eLog(this, "对方已挂断", "TAG");
+                MLOC.INSTANCE.showMsg(VoipActivity.this, "对方已挂断");
+                mTalkingTiTask.cancel();
                 stopAndFinish();
                 break;
             case AEvent.AEVENT_VOIP_REV_CONNECT:
-                eLog(this,"对方允许通话","TAG");
+                eLog(this, "对方允许通话", "TAG");
+                mTimerTask.cancel();
                 showTalkingView();
                 break;
             case AEvent.AEVENT_VOIP_REV_ERROR:
-                MLOC.INSTANCE.d("",(String) eventObj);
-                if(xhsdkHelper!=null){
+                MLOC.INSTANCE.d("", (String) eventObj);
+                if (xhsdkHelper != null) {
                     xhsdkHelper.stopPerview();
                     xhsdkHelper = null;
                 }
                 stopAndFinish();
                 break;
             case AEvent.AEVENT_VOIP_TRANS_STATE_CHANGED:
-                findViewById(R.id.state).setBackgroundColor(((int)eventObj==0)?0xFFFFFF00:0xFF299401);
+                findViewById(R.id.state).setBackgroundColor(((int) eventObj == 0) ? 0xFFFFFF00 : 0xFF299401);
                 break;
         }
     }
 
 
-    private void showCallingView(){
+    private void showCallingView() {
         findViewById(R.id.calling_view).setVisibility(View.VISIBLE);
         findViewById(R.id.talking_view).setVisibility(View.GONE);
     }
 
-    private void showTalkingView(){
+    private void showTalkingView() {
         isTalking = true;
         findViewById(R.id.calling_view).setVisibility(View.GONE);
         findViewById(R.id.talking_view).setVisibility(View.VISIBLE);
-        timer.setBase(SystemClock.elapsedRealtime());
-        timer.start();
+
+        final Long[] time = {outTime};
+        mTalkingTiTask = new TimerTask() {
+            @Override
+            public void run() {
+                time[0]--;
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvTimer.setText("剩余时间:" + time[0]);
+                        if (time[0] == 0) {
+                            onClick(null);
+                            eLog(this,"倒计时关闭","TAG");
+                        }
+                    }
+                });
+            }
+        };
+        new Timer().schedule(mTalkingTiTask, outTime, 1000L);
+
         setupViews();
     }
 
-    private void onPickup(){
-        voipManager.accept(this,targetId, new IXHResultCallback() {
+    private void onPickup() {
+        voipManager.accept(this, targetId, new IXHResultCallback() {
             @Override
             public void success(Object data) {
-                eLog(data,"newVoip-onPickup OK! RecSessionId:","TAG");
+                eLog(data, "newVoip-onPickup OK! RecSessionId:", "TAG");
             }
+
             @Override
             public void failed(String errMsg) {
-                eLog(this,"newVoip-onPickup failed ","TAG");
+                eLog(this, "newVoip-onPickup failed ", "TAG");
                 stopAndFinish();
             }
         });
@@ -310,6 +375,20 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        if (v == null) {
+            voipManager.hangup(new IXHResultCallback() {
+                @Override
+                public void success(Object data) {
+                    stopAndFinish();
+                }
+
+                @Override
+                public void failed(String errMsg) {
+                    stopAndFinish();
+                }
+            });
+            return;
+        }
         int i = v.getId();
         if (i == R.id.calling_hangup) {
             voipManager.cancel(new IXHResultCallback() {
@@ -396,16 +475,17 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
     private static final int REQUEST_CODE = 1;
     private MediaProjectionManager mMediaProjectionManager;
     private XHScreenRecorder mRecorder;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mRecorder = new XHScreenRecorder(this,resultCode,data);
+        mRecorder = new XHScreenRecorder(this, resultCode, data);
         voipManager.resetRecorder(mRecorder);
         findViewById(R.id.screen_btn).setSelected(true);
     }
 
-    private void stopAndFinish(){
-        if(starRTCAudioManager !=null){
+    public void stopAndFinish() {
+        if (starRTCAudioManager != null) {
             starRTCAudioManager.stop();
         }
         VoipActivity.this.finish();

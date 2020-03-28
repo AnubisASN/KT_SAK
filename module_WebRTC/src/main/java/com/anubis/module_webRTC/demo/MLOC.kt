@@ -13,11 +13,15 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
+import com.anubis.kt_extends.eLogE
+import com.anubis.kt_extends.eShowTip
 
 import com.anubis.module_webRTC.R
 import com.anubis.module_webRTC.database.CoreDB
 import com.anubis.module_webRTC.database.HistoryBean
 import com.anubis.module_webRTC.database.MessageBean
+import com.anubis.module_webRTC.eDataRTC
+import com.anubis.module_webRTC.eDataRTC.mAPP
 
 import org.json.JSONException
 import org.json.JSONObject
@@ -30,10 +34,10 @@ import java.util.TimerTask
  */
 
 object MLOC {
-    lateinit var appContext: Context
-    var userId: String? = ""
+    //    lateinit var mAPP!!: Context
+    var userId: String? = "0"
 
-    var SERVER_HOST = "demo.starrtc.com"
+    var SERVER_HOST :String?= "119.23.77.41"
     var VOIP_SERVER_URL: String? = "$SERVER_HOST:10086"
     var IM_SERVER_URL: String? = "$SERVER_HOST:19903"
     var CHATROOM_SERVER_URL: String? = "$SERVER_HOST:19906"
@@ -93,12 +97,12 @@ object MLOC {
     private var mHeadIconIds: IntArray? = null
 
     fun init(context: Context) {
-        appContext = context.applicationContext
+//        mAPP!! = context.applicationContext
         if (coreDB == null) {
-            coreDB = CoreDB(context)
+            coreDB = CoreDB(eDataRTC.mAPP)
         }
         userId = loadSharedData(context, "userId", userId)
-
+        SERVER_HOST= loadSharedData(context, "SERVER_HOST", SERVER_HOST)
         VOIP_SERVER_URL = loadSharedData(context, "VOIP_SERVER_URL", VOIP_SERVER_URL)
         IM_SERVER_URL = loadSharedData(context, "IM_SERVER_URL", IM_SERVER_URL)
         LIVE_SRC_SERVER_URL = loadSharedData(context, "LIVE_SRC_SERVER_URL", LIVE_SRC_SERVER_URL)
@@ -135,32 +139,11 @@ object MLOC {
     }
 
     fun showMsg(str: String) {
-        try {
-            if (mToast != null) {
-                mToast!!.setText(str)
-                mToast!!.duration = Toast.LENGTH_SHORT
-            } else {
-                mToast = Toast.makeText(appContext.applicationContext, str, Toast.LENGTH_SHORT)
-            }
-            mToast!!.show()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        mAPP?.eShowTip(str)
 
     }
-
-    fun showMsg(context: Context, str: String) {
-        try {
-            if (mToast != null) {
-                mToast!!.setText(str)
-                mToast!!.duration = Toast.LENGTH_SHORT
-            } else {
-                mToast = Toast.makeText(context.applicationContext, str, Toast.LENGTH_SHORT)
-            }
-            mToast!!.show()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+    fun showMsg(context:Context,str: String) {
+        context.eShowTip(str)
 
     }
 
@@ -204,6 +187,7 @@ object MLOC {
         }
     }
 
+
     fun saveSharedData(context: Context, key: String, value: String?) {
         val sp = context.applicationContext.getSharedPreferences("stardemo", Activity.MODE_PRIVATE)
         val editor = sp.edit()
@@ -217,43 +201,49 @@ object MLOC {
     }
 
     fun loadSharedData(context: Context, key: String, defValue: String?): String? {
+
         val sp = context.applicationContext.getSharedPreferences("stardemo", Activity.MODE_PRIVATE)
         return sp.getString(key, defValue)
     }
 
     fun saveUserId(id: String) {
         MLOC.userId = id
-        MLOC.saveSharedData(appContext, "userId", MLOC.userId)
+        MLOC.saveSharedData(mAPP!!, "userId", MLOC.userId)
+    }
+
+    fun saveServerUrl( ServerUrl: String) {
+        MLOC.SERVER_HOST = ServerUrl
+        saveSharedData(mAPP!!, "SERVER_HOST", SERVER_HOST)
     }
 
     fun saveVoipServerUrl(voipServerUrl: String) {
         MLOC.VOIP_SERVER_URL = voipServerUrl
-        saveSharedData(appContext, "VOIP_SERVER_URL", VOIP_SERVER_URL)
+        saveSharedData(mAPP!!, "VOIP_SERVER_URL", VOIP_SERVER_URL)
     }
 
     fun saveSrcServerUrl(srcServerUrl: String) {
         MLOC.LIVE_SRC_SERVER_URL = srcServerUrl
-        saveSharedData(appContext, "LIVE_SRC_SERVER_URL", LIVE_SRC_SERVER_URL)
+        saveSharedData(mAPP!!, "LIVE_SRC_SERVER_URL", LIVE_SRC_SERVER_URL)
     }
 
     fun saveVdnServerUrl(vdnServerUrl: String) {
         MLOC.LIVE_VDN_SERVER_URL = vdnServerUrl
-        saveSharedData(appContext, "LIVE_VDN_SERVER_URL", LIVE_VDN_SERVER_URL)
+        saveSharedData(mAPP!!, "LIVE_VDN_SERVER_URL", LIVE_VDN_SERVER_URL)
     }
 
     fun saveProxyServerUrl(proxyServerUrl: String) {
         MLOC.LIVE_PROXY_SERVER_URL = proxyServerUrl
-        saveSharedData(appContext, "LIVE_PROXY_SERVER_URL", LIVE_PROXY_SERVER_URL)
+        saveSharedData(mAPP!!, "LIVE_PROXY_SERVER_URL", LIVE_PROXY_SERVER_URL)
     }
 
     fun saveChatroomServerUrl(chatroomServerUrl: String) {
         MLOC.CHATROOM_SERVER_URL = chatroomServerUrl
-        saveSharedData(appContext, "CHATROOM_SERVER_URL", CHATROOM_SERVER_URL)
+        saveSharedData(mAPP!!, "CHATROOM_SERVER_URL", CHATROOM_SERVER_URL)
     }
 
     fun saveImServerUrl(imServerUrl: String) {
         MLOC.IM_SERVER_URL = imServerUrl
-        saveSharedData(appContext, "IM_SERVER_URL", IM_SERVER_URL)
+        saveSharedData(mAPP!!, "IM_SERVER_URL", IM_SERVER_URL)
     }
 
     fun saveC2CUserId(context: Context, uid: String) {
@@ -364,7 +354,7 @@ object MLOC {
             dialogTimer = Timer()
             timerTask = object : TimerTask() {
                 override fun run() {
-                    if (dialogs[0]!= null && dialogs[0]!!.isShowing()) {
+                    if (dialogs[0] != null && dialogs[0]!!.isShowing()) {
                         dialogs[0]!!.dismiss()
                         dialogs[0] = null
                     }
@@ -384,7 +374,7 @@ object MLOC {
             val len = ar.length()
             mHeadIconIds = IntArray(len)
             for (i in 0 until len) {
-                mHeadIconIds!![i]= ar.getResourceId(i, 0)
+                mHeadIconIds!![i] = ar.getResourceId(i, 0)
             }
             ar.recycle()
         }
@@ -403,26 +393,26 @@ object MLOC {
 
     fun saveImGroupListUrl(imGroupListUrl: String) {
         MLOC.IM_GROUP_LIST_URL = imGroupListUrl
-        saveSharedData(appContext, "IM_GROUP_LIST_URL", IM_GROUP_LIST_URL)
+        saveSharedData(mAPP!!, "IM_GROUP_LIST_URL", IM_GROUP_LIST_URL)
     }
 
     fun saveImGroupInfoUrl(imGroupInfoUrl: String) {
         MLOC.IM_GROUP_INFO_URL = imGroupInfoUrl
-        saveSharedData(appContext, "IM_GROUP_INFO_URL", IM_GROUP_INFO_URL)
+        saveSharedData(mAPP!!, "IM_GROUP_INFO_URL", IM_GROUP_INFO_URL)
     }
 
     fun saveListSaveUrl(listSaveUrl: String) {
         MLOC.LIST_SAVE_URL = listSaveUrl
-        saveSharedData(appContext, "LIST_SAVE_URL", LIST_SAVE_URL)
+        saveSharedData(mAPP!!, "LIST_SAVE_URL", LIST_SAVE_URL)
     }
 
     fun saveListDeleteUrl(listDeleteUrl: String) {
         MLOC.LIST_DELETE_URL = listDeleteUrl
-        saveSharedData(appContext, "LIST_DELETE_URL", LIST_DELETE_URL)
+        saveSharedData(mAPP!!, "LIST_DELETE_URL", LIST_DELETE_URL)
     }
 
     fun saveListQueryUrl(listQueryUrl: String) {
         MLOC.LIST_QUERY_URL = listQueryUrl
-        saveSharedData(appContext, "LIST_QUERY_URL", LIST_QUERY_URL)
+        saveSharedData(mAPP!!, "LIST_QUERY_URL", LIST_QUERY_URL)
     }
 }

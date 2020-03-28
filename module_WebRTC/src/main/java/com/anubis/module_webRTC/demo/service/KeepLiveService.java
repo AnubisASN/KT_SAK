@@ -12,6 +12,7 @@ import com.anubis.module_webRTC.demo.beauty.DemoVideoSourceCallback;
 import com.anubis.module_webRTC.demo.p2p.VoipP2PRingingActivity;
 import com.anubis.module_webRTC.demo.voip.VoipAudioRingingActivity;
 import com.anubis.module_webRTC.demo.voip.VoipRingingActivity;
+import com.anubis.module_webRTC.eDataRTC;
 import com.anubis.module_webRTC.listener.XHChatManagerListener;
 import com.anubis.module_webRTC.listener.XHGroupManagerListener;
 import com.anubis.module_webRTC.listener.XHLoginManagerListener;
@@ -53,12 +54,12 @@ public class KeepLiveService extends Service implements IEventListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        MLOC.INSTANCE.init(eDataRTC.INSTANCE.getMAPP());
         initSDK();
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void initSDK(){
-        MLOC.INSTANCE.init(this);
         initFree();
     }
 
@@ -91,7 +92,7 @@ public class KeepLiveService extends Service implements IEventListener {
                 @Override
                 public void error(final String errMsg, Object data) {
                     MLOC.INSTANCE.e("KeepLiveService","error:"+errMsg);
-                    MLOC.INSTANCE.showMsg(KeepLiveService.this,errMsg);
+                    MLOC.INSTANCE.showMsg( errMsg);
                 }
             },new Handler());
 
@@ -111,7 +112,7 @@ public class KeepLiveService extends Service implements IEventListener {
                 @Override
                 public void failed(final String errMsg) {
                     MLOC.INSTANCE.d("KeepLiveService","loginFailed "+errMsg);
-                    MLOC.INSTANCE.showMsg(KeepLiveService.this,errMsg);
+                    MLOC.INSTANCE.showMsg( errMsg);
                 }
             });
         }
@@ -173,7 +174,7 @@ public class KeepLiveService extends Service implements IEventListener {
                     @Override
                     public void failed(final String errMsg) {
                         MLOC.INSTANCE.d("KeepLiveService","loginFailed "+errMsg);
-                        MLOC.INSTANCE.showMsg(KeepLiveService.this,errMsg);
+                        MLOC.INSTANCE.showMsg( errMsg);
                     }
                 });
                 break;

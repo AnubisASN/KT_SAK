@@ -583,7 +583,7 @@ object eApp {
     }
 
     //软件安装判断
-    fun eIsAppInstall(packageName: String, mContext: Context): Boolean {
+    fun eIsAppInstall(mContext: Context,packageName: String): Boolean {
         var packageInfo: PackageInfo? = null
         try {
             packageInfo = mContext.packageManager.getPackageInfo(
