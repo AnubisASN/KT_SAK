@@ -54,12 +54,12 @@ public class KeepLiveService extends Service implements IEventListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MLOC.INSTANCE.init(eDataRTC.INSTANCE.getMAPP());
         initSDK();
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void initSDK(){
+        MLOC.INSTANCE.init(this);
         initFree();
     }
 

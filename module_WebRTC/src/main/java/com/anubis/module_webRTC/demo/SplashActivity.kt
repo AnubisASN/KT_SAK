@@ -21,6 +21,7 @@ import android.view.animation.Animation
 
 import com.anubis.module_webRTC.demo.service.KeepLiveService
 import com.anubis.module_webRTC.R
+import com.anubis.module_webRTC.eDataRTC
 import com.anubis.module_webRTC.utils.AEvent
 
 import java.util.ArrayList
@@ -36,6 +37,7 @@ class SplashActivity : Activity() {
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(com.anubis.module_webRTC.R.layout.activity_splash)
+        eDataRTC.mAPP=this.application
         AEvent.setHandler(Handler())
         checkPermission()
     }

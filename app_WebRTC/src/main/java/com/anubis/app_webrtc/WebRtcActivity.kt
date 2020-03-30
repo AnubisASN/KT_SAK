@@ -26,25 +26,28 @@ class WebRtcActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_rtc)
-        stopService(Intent(this, KeepLiveService::class.java))
-        stopService(Intent(this, FloatWindowsService::class.java))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initRRT()
         init()
     }
 
     companion object {
         val CALL = "CALL"  //拨打
         val HANG = "HANG"  //挂断
-        val SETUI="SETUI"   //高级设置
-        val DEMO="DEMO"  //Ddemo界面
-        val SET="SET" //参数设置
+        val SETUI = "SETUI"   //高级设置
+        val DEMO = "DEMO"  //Ddemo界面
+        val SET = "SET" //参数设置
     }
 
     fun init() {
         eLog("初始化")
-        eDataRTC.mAPP=mAPP
+        eDataRTC.mAPP = mAPP
         val uri = intent.data ?: return eShowTip("RTC扩展组件,规则错误无法运行").apply { finish() }
         when (uri.getQueryParameter("type").eLog("type:")) {
-            SET->{
+            SET -> {
                 val url = uri.getQueryParameter("url").eLog("url")
                 if (url != null && url.isNotBlank() && url.isNotEmpty()) {
                     saveServerUrl(url)
@@ -52,15 +55,21 @@ class WebRtcActivity : AppCompatActivity() {
                 val localId = uri.getQueryParameter("localId").eLog("localId")
                 if (localId != null && localId.isNotBlank() && localId.isNotEmpty())
                     saveUserId(localId)
+                val isAutoAnswer = uri.getBooleanQueryParameter("autoAnswer",false).eLog("autoAnswer")!!
+                if (isAutoAnswer) {
+                     eSetSystemSharedPreferences("isAutoAnswer",isAutoAnswer)
+                }
                 finish()
             }
             CALL -> {
                 val targetId = uri.getQueryParameter("targetId").eLog("targetId")
-                val outTime =( uri.getQueryParameter("maxTime").eLog("maxTime") ?: 60L).toString().toLong()
-                val cameraId = (uri.getQueryParameter("cameraId").eLog("cameraId") ?: 0).toString().toInt()
+                val outTime = (uri.getQueryParameter("maxTime").eLog("maxTime")
+                        ?: 60L).toString().toLong()
+                val cameraId = (uri.getQueryParameter("cameraId").eLog("cameraId")
+                        ?: 0).toString().toInt()
                 if (targetId != null || targetId!!.isNotBlank()) {
                     initRRT()
-                    startVoip(targetId, outTime,cameraId)
+                    startVoip(targetId, outTime, cameraId)
                 } else {
                     eShowTip("targetId为空")
                 }
@@ -71,12 +80,12 @@ class WebRtcActivity : AppCompatActivity() {
                 VoipActivity.mVoipActivity?.onClick(null)
                 finish()
             }
-            DEMO->{
+            DEMO -> {
                 val intent = Intent(this, SplashActivity::class.java)
                 startActivity(intent)
                 finish()
             }
-            SETUI->{
+            SETUI -> {
                 val intent = Intent(this, SettingActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -85,17 +94,19 @@ class WebRtcActivity : AppCompatActivity() {
     }
 
     fun initRRT() {
-        val intent = Intent(this, KeepLiveService::class.java)
-        startService(intent)
+        if (!eApp.eIsServiceRunning(this, KeepLiveService::class.java.name)) {
+            val intent = Intent(this, KeepLiveService::class.java)
+            startService(intent)
+        }
         val isOnline = XHClient.getInstance().isOnline.eLog("isOnline")
 
     }
 
-    fun startVoip(targetId: String, outTime: Long,cameraId:Int=0) {
+    fun startVoip(targetId: String, outTime: Long, cameraId: Int = 0) {
         val intent = Intent(this, VoipActivity::class.java)
         intent.putExtra("targetId", targetId)
         intent.putExtra("outTime", outTime)
-        intent.putExtra("cameraId",cameraId)
+        intent.putExtra("cameraId", cameraId)
         intent.putExtra(VoipActivity.ACTION, VoipActivity.CALLING)
         this.finish()
         startActivity(intent)

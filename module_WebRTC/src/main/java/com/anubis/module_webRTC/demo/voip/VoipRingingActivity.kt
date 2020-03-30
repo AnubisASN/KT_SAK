@@ -1,5 +1,6 @@
 package com.anubis.module_webRTC.demo.voip
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import com.anubis.kt_extends.eGetSystemSharedPreferences
 
 import com.anubis.module_webRTC.R
 import com.anubis.module_webRTC.demo.BaseActivity
@@ -19,6 +21,7 @@ import com.anubis.module_webRTC.utils.ColorUtils
 import com.anubis.module_webRTC.utils.DensityUtils
 import com.starrtc.starrtcsdk.api.XHClient
 import com.starrtc.starrtcsdk.apiInterface.IXHResultCallback
+import kotlinx.android.synthetic.main.activity_voip_ringing.*
 
 import java.text.SimpleDateFormat
 
@@ -50,6 +53,9 @@ class VoipRingingActivity : BaseActivity(), View.OnClickListener {
         historyBean.newMsgCount = 1
         MLOC.addHistory(historyBean, true)
 
+        if (this.eGetSystemSharedPreferences<Boolean>("isAutoAnswer", false, getSharedPreferences(this.packageName, Context.MODE_PRIVATE))) {
+            onClick(ring_pickup)
+        }
     }
 
     fun addListener() {

@@ -14,6 +14,7 @@ import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import com.anubis.kt_extends.eLogE
+import com.anubis.kt_extends.eSetSystemSharedPreferences
 import com.anubis.kt_extends.eShowTip
 
 import com.anubis.module_webRTC.R
@@ -37,7 +38,7 @@ object MLOC {
     //    lateinit var mAPP!!: Context
     var userId: String? = "0"
 
-    var SERVER_HOST :String?= "119.23.77.41"
+    var SERVER_HOST: String? = "119.23.77.41"
     var VOIP_SERVER_URL: String? = "$SERVER_HOST:10086"
     var IM_SERVER_URL: String? = "$SERVER_HOST:19903"
     var CHATROOM_SERVER_URL: String? = "$SERVER_HOST:19906"
@@ -99,10 +100,10 @@ object MLOC {
     fun init(context: Context) {
 //        mAPP!! = context.applicationContext
         if (coreDB == null) {
-            coreDB = CoreDB(eDataRTC.mAPP)
+            coreDB = CoreDB(context)
         }
         userId = loadSharedData(context, "userId", userId)
-        SERVER_HOST= loadSharedData(context, "SERVER_HOST", SERVER_HOST)
+        SERVER_HOST = loadSharedData(context, "SERVER_HOST", SERVER_HOST)
         VOIP_SERVER_URL = loadSharedData(context, "VOIP_SERVER_URL", VOIP_SERVER_URL)
         IM_SERVER_URL = loadSharedData(context, "IM_SERVER_URL", IM_SERVER_URL)
         LIVE_SRC_SERVER_URL = loadSharedData(context, "LIVE_SRC_SERVER_URL", LIVE_SRC_SERVER_URL)
@@ -142,7 +143,8 @@ object MLOC {
         mAPP?.eShowTip(str)
 
     }
-    fun showMsg(context:Context,str: String) {
+
+    fun showMsg(context: Context, str: String) {
         context.eShowTip(str)
 
     }
@@ -211,7 +213,7 @@ object MLOC {
         MLOC.saveSharedData(mAPP!!, "userId", MLOC.userId)
     }
 
-    fun saveServerUrl( ServerUrl: String) {
+    fun saveServerUrl(ServerUrl: String) {
         MLOC.SERVER_HOST = ServerUrl
         saveSharedData(mAPP!!, "SERVER_HOST", SERVER_HOST)
     }

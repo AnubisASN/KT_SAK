@@ -299,16 +299,16 @@ class MainActivity : Activity() {
                         R.id.bt_item1 -> {
                             val intent = Intent()
                             if (MSG == null)
-                                intent.data = Uri.parse("asn://com.anubis.app_webrtc?url=119.23.77.41&localId=123&type=SET")
+                                intent.data = Uri.parse("sak://com.anubis.app_webrtc?url=119.23.77.41&localId=123&autoAnswer=true&type=SET")
                             else
-                            intent.data = Uri.parse("asn://com.anubis.app_webrtc?targetId=${MSG?.split("||")?.get(0)}&maxTime=${MSG?.split("||")?.get(1)}&cameraId=${MSG?.split("||")?.get(2)}&type=CALL")
+                            intent.data = Uri.parse("sak://com.anubis.app_webrtc?url=${MSG.split("||")[0]}&localId=${MSG.split("||")[1]}&autoAnswer=${MSG.split("||")[2]}&type=SET")
                             startActivity(intent)
                         }
                         R.id.bt_item2 -> {
                             Hint("运行状态:${eApp.eIsAppRunning(this@MainActivity, "com.anubis.app_webrtc")}")
                             Hint("安装状态:${eApp.eIsAppInstall(this@MainActivity, "com.anubis.app_webrtc")}")
                             val intent = Intent()
-                            intent.data = Uri.parse("asn://com.anubis.app_webrtc?targetId=${MSG?.split("||")?.get(0)}&maxTime=${MSG?.split("||")?.get(1)}&cameraId=${MSG?.split("||")?.get(2)}&type=CALL")
+                            intent.data = Uri.parse("sak://com.anubis.app_webrtc?targetId=${MSG?.split("||")?.get(0)}&maxTime=${MSG?.split("||")?.get(1)}&cameraId=${MSG?.split("||")?.get(2)}&type=CALL")
                             startActivity(intent)
                         }
 //                        R.id.bt_item2 -> {
@@ -319,11 +319,12 @@ class MainActivity : Activity() {
 //                        }
                         R.id.bt_item3 -> {
                             val intent = Intent()
-                            intent.data = Uri.parse("asn://com.anubis.app_webrtc?type=SETUI")
+                            intent.data = Uri.parse("sak://com.anubis.app_webrtc?type=SETUI")
                             startActivity(intent)
                         }
                     }
 //
+
                     getDigit("CPU") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("CPU架构:${android.os.Build.CPU_ABI}")
                     }

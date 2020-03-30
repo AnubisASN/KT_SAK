@@ -2,8 +2,8 @@ package com.anubis.module_opencv.android;
 
 import java.util.List;
 
-import com.anubis.module_opencv.BuildConfig;
-import com.anubis.module_opencv.R;
+import com.anubis.module_office.BuildConfig;
+import com.anubis.module_office.R;
 import com.anubis.module_opencv.core.Mat;
 import com.anubis.module_opencv.core.Size;
 

@@ -1,6 +1,7 @@
 package com.anubis.module_webRTC.demo.voip;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.projection.MediaProjectionManager;
@@ -15,13 +16,12 @@ import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.TextView;
 
+import com.anubis.kt_extends.EExtendsKt;
 import com.anubis.module_webRTC.R;
 import com.anubis.module_webRTC.database.CoreDB;
 import com.anubis.module_webRTC.database.HistoryBean;
 import com.anubis.module_webRTC.demo.BaseActivity;
 import com.anubis.module_webRTC.demo.MLOC;
-import com.anubis.module_webRTC.demo.service.FloatWindowsService;
-import com.anubis.module_webRTC.demo.service.KeepLiveService;
 import com.anubis.module_webRTC.utils.AEvent;
 import com.starrtc.starrtcsdk.api.XHClient;
 import com.starrtc.starrtcsdk.api.XHConstants;
@@ -104,6 +104,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
                         tvOutTime.setText("等待倒计时:" + time[0]);
                         if (time[0] == 0) {
                             eLog(this,"倒计时关闭","TAG");
+                            //接听等待
                             onClick(findViewById(R.id.calling_hangup));
                         }
                     }
@@ -240,8 +241,6 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onDestroy() {
-        stopService(new Intent(this, KeepLiveService.class));
-        stopService(new Intent(this, FloatWindowsService.class));
         removeListener();
         super.onDestroy();
     }

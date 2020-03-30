@@ -1,5 +1,6 @@
 package com.anubis.module_webRTC.listener;
 
+import com.anubis.kt_extends.EExtendsKt;
 import com.anubis.module_webRTC.database.CoreDB;
 import com.anubis.module_webRTC.database.HistoryBean;
 import com.anubis.module_webRTC.database.MessageBean;
@@ -13,7 +14,7 @@ import java.text.SimpleDateFormat;
 public class XHChatManagerListener implements IXHChatManagerListener {
     @Override
     public void onReceivedMessage(XHIMMessage message) {
-
+        EExtendsKt.eLog(this,"XHChatManager-onReceivedMessage","TAG");
         HistoryBean historyBean = new HistoryBean();
         historyBean.setType(CoreDB.HISTORY_TYPE_C2C);
         historyBean.setLastTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));
@@ -35,6 +36,7 @@ public class XHChatManagerListener implements IXHChatManagerListener {
 
     @Override
     public void onReceivedSystemMessage(XHIMMessage message) {
+        EExtendsKt.eLog(this,"XHChatManager-onReceivedSystemMessage","TAG");
         HistoryBean historyBean = new HistoryBean();
         historyBean.setType(CoreDB.HISTORY_TYPE_C2C);
         historyBean.setLastTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));

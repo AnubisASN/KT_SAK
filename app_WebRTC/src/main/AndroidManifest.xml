@@ -18,19 +18,18 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".WebRtcActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
                 <category android:name="android.intent.category.DEFAULT"/>
-
                 <action android:name="com.anubis.app_webrtc"/>
-
                 <data
                     android:host="com.anubis.app_webrtc"
-                    android:scheme="asn"/>
+                    android:scheme="sak"/>
+
+                    <action android:name="android.intent.action.MAIN"/>
+                    <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".RunActivity">
+        <activity android:name="com.anubis.module_webRTC.demo.SplashActivity">
+
         </activity>
     </application>
 
