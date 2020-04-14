@@ -76,7 +76,7 @@ object eTCP {
             return
         } catch (e: ConnectException) {
             msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE, port.toString())
-            e.eLogE("连接失败 ")
+            eLogE("TCP服务连接失败:$ip-$port ")
             return
         } catch (e: UnknownHostException) {
             msg?.obj = receiveMSG(ip, HANDLER_FAILURE_CODE, port.toString())

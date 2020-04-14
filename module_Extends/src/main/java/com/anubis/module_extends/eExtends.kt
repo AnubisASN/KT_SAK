@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.res.AssetManager
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.media.AudioFormat
@@ -44,6 +45,8 @@ import org.json.JSONObject
 import java.io.*
 import java.lang.Process
 import java.net.*
+import java.nio.MappedByteBuffer
+import java.nio.channels.FileChannel
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -84,20 +87,20 @@ fun Any?.eIsBaseType() = this is String || this is Int || this is Int || this is
 
 
 fun <T> T?.eLog(hint: Any? = "", TAG: String = "TAGd"): T? {
-    if(eIsTag)
-    Log.d(TAG, "${if (this==null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
+    if (eIsTag)
+        Log.d(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
 
 
 fun <T> T?.eLogI(hint: Any? = "", TAG: String = "TAGi"): T? {
-    Log.d(TAG, "${if (this==null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
+    Log.d(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
 
 
 fun <T> T?.eLogE(hint: Any? = "", TAG: String = "TAGe"): T? {
-    Log.e(TAG, "${if (this==null) "" else (this as Any).javaClass.name}-$hint\n${eErrorOut(this)} ")
+    Log.e(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint\n${eErrorOut(this)} ")
     return this
 }
 
@@ -181,23 +184,22 @@ fun Context.eSetSystemSharedPreferences(key: Any, value: Any, sharedPreferences:
         is Float -> editor.putFloat(key, value)
         is Int -> editor.putInt(key, value)
         is Long -> editor.putLong(key, value)
-        is Set<*> ->editor.putStringSet(key,value as Set<String>)
+        is Set<*> -> editor.putStringSet(key, value as Set<String>)
         else -> editor.putString(key, value.toString())
     }
     return editor.commit()
 }
 
 //系统数据文件存储读取扩展
-fun <T> Context.eGetSystemSharedPreferences(key: String, value:T, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)) :T=when(value){
-    is Int->sharedPreferences.getInt(key, value)
-    is Long->sharedPreferences.getLong(key, value)
-    is Float->sharedPreferences.getFloat(key, value)
-    is Boolean-> sharedPreferences.getBoolean(key, value)
-    is String-> sharedPreferences.getString(key, value)
-    is Set<*>-> sharedPreferences.getStringSet(key,value as Set<String> )
-    else-> sharedPreferences.getString(key, value.toString())
-}as T
-
+fun <T> Context.eGetSystemSharedPreferences(key: String, value: T, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)): T = when (value) {
+    is Int -> sharedPreferences.getInt(key, value)
+    is Long -> sharedPreferences.getLong(key, value)
+    is Float -> sharedPreferences.getFloat(key, value)
+    is Boolean -> sharedPreferences.getBoolean(key, value)
+    is String -> sharedPreferences.getString(key, value)
+    is Set<*> -> sharedPreferences.getStringSet(key, value as Set<String>)
+    else -> sharedPreferences.getString(key, value.toString())
+} as T
 
 
 //用户文件数据存储扩展
@@ -209,22 +211,22 @@ fun Context.eSetUserSharedPreferences(userID: String, key: String, value: Any, s
         is Float -> editor.putFloat(key, value)
         is Int -> editor.putInt(key, value)
         is Long -> editor.putLong(key, value)
-        is Set<*> ->editor.putStringSet(key,value as Set<String>)
+        is Set<*> -> editor.putStringSet(key, value as Set<String>)
         else -> editor.putString(key, value.toString())
     }
     return editor.commit()
 }
 
 //用户文件数据读取扩展
-fun <T>Context.eGetUserSharedPreferences(userID: String, key: String, value: T, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)) :T=when(value){
-    is Int->sharedPreferences.getInt(key, value )
-    is Long->sharedPreferences.getLong(key, value )
-    is Float->sharedPreferences.getFloat(key, value )
-    is Boolean-> sharedPreferences.getBoolean(key, value)
-    is String-> sharedPreferences.getString(key, value )
-    is Set<*>-> sharedPreferences.getStringSet(key,value as Set<String>)
-    else->sharedPreferences.getString(key, value.toString() )
-}as T
+fun <T> Context.eGetUserSharedPreferences(userID: String, key: String, value: T, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)): T = when (value) {
+    is Int -> sharedPreferences.getInt(key, value)
+    is Long -> sharedPreferences.getLong(key, value)
+    is Float -> sharedPreferences.getFloat(key, value)
+    is Boolean -> sharedPreferences.getBoolean(key, value)
+    is String -> sharedPreferences.getString(key, value)
+    is Set<*> -> sharedPreferences.getStringSet(key, value as Set<String>)
+    else -> sharedPreferences.getString(key, value.toString())
+} as T
 
 
 //首选项数据文件存储扩展
@@ -236,22 +238,22 @@ fun Context.eSetDefaultSharedPreferences(key: String, value: Any, sharedPref: Sh
         is Float -> editor.putFloat(key, value)
         is Int -> editor.putInt(key, value)
         is Long -> editor.putLong(key, value)
-        is Set<*>->editor.putStringSet(key,value as Set<String>)
-        else ->editor.putString(key, value.toString())
+        is Set<*> -> editor.putStringSet(key, value as Set<String>)
+        else -> editor.putString(key, value.toString())
     }
     return editor.commit()
 }
 
 //首选项数据文件读取扩展
-fun <T>Context.eGetDefaultSharedPreferences(key: String, value: T, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)):T=when(value){
-    is Int->sharedPref.getInt(key, value)
-    is Long->sharedPref.getLong(key, value)
-    is Float->sharedPref.getFloat(key, value)
-    is Boolean-> sharedPref.getBoolean(key, value)
-    is String-> sharedPref.getString(key, value)
-    is Set<*>-> sharedPref.getStringSet(key,value as Set<String> )
-    else-> sharedPref.getString(key, value.toString())
-}as T
+fun <T> Context.eGetDefaultSharedPreferences(key: String, value: T, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)): T = when (value) {
+    is Int -> sharedPref.getInt(key, value)
+    is Long -> sharedPref.getLong(key, value)
+    is Float -> sharedPref.getFloat(key, value)
+    is Boolean -> sharedPref.getBoolean(key, value)
+    is String -> sharedPref.getString(key, value)
+    is Set<*> -> sharedPref.getStringSet(key, value as Set<String>)
+    else -> sharedPref.getString(key, value.toString())
+} as T
 
 //Intent Get传递扩展
 fun Intent.eGetMessage(Sign: String): String = getStringExtra(Sign)
@@ -273,7 +275,7 @@ fun Bundle.eSetMessage(Sign: String, Message: Any) = when (Message) {
 //音频播放
 var mp: MediaPlayer? = null
 
-fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false) :Boolean{
+fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false): Boolean {
     try {
         mp?.stop()
         mp?.release()
@@ -295,7 +297,7 @@ fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false) :Boolean{
 }
 
 //PCM播放
-fun ePlayPCM(path: String,sampleRateInHz:Int=16000, channelConfig:Int=AudioFormat.CHANNEL_OUT_MONO,  audioFormat:Int=AudioFormat.ENCODING_PCM_16BIT) {
+fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = AudioFormat.CHANNEL_OUT_MONO, audioFormat: Int = AudioFormat.ENCODING_PCM_16BIT) {
     val bufferSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat)
     var audioTrack: AudioTrack? = AudioTrack(AudioManager.STREAM_MUSIC, sampleRateInHz, channelConfig, audioFormat, bufferSize, AudioTrack.MODE_STREAM)
     var fis: FileInputStream? = null
@@ -328,27 +330,7 @@ fun ePlayPCM(path: String,sampleRateInHz:Int=16000, channelConfig:Int=AudioForma
     }
 }
 
-//assets文件复制
-fun eAssetsToFile(context: Context, assetsName: String, copyFilePath: String): Boolean {
-    try {
-        if (!File(copyFilePath).exists()) {
-            val inputStream = context.getResources().getAssets().open(assetsName)// assets文件夹下的文件
-            val fileOutputStream = FileOutputStream(copyFilePath)// 保存到本地的文件夹下的文件
-            val buffer = ByteArray(1024)
-            var count = 0
-            while (inputStream.read(buffer).apply { count = this } > 0) {
-                fileOutputStream.write(buffer, 0, count)
-            }
-            fileOutputStream.flush()
-            fileOutputStream.close()
-            inputStream.close()
-        }
-        return true
-    } catch (e: IOException) {
-        e.eLogE("文件复制错误")
-        return false
-    }
-}
+
 
 
 /**
@@ -583,7 +565,7 @@ object eApp {
     }
 
     //软件安装判断
-    fun eIsAppInstall(mContext: Context,packageName: String): Boolean {
+    fun eIsAppInstall(mContext: Context, packageName: String): Boolean {
         var packageInfo: PackageInfo? = null
         try {
             packageInfo = mContext.packageManager.getPackageInfo(
@@ -928,6 +910,57 @@ object eBluetooth {
     }
 }
 
+/**
+ * eAssets文件扩展类--------------------------------------------------------------------------------------
+ */
+object eAssets {
+    //assets文件复制
+    fun eAssetsToFile(context: Context, assetsName: String, copyFilePath: String): Boolean {
+        try {
+            if (!File(copyFilePath).exists()) {
+                val inputStream = context.resources.assets.open(assetsName)// assets文件夹下的文件
+                val fileOutputStream = FileOutputStream(copyFilePath)// 保存到本地的文件夹下的文件
+                val buffer = ByteArray(1024)
+                var count = 0
+                while (inputStream.read(buffer).apply { count = this } > 0) {
+                    fileOutputStream.write(buffer, 0, count)
+                }
+                fileOutputStream.flush()
+                fileOutputStream.close()
+                inputStream.close()
+            }
+            return true
+        } catch (e: IOException) {
+            e.eLogE("文件复制错误")
+            return false
+        }
+    }
+
+    //获取Assets文件图片
+    fun eGetBitmap(context: Context, filename: String): Bitmap? {
+        val bitmap: Bitmap
+        val asm = context.assets
+        try {
+            val `is` = asm.open(filename)
+            bitmap = BitmapFactory.decodeStream(`is`)
+            `is`.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        }
+        return bitmap
+    }
+
+    //加载Assets文件模型
+    fun eLoadModelFile(assetManager: AssetManager, modelPath: String): MappedByteBuffer {
+        val fileDescriptor = assetManager.openFd(modelPath)
+        val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
+        val fileChannel = inputStream.channel
+        val startOffset = fileDescriptor.startOffset
+        val declaredLength = fileDescriptor.declaredLength
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
+    }
+}
 
 /**
  * Bitmap扩展类--------------------------------------------------------------------------------------
@@ -1107,7 +1140,30 @@ object eBitmap {
         return bitmap
     }
 
-    fun eGetBitmap(path: String) = BitmapFactory.decodeFile(path)
+    //获取本地文件图片
+    fun eGetFileBitmap(path: String) = BitmapFactory.decodeFile(path)
+
+    //归一化图片到[0, 1]
+    fun eNormalizeBitmap(bitmap: Bitmap): Array<Array<FloatArray>> {
+        val h = bitmap.height
+        val w = bitmap.width
+        val floatValues = Array(h) { Array(w) { FloatArray(3) } }
+        val imageMean = 0.0f
+        val imageStd = 255.0f
+        val pixels = IntArray(h * w)
+        bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, w, h)
+        for (i in 0 until h) { // 注意是先高后宽
+            for (j in 0 until w) {
+                val `val` = pixels[i * w + j]
+                val r = ((`val` shr 16 and 0xFF) - imageMean) / imageStd
+                val g = ((`val` shr 8 and 0xFF) - imageMean) / imageStd
+                val b = ((`val` and 0xFF) - imageMean) / imageStd
+                val arr = floatArrayOf(r, g, b)
+                floatValues[i][j] = arr
+            }
+        }
+        return floatValues
+    }
 }
 
 

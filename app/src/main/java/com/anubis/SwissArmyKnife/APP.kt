@@ -27,9 +27,7 @@ import java.io.File
  *说明：
  */
 
-/**
- * 这是一个合并测试sssssssssss
- */
+
 class APP : Application() {
     var mActivityList: ArrayList<Activity>? = null
 

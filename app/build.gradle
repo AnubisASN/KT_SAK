@@ -8,7 +8,7 @@ apply plugin: 'org.greenrobot.greendao' // apply plugin
 bugly {
     appId = '47d98f44ec' // 注册时分配的App ID
     appKey = '67d6bd08-71ba-4b1e-b739-6ddb4d8fa1ec' // 注册时分配的App Key
-    debug=true
+    debug = true
 }
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -29,9 +29,9 @@ android {
 //                arguments = [ moduleName : project.getName() ]
 //            }
 //        }
-    ndk {
+        ndk {
             // 设置支持的 SO 库构架，注意这里要根据你的实际情况来设置
-            abiFilters 'armeabi', 'armeabi-v7','armeabi-v7a'
+            abiFilters 'armeabi', 'armeabi-v7', 'armeabi-v7a'
         }
     }
     buildTypes {
@@ -48,6 +48,14 @@ android {
     packagingOptions {
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    aaptOptions {
+        noCompress "tflite"
+        noCompress "lite"
+    }
 }
 kapt {
     arguments {
@@ -56,8 +64,11 @@ kapt {
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     kapt 'com.alibaba:arouter-compiler:1.1.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation files('libs/XHApi.jar')
+
     implementation project(':module_Extends')
     implementation project(':module_TTS')
     implementation project(':module_PortMSG')
@@ -70,12 +81,12 @@ dependencies {
     implementation project(':module_FTP')
     implementation project(':module_ArcFace')
     implementation project(':module_CardOTG')
-    implementation files('libs/XHApi.jar')
     implementation project(':module_UDevice')
     implementation project(':module_QRCode')
     implementation project(':module_ArcFaceFT')
     implementation project(':module_TCP')
-    compile project(path: ':module_VideoChat')
+    implementation project(':module_VideoChat')
+    implementation project(':module_Detection')
 }
 repositories {
     mavenCentral()
