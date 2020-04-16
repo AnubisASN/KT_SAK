@@ -110,6 +110,24 @@ constructor(assetManager: AssetManager) {
         return filteredBoxes
     }
 
+
+    fun MasksDispose(box: Vector<Box>?): Boolean? {
+        box ?: return null
+        if (box.size<4)
+            return null
+        box.sortByDescending { it.score }
+        if (box.first().cls==0){
+            if (box[0].score>0.85 && box[1].score>0.85)
+                return   true
+            return  null
+        }else{
+            if (box.first().score>0.75)
+                return   false
+            return   null
+        }
+
+    }
+
     private fun generateAnchors() {
         var anchorTotal = 0
         for (i in 0..4) {

@@ -223,6 +223,7 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
         mGLSurfaceView!!.gleS2Render.setViewAngle(mCameraMirror, mCameraRotate)
     }
 
+
     fun restartCamera() {
         mCamera?.startPreview()
     }

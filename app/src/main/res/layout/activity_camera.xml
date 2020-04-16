@@ -11,6 +11,7 @@
 
     <com.guo.android_extend.widget.CameraGLSurfaceView
         android:id="@+id/glsurfaceView"
+        android:onClick="onArcFtClick"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"/>

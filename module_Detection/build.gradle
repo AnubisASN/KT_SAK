@@ -26,6 +26,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'org.tensorflow:tensorflow-lite:+'
-    implementation 'com.github.AnubisASN.KT_SAK:module_Extends:2.0.5'
+    implementation 'org.tensorflow:tensorflow-lite:2.1.0'
+    implementation project(':module_Extends')
 }

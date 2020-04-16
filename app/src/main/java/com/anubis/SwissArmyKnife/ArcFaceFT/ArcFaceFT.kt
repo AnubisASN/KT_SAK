@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.media.Image
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.SwissArmyKnife.R.id.imageView
 import com.anubis.kt_extends.eBitmap
@@ -44,12 +45,13 @@ class ArcFaceFT : Activity() {
     private var facemask: FaceMask? = null
     private var frameToCropTransform: Matrix? = null
     private var croppedBitmap: Bitmap? = null
+    private  var mRotate=270f
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
         var camera: eArcFaceFT? = null
         try {
-            camera = eArcFaceFT.init(findViewById(R.id.glsurfaceView), findViewById(R.id.surfaceView), false, Color.GREEN, 2, false, 100, 0, 0, 90f, imageView)
+            camera = eArcFaceFT.init(findViewById(R.id.glsurfaceView), findViewById(R.id.surfaceView), false, Color.GREEN, 2, false, 100, 1, 0,mRotate , glsurfaceView)
         } catch (e: Exception) {
             e.eLogE("ArcFace")
         }
@@ -81,8 +83,7 @@ class ArcFaceFT : Activity() {
                 async {
                     try {
                         val facemask_boxes = facemask?.detectFaceMasks(bitmap!!)?:return@async
-                        facemask_boxes.sortByDescending { it.score }
-                      val isMask=  facemask_boxes.first().cls==0
+                      val isMask=   facemask?.MasksDispose(facemask_boxes)?:return@async
                         tvHint.post {
                             tvHint.text = if (isMask) {
                                 tvHint.textColor = Color.GREEN
@@ -101,7 +102,17 @@ class ArcFaceFT : Activity() {
         }
         Handler().postDelayed(mRunnable, 2000)
     }
+    fun onArcFtClick(v: View){
+        when(v.id){
+            glsurfaceView.id->{
+                if (mRotate==90f)
+                eArcFaceFT.setParameters(getBitmapRotate =270f )
+                else
+                    eArcFaceFT.setParameters(getBitmapRotate =90f )
+            }
+        }
 
+    }
     fun keepOutDetection(b: Bitmap?): Boolean? {
         b ?: return null
         val bitmap = eImage.eGetHandleImageNegative(b)
