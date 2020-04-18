@@ -22,6 +22,11 @@ public final class R {
         public static int back = 0x7f0c0002;
         public static int front = 0x7f0c0003;
     }
+    public static final class string {
+        private string() {}
+
+        public static int app_name = 0x7f150001;
+    }
     public static final class styleable {
         private styleable() {}
 
