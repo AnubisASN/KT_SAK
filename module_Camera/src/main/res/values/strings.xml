@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SAK_相机</string>
+    <string name="camera_error" translation_description="Error regarding camera support[CHAR_LIMIT=40]">设备不支持 Camera2 API.</string>
+</resources>

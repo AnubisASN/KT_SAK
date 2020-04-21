@@ -46,6 +46,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -69,8 +71,6 @@ import com.anubis.module_tensorflow.R;
 import com.anubis.module_tensorflow.detection.customview.AutoFitTextureView;
 import com.anubis.module_tensorflow.detection.env.Logger;
 
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
 
 @SuppressLint("ValidFragment")
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

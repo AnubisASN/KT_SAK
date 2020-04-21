@@ -10,15 +10,16 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app_Coroutine" />
+            <option value="$PROJECT_DIR$/app_DeepLearning" />
             <option value="$PROJECT_DIR$/app_HServer" />
             <option value="$PROJECT_DIR$/app_Map" />
-            <option value="$PROJECT_DIR$/app_OpenCV" />
             <option value="$PROJECT_DIR$/app_Picker" />
             <option value="$PROJECT_DIR$/app_TextR" />
             <option value="$PROJECT_DIR$/app_WebRTC" />
             <option value="$PROJECT_DIR$/module_ASRW" />
             <option value="$PROJECT_DIR$/module_ArcFace" />
             <option value="$PROJECT_DIR$/module_ArcFaceFT" />
+            <option value="$PROJECT_DIR$/module_Camera" />
             <option value="$PROJECT_DIR$/module_CardOTG" />
             <option value="$PROJECT_DIR$/module_Detection" />
             <option value="$PROJECT_DIR$/module_Extends" />
@@ -32,7 +33,6 @@
             <option value="$PROJECT_DIR$/module_Picker" />
             <option value="$PROJECT_DIR$/module_PortMSG" />
             <option value="$PROJECT_DIR$/module_QRCode" />
-            <option value="$PROJECT_DIR$/module_T" />
             <option value="$PROJECT_DIR$/module_TCP" />
             <option value="$PROJECT_DIR$/module_TTS" />
             <option value="$PROJECT_DIR$/module_TensorFlow" />

@@ -35,6 +35,12 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Trace;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Size;
 import android.view.Surface;
 import android.view.View;
@@ -49,15 +55,9 @@ import android.widget.Toast;
 import com.anubis.module_tensorflow.R;
 import com.anubis.module_tensorflow.detection.env.ImageUtils;
 import com.anubis.module_tensorflow.detection.env.Logger;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.nio.ByteBuffer;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.appcompat.widget.Toolbar;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public abstract class CameraActivity extends AppCompatActivity

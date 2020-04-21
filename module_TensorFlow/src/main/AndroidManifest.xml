@@ -2,24 +2,22 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.anubis.module_tensorflow"
           android:appComponentFactory="whateverString"
-          tools:replace="android:appComponentFactory">
+    >
 
     <uses-permission android:name="android.permission.CAMERA"/>
-
     <uses-feature android:name="android.hardware.camera"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
 
     <application
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.ObjectDetection"
-        tools:ignore="GoogleAppIndexingWarning"
         >
         <activity
-            android:name=".detection.DetectorActivity"
+            android:name=".detection.eDetectorGUI"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

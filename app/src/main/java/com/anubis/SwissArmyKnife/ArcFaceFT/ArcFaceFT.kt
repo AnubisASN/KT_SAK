@@ -60,10 +60,6 @@ class ArcFaceFT : Activity() {
             assets.locales.forEach {
                 it.eLog("assets")
             }
-//            croppedBitmap = Bitmap.createBitmap(FaceMask.INPUT_IMAGE_SIZE, FaceMask.INPUT_IMAGE_SIZE, Bitmap.Config.ARGB_8888)
-//            frameToCropTransform = ImageUtils.getTransformationMatrix(glsurfaceView.width, glsurfaceView.height,
-//                    FaceMask.INPUT_IMAGE_SIZE, FaceMask.INPUT_IMAGE_SIZE, 0, true)
-//            frameToCropTransform!!.invert(Matrix())
             facemask = FaceMask(this.resources.assets)
         } catch (e: IOException) {
             e.eLogE("口罩检测初始化失败")
@@ -112,45 +108,6 @@ class ArcFaceFT : Activity() {
             }
         }
 
-    }
-    fun keepOutDetection(b: Bitmap?): Boolean? {
-        b ?: return null
-        val bitmap = eImage.eGetHandleImageNegative(b)
-        val width = bitmap.width
-        val height = bitmap.height
-        val bmp: Bitmap?
-        bmp = Bitmap.createBitmap(bitmap, width / 2, 0, 1, height, null, false)
-        var color0: Int
-        var color1: Int
-        val px = IntArray(bmp.width * bmp.height)
-        bmp.getPixels(px, 0, bmp.width, 0, 0, bmp.width, bmp.height)
-        var r0: Int
-        var g0: Int
-        var b0: Int
-        var r1: Int
-        var g1: Int
-        var b1: Int
-        val size = px.size
-        val scope = 50
-        var Y = 0
-        var N = 0
-        for (i in 0 until size / 2) {
-            color0 = px[i]
-            r0 = Color.red(color0)
-            g0 = Color.green(color0)
-            b0 = Color.blue(color0)
-            color1 = px[size - i - 1]
-            r1 = Color.red(color1)
-            g1 = Color.green(color1)
-            b1 = Color.blue(color1)
-            if (r0 in r1 - scope..r1 + scope && g0 in g1 - scope..g1 + scope && b0 in b1 - scope..b1 + scope) {
-                Y++
-            } else {
-                N++
-            }
-        }
-        eLog("Y:$Y--N:$N")
-        return Y * 2 < N
     }
 
     private fun fillCroppedBitmap(image: Bitmap) {
