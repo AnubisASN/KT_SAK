@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.anubis.module_camera.Camera.eCameraActivity"
+        <activity android:name="com.anubis.module_camera.Camera.testCameraGUI"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

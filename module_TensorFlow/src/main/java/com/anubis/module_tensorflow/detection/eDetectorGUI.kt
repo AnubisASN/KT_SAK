@@ -146,11 +146,10 @@ class eDetectorGUI : CameraActivity(), OnImageAvailableListener {
         LOGGER.i("Preparing image $currTimestamp for detection in bg thread.")
 
         rgbFrameBitmap!!.setPixels(rgbBytes, 0, previewWidth, 0, 0, previewWidth, previewHeight)
-
         readyForNextImage()
-
         val canvas = Canvas(croppedBitmap!!)
         canvas.drawBitmap(rgbFrameBitmap!!, frameToCropTransform!!, null)
+
         // For examining the actual TF input.
         if (SAVE_PREVIEW_BITMAP) {
             ImageUtils.saveBitmap(croppedBitmap)

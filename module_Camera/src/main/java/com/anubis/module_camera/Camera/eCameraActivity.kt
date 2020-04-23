@@ -33,20 +33,13 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Trace
 import android.support.annotation.RequiresApi
-import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SwitchCompat
-import android.support.v7.widget.Toolbar
 import android.util.Size
 import android.view.Surface
-import android.view.View
-import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.widget.CompoundButton
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import com.anubis.kt_extends.eBitmap.eYUV420SPToARGB8888
 import com.anubis.kt_extends.eBitmap.eYUV420ToARGB8888
 import com.anubis.kt_extends.eLog
@@ -58,23 +51,24 @@ import com.anubis.module_camera.R
 open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Camera.PreviewCallback, CompoundButton.OnCheckedChangeListener {
     protected var previewWidth = 0
     protected var previewHeight = 0
-    val isDebug = false
     private var handler: Handler? = null
     private var handlerThread: HandlerThread? = null
     private var useCamera2API: Boolean = false
     private var isProcessingFrame = false
     private val yuvBytes = arrayOfNulls<ByteArray>(3)
-    private var rgbBytes: IntArray? = null
+    internal var rgbBytes: IntArray? = null
     protected var luminanceStride: Int = 0
     private var postInferenceCallback: Runnable? = null
     private var imageConverter: Runnable? = null
-
-
     protected var frameValueTextView: TextView? = null
     protected var cropValueTextView: TextView? = null
     protected var inferenceTimeTextView: TextView? = null
     private val apiSwitchCompat: SwitchCompat? = null
 
+    open val eFrameLayoutId=R.id.fl_camera_ontainer
+    open val eFragmentLayout: Int= R.layout.fragment_camera
+    open val eActivityLayout:Int=R.layout.activity_camera
+    open val eDesiredPreviewFrameSize: Size = Size(640, 480)
     protected val luminance: ByteArray
         get() = yuvBytes[0]!!
 
@@ -88,14 +82,12 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
             }
         }
 
-    open val layoutId: Int? = R.layout.fragment_camera
-    open val desiredPreviewFrameSize: Size? = Size(640, 480)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(null)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        setContentView(R.layout.activity_camera)
-            setFragment()
+        setContentView(eActivityLayout)
+        setFragment()
     }
 
     protected fun getRgbBytes(): IntArray? {
@@ -240,9 +232,7 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
     }
 
 
-
-
-    // Returns true if the device supports the required hardware level, or better.
+    // 如果设备支持所需的硬件级别或更高级别，则返回true。
     private fun isHardwareLevelSupported(
             characteristics: CameraCharacteristics, requiredLevel: Int): Boolean {
         val deviceLevel = characteristics.get(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL)!!
@@ -268,9 +258,9 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
                 val map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
                         ?: continue
 
-// Fallback to camera1 API for internal cameras that don't have full support.
-                // This should help with legacy situations where using the camera2 API causes
-                // distorted or otherwise broken previews.
+// 不支持所有内部摄像机的camera1 API的后备。
+//                //这应有助于解决使用camera2 API造成的遗留情况
+//                //预览扭曲或破坏。
                 useCamera2API = facing == CameraCharacteristics.LENS_FACING_EXTERNAL || isHardwareLevelSupported(
                         characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL)
                 eLog("Camera API lv2?: ${useCamera2API}")
@@ -296,16 +286,15 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
                         }
                     },
                     this,
-                    layoutId!!,
-                    desiredPreviewFrameSize!!)
+                    eFragmentLayout,
+                    eDesiredPreviewFrameSize)
 
             camera2Fragment.setCamera(cameraId)
             fragment = camera2Fragment
         } else {
-            eLog("layoutId:$layoutId-${layoutId==null}--$desiredPreviewFrameSize-${desiredPreviewFrameSize==null}")
-            fragment = LegacyCameraConnectionFragment(this, layoutId!!,desiredPreviewFrameSize!!)
+            fragment = LegacyCameraConnectionFragment(this, eFragmentLayout, eDesiredPreviewFrameSize)
         }
-        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
+        fragmentManager.beginTransaction().replace(eFrameLayoutId, fragment).commit()
     }
 
     protected fun fillBytes(planes: Array<Plane>, yuvBytes: Array<ByteArray?>) {
@@ -334,6 +323,7 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
         else
             apiSwitchCompat!!.text = "TFLITE"
     }
+
     protected fun showFrameInfo(frameInfo: String) {
         frameValueTextView!!.text = frameInfo
     }
@@ -348,11 +338,11 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
 
     protected open fun processImage() {}
 
-    protected open fun onPreviewSizeChosen(size: Size, rotation: Int){}
+    protected open fun onPreviewSizeChosen(size: Size, rotation: Int) {}
 
-    protected open fun setNumThreads(numThreads: Int){}
+    protected open fun setNumThreads(numThreads: Int) {}
 
-    protected open fun setUseNNAPI(isChecked: Boolean){}
+    protected open fun setUseNNAPI(isChecked: Boolean) {}
 
     companion object {
 

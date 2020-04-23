@@ -2,14 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'bugly'
-apply plugin: 'org.greenrobot.greendao' // apply plugin
+apply plugin: 'org.greenrobot.greendao'// apply plugin
 
-bugly {
-    appId = '47d98f44ec' // 注册时分配的App ID
-    appKey = '67d6bd08-71ba-4b1e-b739-6ddb4d8fa1ec' // 注册时分配的App Key
-    debug = true
-}
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
@@ -69,7 +63,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation files('libs/XHApi.jar')
 
-    implementation project(':module_Extends')
+    api project(':module_Extends')
     implementation project(':module_TTS')
     implementation project(':module_PortMSG')
     implementation project(':module_Office')
