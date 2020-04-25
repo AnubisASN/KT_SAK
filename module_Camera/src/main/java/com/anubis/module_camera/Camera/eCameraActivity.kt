@@ -40,8 +40,6 @@ import android.view.Surface
 import android.view.WindowManager
 import android.widget.CompoundButton
 import android.widget.TextView
-import com.anubis.kt_extends.eBitmap.eYUV420SPToARGB8888
-import com.anubis.kt_extends.eBitmap.eYUV420ToARGB8888
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_camera.R
@@ -53,24 +51,21 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
     protected var previewHeight = 0
     private var handler: Handler? = null
     private var handlerThread: HandlerThread? = null
-    private var useCamera2API: Boolean = false
-    private var isProcessingFrame = false
+    open var useCamera2API: Boolean = false
+    private var isProcess = false
     private val yuvBytes = arrayOfNulls<ByteArray>(3)
-    internal var rgbBytes: IntArray? = null
-    protected var luminanceStride: Int = 0
     private var postInferenceCallback: Runnable? = null
-    private var imageConverter: Runnable? = null
     protected var frameValueTextView: TextView? = null
     protected var cropValueTextView: TextView? = null
     protected var inferenceTimeTextView: TextView? = null
     private val apiSwitchCompat: SwitchCompat? = null
 
-    open val eFrameLayoutId=R.id.fl_camera_ontainer
-    open val eFragmentLayout: Int= R.layout.fragment_camera
-    open val eActivityLayout:Int=R.layout.activity_camera
+    open val eFrameLayoutId = R.id.fl_camera_ontainer
+    //相机预览控件
+    open val eFragmentLayout: Int = R.layout.fragment_camera
+    //activity界面
+    open val eActivityLayout: Int = R.layout.activity_camera
     open val eDesiredPreviewFrameSize: Size = Size(640, 480)
-    protected val luminance: ByteArray
-        get() = yuvBytes[0]!!
 
     protected val screenOrientation: Int
         get() {
@@ -81,7 +76,7 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
                 else -> return 0
             }
         }
-
+    protected val eGetYuvBytes: ByteArray? get() = yuvBytes[0]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(null)
@@ -90,87 +85,58 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
         setFragment()
     }
 
-    protected fun getRgbBytes(): IntArray? {
-        imageConverter!!.run()
-        return rgbBytes
-    }
 
-    /** Callback for android.hardware.Camera API  */
+    /** android.hardware.Camera API 的预览回调 */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     override fun onPreviewFrame(bytes: ByteArray, camera: Camera) {
-        if (isProcessingFrame) {
-            eLog("Dropping frame!")
-            return
-        }
-
+        eLog("eOnPreviewFrame")
         try {
-            // Initialize the storage bitmaps once when the resolution is known.
-            if (rgbBytes == null) {
-                val previewSize = camera.parameters.previewSize
-                previewHeight = previewSize.height
-                previewWidth = previewSize.width
-                rgbBytes = IntArray(previewWidth * previewHeight)
-                onPreviewSizeChosen(Size(previewSize.width, previewSize.height), 90)
-            }
+            val previewSize = camera.parameters.previewSize
+            previewHeight = previewSize.height
+            previewWidth = previewSize.width
+            onPreviewSizeChosen(Size(previewSize.width, previewSize.height), screenOrientation)
         } catch (e: Exception) {
             e.eLogE("Exception!")
             return
         }
-
-        isProcessingFrame = true
         yuvBytes[0] = bytes
-        luminanceStride = previewWidth
-
-        imageConverter = Runnable { eYUV420SPToARGB8888(bytes, previewWidth, previewHeight, rgbBytes!!) }
-
         postInferenceCallback = Runnable {
             camera.addCallbackBuffer(bytes)
-            isProcessingFrame = false
+            isProcess = true
         }
-        processImage()
+        if (!isProcess) {
+            eLog("等待图片获取指令")
+            return
+        }
+        processImage(bytes)
     }
 
-    /** Callback for Camera2 API  */
+    /**  Camera2 API 的预览回调 */
     override fun onImageAvailable(reader: ImageReader) {
+        eLog("onImageAvailable")
         // We need wait until we have some size from onPreviewSizeChosen
         if (previewWidth == 0 || previewHeight == 0) {
             return
         }
-        if (rgbBytes == null) {
-            rgbBytes = IntArray(previewWidth * previewHeight)
-        }
         try {
             val image = reader.acquireLatestImage() ?: return
 
-            if (isProcessingFrame) {
-                image.close()
-                return
-            }
-            isProcessingFrame = true
+            isProcess = false
             Trace.beginSection("imageAvailable")
             val planes = image.planes
             fillBytes(planes, yuvBytes)
-            luminanceStride = planes[0].rowStride
-            val uvRowStride = planes[1].rowStride
-            val uvPixelStride = planes[1].pixelStride
-            imageConverter = Runnable {
-                eYUV420ToARGB8888(
-                        yuvBytes[0]!!,
-                        yuvBytes[1]!!,
-                        yuvBytes[2]!!,
-                        previewWidth,
-                        previewHeight,
-                        luminanceStride,
-                        uvRowStride,
-                        uvPixelStride,
-                        rgbBytes!!)
-            }
-
+//            luminanceStride = planes[0].rowStride
+//            val uvRowStride = planes[1].rowStride
+//            val uvPixelStride = planes[1].pixelStride
             postInferenceCallback = Runnable {
                 image.close()
-                isProcessingFrame = false
+                isProcess = true
             }
-            processImage()
+            if (!isProcess) {
+                image.close()
+                return
+            }
+//            processImage(yuvBytes)
         } catch (e: Exception) {
             e.eLogE("Exception!")
             Trace.endSection()
@@ -273,7 +239,9 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
         return null
     }
 
+    /*设置相机预览*/
     val cameraId = "0"// chooseCamera()
+
     protected fun setFragment() {
         var fragment: Fragment? = null
         if (useCamera2API) {
@@ -282,7 +250,7 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
                         override fun onPreviewSizeChosen(size: Size, cameraRotation: Int) {
                             previewHeight = size.height
                             previewWidth = size.width
-                            this@eCameraActivity.onPreviewSizeChosen(size, 0)
+                            this.onPreviewSizeChosen(size, cameraRotation)
                         }
                     },
                     this,
@@ -310,8 +278,8 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
         }
     }
 
-    protected fun readyForNextImage() {
-        if (postInferenceCallback != null) {
+    protected fun eReadyForNextImage() {
+        if (postInferenceCallback != null ) {
             postInferenceCallback!!.run()
         }
     }
@@ -336,8 +304,7 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
         inferenceTimeTextView!!.text = inferenceTime
     }
 
-    protected open fun processImage() {}
-
+    protected open fun processImage(byteArray: ByteArray) {}
     protected open fun onPreviewSizeChosen(size: Size, rotation: Int) {}
 
     protected open fun setNumThreads(numThreads: Int) {}

@@ -16,20 +16,19 @@
 
 package com.anubis.module_camera.Camera
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Matrix
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
-import android.util.Size
-import com.anubis.kt_extends.eLog
-import com.anubis.kt_extends.eShowTip
 import com.anubis.module_camera.R
 import kotlinx.android.synthetic.main.test_gui.*
 import org.jetbrains.anko.imageBitmap
 import org.jetbrains.anko.onClick
+import android.hardware.Camera
+import android.util.Size
+import android.view.View
+import com.anubis.kt_extends.eBitmap
+import com.anubis.kt_extends.eLog
 
 
 /**
@@ -37,23 +36,47 @@ import org.jetbrains.anko.onClick
  * objects.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class testCameraGUI : eCameraActivity(), OnImageAvailableListener {
-    override val eActivityLayout: Int
-        get() = R.layout.test_gui
-    override val eFrameLayoutId: Int
-        get() = R.id.test_container
+class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickListener {
+
+
+    override var useCamera2API: Boolean = true
+    override val eActivityLayout: Int = R.layout.test_gui
+    override val eFrameLayoutId: Int = R.id.test_container
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        test_button.onClick {
-            eShowTip("点击了拍照")
-            val rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888)
-           val croppedBitmap = Bitmap.createBitmap(300, 300, Bitmap.Config.ARGB_8888)
+        test_button.setOnClickListener(this)
+        iv_photo.setOnClickListener(this)
+        iv_image.setOnClickListener(this)
+    }
 
-            rgbFrameBitmap!!.setPixels(rgbBytes, 0, previewWidth, 0, 0, previewWidth, previewHeight)
-            val canvas = Canvas(croppedBitmap!!)
-            canvas.drawBitmap(rgbFrameBitmap, Matrix(), null)
-            imageView.imageBitmap = croppedBitmap
+    override fun onClick(v: View) {
+        when (v.id) {
+            iv_image.id -> {
+                eReadyForNextImage()
+                eLog("iv_image")
+            }
+            test_button.id -> {
+                eReadyForNextImage()
+                val bitmap = eBitmap.eByteArrayToBitmp(eGetYuvBytes!!, previewWidth, previewHeight, rotate = 90f)
+                iv_photo.imageBitmap = bitmap
+                eLog("test_button")
+            }
         }
+    }
+
+    override fun onPreviewSizeChosen(size: Size, rotation: Int) {
+        eLog("size:$size")
+    }
+
+    override fun processImage(bytes: ByteArray) {
+        val bitmap = eBitmap.eByteArrayToBitmp(bytes, previewWidth, previewHeight, rotate = 90f)
+//        val     rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888)
+//        eBitmap.eYUV420SPToARGB8888(byteArray, previewWidth, previewHeight, rgbBytes!!)
+//        getRgbBytes()
+//        rgbFrameBitmap!!.setPixels(rgbBytes, 0, previewWidth, 0, 0, previewWidth, previewHeight)
+        iv_image.imageBitmap = bitmap
+        eReadyForNextImage()
+
     }
 }

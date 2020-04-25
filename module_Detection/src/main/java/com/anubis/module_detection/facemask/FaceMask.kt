@@ -51,8 +51,8 @@ constructor(assetManager: AssetManager) {
     @SuppressLint("UseSparseArrays")
     fun detectFaceMasks(bitmap: Bitmap): Vector<Box>? {
         interpreter?:return null
-       val head=  Bitmap.createScaledBitmap(bitmap,250,200, true);
-        val len = 4336
+       val head=  Bitmap.createScaledBitmap(bitmap,INPUT_IMAGE_SIZE,INPUT_IMAGE_SIZE, true);
+        val len = 5972
         val ddims = intArrayOf(1, INPUT_IMAGE_SIZE, INPUT_IMAGE_SIZE, 3)
         val datasets = Array(ddims[0]) { Array(ddims[1]) { Array(ddims[2]) { FloatArray(ddims[3]) } } }
         datasets[0] = ImageUtils.normalizeImage(head)

@@ -26,17 +26,12 @@
         android:id="@+id/test_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Camera.eCameraActivity">
+        tools:context=".Camera.eCameraActivity"
+        tools:layout_editor_absoluteX="-87dp"
+        tools:layout_editor_absoluteY="0dp">
 
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="120dp"
-        android:layout_height="154dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:color/holo_red_dark" />
     <Button
         android:id="@+id/test_button"
         android:layout_width="match_parent"
@@ -48,5 +43,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_photo"
+        android:layout_width="120dp"
+        android:layout_height="155dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:color/holo_red_dark" />
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="120dp"
+        android:layout_height="155dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:color/holo_blue_bright" />
 
 </android.support.constraint.ConstraintLayout>
