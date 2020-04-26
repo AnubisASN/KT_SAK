@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import com.anubis.kt_extends.eAssets.eAssetsToFile
 import com.anubis.kt_extends.eAssetsToFile
 import com.anubis.kt_extends.eDevice
 import com.anubis.kt_extends.eLog

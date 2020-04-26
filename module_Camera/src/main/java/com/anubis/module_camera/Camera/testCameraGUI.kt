@@ -38,7 +38,7 @@ import com.anubis.kt_extends.eLog
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickListener {
 
-
+    override val screenOrientation: Int = 90
     override var useCamera2API: Boolean = true
     override val eActivityLayout: Int = R.layout.test_gui
     override val eFrameLayoutId: Int = R.id.test_container
@@ -66,7 +66,7 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
     }
 
     override fun onPreviewSizeChosen(size: Size, rotation: Int) {
-        eLog("size:$size")
+        eLog("size:$size--$rotation")
     }
 
     override fun processImage(bytes: ByteArray) {

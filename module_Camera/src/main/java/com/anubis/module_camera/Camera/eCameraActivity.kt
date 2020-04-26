@@ -67,7 +67,7 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
     open val eActivityLayout: Int = R.layout.activity_camera
     open val eDesiredPreviewFrameSize: Size = Size(640, 480)
 
-    protected val screenOrientation: Int
+    open val screenOrientation: Int
         get() {
             when (windowManager.defaultDisplay.rotation) {
                 Surface.ROTATION_270 -> return 270
@@ -94,7 +94,8 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
             val previewSize = camera.parameters.previewSize
             previewHeight = previewSize.height
             previewWidth = previewSize.width
-            onPreviewSizeChosen(Size(previewSize.width, previewSize.height), screenOrientation)
+            camera.setDisplayOrientation(screenOrientation)
+            onPreviewSizeChosen(Size(previewWidth, previewHeight), screenOrientation)
         } catch (e: Exception) {
             e.eLogE("Exception!")
             return
@@ -120,9 +121,6 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
         }
         try {
             val image = reader.acquireLatestImage() ?: return
-
-            isProcess = false
-            Trace.beginSection("imageAvailable")
             val planes = image.planes
             fillBytes(planes, yuvBytes)
 //            luminanceStride = planes[0].rowStride
@@ -139,11 +137,9 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
 //            processImage(yuvBytes)
         } catch (e: Exception) {
             e.eLogE("Exception!")
-            Trace.endSection()
             return
         }
 
-        Trace.endSection()
     }
 
     @Synchronized
@@ -250,7 +246,7 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
                         override fun onPreviewSizeChosen(size: Size, cameraRotation: Int) {
                             previewHeight = size.height
                             previewWidth = size.width
-                            this.onPreviewSizeChosen(size, cameraRotation)
+                            this@eCameraActivity.onPreviewSizeChosen(size, cameraRotation)
                         }
                     },
                     this,
