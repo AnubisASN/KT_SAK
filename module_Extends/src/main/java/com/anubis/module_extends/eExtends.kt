@@ -45,6 +45,7 @@ import org.json.JSONObject
 import java.io.*
 import java.lang.Process
 import java.net.*
+import java.nio.ByteBuffer
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import java.security.MessageDigest
@@ -973,7 +974,20 @@ object eBitmap {
             System.gc() // 提醒系统及时回收
         }
     }
+    //Bitmap镜像水平翻转
+    fun eBitmapHorizontalFlip(bitmap: Bitmap):Bitmap{
+        val matrix=Matrix()
+        matrix.postScale(-1f,1f)
+        return Bitmap.createBitmap(bitmap,0,0,bitmap.width,bitmap.height,matrix,true)
+    }
 
+    //Bitmap转ByteArray工具
+    fun eBitmapToByteArray(bitmap: Bitmap): ByteArray? {
+       val bytes= bitmap.byteCount
+        val buffer=ByteBuffer.allocate(bytes)
+        bitmap.copyPixelsFromBuffer(buffer)
+        return buffer.array()
+    }
     //Bitmap转Base64工具
     fun eBitmapToBase64(bitmap: Bitmap): String? {
         var baos: ByteArrayOutputStream? = null
@@ -1011,14 +1025,14 @@ object eBitmap {
     }
 
     //NV21 Bytes字节转Bitmap
-    fun eByteArrayToBitmp(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect = Rect(0, 0, width, height), rotate: Float = 0f, quality: Int = 80): Bitmap? {
+    fun eByteArrayToBitmp(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect = Rect(0, 0, width, height), rotate: Float = 0f, quality: Int = 80,isFlip: Boolean=false): Bitmap? {
         var mBitmap: Bitmap? = null
         try {
             val image = YuvImage(mImageNV21, ImageFormat.NV21, width, height, null)
             val stream = ByteArrayOutputStream()
             image.compressToJpeg(rect, quality, stream)
             val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
-            mBitmap = eRotateBitmap(bmp, rotate)
+            mBitmap = eRotateFlipBitmap(bmp, rotate,isFlip)
             stream.close()
 //            eGcBitmap(bmp)
         } catch (e: Exception) {
@@ -1055,7 +1069,7 @@ object eBitmap {
     }
 
     //图片旋转
-    fun eRotateBitmap(bitmap: Bitmap?, rotate: Float = 0f): Bitmap? {
+    fun eRotateFlipBitmap(bitmap: Bitmap?, rotate: Float = 0f,isFlip:Boolean=false): Bitmap? {
         if (bitmap == null) {
             return null
         }
@@ -1063,6 +1077,8 @@ object eBitmap {
         val height = bitmap.height
         val matrix = Matrix()
         matrix.setRotate(rotate)
+        if (isFlip)
+            matrix.postScale(-1f,1f)
         // 围绕原地进行旋转
         val newBM = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false)
         if (newBM == bitmap) {
@@ -1204,7 +1220,6 @@ object eBitmap {
 
             for (i in 0 until width) {
                 val uv_offset = pUV + (i shr 1) * uvPixelStride
-
                 out[yp++] = eYUV2RGB(0xff and yData[pY + i].toInt(), 0xff and uData[uv_offset].toInt(), 0xff and vData[uv_offset].toInt())
             }
         }

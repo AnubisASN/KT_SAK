@@ -20,10 +20,13 @@ import android.Manifest
 import android.app.Fragment
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.hardware.Camera
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
+import android.media.Image
 import android.media.Image.Plane
 import android.media.ImageReader
 import android.media.ImageReader.OnImageAvailableListener
@@ -40,9 +43,15 @@ import android.view.Surface
 import android.view.WindowManager
 import android.widget.CompoundButton
 import android.widget.TextView
+import com.anubis.kt_extends.eBitmap
+import com.anubis.kt_extends.eBitmap.eYUV420SPToARGB8888
+import com.anubis.kt_extends.eBitmap.eYUV420ToARGB8888
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_camera.R
+import com.tencent.bugly.proguard.an
+import java.nio.ByteBuffer
+import java.util.*
 
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -66,7 +75,7 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
     //activity界面
     open val eActivityLayout: Int = R.layout.activity_camera
     open val eDesiredPreviewFrameSize: Size = Size(640, 480)
-
+    //camera1  预览旋转
     open val screenOrientation: Int
         get() {
             when (windowManager.defaultDisplay.rotation) {
@@ -100,7 +109,6 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
             e.eLogE("Exception!")
             return
         }
-        yuvBytes[0] = bytes
         postInferenceCallback = Runnable {
             camera.addCallbackBuffer(bytes)
             isProcess = true
@@ -109,34 +117,67 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
             eLog("等待图片获取指令")
             return
         }
-        processImage(bytes)
+        yuvBytes[0] = bytes
+        when (returnType) {
+
+            TYPE.ByteArray -> {
+                processImage(bytes)
+            }
+            else -> {
+                processImage(eBitmap.eByteArrayToBitmp(bytes, previewWidth, previewHeight, rotate = bitmapRotation, isFlip = isFlip))
+            }
+        }
     }
 
     /**  Camera2 API 的预览回调 */
-    override fun onImageAvailable(reader: ImageReader) {
+    private var inArrays: IntArray? = null
+
+    public override fun onImageAvailable(reader: ImageReader) {
         eLog("onImageAvailable")
-        // We need wait until we have some size from onPreviewSizeChosen
         if (previewWidth == 0 || previewHeight == 0) {
             return
         }
         try {
             val image = reader.acquireLatestImage() ?: return
-            val planes = image.planes
-            fillBytes(planes, yuvBytes)
-//            luminanceStride = planes[0].rowStride
-//            val uvRowStride = planes[1].rowStride
-//            val uvPixelStride = planes[1].pixelStride
             postInferenceCallback = Runnable {
-                image.close()
                 isProcess = true
             }
             if (!isProcess) {
                 image.close()
                 return
             }
-//            processImage(yuvBytes)
+            isProcess = false
+            if (inArrays == null) {
+                inArrays = IntArray(previewWidth * previewHeight)
+            }
+            val planes = image.planes
+            fillBytes(planes, yuvBytes)
+            val yRowStride = planes[0].rowStride
+            val uvRowStride = planes[1].rowStride
+            val uvPixelStride = planes[1].pixelStride
+            eYUV420ToARGB8888(
+                    yuvBytes[0]!!,
+                    yuvBytes[1]!!,
+                    yuvBytes[2]!!,
+                    previewWidth,
+                    previewHeight,
+                    yRowStride,
+                    uvRowStride,
+                    uvPixelStride,
+                    inArrays!!)
+            image.close()
+            val bitmap = Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888)
+            bitmap!!.setPixels(inArrays, 0, previewWidth, 0, 0, previewWidth, previewHeight)
+            when (returnType) {
+                TYPE.ByteArray -> {
+                    processImage(eBitmap.eBitmapToByteArray(bitmap))
+                }
+                else -> {
+                    processImage(eBitmap.eRotateFlipBitmap(bitmap, bitmapRotation, isFlip))
+                }
+            }
+
         } catch (e: Exception) {
-            e.eLogE("Exception!")
             return
         }
 
@@ -236,7 +277,7 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
     }
 
     /*设置相机预览*/
-    val cameraId = "0"// chooseCamera()
+    open val cameraId = "0"// chooseCamera()
 
     protected fun setFragment() {
         var fragment: Fragment? = null
@@ -274,8 +315,15 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
         }
     }
 
-    protected fun eReadyForNextImage() {
-        if (postInferenceCallback != null ) {
+    private var returnType: Any = TYPE.Bitmap
+    private var bitmapRotation = 0f
+    private var isFlip = false
+    //camera1 bitmapRotation  拍照旋转
+    protected fun eReadyForNextImage(type: TYPE = TYPE.Bitmap, bitmapRotation: Float = 0f, isFlip: Boolean = false) {
+        returnType = type
+        this.isFlip = isFlip
+        this.bitmapRotation = bitmapRotation
+        if (postInferenceCallback != null) {
             postInferenceCallback!!.run()
         }
     }
@@ -300,7 +348,9 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
         inferenceTimeTextView!!.text = inferenceTime
     }
 
-    protected open fun processImage(byteArray: ByteArray) {}
+    protected open fun processImage(bitmap: Bitmap?) {}
+    protected open fun processImage(intArray: IntArray?) {}
+    protected open fun processImage(byteArray: ByteArray?) {}
     protected open fun onPreviewSizeChosen(size: Size, rotation: Int) {}
 
     protected open fun setNumThreads(numThreads: Int) {}
@@ -321,5 +371,8 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
             }
             return true
         }
+
+        enum class TYPE { Bitmap, IntArray, ByteArray, File }
     }
+
 }

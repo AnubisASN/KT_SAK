@@ -16,6 +16,7 @@
 
 package com.anubis.module_camera.Camera
 
+import android.graphics.Bitmap
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.Build
 import android.os.Bundle
@@ -29,6 +30,7 @@ import android.util.Size
 import android.view.View
 import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eLog
+import com.tencent.bugly.proguard.t
 
 
 /**
@@ -53,13 +55,10 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
     override fun onClick(v: View) {
         when (v.id) {
             iv_image.id -> {
-                eReadyForNextImage()
                 eLog("iv_image")
             }
             test_button.id -> {
-                eReadyForNextImage()
-                val bitmap = eBitmap.eByteArrayToBitmp(eGetYuvBytes!!, previewWidth, previewHeight, rotate = 90f)
-                iv_photo.imageBitmap = bitmap
+                eReadyForNextImage(bitmapRotation = 90f,isFlip = true)
                 eLog("test_button")
             }
         }
@@ -69,14 +68,8 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
         eLog("size:$size--$rotation")
     }
 
-    override fun processImage(bytes: ByteArray) {
-        val bitmap = eBitmap.eByteArrayToBitmp(bytes, previewWidth, previewHeight, rotate = 90f)
-//        val     rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Bitmap.Config.ARGB_8888)
-//        eBitmap.eYUV420SPToARGB8888(byteArray, previewWidth, previewHeight, rgbBytes!!)
-//        getRgbBytes()
-//        rgbFrameBitmap!!.setPixels(rgbBytes, 0, previewWidth, 0, 0, previewWidth, previewHeight)
-        iv_image.imageBitmap = bitmap
-        eReadyForNextImage()
-
+    override fun   processImage(bitmap: Bitmap?) {
+        iv_image.post {iv_image .imageBitmap = bitmap }
+//        eReadyForNextImage(bitmapRotation = 90f)
     }
 }
