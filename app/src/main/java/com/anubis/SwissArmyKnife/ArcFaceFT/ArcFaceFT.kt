@@ -2,26 +2,18 @@ package com.anubis.SwissArmyKnife
 
 import android.app.Activity
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
-import android.media.Image
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.anubis.SwissArmyKnife.R.id.imageView
-import com.anubis.kt_extends.eBitmap
-import com.anubis.kt_extends.eImage
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_arcfaceft.eArcFaceFT
-import com.anubis.module_detection.facemask.FaceMask
-import com.anubis.module_detection.util.ImageUtils
+import com.anubis.module_detection.facemask.eFaceMask
 import kotlinx.android.synthetic.main.activity_camera.*
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.textColor
 import java.io.IOException
-import java.util.*
 
 
 /**
@@ -42,7 +34,7 @@ import java.util.*
 @Route(path = "/face/ArcFaceFT")
 class ArcFaceFT : Activity() {
     private var mRunnable: Runnable? = null
-    private var facemask: FaceMask? = null
+    private var mFacemask: eFaceMask? = null
     private var frameToCropTransform: Matrix? = null
     private var croppedBitmap: Bitmap? = null
     private  var mRotate=270f
@@ -60,7 +52,7 @@ class ArcFaceFT : Activity() {
             assets.locales.forEach {
                 it.eLog("assets")
             }
-            facemask = FaceMask(this.resources.assets)
+            mFacemask = eFaceMask(this.resources.assets)
         } catch (e: IOException) {
             e.eLogE("口罩检测初始化失败")
         }
@@ -78,8 +70,8 @@ class ArcFaceFT : Activity() {
 //                val `is` = keepOutDetection(bitmap)
                 async {
                     try {
-                        val facemask_boxes = facemask?.detectFaceMasks(bitmap!!)?:return@async
-                      val isMask=   facemask?.MasksDispose(facemask_boxes)?:return@async
+                        val facemask_boxes = mFacemask?.detectFaceMasks(bitmap!!)?:return@async
+                      val isMask=   mFacemask?.MasksDispose(facemask_boxes)?:return@async
                         tvHint.post {
                             tvHint.text = if (isMask) {
                                 tvHint.textColor = Color.GREEN

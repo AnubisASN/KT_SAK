@@ -20,11 +20,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    aaptOptions {
+        noCompress "tflite"
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api project(':module_Extends')
+    implementation project(path: ':module_TensorFlow')
+    implementation project(path: ':module_Detection')
     //    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

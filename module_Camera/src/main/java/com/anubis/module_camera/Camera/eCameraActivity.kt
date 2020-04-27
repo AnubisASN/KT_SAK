@@ -133,7 +133,6 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
     private var inArrays: IntArray? = null
 
     public override fun onImageAvailable(reader: ImageReader) {
-        eLog("onImageAvailable")
         if (previewWidth == 0 || previewHeight == 0) {
             return
         }

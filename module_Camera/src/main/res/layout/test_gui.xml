@@ -33,16 +33,39 @@
     </FrameLayout>
 
     <Button
-        android:id="@+id/test_button"
-        android:layout_width="match_parent"
+        android:id="@+id/bt_body"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="拍照"
+        android:text="物体识别"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/bt_make"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="口罩检测"
+        app:layout_constraintBottom_toBottomOf="@+id/bt_body"
+        app:layout_constraintEnd_toEndOf="@+id/test_container" />
+
+    <ScrollView
+        android:id="@+id/sv_Hint"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        app:layout_constraintBottom_toTopOf="@+id/bt_body"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_image">
+
+        <TextView
+            android:id="@+id/tv_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+    </ScrollView>
 
     <ImageView
         android:id="@+id/iv_photo"

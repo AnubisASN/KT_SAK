@@ -21,7 +21,7 @@ import java.util.Vector
 /**
  * 口罩检测
  */
-class FaceMask
+class eFaceMask
 constructor(assetManager: AssetManager) {
 
     private var anchors: Array<FloatArray>? = null

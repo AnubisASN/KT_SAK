@@ -19,14 +19,14 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        tools:replace="android:theme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.anubis.module_camera.Camera.testCameraGUI"
-            >
+        <activity android:name=".Camera.testCameraGUI">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-    </application>
+        </application>
 
 </manifest>

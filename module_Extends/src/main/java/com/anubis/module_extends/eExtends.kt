@@ -55,6 +55,8 @@ import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.Error
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.experimental.and
 
 
@@ -84,18 +86,19 @@ fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
  */
 var eIsTag: Boolean = true
 
+
 fun Any?.eIsBaseType() = this is String || this is Int || this is Int || this is Log || this is Double || this is Float || this is Char || this is Short || this is Boolean || this is Byte
 
 
-fun <T> T?.eLog(hint: Any? = "", TAG: String = "TAGd"): T? {
+fun <T> T.eLog(hint: Any? = "", TAG: String = "TAGd"): T {
     if (eIsTag)
         Log.d(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
 
 
-fun <T> T?.eLogI(hint: Any? = "", TAG: String = "TAGi"): T? {
-    Log.d(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
+fun <T> T.eLogI(hint: Any? = "", TAG: String = "TAGi"): T {
+    Log.i(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
 

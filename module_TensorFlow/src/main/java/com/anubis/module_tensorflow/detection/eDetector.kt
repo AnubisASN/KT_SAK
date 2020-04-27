@@ -33,6 +33,7 @@ import com.anubis.module_tensorflow.detection.env.BorderedText
 import com.anubis.module_tensorflow.detection.tflite.Classifier
 import com.anubis.module_tensorflow.detection.tflite.TFLiteObjectDetectionAPIModel
 import com.anubis.module_tensorflow.detection.tracking.MultiBoxTracker
+import java.io.FileNotFoundException
 
 import java.io.IOException
 
@@ -92,14 +93,22 @@ object eDetector {
             e.eLogE("Exception initializing classifier!")
             context.eShowTip("Classifier could not be initialized")
             return false
+        }catch (e: FileNotFoundException){
+            if (e.toString().contains("it is probably compressed")){
+                eLogE("请在Build.gradle文件Android{}内添加：" +
+                        "    aaptOptions {\n" +
+                        "        noCompress \"tflite\"\n" +
+                        "    }")
+            }
+            return false
         }
 
     }
     fun eDetector(deBitmap: Bitmap,minConfidence:Float=MINIMUM_CONFIDENCE_TF_OD_API): ArrayList<Classifier.Recognition> {
-        val results = detector!!.recognizeImage(deBitmap)
-        val mResult= arrayListOf<Classifier.Recognition>()
+        val limitBitmap=  Bitmap.createScaledBitmap(deBitmap,300,300, true);
+        val results = detector!!.recognizeImage(limitBitmap).eLog("recognizeImage")
+        val mResult= arrayListOf<Classifier.Recognition>().eLog("arrayListOf")
         results.forEach {
-            eLog("id:${it.id}--confidence:${it.confidence}--location:${it.location}--title:${it.title}")
             if (  it.confidence >= minConfidence) {
                 mResult.add(it)
             }
