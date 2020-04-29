@@ -12,6 +12,7 @@ android {
         versionName rootProject.ext.versionName
         multiDexEnabled=true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -28,7 +29,8 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api project(':module_Extends')
-    implementation project(path: ':module_TensorFlow')
+    api project(':module_TensorFlow')
+//    api project(':module_Detection')
     implementation project(path: ':module_Detection')
     //    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

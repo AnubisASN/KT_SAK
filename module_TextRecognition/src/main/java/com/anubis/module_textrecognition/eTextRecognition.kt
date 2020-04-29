@@ -6,7 +6,7 @@ import android.graphics.Bitmap
 import android.os.Environment
 import com.googlecode.tesseract.android.TessBaseAPI
 import android.os.Environment.getExternalStorageDirectory
-import com.anubis.kt_extends.eAssetsToFile
+import com.anubis.kt_extends.eAssets.eAssetsToFile
 import com.anubis.kt_extends.eFile
 import com.anubis.kt_extends.eShowTip
 import org.jetbrains.anko.custom.async

@@ -1,0 +1,26 @@
+{
+  "buildFiles": [
+    "/super/WorkSpace/KT_SAK/module_Detection/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a --target clean"
+  ],
+  "libraries": {
+    "MNN_CL-Debug-arm64-v8a": {
+      "artifactName": "MNN_CL",
+      "abi": "arm64-v8a",
+      "output": "/super/WorkSpace/KT_SAK/module_Detection/src/main/jniLibs/arm64-v8a/libMNN_CL.so"
+    },
+    "MNN-Debug-arm64-v8a": {
+      "artifactName": "MNN",
+      "abi": "arm64-v8a",
+      "output": "/super/WorkSpace/KT_SAK/module_Detection/src/main/jniLibs/arm64-v8a/libMNN.so"
+    },
+    "facedetect-Debug-arm64-v8a": {
+      "artifactName": "facedetect",
+      "buildCommand": "/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a --target facedetect",
+      "abi": "arm64-v8a",
+      "output": "/super/WorkSpace/KT_SAK/module_Detection/build/intermediates/cmake/debug/obj/arm64-v8a/libfacedetect.so"
+    }
+  }
+}

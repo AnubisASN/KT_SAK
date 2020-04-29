@@ -1,0 +1,74 @@
+{
+  "variant": {
+    "module": {
+      "rootBuildGradleFolder": "/super/WorkSpace/KT_SAK",
+      "sdkFolder": "/home/anubis/extend/SDK",
+      "isNativeCompilerSettingsCacheEnabled": false,
+      "isBuildOnlyTargetAbiEnabled": true,
+      "splitsAbiFilterSet": [],
+      "intermediatesFolder": "/super/WorkSpace/KT_SAK/module_Detection/build/intermediates",
+      "gradleModulePathName": ":module_Detection",
+      "moduleRootFolder": "/super/WorkSpace/KT_SAK/module_Detection",
+      "makeFile": "/super/WorkSpace/KT_SAK/module_Detection/CMakeLists.txt",
+      "buildSystem": "CMAKE",
+      "compilerSettingsCacheFolder": "/super/WorkSpace/KT_SAK/.cxx",
+      "cxxFolder": "/super/WorkSpace/KT_SAK/module_Detection/.cxx",
+      "ndkFolder": "/home/anubis/extend/SDK/ndk-bundle",
+      "ndkVersion": "21.1.6352462",
+      "ndkSupportedAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "cmakeToolchainFile": "."
+    },
+    "buildSystemArgumentList": [
+      "-DANDROID_STL\u003dc++_shared",
+      "-DANDROID_ARM_NEON\u003dTRUE",
+      "-DANDROID_PLATFORM\u003dandroid-21",
+      "-DMNN_OPENCL\u003dtrue",
+      "-DMNN_OPENGL\u003dtrue"
+    ],
+    "cFlagList": [],
+    "cppFlagsList": [],
+    "variantName": "debug",
+    "soFolder": "/super/WorkSpace/KT_SAK/module_Detection/build/intermediates/cmake/debug/lib",
+    "objFolder": "/super/WorkSpace/KT_SAK/module_Detection/build/intermediates/cmake/debug/obj",
+    "jsonFolder": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug",
+    "gradleBuildOutputFolder": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cxx/debug",
+    "isDebuggableEnabled": true,
+    "validAbiList": [
+      "ARMEABI_V7A",
+      "ARM64_V8A"
+    ],
+    "buildTargetSet": []
+  },
+  "abi": "ARM64_V8A",
+  "abiPlatformVersion": 19,
+  "cxxBuildFolder": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a",
+  "jsonFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/android_gradle_build.json",
+  "gradleBuildOutputFolder": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cxx/debug/arm64-v8a",
+  "objFolder": "/super/WorkSpace/KT_SAK/module_Detection/build/intermediates/cmake/debug/obj/arm64-v8a",
+  "buildCommandFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/build_command.txt",
+  "buildOutputFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/build_output.txt",
+  "modelOutputFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/build_model.json",
+  "cmake": {
+    "cmakeListsWrapperFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cxx/debug/arm64-v8a/CMakeLists.txt",
+    "toolchainWrapperFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cxx/debug/arm64-v8a/android_gradle_build.toolchain.cmake",
+    "buildGenerationStateFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cxx/debug/arm64-v8a/build_generation_state.json",
+    "cacheKeyFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cxx/debug/arm64-v8a/compiler_cache_key.json",
+    "compilerCacheUseFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cxx/debug/arm64-v8a/compiler_cache_use.json",
+    "compilerCacheWriteFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cxx/debug/arm64-v8a/compiler_cache_write.json",
+    "toolchainSettingsFromCacheFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cxx/debug/arm64-v8a/compiler_settings_cache.cmake",
+    "cmakeWrappingBaseFolder": "."
+  },
+  "jsonGenerationLoggingRecordFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/json_generation_record.json",
+  "compileCommandsJsonFile": "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/compile_commands.json"
+}

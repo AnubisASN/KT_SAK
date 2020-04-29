@@ -30,16 +30,10 @@ import android.util.Base64
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
-import com.anubis.kt_extends.eString.eInterception
-import com.tencent.bugly.proguard.s
-import com.tencent.bugly.proguard.t
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import org.jetbrains.anko.AnkoAsyncContext
 import org.jetbrains.anko.activityManager
-import org.jetbrains.anko.uiThread
 import org.jetbrains.anko.custom.async
 import org.json.JSONObject
 import java.io.*
@@ -55,8 +49,7 @@ import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.Error
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
+import kotlin.collections.ArrayList
 import kotlin.experimental.and
 
 
@@ -84,21 +77,22 @@ fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
 /**
  * Log i e扩展函数------------------------------------------------------------------------------------
  */
-var eIsTag: Boolean = true
-
+var eIsTagD: Boolean = true
+var eIsTagI: Boolean = true
 
 fun Any?.eIsBaseType() = this is String || this is Int || this is Int || this is Log || this is Double || this is Float || this is Char || this is Short || this is Boolean || this is Byte
 
 
 fun <T> T.eLog(hint: Any? = "", TAG: String = "TAGd"): T {
-    if (eIsTag)
+    if (eIsTagD)
         Log.d(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
 
 
 fun <T> T.eLogI(hint: Any? = "", TAG: String = "TAGi"): T {
-    Log.i(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
+    if (eIsTagI)
+        Log.i(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
 
@@ -138,7 +132,6 @@ fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "
                     it.split(" ").forEach {
                         try {
                             val pid = it.replace(" ", "").toInt()
-                            eLog("PID:$pid")
                             eShell.eExecShell("kill $pid")
                             return@coroutineScope
                         } catch (e: Exception) {
@@ -916,12 +909,12 @@ object eBluetooth {
  * eAssets文件扩展类--------------------------------------------------------------------------------------
  */
 object eAssets {
-    //assets文件复制
-    fun eAssetsToFile(context: Context, assetsName: String, copyFilePath: String): Boolean {
+    //assets文件复制 文件夹路径
+    fun eAssetsToFile(context: Context, assetsFilePath: String, copyFilePath: String): Boolean {
         try {
-            if (!File(copyFilePath).exists()) {
-                val inputStream = context.resources.assets.open(assetsName)// assets文件夹下的文件
-                val fileOutputStream = FileOutputStream(copyFilePath)// 保存到本地的文件夹下的文件
+            if (!File(copyFilePath).exists() && eFile.eCheckFile(copyFilePath)) {
+                val inputStream = context.resources.assets.open(assetsFilePath)// assets文件夹下的文件
+                var fileOutputStream = FileOutputStream(copyFilePath)// 保存到本地的文件夹下的文件
                 val buffer = ByteArray(1024)
                 var count = 0
                 while (inputStream.read(buffer).apply { count = this } > 0) {
@@ -977,18 +970,42 @@ object eBitmap {
             System.gc() // 提醒系统及时回收
         }
     }
+
     //Bitmap镜像水平翻转
-    fun eBitmapHorizontalFlip(bitmap: Bitmap):Bitmap{
-        val matrix=Matrix()
-        matrix.postScale(-1f,1f)
-        return Bitmap.createBitmap(bitmap,0,0,bitmap.width,bitmap.height,matrix,true)
+    fun eBitmapHorizontalFlip(bitmap: Bitmap): Bitmap {
+        val matrix = Matrix()
+        matrix.postScale(-1f, 1f)
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    }
+
+    //Bitmap矩形绘制
+    fun eBitmapRect(bitmap: Bitmap, rect: Rect, paint: Paint? = null): Bitmap {
+        return eBitmapRect(bitmap, arrayListOf(rect), paint)
+    }
+
+    fun eBitmapRect(bitmap: Bitmap, rect: ArrayList<Rect>, paint: Paint? = null): Bitmap {
+        val drawBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val mPaint = if (paint == null) {
+            val mPaint = Paint()
+            mPaint.color = Color.GREEN
+            mPaint.style = Paint.Style.STROKE
+            mPaint.strokeWidth = 5f
+            mPaint
+        } else {
+            paint
+        }
+        val canvas = Canvas(drawBitmap)
+        rect.forEach {
+            canvas.drawRect(it, mPaint)
+        }
+        return drawBitmap
     }
 
     //Bitmap转ByteArray工具
-    fun eBitmapToByteArray(bitmap: Bitmap): ByteArray? {
-       val bytes= bitmap.byteCount
-        val buffer=ByteBuffer.allocate(bytes)
-        bitmap.copyPixelsFromBuffer(buffer)
+      fun eBitmapToByteArray(image: Bitmap): ByteArray {
+        val bytes = image.byteCount
+        val buffer = ByteBuffer.allocate(bytes)
+        image.copyPixelsToBuffer(buffer)
         return buffer.array()
     }
     //Bitmap转Base64工具
@@ -1028,14 +1045,14 @@ object eBitmap {
     }
 
     //NV21 Bytes字节转Bitmap
-    fun eByteArrayToBitmp(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect = Rect(0, 0, width, height), rotate: Float = 0f, quality: Int = 80,isFlip: Boolean=false): Bitmap? {
+    fun eByteArrayToBitmp(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect = Rect(0, 0, width, height), rotate: Float = 0f, quality: Int = 80, isFlip: Boolean = false): Bitmap? {
         var mBitmap: Bitmap? = null
         try {
             val image = YuvImage(mImageNV21, ImageFormat.NV21, width, height, null)
             val stream = ByteArrayOutputStream()
             image.compressToJpeg(rect, quality, stream)
             val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
-            mBitmap = eRotateFlipBitmap(bmp, rotate,isFlip)
+            mBitmap = eRotateFlipBitmap(bmp, rotate, isFlip)
             stream.close()
 //            eGcBitmap(bmp)
         } catch (e: Exception) {
@@ -1071,8 +1088,8 @@ object eBitmap {
         }
     }
 
-    //图片旋转
-    fun eRotateFlipBitmap(bitmap: Bitmap?, rotate: Float = 0f,isFlip:Boolean=false): Bitmap? {
+    //图片旋转翻转
+    fun eRotateFlipBitmap(bitmap: Bitmap?, rotate: Float = 0f, isFlip: Boolean = false): Bitmap? {
         if (bitmap == null) {
             return null
         }
@@ -1081,7 +1098,7 @@ object eBitmap {
         val matrix = Matrix()
         matrix.setRotate(rotate)
         if (isFlip)
-            matrix.postScale(-1f,1f)
+            matrix.postScale(-1f, 1f)
         // 围绕原地进行旋转
         val newBM = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false)
         if (newBM == bitmap) {
@@ -1107,6 +1124,34 @@ object eBitmap {
         val isBm = ByteArrayInputStream(baos.toByteArray())
         return BitmapFactory.decodeStream(isBm, null, null)
     }
+
+//    private fun decodeUri(selectedImage: Uri): Bitmap? {
+//        // Decode image size
+//        val o = BitmapFactory.Options()
+//        o.inJustDecodeBounds = true
+//        BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o)
+//
+//        // The new size we want to scale to
+//        val REQUIRED_SIZE = 400
+//
+//        //// Find the correct scale value. It should be the power of 2.
+//        var width_tmp = o.outWidth
+//        var height_tmp = o.outHeight
+//        var scale = 1
+//        while (true) {
+//            if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
+//                break
+//            }
+//            width_tmp /= 2
+//            height_tmp /= 2
+//            scale *= 2
+//        }
+//
+//        //// Decode with inSampleSize
+//        val o2 = BitmapFactory.Options()
+//        o2.inSampleSize = scale
+//        return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2)
+//    }
 
     //Bitmap转文件
     fun eBitmapToFile(bitmap: Bitmap, absPath: String, quality: Int = 80): Boolean {
@@ -1263,6 +1308,7 @@ object eBitmap {
 
         return ySize + uvSize
     }
+
     //获取变换矩阵
     fun eGetTransformationMatrix(
             srcWidth: Int,
@@ -1275,7 +1321,7 @@ object eBitmap {
 
         if (applyRotation != 0) {
             if (applyRotation % 90 != 0) {
-          eLogE("Rotation of $applyRotation % 90 != 0")
+                eLogE("Rotation of $applyRotation % 90 != 0")
             }
 
             // Translate so center of image is at origin.
@@ -1315,6 +1361,7 @@ object eBitmap {
 
         return matrix
     }
+
 }
 
 

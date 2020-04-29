@@ -9,7 +9,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_arcfaceft.eArcFaceFT
-import com.anubis.module_detection.facemask.eFaceMask
+import com.anubis.module_detection.face_mask.eFaceMask
 import kotlinx.android.synthetic.main.activity_camera.*
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.textColor

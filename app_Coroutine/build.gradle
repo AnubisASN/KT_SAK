@@ -26,5 +26,5 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api project(':module_Extends')
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+//    implementation project(path: ':app_facesdk')
 }

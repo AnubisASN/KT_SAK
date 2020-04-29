@@ -1,0 +1,66 @@
+
+{
+	"buildFiles" : [ "/super/WorkSpace/KT_SAK/module_Detection/CMakeLists.txt" ],
+	"cleanCommands" : 
+	[
+		"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a --target clean"
+	],
+	"cppFileExtensions" : [ "cpp" ],
+	"libraries" : 
+	{
+		"MNN-Release-arm64-v8a" : 
+		{
+			"abi" : "arm64-v8a",
+			"artifactName" : "MNN",
+			"buildType" : "release",
+			"output" : "/super/WorkSpace/KT_SAK/module_Detection/src/main/jniLibs/arm64-v8a/libMNN.so",
+			"toolchain" : "6990751234414376785"
+		},
+		"MNN_CL-Release-arm64-v8a" : 
+		{
+			"abi" : "arm64-v8a",
+			"artifactName" : "MNN_CL",
+			"buildType" : "release",
+			"output" : "/super/WorkSpace/KT_SAK/module_Detection/src/main/jniLibs/arm64-v8a/libMNN_CL.so",
+			"toolchain" : "6990751234414376785"
+		},
+		"facedetect-Release-arm64-v8a" : 
+		{
+			"abi" : "arm64-v8a",
+			"artifactName" : "facedetect",
+			"buildCommand" : "/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a --target facedetect",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -DMNN_USE_LOGCAT -Dfacedetect_EXPORTS -I../../../../src/main/cpp/include -I../../../../src/main/cpp  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -std=c++11 -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/super/WorkSpace/KT_SAK/module_Detection/src/main/cpp/Ultra_jni.cpp",
+					"workingDirectory" : "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -DMNN_USE_LOGCAT -Dfacedetect_EXPORTS -I../../../../src/main/cpp/include -I../../../../src/main/cpp  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -std=c++11 -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/super/WorkSpace/KT_SAK/module_Detection/src/main/cpp/UltraFace.cpp",
+					"workingDirectory" : "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a"
+				},
+				
+				{
+					"flags" : "  --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -DMNN_USE_LOGCAT -Dfacedetect_EXPORTS -I../../../../src/main/cpp/include -I../../../../src/main/cpp  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -std=c++11 -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/super/WorkSpace/KT_SAK/module_Detection/src/main/cpp/net.cpp",
+					"workingDirectory" : "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a"
+				}
+			],
+			"output" : "/super/WorkSpace/KT_SAK/module_Detection/build/intermediates/cmake/release/obj/arm64-v8a/libfacedetect.so",
+			"toolchain" : "6990751234414376785"
+		}
+	},
+	"toolchains" : 
+	{
+		"6990751234414376785" : 
+		{
+			"cCompilerExecutable" : "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
+		}
+	}
+}

@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$/module_Detection" />
             <option value="$PROJECT_DIR$/module_Extends" />
             <option value="$PROJECT_DIR$/module_FTP" />
+            <option value="$PROJECT_DIR$/module_FaceSDK" />
             <option value="$PROJECT_DIR$/module_GreenDao" />
             <option value="$PROJECT_DIR$/module_HttpServer" />
             <option value="$PROJECT_DIR$/module_Map" />
@@ -46,6 +47,7 @@
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
+        <option name="testRunner" value="PLATFORM" />
       </GradleProjectSettings>
     </option>
   </component>

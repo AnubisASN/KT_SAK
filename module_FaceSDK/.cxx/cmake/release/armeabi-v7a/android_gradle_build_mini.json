@@ -1,0 +1,26 @@
+{
+  "buildFiles": [
+    "/super/WorkSpace/KT_SAK/module_FaceSDK/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a --target clean"
+  ],
+  "libraries": {
+    "MNN-Release-armeabi-v7a": {
+      "artifactName": "MNN",
+      "abi": "armeabi-v7a",
+      "output": "/super/WorkSpace/KT_SAK/module_FaceSDK/src/main/jniLibs/armeabi-v7a/libMNN.so"
+    },
+    "facedetect-Release-armeabi-v7a": {
+      "artifactName": "facedetect",
+      "buildCommand": "/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a --target facedetect",
+      "abi": "armeabi-v7a",
+      "output": "/super/WorkSpace/KT_SAK/module_FaceSDK/build/intermediates/cmake/release/obj/armeabi-v7a/libfacedetect.so"
+    },
+    "MNN_CL-Release-armeabi-v7a": {
+      "artifactName": "MNN_CL",
+      "abi": "armeabi-v7a",
+      "output": "/super/WorkSpace/KT_SAK/module_FaceSDK/src/main/jniLibs/armeabi-v7a/libMNN_CL.so"
+    }
+  }
+}

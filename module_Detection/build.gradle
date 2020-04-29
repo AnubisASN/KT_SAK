@@ -9,7 +9,13 @@ android {
         versionName rootProject.ext.versionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_STL=c++_shared", "-DANDROID_ARM_NEON=TRUE", "-DANDROID_PLATFORM=android-21",
+                        "-DMNN_OPENCL=true",  "-DMNN_OPENGL=true"
+                abiFilters  'arm64-v8a', 'armeabi-v7a'
+            }
+        }
     }
 
     buildTypes {
@@ -20,7 +26,12 @@ android {
     }
     aaptOptions {
         noCompress "tflite"
-        noCompress "lite"
+        noCompress "mnn"
+    }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
     }
 }
 

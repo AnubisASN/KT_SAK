@@ -1,7 +1,6 @@
 package com.anubis.module_detection.util
 
 import android.content.Context
-import android.content.res.AssetFileDescriptor
 import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,18 +9,15 @@ import android.graphics.Rect
 import android.media.Image
 
 
-import com.anubis.module_detection.facemask.Box
+import com.anubis.module_detection.face_mask.Box
 
 import java.io.FileInputStream
 import java.io.IOException
-import java.io.InputStream
-import java.nio.ByteBuffer
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 
 import java.lang.Math.max
 import java.lang.Math.min
-import kotlin.experimental.and
 
 object ImageUtils {
     // This value is 2 ^ 18 - 1, and is used to clamp the RGB values before their ranges

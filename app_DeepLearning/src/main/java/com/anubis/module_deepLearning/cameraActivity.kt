@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.anubis.app_opencv.R
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_arcfaceft.eArcFaceFT
 import kotlinx.android.synthetic.main.activity_camera.*

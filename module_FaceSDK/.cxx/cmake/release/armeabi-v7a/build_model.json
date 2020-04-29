@@ -1,0 +1,74 @@
+{
+  "variant": {
+    "module": {
+      "rootBuildGradleFolder": "/super/WorkSpace/KT_SAK",
+      "sdkFolder": "/home/anubis/extend/SDK",
+      "isNativeCompilerSettingsCacheEnabled": false,
+      "isBuildOnlyTargetAbiEnabled": true,
+      "splitsAbiFilterSet": [],
+      "intermediatesFolder": "/super/WorkSpace/KT_SAK/module_FaceSDK/build/intermediates",
+      "gradleModulePathName": ":module_FaceSDK",
+      "moduleRootFolder": "/super/WorkSpace/KT_SAK/module_FaceSDK",
+      "makeFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/CMakeLists.txt",
+      "buildSystem": "CMAKE",
+      "compilerSettingsCacheFolder": "/super/WorkSpace/KT_SAK/.cxx",
+      "cxxFolder": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx",
+      "ndkFolder": "/home/anubis/extend/SDK/ndk-bundle",
+      "ndkVersion": "21.1.6352462",
+      "ndkSupportedAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "cmakeToolchainFile": "."
+    },
+    "buildSystemArgumentList": [
+      "-DANDROID_STL\u003dc++_shared",
+      "-DANDROID_ARM_NEON\u003dTRUE",
+      "-DANDROID_PLATFORM\u003dandroid-21",
+      "-DMNN_OPENCL\u003dtrue",
+      "-DMNN_OPENGL\u003dtrue"
+    ],
+    "cFlagList": [],
+    "cppFlagsList": [],
+    "variantName": "release",
+    "soFolder": "/super/WorkSpace/KT_SAK/module_FaceSDK/build/intermediates/cmake/release/lib",
+    "objFolder": "/super/WorkSpace/KT_SAK/module_FaceSDK/build/intermediates/cmake/release/obj",
+    "jsonFolder": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release",
+    "gradleBuildOutputFolder": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cxx/release",
+    "isDebuggableEnabled": false,
+    "validAbiList": [
+      "ARMEABI_V7A",
+      "ARM64_V8A"
+    ],
+    "buildTargetSet": []
+  },
+  "abi": "ARMEABI_V7A",
+  "abiPlatformVersion": 19,
+  "cxxBuildFolder": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a",
+  "jsonFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a/android_gradle_build.json",
+  "gradleBuildOutputFolder": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cxx/release/armeabi-v7a",
+  "objFolder": "/super/WorkSpace/KT_SAK/module_FaceSDK/build/intermediates/cmake/release/obj/armeabi-v7a",
+  "buildCommandFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a/build_command.txt",
+  "buildOutputFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a/build_output.txt",
+  "modelOutputFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a/build_model.json",
+  "cmake": {
+    "cmakeListsWrapperFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cxx/release/armeabi-v7a/CMakeLists.txt",
+    "toolchainWrapperFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cxx/release/armeabi-v7a/android_gradle_build.toolchain.cmake",
+    "buildGenerationStateFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cxx/release/armeabi-v7a/build_generation_state.json",
+    "cacheKeyFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cxx/release/armeabi-v7a/compiler_cache_key.json",
+    "compilerCacheUseFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cxx/release/armeabi-v7a/compiler_cache_use.json",
+    "compilerCacheWriteFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cxx/release/armeabi-v7a/compiler_cache_write.json",
+    "toolchainSettingsFromCacheFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cxx/release/armeabi-v7a/compiler_settings_cache.cmake",
+    "cmakeWrappingBaseFolder": "."
+  },
+  "jsonGenerationLoggingRecordFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a/json_generation_record.json",
+  "compileCommandsJsonFile": "/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a/compile_commands.json"
+}
