@@ -1,3 +1,0 @@
-/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a/CMakeFiles/edit_cache.dir
-/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a/CMakeFiles/rebuild_cache.dir
-/super/WorkSpace/KT_SAK/module_FaceSDK/.cxx/cmake/release/armeabi-v7a/CMakeFiles/facedetect.dir

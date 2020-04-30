@@ -16,8 +16,7 @@
 
 package com.anubis.module_camera.Camera
 
-import android.graphics.Bitmap
-import android.graphics.Rect
+import android.graphics.*
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.Build
 import android.os.Bundle
@@ -29,9 +28,11 @@ import android.view.View
 import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogI
+import com.anubis.module_camera.Camera.tracking.MultiBoxTracker
 import com.anubis.module_detection.face_mask.eFaceMask
 import com.anubis.module_detection.face_mnn.eFaceSDK
 import com.anubis.module_tensorflow.detection.eDetector
+import kotlinx.android.synthetic.main.fragment_camera.*
 import kotlinx.coroutines.*
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.uiThread
@@ -62,10 +63,11 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
         bt_body.setOnClickListener(this)
         bt_make.setOnClickListener(this)
         bt_face.setOnClickListener(this)
+        test_container.setOnClickListener(this)
     }
 
     private var typeId: Int? = null
-    private  var jobFace:Job?=null
+    private var jobFace: Job? = null
     override fun onClick(v: View) {
         typeId = v.id
         when (typeId) {
@@ -73,21 +75,21 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
             }
             iv_photo.id -> {
                 eLog("onclick：iv_photo")
-                if(jobFace==null){
+                if (jobFace == null) {
                     eLog("jobFace==null")
-                    jobFace=GlobalScope.launch {
-                        while (isActive){
+                    jobFace = GlobalScope.launch {
+                        while (isActive) {
                             delay(100)
-                            typeId =bt_face.id
+                            typeId = bt_face.id
                             eReadyForNextImage(bitmapRotation = 90f)
                         }
                     }
-                }else{
+                } else {
                     eLog("jobFace.cancelAndJoin")
-                   GlobalScope.launch {
-                       jobFace?.cancelAndJoin()
-                       jobFace=null
-                   }
+                    GlobalScope.launch {
+                        jobFace?.cancelAndJoin()
+                        jobFace = null
+                    }
                 }
             }
             bt_make.id -> {
@@ -102,10 +104,17 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                 tv_hint.text = "人脸检测"
                 eReadyForNextImage(bitmapRotation = 90f)
             }
+            test_container.id -> {
+                tv_hint.text = "覆盖图层"
+                eReadyForNextImage(bitmapRotation = 90f)
+            }
         }
     }
 
-    private var tBitmap: Bitmap? = null
+    private var canvas: Canvas? = null
+    private var paint: Paint? = null
+    val rect = Rect(40, 219, -340, 608)
+    private var tracker: MultiBoxTracker? = null
     override fun processImage(bitmap: Bitmap?) {
         async {
             when (typeId) {
@@ -142,6 +151,22 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                         }
                     }
 
+                }
+                test_container.id -> {
+                    eLog(" processImage test_container")
+                    if (canvas == null) {
+                        tracker = MultiBoxTracker(this@testCameraGUI)
+                        frame_ov_tracking.addCallback { canvas ->
+                            tracker!!.draw(canvas)
+                        }
+                        canvas = Canvas(Bitmap.createBitmap(ePreviewWidth, ePreviewHeight, Bitmap.Config.ARGB_8888))
+                        val paint = Paint()
+                        paint.color = Color.RED
+                        paint.style = Paint.Style.STROKE
+                        paint.strokeWidth = 2.0f
+                    }
+                    canvas!!.drawRect(rect, paint!!)
+                    tracker!!.trackResults( eFaceSDK.eFaceDetect(bitmap!!))
                 }
             }
         }

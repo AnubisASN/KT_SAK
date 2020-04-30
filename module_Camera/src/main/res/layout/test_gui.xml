@@ -62,7 +62,7 @@
     <ScrollView
         android:id="@+id/sv_hint"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="120dp"
         app:layout_constraintBottom_toTopOf="@+id/bt_body"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
