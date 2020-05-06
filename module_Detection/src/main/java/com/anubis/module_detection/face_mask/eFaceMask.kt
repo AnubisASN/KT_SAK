@@ -40,7 +40,6 @@ constructor(assetManager: AssetManager) {
                 eLogE("请在build.gradle中的android{}块内添加：\n   " +
                         "  aaptOptions {\n" +
                         "        noCompress \"tflite\"\n" +
-                        "        noCompress \"lite\"\n" +
                         "    }")
             }
         }

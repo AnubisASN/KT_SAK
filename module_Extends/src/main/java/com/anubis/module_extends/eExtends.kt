@@ -1052,7 +1052,7 @@ object eBitmap {
             val stream = ByteArrayOutputStream()
             image.compressToJpeg(rect, quality, stream)
             val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
-            mBitmap = eRotateFlipBitmap(bmp, rotate, isFlip)
+            mBitmap = eBitmapRotateFlip(bmp, rotate, isFlip)
             stream.close()
 //            eGcBitmap(bmp)
         } catch (e: Exception) {
@@ -1089,7 +1089,7 @@ object eBitmap {
     }
 
     //图片旋转翻转
-    fun eRotateFlipBitmap(bitmap: Bitmap?, rotate: Float = 0f, isFlip: Boolean = false): Bitmap? {
+    fun eBitmapRotateFlip(bitmap: Bitmap?, rotate: Float = 0f, isFlip: Boolean = false): Bitmap? {
         if (bitmap == null) {
             return null
         }

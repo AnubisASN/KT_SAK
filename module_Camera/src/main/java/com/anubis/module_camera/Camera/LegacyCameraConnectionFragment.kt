@@ -36,7 +36,7 @@ import android.view.ViewGroup
 import com.anubis.kt_extends.eBitmap.eGetYUVByteSize
 import com.anubis.kt_extends.eLog
 
-import com.anubis.module_camera.Camera.customview.AutoFitTextureView
+import com.anubis.module_camera.Camera.customview.eAutoFitTextureView
 import com.anubis.module_camera.R
 
 import java.io.IOException
@@ -49,8 +49,8 @@ class LegacyCameraConnectionFragment(
         private val layout: Int, private val desiredSize: Size) : Fragment() {
 
     private var camera: Camera? = null
-    /** An [AutoFitTextureView] for camera preview.  */
-    private var textureView: AutoFitTextureView? = null
+    /** An [eAutoFitTextureView] for camera preview.  */
+    private var mTextureViewE: eAutoFitTextureView? = null
     /**
      * [TextureView.SurfaceTextureListener] handles several lifecycle events on a [ ].
      */
@@ -91,7 +91,7 @@ class LegacyCameraConnectionFragment(
             val s = camera!!.parameters.previewSize
             camera!!.addCallbackBuffer(ByteArray(eGetYUVByteSize(s.height, s.width)))
 
-            textureView!!.setAspectRatio(s.height, s.width)
+            mTextureViewE!!.setAspectRatio(s.height, s.width)
 
             camera!!.startPreview()
         }
@@ -127,7 +127,7 @@ class LegacyCameraConnectionFragment(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        textureView = view.findViewById<View>(R.id.texture) as AutoFitTextureView
+        mTextureViewE = view.findViewById<View>(R.id.frame_at_texture) as eAutoFitTextureView
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -142,10 +142,10 @@ class LegacyCameraConnectionFragment(
         // a camera and start preview from here (otherwise, we wait until the surface is ready in
         // the SurfaceTextureListener).
 
-        if (textureView!!.isAvailable) {
+        if (mTextureViewE!!.isAvailable) {
             camera!!.startPreview()
         } else {
-            textureView!!.surfaceTextureListener = surfaceTextureListener
+            mTextureViewE!!.surfaceTextureListener = surfaceTextureListener
         }
     }
 

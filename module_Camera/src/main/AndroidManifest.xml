@@ -19,9 +19,8 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:theme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Camera.testCameraGUI">
+        <activity android:name=".Camera.eCameraActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

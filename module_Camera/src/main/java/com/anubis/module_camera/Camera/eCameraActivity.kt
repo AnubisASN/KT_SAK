@@ -16,18 +16,13 @@
 
 package com.anubis.module_camera.Camera
 
-import android.Manifest
 import android.app.Fragment
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Rect
 import android.hardware.Camera
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
-import android.media.Image
 import android.media.Image.Plane
 import android.media.ImageReader
 import android.media.ImageReader.OnImageAvailableListener
@@ -35,7 +30,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.os.Trace
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SwitchCompat
@@ -48,13 +42,7 @@ import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eBitmap.eYUV420ToARGB8888
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
-import com.anubis.module_camera.Camera.tracking.MultiBoxTracker
 import com.anubis.module_camera.R
-import com.tencent.bugly.proguard.an
-import kotlinx.android.synthetic.main.fragment_camera.*
-import java.nio.ByteBuffer
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -176,7 +164,7 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
                     processImage(eBitmap.eBitmapToByteArray(bitmap))
                 }
                 else -> {
-                    processImage(eBitmap.eRotateFlipBitmap(bitmap, bitmapRotation, isFlip))
+                    processImage(eBitmap.eBitmapRotateFlip(bitmap, bitmapRotation, isFlip))
                 }
             }
 

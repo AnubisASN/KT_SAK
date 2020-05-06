@@ -3,17 +3,17 @@ The host system is: Linux - 4.9.0-8-amd64 - x86_64
 Determining if the C compiler works passed with the following output:
 Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_951fa"
-[1/2] Building C object CMakeFiles/cmTC_951fa.dir/testCCompiler.c.o
-[2/2] Linking C executable cmTC_951fa
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_ef271"
+[1/2] Building C object CMakeFiles/cmTC_ef271.dir/testCCompiler.c.o
+[2/2] Linking C executable cmTC_ef271
 
 
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_7b196"
-[1/2] Building C object CMakeFiles/cmTC_7b196.dir/CMakeCCompilerABI.c.o
-[2/2] Linking C executable cmTC_7b196
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_98245"
+[1/2] Building C object CMakeFiles/cmTC_98245.dir/CMakeCCompilerABI.c.o
+[2/2] Linking C executable cmTC_98245
 Android (6317467 based on r365631c1) clang version 9.0.8 (https://android.googlesource.com/toolchain/llvm-project e0caee08e5f09b374a27a676d04978c81fcb1928) (based on LLVM 9.0.8svn)
 Target: aarch64-none-linux-android21
 Thread model: posix
@@ -22,16 +22,16 @@ Found candidate GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/
 Selected GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x
 Candidate multilib: .;@m64
 Selected multilib: .;@m64
- "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --fix-cortex-a53-843419 --warn-shared-textrel -z now -z relro -z max-page-size=4096 --hash-style=both --enable-new-dtags --eh-frame-hdr -m aarch64linux -dynamic-linker /system/bin/linker64 -o cmTC_7b196 /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib/../lib64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --no-undefined --gc-sections CMakeFiles/cmTC_7b196.dir/CMakeCCompilerABI.c.o -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtend_android.o
+ "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --fix-cortex-a53-843419 --warn-shared-textrel -z now -z relro -z max-page-size=4096 --hash-style=both --enable-new-dtags --eh-frame-hdr -m aarch64linux -dynamic-linker /system/bin/linker64 -o cmTC_98245 /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib/../lib64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --no-undefined --gc-sections CMakeFiles/cmTC_98245.dir/CMakeCCompilerABI.c.o -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtend_android.o
 
 
 Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(aarch64-linux-android-ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_7b196"]
-  ignore line: [[1/2] Building C object CMakeFiles/cmTC_7b196.dir/CMakeCCompilerABI.c.o]
-  ignore line: [[2/2] Linking C executable cmTC_7b196]
+  ignore line: [Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_98245"]
+  ignore line: [[1/2] Building C object CMakeFiles/cmTC_98245.dir/CMakeCCompilerABI.c.o]
+  ignore line: [[2/2] Linking C executable cmTC_98245]
   ignore line: [Android (6317467 based on r365631c1) clang version 9.0.8 (https://android.googlesource.com/toolchain/llvm-project e0caee08e5f09b374a27a676d04978c81fcb1928) (based on LLVM 9.0.8svn)]
   ignore line: [Target: aarch64-none-linux-android21]
   ignore line: [Thread model: posix]
@@ -42,7 +42,7 @@ Parsed C implicit link information from above output:
   ignore line: [@m64]
   ignore line: [Selected multilib: .]
   ignore line: [@m64]
-  link line: [ "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --fix-cortex-a53-843419 --warn-shared-textrel -z now -z relro -z max-page-size=4096 --hash-style=both --enable-new-dtags --eh-frame-hdr -m aarch64linux -dynamic-linker /system/bin/linker64 -o cmTC_7b196 /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib/../lib64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --no-undefined --gc-sections CMakeFiles/cmTC_7b196.dir/CMakeCCompilerABI.c.o -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtend_android.o]
+  link line: [ "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --fix-cortex-a53-843419 --warn-shared-textrel -z now -z relro -z max-page-size=4096 --hash-style=both --enable-new-dtags --eh-frame-hdr -m aarch64linux -dynamic-linker /system/bin/linker64 -o cmTC_98245 /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib/../lib64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --no-undefined --gc-sections CMakeFiles/cmTC_98245.dir/CMakeCCompilerABI.c.o -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtend_android.o]
     arg [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/bin/ld] ==> ignore
     arg [--sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot] ==> ignore
     arg [-pie] ==> ignore
@@ -61,7 +61,7 @@ Parsed C implicit link information from above output:
     arg [-dynamic-linker] ==> ignore
     arg [/system/bin/linker64] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_7b196] ==> ignore
+    arg [cmTC_98245] ==> ignore
     arg [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtbegin_dynamic.o] ==> ignore
     arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64]
     arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x]
@@ -80,7 +80,7 @@ Parsed C implicit link information from above output:
     arg [--fatal-warnings] ==> ignore
     arg [--no-undefined] ==> ignore
     arg [--gc-sections] ==> ignore
-    arg [CMakeFiles/cmTC_7b196.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [CMakeFiles/cmTC_98245.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [-lgcc] ==> lib [gcc]
     arg [-ldl] ==> lib [dl]
     arg [-lc] ==> lib [c]
@@ -106,9 +106,9 @@ Parsed C implicit link information from above output:
 Detecting C [-std=c11] compiler features compiled with the following output:
 Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_5060d"
-[1/2] Building C object CMakeFiles/cmTC_5060d.dir/feature_tests.c.o
-[2/2] Linking C executable cmTC_5060d
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_6e0d2"
+[1/2] Building C object CMakeFiles/cmTC_6e0d2.dir/feature_tests.c.o
+[2/2] Linking C executable cmTC_6e0d2
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -120,9 +120,9 @@ Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_50
 Detecting C [-std=c99] compiler features compiled with the following output:
 Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_a6ec8"
-[1/2] Building C object CMakeFiles/cmTC_a6ec8.dir/feature_tests.c.o
-[2/2] Linking C executable cmTC_a6ec8
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_c8287"
+[1/2] Building C object CMakeFiles/cmTC_c8287.dir/feature_tests.c.o
+[2/2] Linking C executable cmTC_c8287
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -134,9 +134,9 @@ Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_a6
 Detecting C [-std=c90] compiler features compiled with the following output:
 Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_e4d0e"
-[1/2] Building C object CMakeFiles/cmTC_e4d0e.dir/feature_tests.c.o
-[2/2] Linking C executable cmTC_e4d0e
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_1b12b"
+[1/2] Building C object CMakeFiles/cmTC_1b12b.dir/feature_tests.c.o
+[2/2] Linking C executable cmTC_1b12b
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -146,17 +146,17 @@ Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_e4
 Determining if the CXX compiler works passed with the following output:
 Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_05cfb"
-[1/2] Building CXX object CMakeFiles/cmTC_05cfb.dir/testCXXCompiler.cxx.o
-[2/2] Linking CXX executable cmTC_05cfb
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_95fad"
+[1/2] Building CXX object CMakeFiles/cmTC_95fad.dir/testCXXCompiler.cxx.o
+[2/2] Linking CXX executable cmTC_95fad
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_2fbbc"
-[1/2] Building CXX object CMakeFiles/cmTC_2fbbc.dir/CMakeCXXCompilerABI.cpp.o
-[2/2] Linking CXX executable cmTC_2fbbc
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_48dc8"
+[1/2] Building CXX object CMakeFiles/cmTC_48dc8.dir/CMakeCXXCompilerABI.cpp.o
+[2/2] Linking CXX executable cmTC_48dc8
 Android (6317467 based on r365631c1) clang version 9.0.8 (https://android.googlesource.com/toolchain/llvm-project e0caee08e5f09b374a27a676d04978c81fcb1928) (based on LLVM 9.0.8svn)
 Target: aarch64-none-linux-android21
 Thread model: posix
@@ -165,16 +165,16 @@ Found candidate GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/
 Selected GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x
 Candidate multilib: .;@m64
 Selected multilib: .;@m64
- "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --fix-cortex-a53-843419 --warn-shared-textrel -z now -z relro -z max-page-size=4096 --hash-style=both --enable-new-dtags --eh-frame-hdr -m aarch64linux -dynamic-linker /system/bin/linker64 -o cmTC_2fbbc /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib/../lib64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --no-undefined --gc-sections CMakeFiles/cmTC_2fbbc.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lm -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtend_android.o
+ "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --fix-cortex-a53-843419 --warn-shared-textrel -z now -z relro -z max-page-size=4096 --hash-style=both --enable-new-dtags --eh-frame-hdr -m aarch64linux -dynamic-linker /system/bin/linker64 -o cmTC_48dc8 /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib/../lib64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --no-undefined --gc-sections CMakeFiles/cmTC_48dc8.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lm -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtend_android.o
 
 
 Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(aarch64-linux-android-ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_2fbbc"]
-  ignore line: [[1/2] Building CXX object CMakeFiles/cmTC_2fbbc.dir/CMakeCXXCompilerABI.cpp.o]
-  ignore line: [[2/2] Linking CXX executable cmTC_2fbbc]
+  ignore line: [Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_48dc8"]
+  ignore line: [[1/2] Building CXX object CMakeFiles/cmTC_48dc8.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [[2/2] Linking CXX executable cmTC_48dc8]
   ignore line: [Android (6317467 based on r365631c1) clang version 9.0.8 (https://android.googlesource.com/toolchain/llvm-project e0caee08e5f09b374a27a676d04978c81fcb1928) (based on LLVM 9.0.8svn)]
   ignore line: [Target: aarch64-none-linux-android21]
   ignore line: [Thread model: posix]
@@ -185,7 +185,7 @@ Parsed CXX implicit link information from above output:
   ignore line: [@m64]
   ignore line: [Selected multilib: .]
   ignore line: [@m64]
-  link line: [ "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --fix-cortex-a53-843419 --warn-shared-textrel -z now -z relro -z max-page-size=4096 --hash-style=both --enable-new-dtags --eh-frame-hdr -m aarch64linux -dynamic-linker /system/bin/linker64 -o cmTC_2fbbc /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib/../lib64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --no-undefined --gc-sections CMakeFiles/cmTC_2fbbc.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lm -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtend_android.o]
+  link line: [ "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --fix-cortex-a53-843419 --warn-shared-textrel -z now -z relro -z max-page-size=4096 --hash-style=both --enable-new-dtags --eh-frame-hdr -m aarch64linux -dynamic-linker /system/bin/linker64 -o cmTC_48dc8 /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib/../lib64 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --no-undefined --gc-sections CMakeFiles/cmTC_48dc8.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lm -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtend_android.o]
     arg [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x/../../../../aarch64-linux-android/bin/ld] ==> ignore
     arg [--sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot] ==> ignore
     arg [-pie] ==> ignore
@@ -204,7 +204,7 @@ Parsed CXX implicit link information from above output:
     arg [-dynamic-linker] ==> ignore
     arg [/system/bin/linker64] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_2fbbc] ==> ignore
+    arg [cmTC_48dc8] ==> ignore
     arg [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/21/crtbegin_dynamic.o] ==> ignore
     arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/aarch64]
     arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/aarch64-linux-android/4.9.x]
@@ -223,7 +223,7 @@ Parsed CXX implicit link information from above output:
     arg [--fatal-warnings] ==> ignore
     arg [--no-undefined] ==> ignore
     arg [--gc-sections] ==> ignore
-    arg [CMakeFiles/cmTC_2fbbc.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [CMakeFiles/cmTC_48dc8.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
     arg [-lc++] ==> lib [c++]
     arg [-lm] ==> lib [m]
     arg [-lgcc] ==> lib [gcc]
@@ -251,9 +251,9 @@ Parsed CXX implicit link information from above output:
 Detecting CXX [-std=c++14] compiler features compiled with the following output:
 Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_f3386"
-[1/2] Building CXX object CMakeFiles/cmTC_f3386.dir/feature_tests.cxx.o
-[2/2] Linking CXX executable cmTC_f3386
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_67cf4"
+[1/2] Building CXX object CMakeFiles/cmTC_67cf4.dir/feature_tests.cxx.o
+[2/2] Linking CXX executable cmTC_67cf4
 
 
     Feature record: CXX_FEATURE:1cxx_aggregate_default_initializers
@@ -318,9 +318,9 @@ Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_f3
 Detecting CXX [-std=c++11] compiler features compiled with the following output:
 Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_2afec"
-[1/2] Building CXX object CMakeFiles/cmTC_2afec.dir/feature_tests.cxx.o
-[2/2] Linking CXX executable cmTC_2afec
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_ab4ff"
+[1/2] Building CXX object CMakeFiles/cmTC_ab4ff.dir/feature_tests.cxx.o
+[2/2] Linking CXX executable cmTC_ab4ff
 
 
     Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
@@ -385,9 +385,9 @@ Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_2a
 Detecting CXX [-std=c++98] compiler features compiled with the following output:
 Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/arm64-v8a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_58fca"
-[1/2] Building CXX object CMakeFiles/cmTC_58fca.dir/feature_tests.cxx.o
-[2/2] Linking CXX executable cmTC_58fca
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_d4e2c"
+[1/2] Building CXX object CMakeFiles/cmTC_d4e2c.dir/feature_tests.cxx.o
+[2/2] Linking CXX executable cmTC_d4e2c
 
 
     Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers

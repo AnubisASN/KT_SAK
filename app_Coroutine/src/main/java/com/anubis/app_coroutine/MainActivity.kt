@@ -10,7 +10,6 @@ import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eJson
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
-import com.facesdk.eFaceSDK
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,7 +17,5 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        eFaceSDK.eInit(this)
-        eFaceSDK.eFaceDetect(eBitmap.eDrawableToBitmap(getDrawable(R.drawable.test))).size.eLog("size")
     }
 }

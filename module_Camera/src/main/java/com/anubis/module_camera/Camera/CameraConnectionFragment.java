@@ -57,7 +57,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.anubis.module_camera.Camera.customview.AutoFitTextureView;
+import com.anubis.module_camera.Camera.customview.eAutoFitTextureView;
 import com.anubis.module_camera.R;
 
 import java.util.ArrayList;
@@ -119,8 +119,8 @@ public class CameraConnectionFragment extends Fragment {
           };
   /** ID of the current {@link CameraDevice}. */
   private String cameraId;
-  /** An {@link AutoFitTextureView} for camera preview. */
-  private AutoFitTextureView textureView;
+  /** An {@link eAutoFitTextureView} for camera preview. */
+  private eAutoFitTextureView textureView;
   /** A {@link CameraCaptureSession } for camera preview. */
   private CameraCaptureSession captureSession;
   /** A reference to the opened {@link CameraDevice}. */
@@ -285,7 +285,7 @@ public class CameraConnectionFragment extends Fragment {
 
   @Override
   public void onViewCreated(final View view, final Bundle savedInstanceState) {
-    textureView = (AutoFitTextureView) view.findViewById(R.id.frame_at_texture);
+    textureView = (eAutoFitTextureView) view.findViewById(R.id.frame_at_texture);
   }
 
   @Override

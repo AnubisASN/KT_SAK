@@ -36,6 +36,7 @@ import com.anubis.module_tensorflow.detection.tracking.MultiBoxTracker
 import java.io.FileNotFoundException
 
 import java.io.IOException
+import java.lang.Exception
 
 
 /**
@@ -93,9 +94,9 @@ object eDetector {
             e.eLogE("Exception initializing classifier!")
             context.eShowTip("Classifier could not be initialized")
             return false
-        }catch (e: FileNotFoundException){
+        }catch (e: Exception){
             if (e.toString().contains("it is probably compressed")){
-                eLogE("请在Build.gradle文件Android{}内添加：" +
+                context.eShowTip("请在Build.gradle文件Android{}内添加：" +
                         "    aaptOptions {\n" +
                         "        noCompress \"tflite\"\n" +
                         "    }")
