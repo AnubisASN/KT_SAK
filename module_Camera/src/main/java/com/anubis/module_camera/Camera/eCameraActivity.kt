@@ -28,8 +28,6 @@ import android.media.ImageReader
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import android.support.annotation.RequiresApi
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SwitchCompat
@@ -37,7 +35,6 @@ import android.util.Size
 import android.view.Surface
 import android.view.WindowManager
 import android.widget.CompoundButton
-import android.widget.TextView
 import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eBitmap.eYUV420ToARGB8888
 import com.anubis.kt_extends.eLog
@@ -46,30 +43,27 @@ import com.anubis.module_camera.R
 
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Camera.PreviewCallback, CompoundButton.OnCheckedChangeListener {
+abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Camera.PreviewCallback, CompoundButton.OnCheckedChangeListener {
     protected var ePreviewWidth = 0
     protected var ePreviewHeight = 0
-    private var handler: Handler? = null
-    private var handlerThread: HandlerThread? = null
-    open var useCamera2API: Boolean = false
+    open var eUseCamera2API: Boolean = true
     private var isProcess = false
     private val yuvBytes = arrayOfNulls<ByteArray>(3)
     //FrameLayout
-    open val eFrameLayoutId = R.id.fl_camera_ontainer
+    val mFrameLayoutId= R.id.fl_camera_ontainer
+    abstract val eFrameLayoutId :Int
     //相机预览控件
-    open val eFragmentLayout: Int = R.layout.fragment_camera
+    open val eFragmentLayout: Int=R.layout.fragment_camera
     //activity界面
-    open val eActivityLayout: Int = R.layout.activity_camera
+    val mActivityLayout: Int = R.layout.activity_camera
+    abstract val eActivityLayout: Int
     open val eDesiredPreviewFrameSize: Size = Size(640, 480)
 
     private var postInferenceCallback: Runnable? = null
-    protected var frameValueTextView: TextView? = null
-    protected var cropValueTextView: TextView? = null
-    protected var inferenceTimeTextView: TextView? = null
     private val apiSwitchCompat: SwitchCompat? = null
 
     //camera1  预览旋转
-    open val screenOrientation: Int
+    open val eScreenOrientation: Int
         get() {
             when (windowManager.defaultDisplay.rotation) {
                 Surface.ROTATION_270 -> return 270
@@ -95,8 +89,8 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
             val previewSize = camera.parameters.previewSize
             ePreviewHeight = previewSize.height
             ePreviewWidth = previewSize.width
-            camera.setDisplayOrientation(screenOrientation)
-            onPreviewSizeChosen(Size(ePreviewWidth, ePreviewHeight), screenOrientation)
+            camera.setDisplayOrientation(eScreenOrientation)
+            eOnPreviewSizeChosen(Size(ePreviewWidth, ePreviewHeight), eScreenOrientation)
         } catch (e: Exception) {
             e.eLogE("Exception!")
             return
@@ -113,10 +107,10 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
         when (returnType) {
 
             TYPE.ByteArray -> {
-                processImage(bytes)
+                eProcessImage(bytes)
             }
             else -> {
-                processImage(eBitmap.eByteArrayToBitmp(bytes, ePreviewWidth, ePreviewHeight, rotate = bitmapRotation, isFlip = isFlip))
+                eProcessImage(eBitmap.eByteArrayToBitmp(bytes, ePreviewWidth, ePreviewHeight, rotate = bitmapRotation, isFlip = isFlip))
             }
         }
     }
@@ -161,10 +155,10 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
             bitmap!!.setPixels(inArrays, 0, ePreviewWidth, 0, 0, ePreviewWidth, ePreviewHeight)
             when (returnType) {
                 TYPE.ByteArray -> {
-                    processImage(eBitmap.eBitmapToByteArray(bitmap))
+                    eProcessImage(eBitmap.eBitmapToByteArray(bitmap))
                 }
                 else -> {
-                    processImage(eBitmap.eBitmapRotateFlip(bitmap, bitmapRotation, isFlip))
+                    eProcessImage(eBitmap.eBitmapRotateFlip(bitmap, bitmapRotation, isFlip))
                 }
             }
 
@@ -182,26 +176,12 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
 
     @Synchronized
     public override fun onResume() {
-        eLog("onResume $this")
         super.onResume()
-
-        handlerThread = HandlerThread("inference")
-        handlerThread!!.start()
-        handler = Handler(handlerThread!!.looper)
     }
 
     @Synchronized
     public override fun onPause() {
         eLog("onPause $this")
-        handlerThread!!.quitSafely()
-        try {
-            handlerThread!!.join()
-            handlerThread = null
-            handler = null
-        } catch (e: InterruptedException) {
-            e.eLogE("Exception!")
-        }
-
         super.onPause()
     }
 
@@ -247,9 +227,9 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
 // 不支持所有内部摄像机的camera1 API的后备。
 //                //这应有助于解决使用camera2 API造成的遗留情况
 //                //预览扭曲或破坏。
-                useCamera2API = facing == CameraCharacteristics.LENS_FACING_EXTERNAL || isHardwareLevelSupported(
+                eUseCamera2API = facing == CameraCharacteristics.LENS_FACING_EXTERNAL || isHardwareLevelSupported(
                         characteristics, CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL)
-                eLog("Camera API lv2?: ${useCamera2API}")
+                eLog("Camera API lv2?: ${eUseCamera2API}")
                 return cameraId
             }
         } catch (e: CameraAccessException) {
@@ -260,24 +240,24 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
     }
 
     /*设置相机预览*/
-    open val cameraId = "0"// chooseCamera()
+    open val eCameraId = "0"// chooseCamera()
 
     protected fun setFragment() {
         var fragment: Fragment? = null
-        if (useCamera2API) {
+        if (eUseCamera2API) {
             val camera2Fragment = CameraConnectionFragment.newInstance(
                     object : CameraConnectionFragment.ConnectionCallback {
                         override fun onPreviewSizeChosen(size: Size, cameraRotation: Int) {
                             ePreviewHeight = size.height
                             ePreviewWidth = size.width
-                            this@eCameraActivity.onPreviewSizeChosen(size, cameraRotation)
+                            this@eCameraActivity.eOnPreviewSizeChosen(size, cameraRotation)
                         }
                     },
                     this,
                     eFragmentLayout,
                     eDesiredPreviewFrameSize)
 
-            camera2Fragment.setCamera(cameraId)
+            camera2Fragment.setCamera(eCameraId)
             fragment = camera2Fragment
         } else {
             fragment = LegacyCameraConnectionFragment(this, eFragmentLayout, eDesiredPreviewFrameSize)
@@ -311,9 +291,9 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
         }
     }
 
-    protected open fun processImage(bitmap: Bitmap?) {}
-    protected open fun processImage(byteArray: ByteArray?) {}
-    protected open fun onPreviewSizeChosen(size: Size, rotation: Int) {}
+    protected open fun eProcessImage(bitmap: Bitmap?) {}
+    protected open fun eProcessImage(byteArray: ByteArray?) {}
+    protected open fun eOnPreviewSizeChosen(size: Size, rotation: Int) {}
 
     companion object {
         enum class TYPE { Bitmap, ByteArray }
@@ -323,36 +303,19 @@ open class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Came
     /** ------------------------------------- */
 
     @Synchronized
-    protected fun runInBackground(r: Runnable) {
-        if (handler != null) {
-            handler!!.post(r)
-        }
+    protected fun eRunInBackground(r: Runnable) {
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-        setUseNNAPI(isChecked)
+        eSetUseNNAPI(isChecked)
         if (isChecked)
             apiSwitchCompat!!.text = "NNAPI"
         else
             apiSwitchCompat!!.text = "TFLITE"
     }
 
-    protected fun showFrameInfo(frameInfo: String) {
-        frameValueTextView!!.text = frameInfo
-    }
 
-    protected fun showCropInfo(cropInfo: String) {
-        cropValueTextView!!.text = cropInfo
-    }
-
-    protected fun showInference(inferenceTime: String) {
-        inferenceTimeTextView!!.text = inferenceTime
-    }
-
-
-    protected open fun setNumThreads(numThreads: Int) {}
-
-    protected open fun setUseNNAPI(isChecked: Boolean) {}
+    protected open fun eSetUseNNAPI(isChecked: Boolean) {}
 
 
 }

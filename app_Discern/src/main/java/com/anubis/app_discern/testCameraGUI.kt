@@ -30,6 +30,7 @@ import com.anubis.module_camera.Camera.tracking.eMultiBoxTracker
 import com.anubis.module_detection.face_mask.eFaceMask
 import com.anubis.module_detection.face_mnn.eFaceSDK
 import com.anubis.module_tensorflow.detection.eDetector
+import com.tencent.bugly.proguard.t
 import kotlinx.android.synthetic.main.test_gui.*
 import kotlinx.coroutines.*
 import org.jetbrains.anko.custom.async
@@ -43,10 +44,10 @@ import java.util.*
  * objects.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickListener {
+class testCameraGUI() : eCameraActivity(), OnImageAvailableListener, View.OnClickListener {
 
-    override val screenOrientation: Int = 90
-    override var useCamera2API: Boolean = true
+    override val eScreenOrientation: Int = 90
+    override var eUseCamera2API: Boolean = true
     override val eActivityLayout: Int = R.layout.test_gui
     override val eFrameLayoutId: Int = R.id.test_container
     private var faceMask: eFaceMask? = null
@@ -112,7 +113,7 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
     }
 
     private var mTrackerE: eMultiBoxTracker? = null
-    override fun processImage(bitmap: Bitmap?) {
+    override fun eProcessImage(bitmap: Bitmap?) {
         async {
             when (typeId) {
                 bt_make.id -> {
@@ -150,16 +151,15 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                 }
                 test_container.id -> {
                     mTrackerE = eMultiBoxTracker(this@testCameraGUI)
-                    findViewById<eOverlayView>(R.id.frame_ov_tracking).addCallback { canvas ->
-                        mTrackerE!!.draw(canvas)
-                    }
-                    mTrackerE!!.setFrameConfiguration(bitmap!!.width,bitmap.height)
-                    val re = eFaceSDK.eFaceDetect(eBitmap.eBitmapRotateFlip(bitmap, isFlip = true)!!)
+                    //比例计算
+                    mTrackerE!!.setFrameConfiguration(bitmap!!.width,bitmap.height, true)
+                    val re = eFaceSDK.eFaceDetect(bitmap)
+
                   val res=  LinkedList<Pair<Rect,String>>()
                     re.forEach {
                         res.add(Pair(it,re.indexOf(it).toString()))
                     }
-                    mTrackerE!!.trackResults( findViewById<eOverlayView>(R.id.frame_ov_tracking), res)
+                    mTrackerE!!.trackResults( findViewById(R.id.frame_ov_tracking), res)
                 }
             }
         }

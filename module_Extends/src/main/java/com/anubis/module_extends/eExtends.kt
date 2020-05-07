@@ -958,6 +958,14 @@ object eAssets {
 }
 
 /**
+ * 矩阵扩展类--------------------------------------------------------------------------------------
+ */
+object eMatrix {
+    fun eRectFtoRect(rectF: RectF) = Rect(rectF.left.toInt(), rectF.top.toInt(), rectF.right.toInt(), rectF.bottom.toInt())
+
+}
+
+/**
  * Bitmap扩展类--------------------------------------------------------------------------------------
  */
 object eBitmap {
@@ -1002,12 +1010,13 @@ object eBitmap {
     }
 
     //Bitmap转ByteArray工具
-      fun eBitmapToByteArray(image: Bitmap): ByteArray {
+    fun eBitmapToByteArray(image: Bitmap): ByteArray {
         val bytes = image.byteCount
         val buffer = ByteBuffer.allocate(bytes)
         image.copyPixelsToBuffer(buffer)
         return buffer.array()
     }
+
     //Bitmap转Base64工具
     fun eBitmapToBase64(bitmap: Bitmap): String? {
         var baos: ByteArrayOutputStream? = null
@@ -1107,6 +1116,11 @@ object eBitmap {
         bitmap.recycle()
         return newBM
     }
+
+    fun eBitmapToZoom(bitmap: Bitmap, zoomFactor: Int = 1, filter: Boolean = true) = eBitmapToZoom(bitmap, bitmap.width / zoomFactor, bitmap.height / zoomFactor, filter)
+
+    fun eBitmapToZoom(bitmap: Bitmap, width: Int, height: Int, filter: Boolean = true) = Bitmap.createScaledBitmap(bitmap, width, height, filter)
+
 
     //Bitmap压缩 (设置压缩率或者 设置大小)
     fun eBitmapCompress(bitmap: Bitmap, quality: Int = 100, size: Int? = null): Bitmap? {

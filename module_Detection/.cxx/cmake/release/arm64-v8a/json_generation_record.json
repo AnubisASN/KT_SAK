@@ -5,55 +5,7 @@
   },
   {
     "level": "INFO",
-    "message": "No CMake version was specified in build.gradle. Choosing a suitable version."
-  },
-  {
-    "level": "INFO",
-    "message": "Trying to locate CMake in local SDK repository."
-  },
-  {
-    "level": "INFO",
-    "message": "CMake \u00273.10.2\u0027 found in SDK did not match requested version \u00273.6.0\u0027."
-  },
-  {
-    "level": "INFO",
-    "message": "- CMake found in SDK at \u0027/home/anubis/extend/SDK/cmake/3.6.4111459\u0027 had version \u00273.6.0\u0027"
-  },
-  {
-    "level": "INFO",
-    "message": "rebuilding JSON /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a/android_gradle_build.json due to:"
-  },
-  {
-    "level": "INFO",
-    "message": "- force flag, will remove stale json folder"
-  },
-  {
-    "level": "INFO",
-    "message": "removing stale contents from \u0027/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a\u0027"
-  },
-  {
-    "level": "INFO",
-    "message": "created folder \u0027/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a\u0027"
-  },
-  {
-    "level": "INFO",
-    "message": "executing cmake Executable : /home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake\narguments : \n-H/super/WorkSpace/KT_SAK/module_Detection\n-B/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a\n-DANDROID_ABI\u003darm64-v8a\n-DANDROID_PLATFORM\u003dandroid-19\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d/super/WorkSpace/KT_SAK/module_Detection/build/intermediates/cmake/release/obj/arm64-v8a\n-DCMAKE_BUILD_TYPE\u003dRelease\n-DANDROID_NDK\u003d/home/anubis/extend/SDK/ndk-bundle\n-DCMAKE_TOOLCHAIN_FILE\u003d/home/anubis/extend/SDK/ndk-bundle/build/cmake/android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003d/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja\n-GAndroid Gradle - Ninja\n-DANDROID_STL\u003dc++_shared\n-DANDROID_ARM_NEON\u003dTRUE\n-DANDROID_PLATFORM\u003dandroid-21\n-DMNN_OPENCL\u003dtrue\n-DMNN_OPENGL\u003dtrue\njvmArgs : \n\n"
-  },
-  {
-    "level": "INFO",
-    "message": "Executable : /home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake\narguments : \n-H/super/WorkSpace/KT_SAK/module_Detection\n-B/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a\n-DANDROID_ABI\u003darm64-v8a\n-DANDROID_PLATFORM\u003dandroid-19\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d/super/WorkSpace/KT_SAK/module_Detection/build/intermediates/cmake/release/obj/arm64-v8a\n-DCMAKE_BUILD_TYPE\u003dRelease\n-DANDROID_NDK\u003d/home/anubis/extend/SDK/ndk-bundle\n-DCMAKE_TOOLCHAIN_FILE\u003d/home/anubis/extend/SDK/ndk-bundle/build/cmake/android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003d/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja\n-GAndroid Gradle - Ninja\n-DANDROID_STL\u003dc++_shared\n-DANDROID_ARM_NEON\u003dTRUE\n-DANDROID_PLATFORM\u003dandroid-21\n-DMNN_OPENCL\u003dtrue\n-DMNN_OPENGL\u003dtrue\njvmArgs : \n\n"
-  },
-  {
-    "level": "INFO",
-    "message": "done executing cmake"
-  },
-  {
-    "level": "INFO",
-    "message": "write build output /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a/build_output.txt"
-  },
-  {
-    "level": "INFO",
-    "message": "write command file /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a/build_command.txt"
+    "message": "JSON \u0027/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a/android_gradle_build.json\u0027 was up-to-date"
   },
   {
     "level": "INFO",

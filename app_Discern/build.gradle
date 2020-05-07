@@ -30,4 +30,5 @@ dependencies {
     api project(':module_TensorFlow')
     api project(path: ':module_Camera')
     api project(path: ':module_Detection')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }
