@@ -1,18 +1,3 @@
-/*
- * Copyright 2019 The TensorFlow Authors. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.anubis.module_camera.Camera
 
@@ -40,25 +25,42 @@ import com.anubis.kt_extends.eBitmap.eYUV420ToARGB8888
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_camera.R
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-
+/**
+ * Author  ： AnubisASN   on 19-9-27 上午11:59.
+ * E-mail  ： anubisasn@gmail.com ( anubisasn@qq.com )
+ *  Q Q： 773506352
+ *说明： * 类说明：相机封装
+ * @使用方法：继承
+ * @param eFrameLayoutId: Int；框架布局ID abstract
+ * @param eActivityLayout: Int；活动布局  abstract
+ * @param eUseCamera2API: Boolean = false ；是否使用Camera2 open
+ * @param eFragmentLayout: Int = R.layout.fragment_camera ；相机预览控件  open
+ * @param eDesiredPreviewFrameSize: Size = Size(640, 480) ；相机预览大小  open
+ * @param eScreenOrientation: Int = default ；相机预览旋转  open
+ * @param eCameraId = "0"；相机ID  open
+ */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, Camera.PreviewCallback, CompoundButton.OnCheckedChangeListener {
     protected var ePreviewWidth = 0
     protected var ePreviewHeight = 0
-    open var eUseCamera2API: Boolean = true
+    open var eUseCamera2API: Boolean = false
     private var isProcess = false
     private val yuvBytes = arrayOfNulls<ByteArray>(3)
     //FrameLayout
-    val mFrameLayoutId= R.id.fl_camera_ontainer
-    abstract val eFrameLayoutId :Int
+    val mFrameLayoutId = R.id.fl_camera_ontainer
+//    相机框架布局ID
+    abstract val eFrameLayoutId: Int  //
     //相机预览控件
-    open val eFragmentLayout: Int=R.layout.fragment_camera
+    open val eFragmentLayout: Int = R.layout.fragment_camera
     //activity界面
     val mActivityLayout: Int = R.layout.activity_camera
     abstract val eActivityLayout: Int
     open val eDesiredPreviewFrameSize: Size = Size(640, 480)
-
+    /*设置相机预览*/
+    open val eCameraId = "0"// chooseCamera()
     private var postInferenceCallback: Runnable? = null
     private val apiSwitchCompat: SwitchCompat? = null
 
@@ -79,7 +81,6 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
         setContentView(eActivityLayout)
         setFragment()
     }
-
 
     /** android.hardware.Camera API 的预览回调 */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -104,13 +105,14 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
             return
         }
         yuvBytes[0] = bytes
-        when (returnType) {
-
-            TYPE.ByteArray -> {
-                eProcessImage(bytes)
-            }
-            else -> {
-                eProcessImage(eBitmap.eByteArrayToBitmp(bytes, ePreviewWidth, ePreviewHeight, rotate = bitmapRotation, isFlip = isFlip))
+        GlobalScope.launch {
+            when (returnType) {
+                TYPE.ByteArray -> {
+                    eProcessImage(bytes,ePreviewWidth,ePreviewHeight)
+                }
+                else -> {
+                    eProcessImage(eBitmap.eByteArrayToBitmp(bytes, ePreviewWidth, ePreviewHeight, rotate = bitmapRotation, isFlip = isFlip))
+                }
             }
         }
     }
@@ -132,6 +134,7 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
                 return
             }
             isProcess = false
+
             if (inArrays == null) {
                 inArrays = IntArray(ePreviewWidth * ePreviewHeight)
             }
@@ -153,9 +156,11 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
             image.close()
             val bitmap = Bitmap.createBitmap(ePreviewWidth, ePreviewHeight, Bitmap.Config.ARGB_8888)
             bitmap!!.setPixels(inArrays, 0, ePreviewWidth, 0, 0, ePreviewWidth, ePreviewHeight)
+
+
             when (returnType) {
                 TYPE.ByteArray -> {
-                    eProcessImage(eBitmap.eBitmapToByteArray(bitmap))
+                    eProcessImage(eBitmap.eBitmapToByteArray(bitmap), ePreviewWidth, ePreviewHeight)
                 }
                 else -> {
                     eProcessImage(eBitmap.eBitmapRotateFlip(bitmap, bitmapRotation, isFlip))
@@ -239,8 +244,7 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
         return null
     }
 
-    /*设置相机预览*/
-    open val eCameraId = "0"// chooseCamera()
+
 
     protected fun setFragment() {
         var fragment: Fragment? = null
@@ -281,8 +285,13 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
     private var returnType: Any = TYPE.Bitmap
     private var bitmapRotation = 0f
     private var isFlip = false
-    //camera1 bitmapRotation  拍照旋转
-    protected fun eReadyForNextImage(type: TYPE = TYPE.Bitmap, bitmapRotation: Float = 0f, isFlip: Boolean = false) {
+
+    /**
+    * @param type: TYPE = TYPE.Bitmap；回调类型
+    * @param bitmapRotation: Float = 0f；回调数据旋转
+    * @param isFlip: Boolean = false ；镜像翻转
+    */
+   fun eReadyForNextImage(type: TYPE = TYPE.Bitmap, bitmapRotation: Float = 0f, isFlip: Boolean = false) {
         returnType = type
         this.isFlip = isFlip
         this.bitmapRotation = bitmapRotation
@@ -292,7 +301,7 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
     }
 
     protected open fun eProcessImage(bitmap: Bitmap?) {}
-    protected open fun eProcessImage(byteArray: ByteArray?) {}
+    protected open fun eProcessImage(byteArray: ByteArray?, width: Int, height: Int) {}
     protected open fun eOnPreviewSizeChosen(size: Size, rotation: Int) {}
 
     companion object {
@@ -303,8 +312,6 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
     /** ------------------------------------- */
 
     @Synchronized
-    protected fun eRunInBackground(r: Runnable) {
-    }
 
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         eSetUseNNAPI(isChecked)

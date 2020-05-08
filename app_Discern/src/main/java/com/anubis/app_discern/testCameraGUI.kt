@@ -15,6 +15,7 @@
  */
 
 package com.anubis.app_discern
+
 import android.graphics.*
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.Build
@@ -26,11 +27,10 @@ import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogI
 import com.anubis.module_camera.Camera.customview.eOverlayView
 import com.anubis.module_camera.Camera.eCameraActivity
-import com.anubis.module_camera.Camera.tracking.eMultiBoxTracker
+import com.anubis.module_camera.Camera.eMultiBoxTracker
 import com.anubis.module_detection.face_mask.eFaceMask
 import com.anubis.module_detection.face_mnn.eFaceSDK
 import com.anubis.module_tensorflow.detection.eDetector
-import com.tencent.bugly.proguard.t
 import kotlinx.android.synthetic.main.test_gui.*
 import kotlinx.coroutines.*
 import org.jetbrains.anko.custom.async
@@ -44,7 +44,7 @@ import java.util.*
  * objects.
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-class testCameraGUI() : eCameraActivity(), OnImageAvailableListener, View.OnClickListener {
+class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickListener {
 
     override val eScreenOrientation: Int = 90
     override var eUseCamera2API: Boolean = true
@@ -53,12 +53,14 @@ class testCameraGUI() : eCameraActivity(), OnImageAvailableListener, View.OnClic
     private var faceMask: eFaceMask? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView( R.layout.test_gui)
 //        物体检测
         eDetector.eInit(this, assets).eLog("eDetector初始化")
 //        人脸检测
         eFaceSDK.eInit(this)
 //        口罩检测
         faceMask = eFaceMask(assets)
+
         iv_photo.setOnClickListener(this)
         iv_image.setOnClickListener(this)
         bt_body.setOnClickListener(this)
@@ -150,16 +152,19 @@ class testCameraGUI() : eCameraActivity(), OnImageAvailableListener, View.OnClic
                     }
                 }
                 test_container.id -> {
-                    mTrackerE = eMultiBoxTracker(this@testCameraGUI)
-                    //比例计算
-                    mTrackerE!!.setFrameConfiguration(bitmap!!.width,bitmap.height, true)
-                    val re = eFaceSDK.eFaceDetect(bitmap)
-
-                  val res=  LinkedList<Pair<Rect,String>>()
-                    re.forEach {
-                        res.add(Pair(it,re.indexOf(it).toString()))
+//        跟踪器
+                    mTrackerE = eMultiBoxTracker.einit(this@testCameraGUI)
+                   findViewById<eOverlayView>(R.id.frame_ov_tracking).addCallback {
+                        mTrackerE!!. draw(it)
                     }
-                    mTrackerE!!.trackResults( findViewById(R.id.frame_ov_tracking), res)
+                    //比例计算
+                    mTrackerE!!.setFrameConfiguration(bitmap!!.width, bitmap.height, true)
+                    val re = eFaceSDK.eFaceDetect(bitmap)
+                    val res = LinkedList<Pair<Rect, String>>()
+                    re.forEach {
+                        res.add(Pair(it, re.indexOf(it).toString()))
+                    }
+                    mTrackerE!!.eTrackResults(res)
                 }
             }
         }

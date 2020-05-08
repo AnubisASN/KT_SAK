@@ -26,9 +26,6 @@ constructor(assetManager: AssetManager) {
     private var anchors: Array<FloatArray>? = null
 
     private var interpreter: Interpreter?=null
-
-    internal var TAG = "TAG"
-
     init {
         val options = Interpreter.Options()
         options.setNumThreads(4)
@@ -56,7 +53,6 @@ constructor(assetManager: AssetManager) {
         datasets[0] = ImageUtils.normalizeImage(head)
         val loc = Array(1) { Array(len) { FloatArray(4) } }
         val cls = Array(1) { Array(len) { FloatArray(2) } }
-        Log.i(TAG, "detectFaceMasks: " + arrayOf<Any>(datasets).size)
         val outputs:HashMap<Int,Any>?= HashMap()
         outputs!!.put(interpreter!!.getOutputIndex("loc_branch_concat_1/concat"),loc)
         outputs.put(interpreter!!.getOutputIndex("cls_branch_concat_1/concat"),cls)
@@ -168,7 +164,6 @@ constructor(assetManager: AssetManager) {
     }
 
     private fun decodeBBox(boxes: Vector<Box>) {
-        Log.i(TAG, "decodeBBox: " + boxes.size)
         for (i in boxes.indices) {
             val box = boxes[i]
 

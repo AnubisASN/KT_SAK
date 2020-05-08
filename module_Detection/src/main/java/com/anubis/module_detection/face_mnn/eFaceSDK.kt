@@ -23,7 +23,7 @@ import com.anubis.kt_extends.*
  *说明：
  */
 object eFaceSDK {
-    fun eInit(context: Context) {
+    fun eInit(context: Context):eFaceSDK {
         eLog("FaceSDK准备初始化")
         val sdDir = Environment.getExternalStorageDirectory()//get model store dir
         val sdPath = "$sdDir/facesdk/"
@@ -34,6 +34,7 @@ object eFaceSDK {
         eAssets.eAssetsToFile(context, "slim-320-quant-ADMM-50.mnn",sdPath+"slim-320-quant-ADMM-50.mnn").eLog("slim-320-quant-ADMM-50")
         eLog("文件复制完成")
         FaceSDKNative.FaceDetectionModelInit(sdPath).eLogI("faceSDK初始化")
+        return  this
     }
 
     fun eFaceDetect(bitmap: Bitmap, imageChannel: Int = 4): ArrayList<Rect> {
@@ -45,7 +46,7 @@ object eFaceSDK {
         val faceInfo = FaceSDKNative.FaceDetect(byteArray, width, height, imageChannel)
         val faceNum = faceInfo[0]
         for (i in 0 until faceNum) {
-            results.add(Rect(faceInfo[1 + 4 * i], faceInfo[2 + 4 * i], faceInfo[3 + 4 * i], faceInfo[4 + 4 * i]))
+            results.add(Rect(faceInfo[1 + 4 * i], faceInfo[2 + 4 * i], faceInfo[3 + 4 * i], faceInfo[3 + 4 * i]+faceInfo[2 + 4 * i]-faceInfo[1 + 4 * i]+(faceInfo[4 + 4 * i]-faceInfo[3 + 4 * i])/10))
         }
         return results
     }

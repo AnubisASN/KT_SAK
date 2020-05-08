@@ -13,10 +13,7 @@ import android.content.pm.PackageManager
 import android.content.res.AssetManager
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.media.AudioFormat
-import android.media.AudioManager
-import android.media.AudioTrack
-import android.media.MediaPlayer
+import android.media.*
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
@@ -971,10 +968,8 @@ object eMatrix {
 object eBitmap {
     //Bitmap释放
     fun eGcBitmap(bitmap: Bitmap?) {
-        var bitmap = bitmap
         if (bitmap != null && !bitmap.isRecycled) {
             bitmap.recycle() // 回收图片所占的内存
-            bitmap = null
             System.gc() // 提醒系统及时回收
         }
     }
@@ -1097,6 +1092,89 @@ object eBitmap {
         }
     }
 
+    //Image获取字节
+    fun eGetImagetoByteArray(image: Image?): ByteArray? {
+        try {
+            //获取源数据，如果是YUV格式的数据planes.length = 3
+            //plane[i]里面的实际数据可能存在byte[].length <= capacity (缓冲区总大小)
+            val planes = image!!.planes
+            //数据有效宽度，一般的，图片width <= rowStride，这也是导致byte[].length <= capacity的原因
+            // 所以我们只取width部分
+            val width = image.width
+            val height = image.height
+            //此处用来装填最终的YUV数据，需要1.5倍的图片大小，因为Y U V 比例为 4:1:1
+            val yuvBytes = ByteArray(width * height * ImageFormat.getBitsPerPixel(ImageFormat.YUV_420_888) / 8)
+            //目标数组的装填到的位置
+            var dstIndex = 0
+            //临时存储uv数据的
+            val uBytes = ByteArray(width * height / 4)
+            val vBytes = ByteArray(width * height / 4)
+            var uIndex = 0
+            var vIndex = 0
+
+            var pixelsStride: Int
+            var rowStride: Int
+            for (i in planes.indices) {
+                pixelsStride = planes[i].pixelStride
+                rowStride = planes[i].rowStride
+
+                val buffer = planes[i].buffer
+
+                //如果pixelsStride==2，一般的Y的buffer长度=800x600，UV的长度=800x600/2-1
+                //源数据的索引，y的数据是byte中连续的，u的数据是v向左移以为生成的，两者都是偶数位为有效数据
+                val bytes = ByteArray(buffer.capacity())
+                buffer.get(bytes)
+
+                var srcIndex = 0
+                if (i == 0) {
+                    //直接取出来所有Y的有效区域，也可以存储成一个临时的bytes，到下一步再copy
+                    for (j in 0 until height) {
+                        System.arraycopy(bytes, srcIndex, yuvBytes, dstIndex, width)
+                        srcIndex += rowStride
+                        dstIndex += width
+                    }
+                } else if (i == 1) {
+                    //根据pixelsStride取相应的数据
+                    for (j in 0 until height / 2) {
+                        for (k in 0 until width / 2) {
+                            uBytes[uIndex++] = bytes[srcIndex]
+                            srcIndex += pixelsStride
+                        }
+                        if (pixelsStride == 2) {
+                            srcIndex += rowStride - width
+                        } else if (pixelsStride == 1) {
+                            srcIndex += rowStride - width / 2
+                        }
+                    }
+                } else if (i == 2) {
+                    //根据pixelsStride取相应的数据
+                    for (j in 0 until height / 2) {
+                        for (k in 0 until width / 2) {
+                            vBytes[vIndex++] = bytes[srcIndex]
+                            srcIndex += pixelsStride
+                        }
+                        if (pixelsStride == 2) {
+                            srcIndex += rowStride - width
+                        } else if (pixelsStride == 1) {
+                            srcIndex += rowStride - width / 2
+                        }
+                    }
+                }
+            }
+            //根据要求的结果类型进行填充
+            for (i in vBytes.indices) {
+                yuvBytes[dstIndex++] = uBytes[i]
+                yuvBytes[dstIndex++] = vBytes[i]
+            }
+            return yuvBytes
+        } catch (e: Exception) {
+            image?.close()
+            e. eLogE("")
+        }
+
+        return null
+    }
+
     //图片旋转翻转
     fun eBitmapRotateFlip(bitmap: Bitmap?, rotate: Float = 0f, isFlip: Boolean = false): Bitmap? {
         if (bitmap == null) {
@@ -1119,7 +1197,12 @@ object eBitmap {
 
     fun eBitmapToZoom(bitmap: Bitmap, zoomFactor: Int = 1, filter: Boolean = true) = eBitmapToZoom(bitmap, bitmap.width / zoomFactor, bitmap.height / zoomFactor, filter)
 
-    fun eBitmapToZoom(bitmap: Bitmap, width: Int, height: Int, filter: Boolean = true) = Bitmap.createScaledBitmap(bitmap, width, height, filter)
+    fun eBitmapToZoom(bitmap: Bitmap, width: Int, height: Int, filter: Boolean = true): Bitmap {
+       val tBitmap= Bitmap.createScaledBitmap(bitmap, width, height, filter)
+        if (tBitmap!==bitmap)
+         eGcBitmap(bitmap)
+        return  tBitmap
+    }
 
 
     //Bitmap压缩 (设置压缩率或者 设置大小)
