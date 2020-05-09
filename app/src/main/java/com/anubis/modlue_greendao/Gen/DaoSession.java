@@ -8,7 +8,7 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
-import com.anubis.SwissArmyKnife.GreenDao.Data;
+import com.anubis.SwissArmyKnife.GreenDao.eData;
 
 import com.anubis.modlue_greendao.Gen.DataDao;
 

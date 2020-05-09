@@ -25,7 +25,7 @@ import android.widget.Spinner
 import com.alibaba.android.arouter.launcher.ARouter
 import com.android.xhapimanager.XHApiManager
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
-import com.anubis.SwissArmyKnife.GreenDao.Data
+import com.anubis.SwissArmyKnife.GreenDao.eData
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleMsg
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTCP
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTTS
@@ -390,9 +390,9 @@ class MainActivity : Activity() {
                     }
 
                     getDigit("数据库") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("数据库插入：${eGreenDao(this@MainActivity).insertUser(Data("00000", "11111"))}")
-                        R.id.bt_item2 -> Hint("数据库查询:" + eGreenDao(this@MainActivity).queryAllUser(Data()).size)
-                        R.id.bt_item3 -> Hint("数据库删除：${eGreenDao(this@MainActivity).deleteAll(Data("", ""))}")
+                        R.id.bt_item1 -> Hint("数据库插入：${eGreenDao(this@MainActivity).insertUser(eData("00000", "11111"))}")
+                        R.id.bt_item2 -> Hint("数据库查询:" + eGreenDao(this@MainActivity).queryAllUser(eData()).size)
+                        R.id.bt_item3 -> Hint("数据库删除：${eGreenDao(this@MainActivity).deleteAll(eData("", ""))}")
                     }
                     getDigit("系统设置权限检测") -> when (view?.id) {
                         R.id.bt_item1 -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
