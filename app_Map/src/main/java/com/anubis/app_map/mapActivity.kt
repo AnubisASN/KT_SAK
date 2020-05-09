@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.anubis.app_map.sdkdemo.activity.DemoMainActivity
+import com.anubis.module_navi.activity.DemoMainActivity
 import com.anubis.module_navi.eNavigate
 import kotlinx.android.synthetic.main.map.*
 

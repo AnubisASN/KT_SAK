@@ -50,6 +50,7 @@ android {
         noCompress "tflite"
         noCompress "lite"
     }
+
 }
 kapt {
     arguments {

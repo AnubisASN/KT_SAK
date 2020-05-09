@@ -52,6 +52,6 @@ repositories {
 }
 dependencies {
     api project(':module_Navigate')
-    api ('org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.61'){exclude group:'org.jetbrains',module:'annotations'}
+//    api ('org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.61'){exclude group:'org.jetbrains',module:'annotations'}
 }
 
