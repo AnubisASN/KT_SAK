@@ -85,7 +85,6 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
     /** android.hardware.Camera API 的预览回调 */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     override fun onPreviewFrame(bytes: ByteArray, camera: Camera) {
-        eLog("eOnPreviewFrame")
         try {
             val previewSize = camera.parameters.previewSize
             ePreviewHeight = previewSize.height

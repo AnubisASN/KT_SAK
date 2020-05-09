@@ -1169,7 +1169,7 @@ object eBitmap {
             return yuvBytes
         } catch (e: Exception) {
             image?.close()
-            e. eLogE("")
+            e.eLogE("")
         }
 
         return null
@@ -1195,13 +1195,14 @@ object eBitmap {
         return newBM
     }
 
+    //bitmap 宽高压缩
     fun eBitmapToZoom(bitmap: Bitmap, zoomFactor: Int = 1, filter: Boolean = true) = eBitmapToZoom(bitmap, bitmap.width / zoomFactor, bitmap.height / zoomFactor, filter)
 
     fun eBitmapToZoom(bitmap: Bitmap, width: Int, height: Int, filter: Boolean = true): Bitmap {
-       val tBitmap= Bitmap.createScaledBitmap(bitmap, width, height, filter)
-        if (tBitmap!==bitmap)
-         eGcBitmap(bitmap)
-        return  tBitmap
+        val tBitmap = Bitmap.createScaledBitmap(bitmap, width, height, filter)
+        if (tBitmap !== bitmap)
+            eGcBitmap(bitmap)
+        return tBitmap
     }
 
 
@@ -1222,33 +1223,7 @@ object eBitmap {
         return BitmapFactory.decodeStream(isBm, null, null)
     }
 
-//    private fun decodeUri(selectedImage: Uri): Bitmap? {
-//        // Decode image size
-//        val o = BitmapFactory.Options()
-//        o.inJustDecodeBounds = true
-//        BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o)
-//
-//        // The new size we want to scale to
-//        val REQUIRED_SIZE = 400
-//
-//        //// Find the correct scale value. It should be the power of 2.
-//        var width_tmp = o.outWidth
-//        var height_tmp = o.outHeight
-//        var scale = 1
-//        while (true) {
-//            if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
-//                break
-//            }
-//            width_tmp /= 2
-//            height_tmp /= 2
-//            scale *= 2
-//        }
-//
-//        //// Decode with inSampleSize
-//        val o2 = BitmapFactory.Options()
-//        o2.inSampleSize = scale
-//        return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2)
-//    }
+
 
     //Bitmap转文件
     fun eBitmapToFile(bitmap: Bitmap, absPath: String, quality: Int = 80): Boolean {
@@ -1406,58 +1381,7 @@ object eBitmap {
         return ySize + uvSize
     }
 
-    //获取变换矩阵
-    fun eGetTransformationMatrix(
-            srcWidth: Int,
-            srcHeight: Int,
-            dstWidth: Int,
-            dstHeight: Int,
-            applyRotation: Int,
-            maintainAspectRatio: Boolean): Matrix {
-        val matrix = Matrix()
 
-        if (applyRotation != 0) {
-            if (applyRotation % 90 != 0) {
-                eLogE("Rotation of $applyRotation % 90 != 0")
-            }
-
-            // Translate so center of image is at origin.
-            matrix.postTranslate(-srcWidth / 2.0f, -srcHeight / 2.0f)
-
-            // Rotate around origin.
-            matrix.postRotate(applyRotation.toFloat())
-        }
-
-        // Account for the already applied rotation, if any, and then determine how
-        // much scaling is needed for each axis.
-        val transpose = (Math.abs(applyRotation) + 90) % 180 == 0
-
-        val inWidth = if (transpose) srcHeight else srcWidth
-        val inHeight = if (transpose) srcWidth else srcHeight
-
-        // Apply scaling if necessary.
-        if (inWidth != dstWidth || inHeight != dstHeight) {
-            val scaleFactorX = dstWidth / inWidth.toFloat()
-            val scaleFactorY = dstHeight / inHeight.toFloat()
-
-            if (maintainAspectRatio) {
-                // Scale by minimum factor so that dst is filled completely while
-                // maintaining the aspect ratio. Some image may fall off the edge.
-                val scaleFactor = Math.max(scaleFactorX, scaleFactorY)
-                matrix.postScale(scaleFactor, scaleFactor)
-            } else {
-                // Scale exactly to fill dst from src.
-                matrix.postScale(scaleFactorX, scaleFactorY)
-            }
-        }
-
-        if (applyRotation != 0) {
-            // Translate back from origin centered reference to destination frame.
-            matrix.postTranslate(dstWidth / 2.0f, dstHeight / 2.0f)
-        }
-
-        return matrix
-    }
 
 }
 
