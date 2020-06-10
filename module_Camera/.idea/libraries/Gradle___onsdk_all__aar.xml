@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: :onsdk_all:@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/onsdk_all.aar/3ed1d9b19937addde84d93349b27e53f/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/onsdk_all.aar/3ed1d9b19937addde84d93349b27e53f/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/onsdk_all.aar/3ed1d9b19937addde84d93349b27e53f/jars/libs/r-classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

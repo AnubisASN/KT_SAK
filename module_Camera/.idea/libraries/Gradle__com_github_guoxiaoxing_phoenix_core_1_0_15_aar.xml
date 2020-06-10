@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.guoxiaoxing:phoenix-core:1.0.15@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/phoenix-core-1.0.15.aar/fd3fc11c1316aaa9b3132cef9635548a/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/phoenix-core-1.0.15.aar/fd3fc11c1316aaa9b3132cef9635548a/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.guoxiaoxing/phoenix-core/1.0.15/2f87f22b2a44c57c7ad0da4cc1d65a8c0af1db84/phoenix-core-1.0.15-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.guoxiaoxing/phoenix-core/1.0.15/2e75c80532a426250d405ce6581aa21373b141ef/phoenix-core-1.0.15-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

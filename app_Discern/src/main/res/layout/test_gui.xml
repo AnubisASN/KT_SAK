@@ -35,6 +35,7 @@
         android:id="@+id/bt_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
         android:text="物体检测"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,18 +46,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="人脸检测"
-        app:layout_constraintBottom_toBottomOf="@+id/test_container"
+        app:layout_constraintBottom_toBottomOf="@+id/bt_body"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/bt_body" />
+        app:layout_constraintStart_toEndOf="@+id/bt_body"
+        app:layout_constraintTop_toTopOf="@+id/bt_body" />
+
+    <Button
+        android:id="@+id/bt_net"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Net对比 GUI"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_make" />
+
+    <Button
+        android:id="@+id/bt_TF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TF检测 GUI"
+        app:layout_constraintEnd_toStartOf="@+id/bt_landmark"
+        app:layout_constraintStart_toEndOf="@+id/bt_net"
+        app:layout_constraintTop_toBottomOf="@+id/bt_body" />
+
+    <Button
+        android:id="@+id/bt_landmark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Face地标 GUI"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_face" />
 
     <Button
         android:id="@+id/bt_make"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="口罩检测"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/bt_body"
         app:layout_constraintEnd_toStartOf="@+id/bt_body"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bt_body" />
 
     <ScrollView
         android:id="@+id/sv_hint"

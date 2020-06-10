@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: me.rosuh:AndroidFilePicker:0.4.3@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/AndroidFilePicker-0.4.3.aar/3e113de45378e041dbccd81866ea43ac/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/AndroidFilePicker-0.4.3.aar/3e113de45378e041dbccd81866ea43ac/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/me.rosuh/AndroidFilePicker/0.4.3/c35f38cd80e834d1a6f5be33e8594e97371eaa89/AndroidFilePicker-0.4.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

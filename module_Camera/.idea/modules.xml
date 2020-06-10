@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../KT_SAK.iml" filepath="$PROJECT_DIR$/../KT_SAK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../app/app.iml" filepath="$PROJECT_DIR$/../app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../app_Coroutine/app_Coroutine.iml" filepath="$PROJECT_DIR$/../app_Coroutine/app_Coroutine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../app_Discern/app_Discern.iml" filepath="$PROJECT_DIR$/../app_Discern/app_Discern.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../app_HServer/app_HServer.iml" filepath="$PROJECT_DIR$/../app_HServer/app_HServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../app_Map/app_Map.iml" filepath="$PROJECT_DIR$/../app_Map/app_Map.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../app_Picker/app_Picker.iml" filepath="$PROJECT_DIR$/../app_Picker/app_Picker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../app_TextR/app_TextR.iml" filepath="$PROJECT_DIR$/../app_TextR/app_TextR.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../app_WebRTC/app_WebRTC.iml" filepath="$PROJECT_DIR$/../app_WebRTC/app_WebRTC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_ASRW/module_ASRW.iml" filepath="$PROJECT_DIR$/../module_ASRW/module_ASRW.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_ArcFace/module_ArcFace.iml" filepath="$PROJECT_DIR$/../module_ArcFace/module_ArcFace.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_ArcFaceFT/module_ArcFaceFT.iml" filepath="$PROJECT_DIR$/../module_ArcFaceFT/module_ArcFaceFT.iml" />
+      <module fileurl="file://$PROJECT_DIR$/module_Camera.iml" filepath="$PROJECT_DIR$/module_Camera.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_CardOTG/module_CardOTG.iml" filepath="$PROJECT_DIR$/../module_CardOTG/module_CardOTG.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_Detection/module_Detection.iml" filepath="$PROJECT_DIR$/../module_Detection/module_Detection.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_Extends/module_Extends.iml" filepath="$PROJECT_DIR$/../module_Extends/module_Extends.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_FTP/module_FTP.iml" filepath="$PROJECT_DIR$/../module_FTP/module_FTP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_GreenDao/module_GreenDao.iml" filepath="$PROJECT_DIR$/../module_GreenDao/module_GreenDao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_HttpServer/module_HttpServer.iml" filepath="$PROJECT_DIR$/../module_HttpServer/module_HttpServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_Map/module_Map.iml" filepath="$PROJECT_DIR$/../module_Map/module_Map.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_Navigate/module_Navigate.iml" filepath="$PROJECT_DIR$/../module_Navigate/module_Navigate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_Office/module_Office.iml" filepath="$PROJECT_DIR$/../module_Office/module_Office.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_OpenCV/module_OpenCV.iml" filepath="$PROJECT_DIR$/../module_OpenCV/module_OpenCV.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_Picker/module_Picker.iml" filepath="$PROJECT_DIR$/../module_Picker/module_Picker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_PortMSG/module_PortMSG.iml" filepath="$PROJECT_DIR$/../module_PortMSG/module_PortMSG.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_QRCode/module_QRCode.iml" filepath="$PROJECT_DIR$/../module_QRCode/module_QRCode.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_TCP/module_TCP.iml" filepath="$PROJECT_DIR$/../module_TCP/module_TCP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_TTS/module_TTS.iml" filepath="$PROJECT_DIR$/../module_TTS/module_TTS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_TensorFlow/module_TensorFlow.iml" filepath="$PROJECT_DIR$/../module_TensorFlow/module_TensorFlow.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_TextRecognition/module_TextRecognition.iml" filepath="$PROJECT_DIR$/../module_TextRecognition/module_TextRecognition.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_UDevice/module_UDevice.iml" filepath="$PROJECT_DIR$/../module_UDevice/module_UDevice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_Utils/module_Utils.iml" filepath="$PROJECT_DIR$/../module_Utils/module_Utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_VNC/module_VNC.iml" filepath="$PROJECT_DIR$/../module_VNC/module_VNC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_VideoChat/module_VideoChat.iml" filepath="$PROJECT_DIR$/../module_VideoChat/module_VideoChat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_WebRTC/module_WebRTC.iml" filepath="$PROJECT_DIR$/../module_WebRTC/module_WebRTC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../module_WiFi/module_WiFi.iml" filepath="$PROJECT_DIR$/../module_WiFi/module_WiFi.iml" />
+    </modules>
+  </component>
+</project>

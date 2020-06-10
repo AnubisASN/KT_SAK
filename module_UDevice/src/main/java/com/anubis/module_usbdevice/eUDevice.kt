@@ -27,7 +27,7 @@ import java.util.*
  * Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  * Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  * Router :  /'Module'/'Function'
- * 说明：
+ * 说明： 安卓USB外置设备操作
  */
 
 @SuppressLint("StaticFieldLeak")

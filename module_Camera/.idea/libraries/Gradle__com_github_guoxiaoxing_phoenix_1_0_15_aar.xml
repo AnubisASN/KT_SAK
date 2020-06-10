@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.guoxiaoxing:phoenix:1.0.15@aar">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/phoenix-1.0.15.aar/c3184ab3257e8299798675a7aafb2329/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/phoenix-1.0.15.aar/c3184ab3257e8299798675a7aafb2329/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/phoenix-1.0.15.aar/c3184ab3257e8299798675a7aafb2329/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.guoxiaoxing/phoenix/1.0.15/720c1414ba38d494709ffbe8c420e80c5e8b6cfa/phoenix-1.0.15-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.guoxiaoxing/phoenix/1.0.15/7801d0c068973268f07f8d4052eeb47a75ffa399/phoenix-1.0.15-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

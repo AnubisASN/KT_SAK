@@ -18,7 +18,6 @@ android {
         }
     }
 }
-
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':module_Extends')

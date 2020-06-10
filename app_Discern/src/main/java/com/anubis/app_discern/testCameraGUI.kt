@@ -16,12 +16,14 @@
 
 package com.anubis.app_discern
 
+import android.content.Intent
 import android.graphics.*
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.view.View
+import com.anubis.app_discern.Activity.DiscernActivity
 import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogI
@@ -30,7 +32,9 @@ import com.anubis.module_camera.Camera.eCameraActivity
 import com.anubis.module_camera.Camera.eMultiBoxTracker
 import com.anubis.module_detection.face_mask.eFaceMask
 import com.anubis.module_detection.face_mnn.eFaceSDK
+import com.anubis.module_facelandmark.Landmark.MainActivity
 import com.anubis.module_tensorflow.detection.eDetector
+import com.anubis.module_tensorflow.detection.eDetectorGUI
 import kotlinx.android.synthetic.main.test_gui.*
 import kotlinx.coroutines.*
 import org.jetbrains.anko.custom.async
@@ -66,6 +70,9 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
         bt_body.setOnClickListener(this)
         bt_make.setOnClickListener(this)
         bt_face.setOnClickListener(this)
+        bt_net.setOnClickListener(this)
+        bt_TF.setOnClickListener(this)
+        bt_landmark.setOnClickListener(this)
         test_container.setOnClickListener(this)
     }
 
@@ -107,6 +114,9 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                 tv_hint.text = "人脸检测"
                 eReadyForNextImage(bitmapRotation = 90f)
             }
+            bt_net.id->startActivity(Intent(this,DiscernActivity::class.java))
+            bt_landmark.id->startActivity(Intent(this,MainActivity::class.java))
+            bt_TF.id->startActivity(Intent(this,eDetectorGUI::class.java))
             test_container.id -> {
                 tv_hint.text = "覆盖图层"
                 eReadyForNextImage(bitmapRotation = 90f)
