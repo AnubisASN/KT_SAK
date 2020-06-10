@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SAK-HTTP服务</string>
+    <string name="hint">浏览器输入地址：%1$s 以访问</string>
 </resources>

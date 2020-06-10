@@ -67,6 +67,14 @@ object ParameHandleMSG {
         }
     }
 
+    val handleWeb = @SuppressLint("HandlerLeak")
+    object : Handler() {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            handleWeb(msg)
+        }
+    }
+
     val uHandler = @SuppressLint("HandlerLeak")
     object : Handler() {
         override fun handleMessage(msg: Message) {
@@ -173,7 +181,7 @@ object ParameHandleMSG {
         }
         if (msg.what == HandlerMsg.READ_SUCCESS) {
             eLog("msg读卡成功")
-            eLog("读卡成功："+msg.obj)
+            eLog("读卡成功：" + msg.obj)
         }
     }
 
@@ -216,6 +224,10 @@ object ParameHandleMSG {
 //////                val SHANDLER_MSG_CODE = 22    //接收消息
 ////            eTCP.SHANDLER_MSG_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：接收到${obj.msg}")
 //        }
+    }
+
+    private fun handleWeb(msg: Message) {
+        mainActivity?.Hint("Web:${msg.obj}")
     }
 
     private fun handleUSB(msg: Message) {

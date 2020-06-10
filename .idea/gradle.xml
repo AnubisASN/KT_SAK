@@ -42,6 +42,7 @@
             <option value="$PROJECT_DIR$/module_VNC" />
             <option value="$PROJECT_DIR$/module_VideoChat" />
             <option value="$PROJECT_DIR$/module_WebRTC" />
+            <option value="$PROJECT_DIR$/module_WebSocket" />
             <option value="$PROJECT_DIR$/module_WiFi" />
           </set>
         </option>

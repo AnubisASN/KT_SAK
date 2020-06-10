@@ -41,6 +41,7 @@ import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Matcher
@@ -404,6 +405,44 @@ object eBReceiver {
  */
 object eApp {
 
+/*     通过APK地址获取此APP的包名和版本等信息*/
+
+    fun eGetApkInfo(context: Context, apkPath: String): Array<String?> {
+        val infos = arrayOfNulls<String>(3)
+        val pm = context.packageManager
+        val info = pm.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES)
+        if (info != null) {
+            val appInfo = info.applicationInfo
+            val appName = pm.getApplicationLabel(appInfo).toString()
+            infos[0] = appName
+            infos[1] = info.versionName //获取版本信息
+            infos[2] = appInfo.packageName   //获取安装包名称
+        }
+        return infos
+    }
+
+    /*
+    * APP国际化
+    * @parame
+    * */
+    fun eInternationalization(activity: Context, locale: Locale = Locale.getDefault()) {
+        //设置应用语言类型
+        val resources = activity.resources
+        val config = resources.configuration
+        val dm = resources.displayMetrics
+        config.locale = locale
+        resources.updateConfiguration(config, dm)
+//        //更新语言后，destroy当前页面，重新绘制
+        if (activity is Activity) {
+            activity.finish()
+            val it = Intent(activity, activity::class.java)
+            //清空任务栈确保当前打开activit为前台任务栈栈顶
+            it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            activity.startActivity(it)
+        }
+    }
+
+
     //获取所有安装的app
     fun eGetLocalApps(context: Context) = context.packageManager.queryIntentActivities(Intent(Intent.ACTION_MAIN, null), 0)
 
@@ -426,11 +465,11 @@ object eApp {
     }
 
     //APP重启
-    fun eAppRestart(context: Application, activity: Activity) {
+    fun eAppRestart(application: Application, activity: Activity) {
         //启动页
-        val intent = Intent(context, activity::class.java)
+        val intent = Intent(application, activity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
+        application.startActivity(intent)
         android.os.Process.killProcess(android.os.Process.myPid())
     }
 
@@ -729,6 +768,21 @@ object eTime {
     fun eGetCuoTime(date: String = eTime.eGetCurrentTime(), pattern: String = "yyyy-MM-dd HH:mm:ss", type: String = "s"): String {
         val date = SimpleDateFormat(pattern).parse(date).time.toString()
         return if (type == "s") date.substring(0, 10) else date
+    }
+
+    //将GMT格式的时间转换成yyyy-MM-dd HH:mm:ss格式
+    fun eGetGMTToDateTime(GMTTime: String, pattern: String = "EEE, d MMM yyyy HH:mm:ss 'GMT'", format: String = "yyyy-MM-dd HH:mm:ss"): String {
+        val sf = SimpleDateFormat(pattern, Locale.ENGLISH)
+        val sdf = SimpleDateFormat(format)
+        var date: Date? = null
+        var dateTime = ""
+        try {
+            date = sf.parse(GMTTime)
+            dateTime = sdf.format(date)
+        } catch (e: ParseException) {
+            e.eLogE("eGetGMTToDateTime")
+        }
+        return dateTime
     }
 }
 
@@ -1224,7 +1278,6 @@ object eBitmap {
     }
 
 
-
     //Bitmap转文件
     fun eBitmapToFile(bitmap: Bitmap, absPath: String, quality: Int = 80): Boolean {
         return eBitmapToFile(bitmap, File(absPath), quality)
@@ -1380,7 +1433,6 @@ object eBitmap {
 
         return ySize + uvSize
     }
-
 
 
 }
@@ -2034,6 +2086,11 @@ object eShell {
                 out = null;
             }
         }
+    }
+
+    //Shell APP重启
+    fun eAppReboot(activity: Activity) {
+        eExecShell("am force-stop ${activity.packageName} && am start -n ${activity.packageName}/${activity::class.java.name}")
     }
 }
 

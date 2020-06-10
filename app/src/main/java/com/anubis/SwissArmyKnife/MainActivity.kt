@@ -3,10 +3,8 @@ package com.anubis.SwissArmyKnife
 import android.Manifest
 import android.app.Activity
 import android.app.ProgressDialog
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -29,9 +27,8 @@ import com.anubis.SwissArmyKnife.GreenDao.eData
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleMsg
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTCP
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTTS
+import com.anubis.SwissArmyKnife.ParameHandleMSG.handleWeb
 import com.anubis.SwissArmyKnife.ParameHandleMSG.uHandler
-import com.anubis.SwissArmyKnife.R.id.sv_Hint
-import com.anubis.SwissArmyKnife.R.id.tv_Hint
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
 import com.anubis.kt_extends.eShell.eExecShell
@@ -54,25 +51,19 @@ import com.anubis.module_tts.listener.FileSaveListener
 import com.anubis.module_usbdevice.eUDevice
 import com.anubis.module_videochat.eVideoChatUI
 import com.anubis.module_vncs.eVNC
+import com.anubis.module_websocket.eWebSocket
 import com.anubis.utils.util.eToastUtils
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
-import com.lzy.okgo.utils.IOUtils.toByteArray
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.custom.async
-import org.jetbrains.anko.custom.onUiThread
 import org.jetbrains.anko.uiThread
-import org.json.JSONException
 import java.io.*
-import java.net.ServerSocket
-import java.net.Socket
-import java.net.URLDecoder
 import kotlin.collections.ArrayList
-import kotlin.concurrent.thread
 
 //                       _oo0oo_
 //                      o8888888o
@@ -101,8 +92,6 @@ class MainActivity : Activity() {
     private var datas: Array<String>? = null
     private var Time: Long = 0
     var XHA: XHApiManager? = null
-    private var hashMap1 = HashMap<String, Boolean>()
-    private var hashMap2 = HashMap<String, Boolean>()
     var progressDialog: ProgressDialog? = null
 
     companion object {
@@ -120,7 +109,7 @@ class MainActivity : Activity() {
         ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
         if (Build.MODEL == "ZK-R32A")
             XHA = XHApiManager()
@@ -133,7 +122,6 @@ class MainActivity : Activity() {
      */
 
     var i = 1
-
     private fun init() {
         filePath = "/sdcard/SAK_Record.txt"
         file = File(filePath)
@@ -226,6 +214,11 @@ class MainActivity : Activity() {
                         R.id.bt_item3 -> Hint("TCP服务关闭 ：" + eTCP.eCloseServer())
                     }
 
+                    getDigit("Web") -> when (view?.id) {
+                        R.id.bt_item1 -> Hint("Web服务连接:${eWebSocket.eConnect(MSG?:"ws://121.40.165.18:8800",handleWeb)}")
+                        R.id.bt_item2 -> Hint("Web服务发送:${eWebSocket.eSendMSG(MSG?:"123")}")
+                        R.id.bt_item3 -> Hint("Web服务关闭 ：" + eWebSocket.eClose())
+                    }
 
                     getDigit("GPIO") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("GPIO读取：${XHA!!.XHReadGpioValue(MSG?.toInt() ?: 0)}")

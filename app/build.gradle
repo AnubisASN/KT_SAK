@@ -82,6 +82,7 @@ dependencies {
     implementation project(':module_TCP')
     implementation project(':module_VideoChat')
     implementation project(':module_Detection')
+    implementation project(path: ':module_WebSocket')
 }
 repositories {
     mavenCentral()

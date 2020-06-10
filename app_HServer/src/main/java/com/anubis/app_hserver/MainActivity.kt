@@ -1,10 +1,14 @@
 package com.anubis.app_hserver
 
 import android.annotation.SuppressLint
+import android.app.Application
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.view.View
+import com.anubis.kt_extends.eApp
 import com.anubis.kt_extends.eAssets.eAssetsToFile
 import com.anubis.kt_extends.eDevice
 import com.anubis.kt_extends.eLog
@@ -14,6 +18,12 @@ import com.anubis.module_httpserver.eResolverType
 import com.anubis.module_httpserver.protocols.http.eHTTPD
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
+import java.util.*
+import kotlin.collections.HashMap
+import android.content.Intent
+import com.anubis.kt_extends.eShell
+import com.anubis.kt_extends.eShell.eAppReboot
+
 
 @SuppressLint("SetTextI18n")
 class MainActivity : AppCompatActivity() {
@@ -30,11 +40,12 @@ class MainActivity : AppCompatActivity() {
                 eResolverType.RAW_PARSE -> eLog("RAW解析：${msg.obj}")
                 eResolverType.SESSION_PARSE -> {
                     eLog("常用解析")
-                    (msg.obj as HashMap<*, *>).forEach{
+                    (msg.obj as HashMap<*, *>).forEach {
                         eLog("Key:${it.key}--Value:${it.value}")
                     }
                 }
-                else->{}
+                else -> {
+                }
             }
         }
     }
@@ -55,10 +66,35 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        tvHint.text = "浏览器输入地址：${eDevice.eGetHostIP()}:${mHttpServer?.myPort} 以访问"
+        tvHint.text = String.format(resources.getString(R.string.hint), "${eDevice.eGetHostIP()}:${mHttpServer?.myPort}")
     }
-//    fun onClick(v: View) {
-//        val flutterView=Flutter.createView(this,lifecycle,"route1")
-//        cl.addView(flutterView)
-//    }
+
+    fun onClick(v: View) {
+        when (v.id) {
+            btChinese.id -> switchLanguage(Locale.CHINESE)
+            btEnglish.id -> switchLanguage(Locale.ENGLISH)
+        }
+    }
+
+    /**
+     * 切换语言
+     *
+     * @param language
+     */
+
+    private fun switchLanguage(locale: Locale = Locale.getDefault()) {
+        //设置应用语言类型
+        val resources = resources
+        val config = resources.configuration
+        val dm = resources.displayMetrics
+        config.locale = locale
+        resources.updateConfiguration(config, dm)
+//        //更新语言后，destroy当前页面，重新绘制
+        finish()
+        val it = Intent(this@MainActivity, MainActivity::class.java)
+        //清空任务栈确保当前打开activit为前台任务栈栈顶
+        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(it)
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.anubis.app_coroutine
 
+import android.provider.Contacts
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eTime
 import com.tencent.bugly.proguard.w
@@ -264,23 +265,23 @@ class CoroutineTest {
     @Test  //超时协程 return null
     fun 超时协程1() = runBlocking {
         val result = withTimeoutOrNull(2000L) {
-            repeat(100) { i ->
+            repeat(10) { i ->
                 println("协程$i")
                 delay(100L)
             }
-            "执行完成"
+            "完成"
         }
         println("Result:$result")
     }
 
     @Test
-    fun test()= runBlocking {
-       var tempStatus:Boolean?=null
-        tempStatus=withTimeout(500L) {
+    fun test() = runBlocking {
+        var tempStatus: Boolean? = null
+        tempStatus = withTimeout(500L) {
             while (tempStatus == null) {
                 delay(10)
             }
-             true
+            true
         }
         println(tempStatus)
     }
@@ -352,4 +353,6 @@ class CoroutineTest {
         }
         println("结束")
     }
+
+
 }

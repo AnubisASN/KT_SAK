@@ -20,6 +20,8 @@ import com.anubis.module_httpserver.eResolverType.FILE_PUSH
 import com.anubis.module_httpserver.eResolverType.NULL_PARSE
 import com.anubis.module_httpserver.eResolverType.RAW_PARSE
 import com.anubis.module_httpserver.eResolverType.SESSION_PARSE
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import java.io.File
 
 
@@ -53,6 +55,7 @@ class eResolver(port: Int = 3335, handler: Handler? = null) : eHTTPD(port, handl
                     } != null)
                 "上传成功"
             else "上传失败"
+//        RAW发送    upRequestBody(RequestBody.create(MediaType.parse("application/json; charset=utf-8"),"{\"type\":\"Response\"}"))
             "Raw" -> rawParse(session).apply {
                 val msg = handler?.obtainMessage()
                 msg?.what = RAW_PARSE

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hint">Browser input address：%1$s To visit</string>
+</resources>

@@ -23,12 +23,11 @@ import org.greenrobot.greendao.annotation.Generated;
 public class eData {
     public String time;
     public   String name;
-    @Generated(hash = 966176266)
+    @Generated(hash = 1172605371)
     public eData(String time, String name) {
         this.time = time;
         this.name = name;
     }
-    @Generated(hash = 2135787902)
     public eData() {
     }
     public String getTime() {

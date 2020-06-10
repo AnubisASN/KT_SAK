@@ -133,7 +133,6 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
                 return
             }
             isProcess = false
-
             if (inArrays == null) {
                 inArrays = IntArray(ePreviewWidth * ePreviewHeight)
             }
@@ -155,8 +154,6 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
             image.close()
             val bitmap = Bitmap.createBitmap(ePreviewWidth, ePreviewHeight, Bitmap.Config.ARGB_8888)
             bitmap!!.setPixels(inArrays, 0, ePreviewWidth, 0, 0, ePreviewWidth, ePreviewHeight)
-
-
             when (returnType) {
                 TYPE.ByteArray -> {
                     eProcessImage(eBitmap.eBitmapToByteArray(bitmap), ePreviewWidth, ePreviewHeight)
@@ -165,11 +162,9 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
                     eProcessImage(eBitmap.eBitmapRotateFlip(bitmap, bitmapRotation, isFlip))
                 }
             }
-
         } catch (e: Exception) {
             return
         }
-
     }
 
     @Synchronized
