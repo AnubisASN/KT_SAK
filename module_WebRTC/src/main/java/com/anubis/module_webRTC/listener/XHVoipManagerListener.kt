@@ -67,21 +67,21 @@ class XHVoipManagerListener : IXHVoipManagerListener {
     }
 
     override fun onHangup(fromID: String) {
-        this.eLog<Any>("XHVoipManagerListener-onHangup")
+        this.eLog<Any>("XHVoipManagerListener-onHangup:$fromID")
         AEvent.notifyListener(AEvent.AEVENT_VOIP_REV_HANGUP, true, fromID)
     }
 
     override fun onError(errorCode: String) {
-        this.eLog<Any>("XHVoipManagerListener-onError")
+        this.eLog<Any>("XHVoipManagerListener-onError:$errorCode")
         AEvent.notifyListener(AEvent.AEVENT_VOIP_REV_ERROR, true, StarErrorCode.getErrorCode(errorCode))
     }
 
     override fun onReceiveRealtimeData(data: ByteArray) {
-        this.eLog<Any>("XHVoipManagerListener-onReceiveRealtimeData", "TAG")
+        this.eLog<Any>("XHVoipManagerListener-onReceiveRealtimeData:${String(data)}", "TAG")
     }
 
     override fun onTransStateChanged(state: Int) {
-        this.eLog<Any>("XHVoipManagerListener-onTransStateChanged", "TAG")
+        this.eLog<Any>("XHVoipManagerListener-onTransStateChanged:$state", "TAG")
         AEvent.notifyListener(AEvent.AEVENT_VOIP_TRANS_STATE_CHANGED, true, state)
     }
 }

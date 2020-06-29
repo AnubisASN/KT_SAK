@@ -41,7 +41,6 @@ public class FaceTracking {
     public  void FaceTrackingInit(byte[] data , int height,int width)
     {
         initTracking(data,height,width,session);
-
     }
 
     public void Update(byte[] data , int height,int width)

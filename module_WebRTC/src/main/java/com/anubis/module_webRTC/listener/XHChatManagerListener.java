@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 public class XHChatManagerListener implements IXHChatManagerListener {
     @Override
     public void onReceivedMessage(XHIMMessage message) {
-        EExtendsKt.eLog(this,"XHChatManager-onReceivedMessage","TAG");
+        EExtendsKt.eLog(this,"XHChatManager-onReceivedMessage\n"+message.toString(),"TAG");
         HistoryBean historyBean = new HistoryBean();
         historyBean.setType(CoreDB.HISTORY_TYPE_C2C);
         historyBean.setLastTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));
@@ -36,7 +36,7 @@ public class XHChatManagerListener implements IXHChatManagerListener {
 
     @Override
     public void onReceivedSystemMessage(XHIMMessage message) {
-        EExtendsKt.eLog(this,"XHChatManager-onReceivedSystemMessage","TAG");
+        EExtendsKt.eLog(this,"XHChatManager-onReceivedSystemMessage\n"+message.toString(),"TAG");
         HistoryBean historyBean = new HistoryBean();
         historyBean.setType(CoreDB.HISTORY_TYPE_C2C);
         historyBean.setLastTime(new SimpleDateFormat("MM-dd HH:mm").format(new java.util.Date()));

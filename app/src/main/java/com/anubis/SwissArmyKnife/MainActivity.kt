@@ -151,7 +151,6 @@ class MainActivity : Activity() {
                             }
                         }
                         when (view?.id) {
-
                             R.id.bt_item1 -> {
                                 TTS = TTS!!.setParams(voiceModel[spID])
                                 Handler().postDelayed({
@@ -172,7 +171,7 @@ class MainActivity : Activity() {
                     }
                     getDigit("二维码") -> when (view?.id) {
                         R.id.bt_item1 -> {
-                            iv_Hint.setImageBitmap(eQRCode.createQRCode(MSG ?: "请输入内容"))
+                            iv_Hint.setImageBitmap(eQRCode.eCreateQRCode(MSG ?: "请输入内容"))
                             iv_Hint.visibility = View.VISIBLE
                             Handler().postDelayed({ iv_Hint.visibility = View.GONE }, 5000)
                         }

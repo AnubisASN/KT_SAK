@@ -74,7 +74,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
         starRTCAudioManager.start(new StarRTCAudioManager.AudioManagerEvents() {
             @Override
             public void onAudioDeviceChanged(StarRTCAudioManager.AudioDevice selectedAudioDevice, Set availableAudioDevices) {
-                eLog(this, selectedAudioDevice.name(), "T");
+                eLog(this, selectedAudioDevice.name(), "TAG");
             }
         });
         starRTCAudioManager.setDefaultAudioDevice(StarRTCAudioManager.AudioDevice.SPEAKER_PHONE);
@@ -334,16 +334,22 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.calling_view).setVisibility(View.GONE);
         findViewById(R.id.talking_view).setVisibility(View.VISIBLE);
 
-        final Long[] time = {outTime};
+        Long[] time;
+        try {
+            time = new Long[]{Long.parseLong(MLOC.INSTANCE.getMaxTime())};
+        } catch (NumberFormatException e) {
+            time=new Long[]{outTime};
+        }
+        final Long[] finalTime = time;
         mTalkingTiTask = new TimerTask() {
             @Override
             public void run() {
-                time[0]--;
+                finalTime[0]--;
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        tvTimer.setText("剩余时间:" + time[0]);
-                        if (time[0] == 0) {
+                        tvTimer.setText("剩余时间:" + finalTime[0]);
+                        if (finalTime[0] == 0) {
                             onClick(null);
                             eLog(this,"倒计时关闭","TAG");
                         }

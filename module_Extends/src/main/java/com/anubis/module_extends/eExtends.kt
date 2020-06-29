@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.custom.async
 import org.json.JSONObject
+import org.junit.Test
 import java.io.*
 import java.lang.Process
 import java.net.*
@@ -331,18 +332,42 @@ fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = Aud
  */
 object eJson {
     //Object Json解析扩展
-    fun eGetJsonObject(json: String, resultKey: String) = JSONObject(json).optString(resultKey)
-
-    fun eGetJsonObject(json: String, resultKey: String, default: Any = ""): Any {
-        return when (default) {
-            is String -> JSONObject(json).optString(resultKey, default)
-            is Int -> JSONObject(json).optInt(resultKey, default)
-            is Long -> JSONObject(json).optLong(resultKey, default)
-            is Boolean -> JSONObject(json).optBoolean(resultKey, default)
-            is Double -> JSONObject(json).optDouble(resultKey, default)
-            else -> default
-        }
+    fun <T>eGetJsonObject(json: String, resultKey: String, default: T="" as T): T {
+            return try {
+                when (default) {
+                    is String -> JSONObject(json).getString(resultKey) as T
+                    is Int -> JSONObject(json).getInt(resultKey)as T
+                    is Long -> JSONObject(json).getLong(resultKey)as T
+                    is Boolean -> JSONObject(json).getBoolean(resultKey)as T
+                    is Double -> JSONObject(json).getDouble(resultKey)as T
+                    else ->default
+                }
+            } catch (e: Exception) {
+                default
+            }
     }
+
+    fun eGetJsonObject(json: String, resultKey: String)=try {
+                JSONObject(json).getInt(resultKey)
+            } catch (e: Exception) {
+                try {
+                    JSONObject(json).getLong(resultKey)
+                } catch (e: Exception) {
+                    try {
+                        JSONObject(json).getBoolean(resultKey)
+                    } catch (e: Exception) {
+                        try {
+                            JSONObject(json).getDouble(resultKey)
+                        } catch (e: Exception) {
+                            try {
+                                JSONObject(json).getString(resultKey)
+                            } catch (e: Exception) {
+                                null
+                            }
+                        }
+                }
+            }
+        }
 
     //Array Json解析扩展
     fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).optJSONArray(resultKey).getJSONObject(i).toString()
@@ -1728,6 +1753,17 @@ object eFile {
         return file
     }
 
+    /**
+     * 屏幕截图
+     * @param activity
+     * @return
+     */
+    fun eActivityScreenShot(activity: Activity): Bitmap {
+        val dView = activity.window.decorView
+        dView.setDrawingCacheEnabled(true)
+        dView.buildDrawingCache()
+        return  Bitmap.createBitmap(dView.drawingCache)
+    }
 }
 
 /**

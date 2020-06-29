@@ -34,7 +34,7 @@ object eQRCode {
      * @return bitmap
      */
     @JvmOverloads
-    fun createQRCode(text: String, size: Int = 500): Bitmap? {
+    fun eCreateQRCode(text: String, size: Int = 500): Bitmap? {
         try {
             val hints = Hashtable<EncodeHintType, String>()
             hints[EncodeHintType.CHARACTER_SET] = "utf-8"
@@ -69,7 +69,7 @@ object eQRCode {
      * @param mBitmap
      * @return
      */
-    fun createQRCodeWithLogo2(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    fun eCreateQRCodeWithLogo2(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -114,7 +114,7 @@ object eQRCode {
      * @param mBitmap
      * @return
      */
-    fun createQRCodeWithLogo3(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    fun eCreateQRCodeWithLogo3(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -158,7 +158,7 @@ object eQRCode {
      * @param mBitmap
      * @return
      */
-    fun createQRCodeWithLogo4(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    fun eCreateQRCodeWithLogo4(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -207,7 +207,7 @@ object eQRCode {
      * @param mBitmap
      * @return
      */
-    fun createQRCodeWithLogo5(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    fun eCreateQRCodeWithLogo5(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -271,7 +271,7 @@ object eQRCode {
      * @param mBitmap
      * @return
      */
-    fun createQRCodeWithLogo6(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    fun eCreateQRCodeWithLogo6(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10

@@ -4,13 +4,11 @@ import android.app.Activity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-
 import com.anubis.module_webRTC.R
 import com.anubis.module_webRTC.utils.AEvent
 import com.anubis.module_webRTC.utils.IEventListener
 import com.starrtc.starrtcsdk.api.XHClient
 import com.starrtc.starrtcsdk.core.im.message.XHIMMessage
-
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -114,7 +112,6 @@ open class BaseActivity : Activity(), IEventListener {
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
-
             }
             AEvent.AEVENT_USER_OFFLINE -> {
                 MLOC.showMsg(this@BaseActivity, "服务已断开")
@@ -149,7 +146,8 @@ open class BaseActivity : Activity(), IEventListener {
                     (findViewById<View>(R.id.userinfo_id) as TextView).text = MLOC.userId
                 }
             }
-        }//                if(!MLOC.canPickupVoip){
+        }
+        //                if(!MLOC.canPickupVoip){
         //                    MLOC.hasNewVoipMsg = true;
         //                    try {
         //                        JSONObject alertData = new JSONObject();

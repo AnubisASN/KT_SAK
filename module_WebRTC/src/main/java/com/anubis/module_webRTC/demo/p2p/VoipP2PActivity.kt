@@ -9,6 +9,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Chronometer
 import android.widget.TextView
+import com.anubis.kt_extends.eLog
 
 import com.anubis.module_webRTC.R
 import com.anubis.module_webRTC.demo.BaseActivity
@@ -46,8 +47,9 @@ class VoipP2PActivity : BaseActivity(), View.OnClickListener {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         starRTCAudioManager = StarRTCAudioManager.create(this)
-        starRTCAudioManager!!.start { selectedAudioDevice, availableAudioDevices -> }
-
+        starRTCAudioManager!!.start { selectedAudioDevice, availableAudioDevices ->
+            eLog(selectedAudioDevice.name+"--"+availableAudioDevices.size)
+        }
         setContentView(R.layout.activity_voip_p2p)
         voipP2PManager = XHClient.getInstance().voipP2PManager
         voipP2PManager!!.setRtcMediaType(XHConstants.XHRtcMediaTypeEnum.STAR_RTC_MEDIA_TYPE_VIDEO_AND_AUDIO)

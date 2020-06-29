@@ -37,7 +37,7 @@ import java.util.TimerTask
 object MLOC {
     //    lateinit var mAPP!!: Context
     var userId: String? = "0"
-
+    var maxTime = "60"
     var SERVER_HOST: String? = "119.23.77.41"
     var VOIP_SERVER_URL: String? = "$SERVER_HOST:10086"
     var IM_SERVER_URL: String? = "$SERVER_HOST:19903"
@@ -102,6 +102,7 @@ object MLOC {
         if (coreDB == null) {
             coreDB = CoreDB(context)
         }
+        maxTime=loadSharedData(context, "maxTime", maxTime)?:"60"
         userId = loadSharedData(context, "userId", userId)
         SERVER_HOST = loadSharedData(context, "SERVER_HOST", SERVER_HOST)
         VOIP_SERVER_URL = loadSharedData(context, "VOIP_SERVER_URL", VOIP_SERVER_URL)
@@ -216,6 +217,11 @@ object MLOC {
     fun saveServerUrl(ServerUrl: String) {
         MLOC.SERVER_HOST = ServerUrl
         saveSharedData(mAPP!!, "SERVER_HOST", SERVER_HOST)
+    }
+
+    fun saveMaxTima(MaxTime: String) {
+        MLOC.maxTime = MaxTime
+        saveSharedData(mAPP!!, "maxTime", maxTime)
     }
 
     fun saveVoipServerUrl(voipServerUrl: String) {

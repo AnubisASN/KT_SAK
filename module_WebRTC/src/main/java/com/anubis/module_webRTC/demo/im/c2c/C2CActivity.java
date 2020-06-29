@@ -94,7 +94,6 @@ public class C2CActivity extends Activity implements IEventListener, AdapterView
             public void success(Object data) {
                 MLOC.INSTANCE.d("IM_C2C  成功","消息序号："+data);
             }
-
             @Override
             public void failed(String errMsg) {
                 MLOC.INSTANCE.d("IM_C2C  失败","消息序号："+errMsg);

@@ -8,10 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.view.View
-import com.anubis.kt_extends.eApp
 import com.anubis.kt_extends.eAssets.eAssetsToFile
-import com.anubis.kt_extends.eDevice
-import com.anubis.kt_extends.eLog
 import com.anubis.module_httpserver.eResolver
 import com.anubis.module_httpserver.eHttpServer
 import com.anubis.module_httpserver.eResolverType
@@ -21,8 +18,9 @@ import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
 import android.content.Intent
-import com.anubis.kt_extends.eShell
+import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eShell.eAppReboot
+import com.tencent.bugly.proguard.s
 
 
 @SuppressLint("SetTextI18n")

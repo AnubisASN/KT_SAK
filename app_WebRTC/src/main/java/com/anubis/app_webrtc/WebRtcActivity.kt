@@ -11,6 +11,7 @@ import com.anubis.module_webRTC.demo.MLOC
 import com.anubis.module_webRTC.demo.MLOC.VOIP_SERVER_URL
 import com.anubis.module_webRTC.demo.MLOC.init
 import com.anubis.module_webRTC.demo.MLOC.saveImServerUrl
+import com.anubis.module_webRTC.demo.MLOC.saveMaxTima
 import com.anubis.module_webRTC.demo.MLOC.saveServerUrl
 import com.anubis.module_webRTC.demo.MLOC.saveUserId
 import com.anubis.module_webRTC.demo.SplashActivity
@@ -56,9 +57,18 @@ class WebRtcActivity : AppCompatActivity() {
                 val localId = uri.getQueryParameter("localId").eLog("localId")
                 if (localId != null && localId.isNotBlank() && localId.isNotEmpty())
                     saveUserId(localId)
+
+                val maxTimae = uri.getQueryParameter("maxTime").eLog("maxTime")
+                if (maxTimae != null && maxTimae.isNotBlank() && maxTimae.isNotEmpty())
+                    saveMaxTima(localId)
                 val isAutoAnswer = uri.getBooleanQueryParameter("autoAnswer",false).eLog("autoAnswer")!!
                 if (isAutoAnswer) {
                      eSetSystemSharedPreferences("isAutoAnswer",isAutoAnswer)
+                }
+                try {
+                    initRRT()
+                }catch (e:Exception){
+                    eLogE("initRRT",e)
                 }
                 finish()
             }
@@ -69,7 +79,6 @@ class WebRtcActivity : AppCompatActivity() {
                 val cameraId = (uri.getQueryParameter("cameraId").eLog("cameraId")
                         ?: 0).toString().toInt()
                 if (targetId != null || targetId!!.isNotBlank()) {
-                    initRRT()
                     startVoip(targetId, outTime, cameraId)
                 } else {
                     eShowTip("targetId为空")

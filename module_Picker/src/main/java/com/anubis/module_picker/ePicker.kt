@@ -93,7 +93,7 @@ object ePicker {
             else -> null
         }
     } else {
-        activity.eShowTip("你没有选择任何~")
+        activity.eShowTip("NULL~")
         null
     }
 
