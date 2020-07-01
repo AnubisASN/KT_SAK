@@ -33,7 +33,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.custom.async
 import org.json.JSONObject
-import org.junit.Test
 import java.io.*
 import java.lang.Process
 import java.net.*
@@ -66,6 +65,9 @@ import kotlin.experimental.and
  * /+Id :  'LoayoutName'_'Widget'+FunctionName
  * Router :  /'Module'/'Function'
  * 说明：Toamst扩展函数
+ * Environment.getExternalStorageDirectory() /storage/sdcard0
+ * getExternalFilesDir()
+ * getExternalCacheDir()
  */
 
 
@@ -335,13 +337,13 @@ object eJson {
     fun <T>eGetJsonObject(json: String, resultKey: String, default: T="" as T): T {
             return try {
                 when (default) {
-                    is String -> JSONObject(json).getString(resultKey) as T
-                    is Int -> JSONObject(json).getInt(resultKey)as T
-                    is Long -> JSONObject(json).getLong(resultKey)as T
-                    is Boolean -> JSONObject(json).getBoolean(resultKey)as T
-                    is Double -> JSONObject(json).getDouble(resultKey)as T
+                    is String -> JSONObject(json).getString(resultKey)
+                    is Int -> JSONObject(json).getInt(resultKey)
+                    is Long -> JSONObject(json).getLong(resultKey)
+                    is Boolean -> JSONObject(json).getBoolean(resultKey)
+                    is Double -> JSONObject(json).getDouble(resultKey)
                     else ->default
-                }
+                }as T
             } catch (e: Exception) {
                 default
             }
@@ -368,12 +370,10 @@ object eJson {
                 }
             }
         }
-
     //Array Json解析扩展
     fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).optJSONArray(resultKey).getJSONObject(i).toString()
 
     fun eGetJsonArray(json: String, resultKey: String) = JSONObject(json).optJSONArray(resultKey)
-
 }
 
 /**
@@ -429,9 +429,7 @@ object eBReceiver {
  * App程序扩展类--------------------------------------------------------------------------------------
  */
 object eApp {
-
 /*     通过APK地址获取此APP的包名和版本等信息*/
-
     fun eGetApkInfo(context: Context, apkPath: String): Array<String?> {
         val infos = arrayOfNulls<String>(3)
         val pm = context.packageManager
@@ -457,7 +455,7 @@ object eApp {
         val dm = resources.displayMetrics
         config.locale = locale
         resources.updateConfiguration(config, dm)
-//        //更新语言后，destroy当前页面，重新绘制
+        //更新语言后，destroy当前页面，重新绘制
         if (activity is Activity) {
             activity.finish()
             val it = Intent(activity, activity::class.java)
@@ -467,10 +465,8 @@ object eApp {
         }
     }
 
-
     //获取所有安装的app
     fun eGetLocalApps(context: Context) = context.packageManager.queryIntentActivities(Intent(Intent.ACTION_MAIN, null), 0)
-
 
     //获取APP包名
     fun eGetLocalAppsPackageName(context: Context, appName: String): String? {
@@ -517,8 +513,7 @@ object eApp {
         }
     }
 
-
-    //    APP包名启动
+    //APP包名启动
     fun eAppStart(activity: Activity, packageName: String? = null): Boolean {
         try {
             val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(packageName
@@ -635,7 +630,7 @@ object eApp {
     }
 
 
-    //   首选Summary项动态改变
+    //首选Summary项动态改变
     //sSummaryDynamicSetting(findPreference("root_screen") as PreferenceScreen)
     //Summary修改
     fun Context.eSummaryModify(group: PreferenceGroup) {

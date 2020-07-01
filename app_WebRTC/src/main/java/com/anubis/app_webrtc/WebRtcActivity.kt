@@ -35,7 +35,6 @@ class WebRtcActivity : AppCompatActivity() {
         init()
     }
 
-
     companion object {
         val CALL = "CALL"  //拨打
         val HANG = "HANG"  //挂断

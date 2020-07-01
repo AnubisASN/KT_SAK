@@ -1,8 +1,6 @@
 package com.anubis.app_hserver
 
 import android.annotation.SuppressLint
-import android.app.Application
-import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -15,12 +13,8 @@ import com.anubis.module_httpserver.eResolverType
 import com.anubis.module_httpserver.protocols.http.eHTTPD
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
-import java.util.*
 import kotlin.collections.HashMap
-import android.content.Intent
 import com.anubis.kt_extends.*
-import com.anubis.kt_extends.eShell.eAppReboot
-import com.tencent.bugly.proguard.s
 
 
 @SuppressLint("SetTextI18n")
@@ -69,30 +63,8 @@ class MainActivity : AppCompatActivity() {
 
     fun onClick(v: View) {
         when (v.id) {
-            btChinese.id -> switchLanguage(Locale.CHINESE)
-            btEnglish.id -> switchLanguage(Locale.ENGLISH)
         }
     }
 
-    /**
-     * 切换语言
-     *
-     * @param language
-     */
-
-    private fun switchLanguage(locale: Locale = Locale.getDefault()) {
-        //设置应用语言类型
-        val resources = resources
-        val config = resources.configuration
-        val dm = resources.displayMetrics
-        config.locale = locale
-        resources.updateConfiguration(config, dm)
-//        //更新语言后，destroy当前页面，重新绘制
-        finish()
-        val it = Intent(this@MainActivity, MainActivity::class.java)
-        //清空任务栈确保当前打开activit为前台任务栈栈顶
-        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(it)
-    }
 
 }

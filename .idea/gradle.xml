@@ -45,6 +45,7 @@
             <option value="$PROJECT_DIR$/module_WebRTC" />
             <option value="$PROJECT_DIR$/module_WebSocket" />
             <option value="$PROJECT_DIR$/module_WiFi" />
+            <option value="$PROJECT_DIR$/module_Xpath" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
