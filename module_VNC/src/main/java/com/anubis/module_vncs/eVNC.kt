@@ -35,12 +35,12 @@ object eVNC {
         val inputStream: InputStream
         var result = false
         try {
-            if (!eShell.eHaveRoot()) {
+            if (!eShell.eInit.eHaveRoot()) {
                 context.eShowTip("无ROOT权限，无法执行")
                 return false
             }
             if (File("/data/local/vncs").exists()) {
-                async { eShell.eExecShellSilent("/data/local/vncs") }
+                async { eShell.eInit.eExecShellSilent("/data/local/vncs") }
             } else {
                 inputStream = context.getResources().getAssets().open("vncs")// assets文件夹下的文件
                 val file = File(context.externalCacheDir.path)
@@ -56,7 +56,7 @@ object eVNC {
                 fileOutputStream.flush()
                 fileOutputStream.close()
                 inputStream.close()
-                async {eShell.eExecShellSilent("cp  ${context.externalCacheDir.path}/vncs /data/local && chmod 777 /data/local/vncs && rm -rf ${context.externalCacheDir.path}/vncs && /data/local/vncs") }
+                async {eShell.eInit.eExecShellSilent("cp  ${context.externalCacheDir.path}/vncs /data/local && chmod 777 /data/local/vncs && rm -rf ${context.externalCacheDir.path}/vncs && /data/local/vncs") }
             }
             result = true
         } catch (e: IOException) {

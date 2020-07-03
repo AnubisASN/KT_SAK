@@ -28,6 +28,6 @@ class MyUpdateBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         eLog("接收到更新广播")
         File("/sdcard/img/info/face.apk").delete()
-        eBReceiver.eSetAPPUpdateBoot(context,intent, MainActivity::class.java)
+        eBReceiver.eInit.eSetAPPUpdateBoot(context,intent, MainActivity::class.java)
     }
 }

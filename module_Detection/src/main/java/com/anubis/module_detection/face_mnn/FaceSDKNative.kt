@@ -2,7 +2,10 @@ package com.anubis.module_detection.face_mnn
 
 import com.anubis.kt_extends.eLog
 
-object FaceSDKNative {
+class FaceSDKNative private constructor(){
+    companion object{
+        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { FaceSDKNative() }
+    }
     init {
         eLog("loadLibrary")
         System.loadLibrary("facedetect")

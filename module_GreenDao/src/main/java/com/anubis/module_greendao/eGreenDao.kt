@@ -5,6 +5,7 @@ import android.util.Log
 
 import org.greenrobot.greendao.AbstractDao
 import org.greenrobot.greendao.AbstractDaoSession
+import org.greenrobot.greendao.test.DbTest.DB_NAME
 
 /**
  * Author  ： AnubisASN   on 2018-08-07 11:52.
@@ -22,10 +23,21 @@ import org.greenrobot.greendao.AbstractDaoSession
  * Router :  /'Module'/'Function'
  * 说明：数据库
  */
-class eGreenDao(context: Context, val greenDaoClassName: String = "com.anubis.modlue_greendao.Gen", DB_NAME: String = "DB_NAME") {
-    private val mManager: DaoManager = DaoManager(context, greenDaoClassName, DB_NAME)
-    private var daoSession: AbstractDaoSession? = null
-    private val TAG = "TAG"
+class eGreenDao private constructor() {
+    private val mManager: DaoManager = DaoManager(mContext, mGreenDaoClassName, DB_NAME)
+    private   var daoSession: AbstractDaoSession
+    companion object {
+        private lateinit var mContext: Context
+        private lateinit var mGreenDaoClassName: String
+        private lateinit var DB_NAME: String
+        fun eInit(context: Context, greenDaoClassName: String = "com.anubis.modlue_greendao.Gen", DBName: String = "DB_ASN"): eGreenDao {
+            mContext=  context
+            mGreenDaoClassName=greenDaoClassName
+            DB_NAME=DBName
+            return eInit
+        }
+        private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eGreenDao() }
+    }
     init {
         daoSession = mManager.daoSession as AbstractDaoSession
     }
@@ -35,11 +47,10 @@ class eGreenDao(context: Context, val greenDaoClassName: String = "com.anubis.mo
      * @param user
      * @return
      */
-    fun insertUser(user: Any): Boolean {
+    fun <T>eInsertUser(user: T): Boolean {
         var flag = false
-        val dataDao = daoSession!!::class.java.getMethod("get${user::class.java.simpleName}Dao").invoke(daoSession) as AbstractDao<Any, Any>
+        val dataDao = daoSession::class.java.getMethod("get${(user as Any)::class.java.simpleName}Dao").invoke(daoSession) as AbstractDao<Any, Any>
         flag = dataDao.insert(user) != (-1).toLong()
-        Log.i(TAG, "insert Any :" + flag + "-->" + user.toString())
         return flag
     }
 
@@ -48,19 +59,18 @@ class eGreenDao(context: Context, val greenDaoClassName: String = "com.anubis.mo
      * @param userList
      * @return
      */
-    fun insertMultUser(userList: List<Any>): Boolean {
+    fun <T>eInsertMultUser(userList: List<T>): Boolean {
         var flag = false
         try {
-            daoSession!!.runInTx {
+            daoSession.runInTx {
                 for (user in userList) {
-                    daoSession!!.insertOrReplace(user)
+                    daoSession.insertOrReplace(user)
                 }
             }
             flag = true
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
         return flag
     }
 
@@ -69,10 +79,10 @@ class eGreenDao(context: Context, val greenDaoClassName: String = "com.anubis.mo
      * @param user
      * @return
      */
-    fun updateUser(user: Any): Boolean {
+    fun <T>eUpdateUser(user: T): Boolean {
         var flag = false
         try {
-            daoSession!!.update(user)
+            daoSession.update(user)
             flag = true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -86,16 +96,15 @@ class eGreenDao(context: Context, val greenDaoClassName: String = "com.anubis.mo
      * @param user
      * @return
      */
-    fun deleteUser(user: Any): Boolean {
+    fun <T>eDeleteUser(user: T): Boolean {
         var flag = false
         try {
             //按照id删除
-            daoSession!!.delete(user)
+            daoSession.delete(user)
             flag = true
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
         return flag
     }
 
@@ -103,16 +112,15 @@ class eGreenDao(context: Context, val greenDaoClassName: String = "com.anubis.mo
      * 删除所有记录
      * @return
      */
-    fun deleteAll(user: Any): Boolean {
+    fun <T>eDeleteAll(user: T): Boolean {
         var flag = false
         try {
             //按照id删除
-            daoSession!!.deleteAll(user::class.java)
+            daoSession.deleteAll((user as Any)::class.java)
             flag = true
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
         return flag
     }
 
@@ -120,8 +128,8 @@ class eGreenDao(context: Context, val greenDaoClassName: String = "com.anubis.mo
      * 查询所有记录
      * @return
      */
-    fun queryAllUser(user: Any): List<Any> {
-        return daoSession!!.loadAll<Any, Any>(user::class.java as Class<Any>?) as List<Any>
+    fun <T> eQueryAllUser(user: T): List<T> {
+        return daoSession.loadAll<Any, Any>((user as Any)::class.java as Class<Any>?) as List<T>
     }
 
     /**
@@ -129,33 +137,21 @@ class eGreenDao(context: Context, val greenDaoClassName: String = "com.anubis.mo
      * @param key
      * @return
      */
-    fun queryUserById(key: Long, user: Any): Any {
-        return daoSession!!.load(user::class.java, key)
+    fun <T>eQueryUserById(key: Long, user: T): T {
+        return daoSession.load((user as Any)::class.java, key) as T
     }
 
     /**
      * 使用native sql进行查询操作
      */
-    fun queryUserByNativeSql(user: Any,sql: String, conditions: Array<String>): List<Any> {
-        return daoSession!!.queryRaw<Any, Any>(user::class.java as Class<Any>?, sql, *conditions)
+    fun <T>eQueryUserByNativeSql(user: T, sql: String, conditions: Array<String>): List<T> {
+        return daoSession.queryRaw<Any, Any>((user as Any)::class.java as Class<Any>?, sql, *conditions) as List<T>
     }
-
-    /**
-     * 使用queryBuilder进行查询
-     * @return
-     */
-//    fun queryUserByQueryBuilder(id: Long,user: Any): List<Any> {
-//        val queryBuilder =daoSession!!.queryBuilder(Any::class.java)
-//        //反射
-//      val clazz=  Class.forName("$greenDaoClassName.${user::class.java.simpleName}Dao\$Properties")
-//        return queryBuilder.where(DataDao.Properties.Name.eq(id)).list()
-//    }
-
     /**
      * 关闭数据库连接
      * @return
      */
-    fun closeConnection() {
+    fun eCloseConnection() {
         mManager.closeConnection()
     }
 

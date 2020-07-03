@@ -25,7 +25,7 @@ class eVideoChatUI : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_videochat)
-        if (ePermissions.eSetPermissions(this, REQUESTED_PERMISSIONS)) {
+        if (ePermissions.eInit.eSetPermissions(this, REQUESTED_PERMISSIONS)) {
             eVideoChat.init(this, local_video_view_container, remote_video_view_container,handler = mHandler,appID = intent.getStringExtra("appID"),channelName =intent.getStringExtra("channelName") )
         }
     }
@@ -42,7 +42,7 @@ class eVideoChatUI : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
-        ePermissions.eSetOnRequestPermissionsResult(this, requestCode, permissions, grantResults)
+        ePermissions.eInit.eSetOnRequestPermissionsResult(this, requestCode, permissions, grantResults)
         if (requestCode != 1) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }

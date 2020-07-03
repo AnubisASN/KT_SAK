@@ -125,7 +125,7 @@ class FsService : Service(), Runnable {
 
     override fun run() {
         Log.d(TAG, "Server thread running")
-        eLog("网络是否在线：" + eNetWork.eIsNetworkOnline()+"-----"+getIP(this))
+        eLog("网络是否在线：" + eNetWork.eInit.eIsNetworkOnline()+"-----"+getIP(this))
         if (getIP(this)==null) {
             Log.w(TAG, "run: There is no local network, bailing out")
             stopSelf()

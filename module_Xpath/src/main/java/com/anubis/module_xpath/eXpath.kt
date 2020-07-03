@@ -30,8 +30,9 @@ import javax.xml.xpath.*
  *Router :  /'Module'/'Function'
  *说明： eXpath 解析封装
  */
-open class eXpath {
-    companion object {
+open class eXpath  internal constructor(){
+     companion object {
+        val eInit by lazy (LazyThreadSafetyMode.SYNCHRONIZED){ eXpath() }
         var xpath: XPath = XPathFactory.newInstance().newXPath()
         var filePath: String? = "${Environment.getExternalStorageDirectory().path}/html.html"
         var httpUrl: String? = null
@@ -41,11 +42,11 @@ open class eXpath {
      * eEvaluate 评估方法（执行）
      * @param expression：String;xpath 语法
      * @param url：String; 网络地址
-     * @param iResult：IResulr；结果回调
+     * @param iResult：IResult；结果回调
      * @param isCorrect:Boolean=false ;是否格式修正
      * @param returnType:QNmae=XPathConstants.NODESET; 结果类型
      */
-    fun eEvaluate(expression: String, url: String, iResult: IResulr, isCorrect: Boolean = false, returnType: QName = XPathConstants.NODESET) {
+    fun eEvaluate(expression: String, url: String, iResult: IResult, isCorrect: Boolean = false, returnType: QName = XPathConstants.NODESET) {
         httpUrl = url
         OkGo.post<String>(url)
                 .execute(object : StringCallback() {
@@ -73,7 +74,7 @@ open class eXpath {
      * @param file：File; 文件
      * @param XX：XX
      */
-    fun eEvaluate(expression: String, file: File, iResult: IResulr, isCorrect: Boolean = false, returnType: QName = XPathConstants.NODESET) {
+    fun eEvaluate(expression: String, file: File, iResult: IResult, isCorrect: Boolean = false, returnType: QName = XPathConstants.NODESET) {
 
         filePath = file.path
         file.readText().eLog()
@@ -86,9 +87,9 @@ open class eXpath {
      * @param inputSource：InputSource; 输入流
      * @param XX：XX
      */
-    fun eEvaluate(expression: String, inputSource: InputSource, iResult: IResulr, isCorrect: Boolean = false, returnType: QName = XPathConstants.NODESET) {
+    fun eEvaluate(expression: String, inputSource: InputSource, iResult: IResult, isCorrect: Boolean = false, returnType: QName = XPathConstants.NODESET) {
         try {
-            iResult.result(arrayList = eParsing(expression, inputSource, iResult, isCorrect, returnType))
+            iResult.result(resultList = eParsing(expression, inputSource, iResult, isCorrect, returnType))
             httpUrl=null
         } catch (e: XPathExpressionException) {
             eLogE("eEvaluate:$e")
@@ -140,12 +141,12 @@ open class eXpath {
      * eParsing 解析方法（可重写）
      * @param expression：String;xpath 语法
      * @param inputSource：InputSource; 输入流
-     * @param iResult：IResulr；结果回调
+     * @param iResult：IResult；结果回调
      * @param isCorrect:Boolean=false ;是否格式修正
      * @param returnType:QNmae=XPathConstants.NODESET; 结果类型
      * @return ArrayList<String>?；解析内容
      */
-    open fun eParsing(expression: String, inputSource: InputSource, iResult: IResulr, isCorrect: Boolean = false, returnType: QName = XPathConstants.NODESET): ArrayList<String>? {
+    open fun eParsing(expression: String, inputSource: InputSource, iResult: IResult, isCorrect: Boolean = false, returnType: QName = XPathConstants.NODESET): ArrayList<String>? {
         val arrayList: ArrayList<String>? = ArrayList()
         val results = xpath.evaluate(expression, inputSource, returnType) as NodeList
         for (i in 0 until results.length) {
@@ -154,8 +155,11 @@ open class eXpath {
         return arrayList
     }
 
-    interface IResulr {
-        fun result(target: String = httpUrl ?: filePath ?: "", arrayList: ArrayList<String>?)
+    /**
+     * IResult 结果回调
+     */
+    interface IResult {
+        fun result(target: String = httpUrl ?: filePath ?: "", resultList: ArrayList<String>?)
         fun error(target: String = httpUrl ?: filePath ?: "", exception: String)
     }
 }

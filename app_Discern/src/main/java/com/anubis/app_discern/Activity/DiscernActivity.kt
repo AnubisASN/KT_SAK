@@ -33,7 +33,7 @@ class DiscernActivity : eCameraActivity() {
     private val minHeight = 350
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        eAssets.eAssetsToFile(this,"20180402-114759.pb","/sdcard/20180402-114759.pb")
+        eAssets.eInit.eAssetsToFile(this,"20180402-114759.pb","/sdcard/20180402-114759.pb")
     }
 
     private  var facenet:Facenet?=null
@@ -54,8 +54,8 @@ class DiscernActivity : eCameraActivity() {
     override fun eProcessImage(bitmap: Bitmap?) {
         if (bitmap != null) {
             //            预览
-            tBitmap = eBitmap.eBitmapToZoom(bitmap, minWidth, minHeight)
-            val re = eFaceSDK.eFaceDetect(tBitmap!!)
+            tBitmap = eBitmap.eInit.eBitmapToZoom(bitmap, minWidth, minHeight)
+            val re = eFaceSDK.eInit(this).eFaceDetect(tBitmap!!)
             eMultiBoxTracker.eTrackResults(re)
             if (feature!=null && re.size>0){
                 eLog("开始识别")

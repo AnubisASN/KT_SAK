@@ -121,11 +121,11 @@ object eTCP {
         if (serverSocket == null) {
             try {
                 serverSocket = ServerSocket(port)
-                msg.obj = eTCP.receiveMSG("${eDevice.eGetHostIP()}:$port", SHANDLER_SUCCEED_CODE, "TCP服务端创建成功")
+                msg.obj = eTCP.receiveMSG("${eDevice.eInit.eGetHostIP()}:$port", SHANDLER_SUCCEED_CODE, "TCP服务端创建成功")
                 tcpHandler.sendMessage(msg)
             } catch (e: Exception) {
                 serverSocket = null
-                msg.obj = eTCP.receiveMSG("${eDevice.eGetHostIP()}:$port", SHANDLER_FAILURE_CODE, "TCP服务端创建失败")
+                msg.obj = eTCP.receiveMSG("${eDevice.eInit.eGetHostIP()}:$port", SHANDLER_FAILURE_CODE, "TCP服务端创建失败")
                 tcpHandler.sendMessage(msg)
                 return
             }
@@ -139,7 +139,7 @@ object eTCP {
                     msg.obj = eTCP.receiveMSG("$clienIP:$port", SHANDLER_CONNECT_CODE, "客户端连接成功")
                     tcpHandler.sendMessage(msg)
                 } catch (e: SocketException) {
-                    msg.obj = eTCP.receiveMSG("${eDevice.eGetHostIP()}:$port", SHANDLER_CREATE_CLOSE_CODE, "TCP服务关闭")
+                    msg.obj = eTCP.receiveMSG("${eDevice.eInit.eGetHostIP()}:$port", SHANDLER_CREATE_CLOSE_CODE, "TCP服务关闭")
                     tcpHandler.sendMessage(msg)
                     continue
                 }catch (e: Exception) {
@@ -237,7 +237,7 @@ object eTCP {
             if (ip == null) {
                 hashMap.forEach {
                     if (it.value != null) {
-                        val msgs = eString.eInterception(str, symbol = symbol).split(symbol)
+                        val msgs = eString.eInit.eInterception(str, symbol = symbol).split(symbol)
                         val os = PrintStream(it.value!!.getOutputStream(), true, "utf-8")
                         for (msg in msgs) {
                             os.print(msg)
@@ -249,7 +249,7 @@ object eTCP {
             if (hashMap[ip] == null) {
                 return false
             }
-            val msgs = eString.eInterception(str, symbol = symbol).split(symbol)
+            val msgs = eString.eInit.eInterception(str, symbol = symbol).split(symbol)
             val os = PrintStream(hashMap[ip]!!.getOutputStream(), true, "utf-8")
             for (msg in msgs) {
                 os.print(msg)

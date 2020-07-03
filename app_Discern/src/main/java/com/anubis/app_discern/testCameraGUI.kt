@@ -57,14 +57,13 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
     private var faceMask: eFaceMask? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView( R.layout.test_gui)
+        setContentView(R.layout.test_gui)
 //        物体检测
         eDetector.eInit(this, assets).eLog("eDetector初始化")
 //        人脸检测
         eFaceSDK.eInit(this)
 //        口罩检测
-        faceMask = eFaceMask(assets)
-
+        faceMask = eFaceMask.eInit(this)
         iv_photo.setOnClickListener(this)
         iv_image.setOnClickListener(this)
         bt_body.setOnClickListener(this)
@@ -114,9 +113,9 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                 tv_hint.text = "人脸检测"
                 eReadyForNextImage(bitmapRotation = 90f)
             }
-            bt_net.id->startActivity(Intent(this,DiscernActivity::class.java))
-            bt_landmark.id->startActivity(Intent(this,MainActivity::class.java))
-            bt_TF.id->startActivity(Intent(this,eDetectorGUI::class.java))
+            bt_net.id -> startActivity(Intent(this, DiscernActivity::class.java))
+            bt_landmark.id -> startActivity(Intent(this, MainActivity::class.java))
+            bt_TF.id -> startActivity(Intent(this, eDetectorGUI::class.java))
             test_container.id -> {
                 tv_hint.text = "覆盖图层"
                 eReadyForNextImage(bitmapRotation = 90f)
@@ -130,13 +129,15 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
             when (typeId) {
                 bt_make.id -> {
                     iv_image.post { iv_image.imageBitmap = bitmap }
-                    val box = faceMask?.detectFaceMasks(bitmap!!)
-                    val isMake = faceMask?.MasksDispose(box)
+                    val box = faceMask?.eDetectFaceMasksData(bitmap!!)
+                    val isMake = faceMask?.eMasksDispose(box)
                     uiThread {
                         if (isMake == null)
                             tv_hint.text = "未知"
                         else
                             tv_hint.text = if (isMake) "带了口罩" else "没带口罩"
+                        if (sw_continued.isChecked)
+                            onClick(bt_make)
                     }
                 }
                 bt_body.id -> {
@@ -147,29 +148,34 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                         results.forEach {
                             tv_hint.append("\nID:${it.id}--Tilte:${it.title}--Confidence:${it.confidence}--Location:${it.location}\n")
                         }
+                        if (sw_continued.isChecked)
+                            onClick(bt_body)
                     }
+
                 }
                 bt_face.id -> {
                     eLog("onclick：bt_face")
                     iv_photo.post { iv_photo.imageBitmap = bitmap }
-                    val results = eFaceSDK.eFaceDetect(bitmap!!)
+                    val results = eFaceSDK.eInit(this@testCameraGUI).eFaceDetect(bitmap!!)
                     results.size.eLogI("人脸检测数量")
                     iv_photo.post {
-                        iv_photo.imageBitmap = eBitmap.eBitmapRect(bitmap, results)
+                        iv_photo.imageBitmap = eBitmap.eInit.eBitmapRect(bitmap, results,Color.RED)
                         results.forEach {
                             tv_hint.append("\n$it\n")
                         }
+                        if (sw_continued.isChecked)
+                            onClick(bt_face)
                     }
                 }
                 test_container.id -> {
 //        跟踪器
                     mTrackerE = eMultiBoxTracker.einit(this@testCameraGUI)
-                   findViewById<eOverlayView>(R.id.frame_ov_tracking).addCallback {
-                        mTrackerE!!. draw(it)
+                    findViewById<eOverlayView>(R.id.frame_ov_tracking).addCallback {
+                        mTrackerE!!.draw(it)
                     }
                     //比例计算
                     mTrackerE!!.setFrameConfiguration(bitmap!!.width, bitmap.height, true)
-                    val re = eFaceSDK.eFaceDetect(bitmap)
+                    val re = eFaceSDK.eInit(this@testCameraGUI).eFaceDetect(bitmap)
                     val res = LinkedList<Pair<Rect, String>>()
                     re.forEach {
                         res.add(Pair(it, re.indexOf(it).toString()))

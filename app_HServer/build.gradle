@@ -30,4 +30,5 @@ dependencies {
     implementation project(':module_Extends')
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation project(':module_HttpServer')
+    implementation project(path: ':module_CardOTG')
 }

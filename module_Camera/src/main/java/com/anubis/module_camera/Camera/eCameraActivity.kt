@@ -21,7 +21,6 @@ import android.view.Surface
 import android.view.WindowManager
 import android.widget.CompoundButton
 import com.anubis.kt_extends.eBitmap
-import com.anubis.kt_extends.eBitmap.eYUV420ToARGB8888
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_camera.R
@@ -110,7 +109,7 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
                     eProcessImage(bytes,ePreviewWidth,ePreviewHeight)
                 }
                 else -> {
-                    eProcessImage(eBitmap.eByteArrayToBitmp(bytes, ePreviewWidth, ePreviewHeight, rotate = bitmapRotation, isFlip = isFlip))
+                    eProcessImage(eBitmap.eInit.eByteArrayToBitmp(bytes, ePreviewWidth, ePreviewHeight, rotate = bitmapRotation, isFlip = isFlip))
                 }
             }
         }
@@ -141,7 +140,7 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
             val yRowStride = planes[0].rowStride
             val uvRowStride = planes[1].rowStride
             val uvPixelStride = planes[1].pixelStride
-            eYUV420ToARGB8888(
+            eBitmap.eInit.eYUV420ToARGB8888(
                     yuvBytes[0]!!,
                     yuvBytes[1]!!,
                     yuvBytes[2]!!,
@@ -156,10 +155,10 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
             bitmap!!.setPixels(inArrays, 0, ePreviewWidth, 0, 0, ePreviewWidth, ePreviewHeight)
             when (returnType) {
                 TYPE.ByteArray -> {
-                    eProcessImage(eBitmap.eBitmapToByteArray(bitmap), ePreviewWidth, ePreviewHeight)
+                    eProcessImage(eBitmap.eInit.eBitmapToByteArray(bitmap), ePreviewWidth, ePreviewHeight)
                 }
                 else -> {
-                    eProcessImage(eBitmap.eBitmapRotateFlip(bitmap, bitmapRotation, isFlip))
+                    eProcessImage(eBitmap.eInit.eBitmapRotateFlip(bitmap, bitmapRotation, isFlip))
                 }
             }
         } catch (e: Exception) {

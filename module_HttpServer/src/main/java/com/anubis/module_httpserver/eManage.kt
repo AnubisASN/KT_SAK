@@ -1,6 +1,6 @@
 package com.anubis.module_httpserver
 
-import com.anubis.kt_extends.eFile.eCopyFile
+import com.anubis.kt_extends.eFile
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_httpserver.protocols.http.IHTTPSession
@@ -45,7 +45,7 @@ object eManage {
         eLog("tmpFilePath:$tmpFilePath--${session.parms[fileParms]}")
         val tmpFile = File(tmpFilePath)
         val targetFile = File("$savePath${session.parms[fileParms]}")
-        return if (eCopyFile(tmpFile.path, targetFile.path)) targetFile.path else null
+        return if (eFile.eInit.eCopyFile(tmpFile.path, targetFile.path)) targetFile.path else null
     }
 
     /**

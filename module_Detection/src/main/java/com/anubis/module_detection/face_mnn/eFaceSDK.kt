@@ -1,6 +1,7 @@
 package com.anubis.module_detection.face_mnn
 
 import android.content.Context
+import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.os.Environment
@@ -22,28 +23,35 @@ import com.anubis.kt_extends.*
  *Router :  /'Module'/'Function'
  *说明：
  */
-object eFaceSDK {
-    fun eInit(context: Context):eFaceSDK {
+open class eFaceSDK internal  constructor(){
+    companion object{
+       private lateinit var mContext: Context
+        fun eInit(context: Context):eFaceSDK{
+            mContext=context
+          return  eInit
+        }
+     private   val eInit by lazy (LazyThreadSafetyMode.SYNCHRONIZED){ eFaceSDK() }
+    }
+    init {
         eLog("FaceSDK准备初始化")
         val sdDir = Environment.getExternalStorageDirectory()//get model store dir
         val sdPath = "$sdDir/facesdk/"
-        eAssets.eAssetsToFile(context, "RFB-320.mnn", sdPath+"RFB-320.mnn").eLog("RFB-320")
-        eAssets.eAssetsToFile(context, "RFB-320-quant-ADMM-32.mnn",sdPath+"RFB-320-quant-ADMM-32.mnn").eLog("RFB-320-quant-ADMM-32.mnn")
-        eAssets.eAssetsToFile(context, "RFB-320-quant-KL-5792.mnn",sdPath+"RFB-320-quant-KL-5792.mnn").eLog("RFB-320-quant-KL-5792")
-        eAssets.eAssetsToFile(context, "slim-320.mnn",sdPath+"slim-320.mnn").eLog("slim-320")
-        eAssets.eAssetsToFile(context, "slim-320-quant-ADMM-50.mnn",sdPath+"slim-320-quant-ADMM-50.mnn").eLog("slim-320-quant-ADMM-50")
+        eAssets.eInit.eAssetsToFile(mContext, "RFB-320.mnn", sdPath+"RFB-320.mnn").eLog("RFB-320")
+        eAssets.eInit.eAssetsToFile(mContext, "RFB-320-quant-ADMM-32.mnn",sdPath+"RFB-320-quant-ADMM-32.mnn").eLog("RFB-320-quant-ADMM-32.mnn")
+        eAssets.eInit.eAssetsToFile(mContext, "RFB-320-quant-KL-5792.mnn",sdPath+"RFB-320-quant-KL-5792.mnn").eLog("RFB-320-quant-KL-5792")
+        eAssets.eInit.eAssetsToFile(mContext, "slim-320.mnn",sdPath+"slim-320.mnn").eLog("slim-320")
+        eAssets.eInit.eAssetsToFile(mContext, "slim-320-quant-ADMM-50.mnn",sdPath+"slim-320-quant-ADMM-50.mnn").eLog("slim-320-quant-ADMM-50")
         eLog("文件复制完成")
-        FaceSDKNative.FaceDetectionModelInit(sdPath).eLogI("faceSDK初始化")
-        return  this
+        FaceSDKNative.eInit.FaceDetectionModelInit(sdPath).eLogI("faceSDK初始化")
     }
 
-    fun eFaceDetect(bitmap: Bitmap, imageChannel: Int = 4): ArrayList<Rect> {
-        return eFaceDetect(eBitmap.eBitmapToByteArray(bitmap), bitmap.width, bitmap.height, imageChannel)
+    open fun eFaceDetect(bitmap: Bitmap, imageChannel: Int = 4): ArrayList<Rect> {
+        return eFaceDetect(eBitmap.eInit.eBitmapToByteArray(bitmap), bitmap.width, bitmap.height, imageChannel)
     }
 
-    fun eFaceDetect(byteArray: ByteArray, width: Int, height: Int, imageChannel: Int = 4): ArrayList<Rect> {
+    open fun eFaceDetect(byteArray: ByteArray, width: Int, height: Int, imageChannel: Int = 4): ArrayList<Rect> {
         val results = arrayListOf<Rect>()
-        val faceInfo = FaceSDKNative.FaceDetect(byteArray, width, height, imageChannel)
+        val faceInfo = FaceSDKNative.eInit.FaceDetect(byteArray, width, height, imageChannel)
         val faceNum = faceInfo[0]
         for (i in 0 until faceNum) {
             results.add(Rect(faceInfo[1 + 4 * i], faceInfo[2 + 4 * i], faceInfo[3 + 4 * i], faceInfo[3 + 4 * i]+faceInfo[2 + 4 * i]-faceInfo[1 + 4 * i]+(faceInfo[4 + 4 * i]-faceInfo[3 + 4 * i])/10))
@@ -51,7 +59,7 @@ object eFaceSDK {
         return results
     }
 
-    fun eDestroy() {
-        FaceSDKNative.FaceDetectionModelUnInit()
+    open fun eDestroy() {
+        FaceSDKNative.eInit.FaceDetectionModelUnInit()
     }
 }

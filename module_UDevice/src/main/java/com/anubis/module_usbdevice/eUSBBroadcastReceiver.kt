@@ -6,7 +6,7 @@ import android.content.Intent
 import android.hardware.usb.UsbManager
 import android.os.Message
 import android.util.Log
-import com.anubis.module_usbdevice.eUDevice.uHandler
+import com.anubis.module_usbdevice.eUDevice.Companion.mHandler
 
 /**
  * Author  ： AnubisASN   on 2018-07-23 9:12.
@@ -29,12 +29,12 @@ class eUSBBroadcastReceiver : BroadcastReceiver() {
             UsbManager.ACTION_USB_DEVICE_ATTACHED -> {
                 val message = Message()
                 message.what = 1
-                uHandler?.sendMessage(message)
+                mHandler.sendMessage(message)
             }
             UsbManager.ACTION_USB_DEVICE_DETACHED -> {
                 val message = Message()
                 message.what = 0
-                uHandler?.sendMessage(message)
+                mHandler.sendMessage(message)
             }
         }
     }

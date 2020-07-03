@@ -52,7 +52,7 @@ class ArcFaceFT : Activity() {
             assets.locales.forEach {
                 it.eLog("assets")
             }
-            mFacemask = eFaceMask(this.resources.assets)
+            mFacemask = eFaceMask.eInit(this)
         } catch (e: IOException) {
             e.eLogE("口罩检测初始化失败")
         }
@@ -70,8 +70,8 @@ class ArcFaceFT : Activity() {
 //                val `is` = keepOutDetection(bitmap)
                 async {
                     try {
-                        val facemask_boxes = mFacemask?.detectFaceMasks(bitmap!!)?:return@async
-                      val isMask=   mFacemask?.MasksDispose(facemask_boxes)?:return@async
+                        val facemask_boxes = mFacemask?.eDetectFaceMasksData(bitmap!!)?:return@async
+                      val isMask=   mFacemask?.eMasksDispose(facemask_boxes)?:return@async
                         tvHint.post {
                             tvHint.text = if (isMask) {
                                 tvHint.textColor = Color.GREEN

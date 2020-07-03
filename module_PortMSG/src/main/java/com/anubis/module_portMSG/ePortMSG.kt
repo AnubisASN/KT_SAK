@@ -116,7 +116,7 @@ object ePortMSG : LockerPortInterface {
         if (outputStream == null) {
             return
         }
-        outputStream!!.write(eString.eGetHexStringToBytes(msg))
+        outputStream!!.write(eString.eInit.eGetHexStringToBytes(msg))
     }
 
     fun sendParams(msg: ByteArray) {

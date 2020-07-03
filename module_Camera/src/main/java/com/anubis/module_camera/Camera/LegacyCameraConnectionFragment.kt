@@ -33,7 +33,7 @@ import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
-import com.anubis.kt_extends.eBitmap.eGetYUVByteSize
+import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eLog
 
 import com.anubis.module_camera.Camera.customview.eAutoFitTextureView
@@ -89,7 +89,7 @@ class LegacyCameraConnectionFragment(
 
             camera!!.setPreviewCallbackWithBuffer(imageListener)
             val s = camera!!.parameters.previewSize
-            camera!!.addCallbackBuffer(ByteArray(eGetYUVByteSize(s.height, s.width)))
+            camera!!.addCallbackBuffer(ByteArray(eBitmap.eInit.eGetYUVByteSize(s.height, s.width)))
 
             mTextureViewE!!.setAspectRatio(s.height, s.width)
 

@@ -2,30 +2,42 @@ package com.anubis.module_detection.face_mask
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.Activity
+import android.content.Context
 import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.os.Build
-import android.util.Log
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
-
-
 import com.anubis.module_detection.util.ImageUtils
-
 import org.tensorflow.lite.Interpreter
-
 import java.util.HashMap
 import java.util.Vector
 
 /**
  * 口罩检测
  */
-class eFaceMask
-constructor(assetManager: AssetManager) {
-
+open class eFaceMask internal constructor() {
+    private val feature_map_sizes = intArrayOf(33, 17, 9, 5, 3)
+    private val anchor_sizes = arrayOf(floatArrayOf(0.04f, 0.056f), floatArrayOf(0.08f, 0.11f), floatArrayOf(0.16f, 0.22f), floatArrayOf(0.32f, 0.45f), floatArrayOf(0.64f, 0.72f))
+    private val anchor_ratios = floatArrayOf(1.0f, 0.62f, 0.42f)
+    private val MODEL_FILE = "face_mask_detection.tflite"
+    private val INPUT_IMAGE_SIZE = 260 // 需要feed数据的placeholder的图片宽高
+    private val CONF_THRESHOLD = 0.5f // 置信度阈值
+    private val IOU_THRESHOLD = 0.4f // IoU阈值
     private var anchors: Array<FloatArray>? = null
+    private var interpreter: Interpreter? = null
+    companion object {
+       private lateinit var assetManager: AssetManager
+        fun eInit(context: Context): eFaceMask {
+            assetManager = context.assets
+            return eInit
+        }
+        private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            eFaceMask()
+        }
+    }
 
-    private var interpreter: Interpreter?=null
     init {
         val options = Interpreter.Options()
         options.setNumThreads(4)
@@ -33,7 +45,7 @@ constructor(assetManager: AssetManager) {
             interpreter = Interpreter(ImageUtils.loadModelFile(assetManager, MODEL_FILE), options)
         } catch (e: Exception) {
             eLog("interpreter:$e")
-            if (e.toString().contains("it is probably compressed")){
+            if (e.toString().contains("it is probably compressed")) {
                 eLogE("请在build.gradle中的android{}块内添加：\n   " +
                         "  aaptOptions {\n" +
                         "        noCompress \"tflite\"\n" +
@@ -44,30 +56,28 @@ constructor(assetManager: AssetManager) {
     }
 
     @SuppressLint("UseSparseArrays")
-    fun detectFaceMasks(bitmap: Bitmap): Vector<Box>? {
-        interpreter?:return null
-       val head=  Bitmap.createScaledBitmap(bitmap,INPUT_IMAGE_SIZE,INPUT_IMAGE_SIZE, true);
+    open fun eDetectFaceMasksData(bitmap: Bitmap): Vector<Box>? {
+        interpreter ?: return null
+        val head = Bitmap.createScaledBitmap(bitmap, INPUT_IMAGE_SIZE, INPUT_IMAGE_SIZE, true);
         val len = 5972
         val ddims = intArrayOf(1, INPUT_IMAGE_SIZE, INPUT_IMAGE_SIZE, 3)
         val datasets = Array(ddims[0]) { Array(ddims[1]) { Array(ddims[2]) { FloatArray(ddims[3]) } } }
         datasets[0] = ImageUtils.normalizeImage(head)
         val loc = Array(1) { Array(len) { FloatArray(4) } }
         val cls = Array(1) { Array(len) { FloatArray(2) } }
-        val outputs:HashMap<Int,Any>?= HashMap()
-        outputs!!.put(interpreter!!.getOutputIndex("loc_branch_concat_1/concat"),loc)
-        outputs.put(interpreter!!.getOutputIndex("cls_branch_concat_1/concat"),cls)
+        val outputs: HashMap<Int, Any>? = HashMap()
+        outputs!!.put(interpreter!!.getOutputIndex("loc_branch_concat_1/concat"), loc)
+        outputs.put(interpreter!!.getOutputIndex("cls_branch_concat_1/concat"), cls)
         interpreter!!.runForMultipleInputsOutputs(arrayOf<Any>(datasets), outputs)
-
         //先通过score筛选Box，减少后续计算
         val filteredBoxes = Vector<Box>()
-        for (i in 0 .. len-1) {
+        for (i in 0..len - 1) {
             var idxCls = -1
             if (cls[0][i][0] > cls[0][i][1]) {
                 idxCls = 0
             } else {
                 idxCls = 1
             }
-
             if (cls[0][i][idxCls] > CONF_THRESHOLD) {
                 val box = Box()
                 // core
@@ -91,33 +101,28 @@ constructor(assetManager: AssetManager) {
                 filteredBoxes.add(box)
             }
         }
-        //        Log.i(TAG, "detectFaceMasks: "+filteredBoxes.get(0).deleted);
-
         //解码Box参数
         decodeBBox(filteredBoxes)
-
         //NMS
         nms(filteredBoxes, IOU_THRESHOLD, "Union")
-
         //Log.i(LOGGING_TAG, String.format("Detected: %d", filteredBoxes.size()));
-
         return filteredBoxes
     }
 
 
-    fun MasksDispose(box: Vector<Box>?): Boolean? {
+    open  fun  eMasksDispose(box: Vector<Box>?,threshold:Double=0.85): Boolean? {
         box ?: return null
-        if (box.size<4)
+        if (box.size < 4)
             return null
         box.sortByDescending { it.score }
-        if (box.first().cls==0){
-            if (box[0].score>0.85 && box[1].score>0.85)
-                return   true
-            return  null
-        }else{
-            if (box.first().score>0.75)
-                return   false
-            return   null
+        if (box.first().cls == 0) {
+            if (box[0].score > threshold && box[1].score > threshold)
+                return true
+            return null
+        } else {
+            if (box.first().score >threshold-0.1)
+                return false
+            return null
         }
 
     }
@@ -130,12 +135,11 @@ constructor(assetManager: AssetManager) {
         anchorTotal *= 4
 
         anchors = Array(anchorTotal) { FloatArray(4) }
-
         var index = 0
         for (i in 0..4) {
             val center = FloatArray(feature_map_sizes[i])
 
-            for (j in 0 .. feature_map_sizes[i]-1) {
+            for (j in 0..feature_map_sizes[i] - 1) {
                 center[j] = 1.0f * (-feature_map_sizes[i] / 2 + j).toFloat() / feature_map_sizes[i].toFloat() + 0.5f
             }
             val offset = Array(4) { FloatArray(4) }
@@ -152,8 +156,8 @@ constructor(assetManager: AssetManager) {
                 val height = anchor_sizes[i][j] / Math.sqrt(ratio.toDouble()).toFloat()
                 offset[2 + j] = floatArrayOf(-width / 2.0f, -height / 2.0f, width / 2.0f, height / 2.0f)
             }
-            for (y in 0 .. feature_map_sizes[i]-1) {
-                for (x in 0 .. feature_map_sizes[i]-1) {
+            for (y in 0..feature_map_sizes[i] - 1) {
+                for (x in 0..feature_map_sizes[i] - 1) {
                     for (j in 0..3) {
                         anchors!![index] = floatArrayOf(center[x] + offset[j][0], center[y] + offset[j][1], center[x] + offset[j][2], center[y] + offset[j][3])
                         index++
@@ -191,7 +195,7 @@ constructor(assetManager: AssetManager) {
         boxes.forEach {
             if (!it.deleted) {
                 // score<0表示当前矩形框被删除
-                for (j in boxes.indexOf(it) + 1 .. boxes.size-1) {
+                for (j in boxes.indexOf(it) + 1..boxes.size - 1) {
                     val box2 = boxes[j]
                     if (!box2.deleted && box2.cls == it.cls) {
                         val x1 = Math.max(it.box[0], box2.box[0])
@@ -217,17 +221,6 @@ constructor(assetManager: AssetManager) {
         }
     }
 
-    companion object {
-        private val MODEL_FILE = "face_mask_detection.tflite"
-
-        val INPUT_IMAGE_SIZE = 260 // 需要feed数据的placeholder的图片宽高
-        val CONF_THRESHOLD = 0.5f // 置信度阈值
-        val IOU_THRESHOLD = 0.4f // IoU阈值
-
-        private val feature_map_sizes = intArrayOf(33, 17, 9, 5, 3)
-        private val anchor_sizes = arrayOf(floatArrayOf(0.04f, 0.056f), floatArrayOf(0.08f, 0.11f), floatArrayOf(0.16f, 0.22f), floatArrayOf(0.32f, 0.45f), floatArrayOf(0.64f, 0.72f))
-        private val anchor_ratios = floatArrayOf(1.0f, 0.62f, 0.42f)
-    }
 }
 
 

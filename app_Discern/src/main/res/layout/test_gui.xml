@@ -113,6 +113,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:color/holo_red_dark" />
 
+    <Switch
+        android:id="@+id/sw_continued"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="持续检测"
+        app:layout_constraintBottom_toTopOf="@+id/bt_body"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
         android:id="@+id/iv_image"
         android:layout_width="200dp"

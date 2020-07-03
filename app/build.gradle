@@ -68,7 +68,7 @@ dependencies {
     implementation project(':module_TTS')
     implementation project(':module_PortMSG')
     implementation project(':module_Office')
-    implementation project(':module_GreenDao')
+    api project(':module_GreenDao')
     implementation project(':module_WiFi')
     implementation project(':module_VNC')
     implementation project(':module_Utils')

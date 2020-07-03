@@ -234,7 +234,6 @@ object ParameHandleMSG {
         when (msg.what) {
             1 -> {
                 mainActivity!!.eShowTip("USB连接")
-                Handler().postDelayed({ mainActivity!!.LoadingData() }, 2000)
             }
             0 -> mainActivity!!.eShowTip("USB断开")
         }

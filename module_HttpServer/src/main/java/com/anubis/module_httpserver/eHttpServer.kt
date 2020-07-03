@@ -24,26 +24,29 @@ import java.lang.Exception
  * Router :  /'Module'/'Function'
  * 说明：
  */
-object eHttpServer {
-    var server: eHTTPD? = null
+class eHttpServer private  constructor(){
+    companion object{
+        val instance by lazy(LazyThreadSafetyMode.SYNCHRONIZED){
+            eHttpServer()
+        }
+    }
+    var  server: eHTTPD? = null
     fun eStart(`class`: Class<*>?=eResolver::class.java, port: Int = 3334, handler: Handler?=null): eHTTPD? {
         if (server == null) {
             try {
-                val con = eReflection.eGetClass(`class`!!.name).getConstructor(Int::class.java,Handler::class.java)
+                val con = eReflection.eInit.eGetClass(`class`!!.name).getConstructor(Int::class.java,Handler::class.java)
                 server = con.newInstance(port,handler) as eHTTPD
                 eLog("定义开启HTTP服务成功")
             } catch (e: NoSuchMethodException) {
-                e.printStackTrace()
-                val con = eReflection.eGetClass(`class`!!.name).getConstructor()
+                val con = eReflection.eInit.eGetClass(`class`!!.name).getConstructor()
                 server = con.newInstance() as eHTTPD
                 eLog("定义开启失败,默认配置：3334")
             } catch (e: Exception) {
-                e.printStackTrace()
                 e.eLogE("HTTP服务开启失败")
             }
             server?.start()
         }else{
-            eLog("已存在")
+            eLog("服务运行中")
         }
         return server
     }

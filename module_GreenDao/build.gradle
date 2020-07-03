@@ -22,8 +22,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':module_Extends')
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(':module_Extends')
 }
 repositories {
     mavenCentral()

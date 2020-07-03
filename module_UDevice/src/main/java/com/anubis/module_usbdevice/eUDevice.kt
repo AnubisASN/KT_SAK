@@ -5,7 +5,7 @@ import android.content.Context
 import android.hardware.usb.UsbManager
 import android.os.Handler
 import com.anubis.kt_extends.eLog
-import com.anubis.kt_extends.eShell
+import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eShowTip
 import com.github.mjdev.libaums.UsbMassStorageDevice
 import com.github.mjdev.libaums.fs.FileSystem
@@ -31,102 +31,72 @@ import java.util.*
  */
 
 @SuppressLint("StaticFieldLeak")
-object eUDevice {
-    private var mContext: Context? = null
-    private val storageDevices: Array<UsbMassStorageDevice>? = null
-    private val usbFiles = ArrayList<UsbFile>()
-    var uHandler: Handler? = null
-    private var mUsbManager: UsbManager? = null
-    fun init(context: Context,handler: Handler) {
-        uHandler = Handler()
-        uHandler=handler
-        mContext = context
-        mUsbManager = mContext!!.getSystemService(Context.USB_SERVICE) as UsbManager
+open class eUDevice internal constructor() {
+    private var mUsbManager: UsbManager
+
+    companion object {
+        internal lateinit var mHandler: Handler
+        private lateinit var mContext: Context
+        fun eInit(context: Context, handler: Handler): eUDevice {
+            mHandler = Handler()
+            handler.let { mHandler = handler }
+            mContext = context
+            return eInit
+        }
+
+        private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eUDevice() }
     }
+
+    init {
+        mUsbManager = mContext.getSystemService(Context.USB_SERVICE) as UsbManager
+    }
+
+    /**
+     * 获取usb上所有的存储设备
+     */
+    open   val eGetUsbDevices = UsbMassStorageDevice.getMassStorageDevices(mContext)
 
 
     /**
      * 读取当前usb设备的数量
-     *
-     * @return
      */
-    //获取存储设备
-    val deviceCount: Int
-        get() {
-            if (mContext == null) {
-                eLog("mContext==null")
-                return 0
-            }
-            val storageDevices = UsbMassStorageDevice.getMassStorageDevices(mContext!!)
-            return storageDevices.size
-        }
-
-    /**
-     * 获取usb上所有的存储设备
-     *
-     * @return
-     */
-    //获取存储设备
-    val usbMassAllDevice: Array<UsbMassStorageDevice>
-        get() = UsbMassStorageDevice.getMassStorageDevices(mContext)
+    open  val eGetUsbDeviceCoun = eGetUsbDevices.size
 
 
     /**
      * 检查usb设备的权限
-     *
-     * @param device
-     * @return
      */
-    fun checkPerssion(device: UsbMassStorageDevice): Boolean {
-        if (mUsbManager == null) {
-            return false
-        }
-        return mUsbManager!!.hasPermission(device.usbDevice)
-    }
+    open  fun eCheckUsbPerssion(device: UsbMassStorageDevice) = mUsbManager.hasPermission(device.usbDevice)
 
     /**
      * 根据position获取usb设备
-     *
-     * @param position
-     * @return
      */
-    fun getUsbMassDevice(position: Int): UsbMassStorageDevice? {
-        //获取存储设备
-        val storageDevices = UsbMassStorageDevice.getMassStorageDevices(mContext!!)
-        return if (position > storageDevices.size) {
-            null
-        } else {
-            storageDevices[position]
-        }
+    open  fun eGetUsbDevice(position: Int): UsbMassStorageDevice? {
+        return if (position in 0 until eGetUsbDeviceCoun)
+            eGetUsbDevices[position ]
+        else null
     }
 
     /**
-     * 根据设备文件
+     * 读取设备文件
      *
      * @param device
      * @return
      */
-    fun readDevice(device: UsbMassStorageDevice): FileSystem? {
-//        try {
-        if (!checkPerssion(device)) {  //检查是否有权限
-            mContext?.eShowTip("设备无权限")
+    open  fun eReadUsbDevice(device: UsbMassStorageDevice,partitions:Int=0): FileSystem? {
+        try {
+            if (!eCheckUsbPerssion(device)) {  //检查是否有权限
+                mContext.eShowTip("设备无权限")
+                return null
+            }
+            device.init()//使用设备之前需要进行 初始化
+            eLog("partitions:$partitions")
+            val partition = device.partitions[partitions] //仅使用设备的第一个分区
+            return partition.fileSystem
+        } catch (e: Exception) {
+            eLogE("eReadDevice", e)
             return null
         }
-
-        device.init()//使用设备之前需要进行 初始化
-        val partition = device.partitions[0] //仅使用设备的第一个分区
-        val currentFs = partition.fileSystem
-        // currentFs.getCapacity(); //容量大小
-        // currentFs.getOccupiedSpace(); //已使用大小
-        // currentFs.getFreeSpace();  //未使用的大小
-        val root = currentFs.rootDirectory//获取根目录
-        val deviceName = currentFs.volumeLabel//获取设备标签
-        eLog("root$root---deviceName:$deviceName---size:${currentFs.capacity}")
-        return currentFs
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//            return null
-//        }
 
     }
 
@@ -136,11 +106,10 @@ object eUDevice {
      * @param fileSystem
      * @return
      */
-    fun getUsbFiles(fileSystem: FileSystem): List<UsbFile> {
-        usbFiles.clear()
+    open  fun eGetUsbFiles(fileSystem: FileSystem): List<UsbFile> {
+        val usbFiles = ArrayList<UsbFile>()
         try {
-            for (file in fileSystem.rootDirectory
-                    .listFiles()) {  //将所以文件和文件夹路径添加到usbFiles数组中
+            for (file in fileSystem.rootDirectory.listFiles()) {  //将所以文件和文件夹路径添加到usbFiles数组中
                 usbFiles.add(file)
             }
             usbFiles.sortWith(Comparator { oFile1, oFile2 ->
@@ -153,9 +122,6 @@ object eUDevice {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
         return usbFiles
     }
-
-
 }

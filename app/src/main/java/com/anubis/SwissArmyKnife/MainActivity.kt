@@ -30,9 +30,6 @@ import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTTS
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleWeb
 import com.anubis.SwissArmyKnife.ParameHandleMSG.uHandler
 import com.anubis.kt_extends.*
-import com.anubis.kt_extends.eKeyEvent.eSetKeyDownExit
-import com.anubis.kt_extends.eShell.eExecShell
-import com.anubis.kt_extends.eTime.eGetCurrentTime
 import com.anubis.module_asrw.eASRW
 import com.anubis.module_cardotg.eCardOTG
 import com.anubis.module_ewifi.eWiFi
@@ -53,6 +50,9 @@ import com.anubis.module_videochat.eVideoChatUI
 import com.anubis.module_vncs.eVNC
 import com.anubis.module_websocket.eWebSocket
 import com.anubis.utils.util.eToastUtils
+import com.github.mjdev.libaums.fs.UsbFile
+import com.google.gson.Gson
+import com.huashi.otg.sdk.HSIDCardInfo
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
@@ -94,9 +94,14 @@ class MainActivity : Activity() {
     var XHA: XHApiManager? = null
     var progressDialog: ProgressDialog? = null
 
+    /*扩展库对象*/
+    private   var mCardOTG: eCardOTG?=null
+    private   var mDevice: eUDevice?=null
+    private   var mGreenDao: eGreenDao?=null
+
     companion object {
         var mainActivity: MainActivity? = null
-        var mHandler: Handler? = null
+        lateinit var mHandler: Handler
     }
 
 
@@ -106,14 +111,13 @@ class MainActivity : Activity() {
         mainActivity = this@MainActivity
         mHandler = Handler()
         ParameHandleMSG.mainActivity = mainActivity
-        ePermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
+        ePermissions.eInit.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
-        TTS = eTTS.ttsInit(APP.mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt身份证阅读器", "bt加载弹窗", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        TTS = eTTS.ttsInit(mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
-        if (Build.MODEL == "ZK-R32A")
-            XHA = XHApiManager()
-        eUDevice.init(mAPP, uHandler)
+        //业务测试模块
+        LoadingData()
     }
 
 
@@ -122,6 +126,7 @@ class MainActivity : Activity() {
      */
 
     var i = 1
+
     private fun init() {
         filePath = "/sdcard/SAK_Record.txt"
         file = File(filePath)
@@ -180,12 +185,30 @@ class MainActivity : Activity() {
                         R.id.bt_item1 -> Hint("语音合成：${TTS!!.synthesize(MSG ?: "语音合成", "0")}")
                         R.id.bt_item2 -> Hint("语音播放：${ePlayPCM("/sdcard/img/info/output-${"0"}.pcm")}")
                     }
-                    getDigit("身份证阅读器") -> {
-                        eCardOTG.otgInit(mAPP, handleMsg)
-                    }
+                    getDigit("读取身份证") ->
+                        when (view?.id) {
+                            R.id.bt_item1 -> Hint("身份证读取：${mCardOTG?.eOTGRead()}")
+                            R.id.bt_item2 -> Hint("身份证自动读取：${mCardOTG?.eOTGAutoRead()}")
+                            R.id.bt_item3 -> Hint("关闭：${mCardOTG?.eOTGStop()}")
+                        }
+                    getDigit("USB设备") ->
+                        when (view?.id) {
+                            R.id.bt_item1 -> Hint("设备数量：${mDevice?.eGetUsbDeviceCoun}")
+                            R.id.bt_item2 -> mDevice?.eGetUsbDevices?.forEach {
+                                Hint("设备：${it.usbDevice}")
+                            }
+                            R.id.bt_item3 -> {
+                                with(mDevice!!) {
+                                    eGetUsbFiles(eReadUsbDevice(eGetUsbDevice(0)!!, MSG?.toInt()
+                                            ?: 0)!!).forEach {
+                                        Hint("文件：${it.name}")
+                                    }
+                                }
+                            }
+                        }
                     getDigit("LogCat") ->
                         async {
-                            eShell.eExecShell("logcat  *:e -v time   -s AndroidRuntime ${this@MainActivity.packageName}  ${android.os.Process.myPid()} -d > /mnt/sdcard/log.txt "
+                            eShell.eInit.eExecShell("logcat  *:e -v time   -s AndroidRuntime ${this@MainActivity.packageName}  ${android.os.Process.myPid()} -d > /mnt/sdcard/log.txt "
                             )
                         }
                     getDigit("TCP创建") -> when (view?.id) {
@@ -214,8 +237,9 @@ class MainActivity : Activity() {
                     }
 
                     getDigit("Web") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("Web服务连接:${eWebSocket.eConnect(MSG?:"ws://121.40.165.18:8800",handleWeb)}")
-                        R.id.bt_item2 -> Hint("Web服务发送:${eWebSocket.eSendMSG(MSG?:"123")}")
+                        R.id.bt_item1 -> Hint("Web服务连接:${eWebSocket.eConnect(MSG
+                                ?: "ws://121.40.165.18:8800", handleWeb)}")
+                        R.id.bt_item2 -> Hint("Web服务发送:${eWebSocket.eSendMSG(MSG ?: "123")}")
                         R.id.bt_item3 -> Hint("Web服务关闭 ：" + eWebSocket.eClose())
                     }
 
@@ -293,12 +317,12 @@ class MainActivity : Activity() {
                             if (MSG == null)
                                 intent.data = Uri.parse("sak://com.anubis.app_webrtc?url=119.23.77.41&localId=123&autoAnswer=true&type=SET")
                             else
-                            intent.data = Uri.parse("sak://com.anubis.app_webrtc?url=${MSG.split("||")[0]}&localId=${MSG.split("||")[1]}&autoAnswer=${MSG.split("||")[2]}&type=SET")
+                                intent.data = Uri.parse("sak://com.anubis.app_webrtc?url=${MSG.split("||")[0]}&localId=${MSG.split("||")[1]}&autoAnswer=${MSG.split("||")[2]}&type=SET")
                             startActivity(intent)
                         }
                         R.id.bt_item2 -> {
-                            Hint("运行状态:${eApp.eIsAppRunning(this@MainActivity, "com.anubis.app_webrtc")}")
-                            Hint("安装状态:${eApp.eIsAppInstall(this@MainActivity, "com.anubis.app_webrtc")}")
+                            Hint("运行状态:${eApp.eInit.eIsAppRunning(this@MainActivity, "com.anubis.app_webrtc")}")
+                            Hint("安装状态:${eApp.eInit.eIsAppInstall(this@MainActivity, "com.anubis.app_webrtc")}")
                             val intent = Intent()
                             intent.data = Uri.parse("sak://com.anubis.app_webrtc?targetId=${MSG?.split("||")?.get(0)}&maxTime=${MSG?.split("||")?.get(1)}&cameraId=${MSG?.split("||")?.get(2)}&type=CALL")
                             startActivity(intent)
@@ -352,27 +376,27 @@ class MainActivity : Activity() {
                     }
                     getDigit("后台杀死") -> when (view?.id) {
                         R.id.bt_item1 -> {
-                            Hint("后台服务状态：${eApp.eIsServiceRunning(this@MainActivity, MyService::class.java.name)}")
+                            Hint("后台服务状态：${eApp.eInit.eIsServiceRunning(this@MainActivity, MyService::class.java.name)}")
                             Hint("后台启动状态：${startService(Intent(this@MainActivity, MyService::class.java))}")
                         }
-                        R.id.bt_item2 -> Hint("后台杀死状态：${eApp.eKillBackgroundProcesses(this@MainActivity, MyService::class.java.name)}")
+                        R.id.bt_item2 -> Hint("后台杀死状态：${eApp.eInit.eKillBackgroundProcesses(this@MainActivity, MyService::class.java.name)}")
                         R.id.bt_item3 -> {
                             eToastUtils.setMsgColor(Color.GREEN)
                             eToastUtils.showShort("Toast测试")
                         }
                     }
-                    getDigit("APP重启") -> Hint("APP重启:${eApp.eAppRestart(APP.mAPP, this@MainActivity)}")
+                    getDigit("APP重启") -> Hint("APP重启:${eApp.eInit.eAppRestart(APP.mAPP, this@MainActivity)}")
                     getDigit("串口通信") -> {
                         val msg = "A55501FB"
                         when (view?.id) {
                             R.id.bt_item1 -> Hint("串口数据发送：" + ePortMSG.sendMSG(this@MainActivity, msg, "/dev/ttyS1", 115200, object : ePortMSG.ICallBack {
                                 override fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
-                                    Hint("串口数据接收:${eString.eGetByteArrToHexStr(buffer)}--$path")
+                                    Hint("串口数据接收:${eString.eInit.eGetByteArrToHexStr(buffer)}--$path")
                                 }
                             }))
                             R.id.bt_item2 -> Hint("串口监听：" + ePortMSG.getMSG(this@MainActivity, callback = object : ePortMSG.ICallBack {
                                 override fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
-                                    Hint("串口接收:${eString.eGetByteArrToHexStr(buffer)}--$path")
+                                    Hint("串口接收:${eString.eInit.eGetByteArrToHexStr(buffer)}--$path")
                                 }
                             }, mPATH = MSG?.split("||")?.get(0)
                                     ?: "/dev/ttyS3", BAUDRATE = MSG?.split("||")?.get(1)?.toInt()
@@ -382,13 +406,18 @@ class MainActivity : Activity() {
                     }
 
                     getDigit("数据库") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("数据库插入：${eGreenDao(this@MainActivity).insertUser(eData("00000", "11111"))}")
-                        R.id.bt_item2 -> Hint("数据库查询:" + eGreenDao(this@MainActivity).queryAllUser(eData()).size)
-                        R.id.bt_item3 -> Hint("数据库删除：${eGreenDao(this@MainActivity).deleteAll(eData("", ""))}")
+                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(eData(eTime.eInit.eGetCurrentTime(), MSG?:""))}")
+                        R.id.bt_item2 -> {
+                            Hint("数据库查询:")
+                            mGreenDao?.eQueryAllUser(eData())?.forEach {
+                                Hint("${it.time}:${it.name}")
+                            }
+                        }
+                        R.id.bt_item3 -> Hint("数据库删除：${mGreenDao?.eDeleteAll(eData("", ""))}")
                     }
                     getDigit("系统设置权限检测") -> when (view?.id) {
                         R.id.bt_item1 -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            Hint("系统设置权限检测：${ePermissions.eSetSystemPermissions(this@MainActivity)}")
+                            Hint("系统设置权限检测：${ePermissions.eInit.eSetSystemPermissions(this@MainActivity)}")
                         } else {
                             Hint("安卓版本低于6.0--${Build.VERSION.SDK_INT}")
                         }
@@ -411,31 +440,31 @@ class MainActivity : Activity() {
                         }
 
                     getDigit("Shell执行") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("ROOT权限检测:${eShell.eHaveRoot()}")
-                        R.id.bt_item2 -> Hint("Shell执行：${eShell.eExecShell(MSG ?: "date")}")
+                        R.id.bt_item1 -> Hint("ROOT权限检测:${eShell.eInit.eHaveRoot()}")
+                        R.id.bt_item2 -> Hint("Shell执行：${eShell.eInit.eExecShell(MSG ?: "date")}")
                         R.id.bt_item3 -> {
                             if (MSG?.isNotEmpty() == true) {
                                 val shell = "cp -r /datas/APP/$MSG* /system/priv*"
-                                Hint("自定义修改为系统APP:" + eExecShell(shell))
+                                Hint("自定义修改为系统APP:" + eShell.eInit.eExecShell(shell))
                                 Hint("执行Shell:$shell")
                             } else {
                                 var shell = " cp -r /datas/APP/$packageName* /system/priv*"
-                                Hint("修改为系统APP:" + eExecShell(shell))
+                                Hint("修改为系统APP:" + eShell.eInit.eExecShell(shell))
                                 Hint("执行Shell:$shell")
                                 if (File("/datas/APP-lib/$packageName-1").exists()) {
                                     shell = "mv /datas/APP-lib/$packageName*/ /system/lib/"
-                                    Hint("文件夹存在，修改lib数据:" + eExecShell(shell))
+                                    Hint("文件夹存在，修改lib数据:" + eShell.eInit.eExecShell(shell))
                                     Hint("执行Shell:$shell")
                                 }
                             }
                             Handler().postDelayed({
                                 val shell = "chmod -R 755   /system/priv*/$MSG*"
-                                Hint("修改文件权限:" + eExecShell(shell))
+                                Hint("修改文件权限:" + eShell.eInit.eExecShell(shell))
                                 Hint("执行Shell:$shell")
                             }, 2000)
                             Handler().postDelayed({
                                 val shell = " rm -rf /datas/APP/$MSG*"
-                                Hint("删除数据遗留:" + eExecShell(shell))
+                                Hint("删除数据遗留:" + eShell.eInit.eExecShell(shell))
                                 Hint("执行Shell:$shell")
                                 eShowTip("请重启设备")
                             }, 3500)
@@ -457,7 +486,7 @@ class MainActivity : Activity() {
         val myAdapter = MyAdapter(this, datas!!, callback)
         rvList.adapter = myAdapter
         rvList.setItemViewCacheSize(datas!!.size)
-        eExecShell("mount -o remount,rw rootfs /system/ ")
+        eShell.eInit.eExecShell("mount -o remount,rw rootfs /system/ ")
 
 
     }
@@ -467,15 +496,34 @@ class MainActivity : Activity() {
      * -----------------------------------------业务控制模块——————————————————————————————————————————
      */
     fun LoadingData() {
-//        try {
-        eLog("数量：${eUDevice.deviceCount}")
-        @Suppress("MISSING_DEPENDENCY_CLASS")
-        val device = eUDevice.getUsbMassDevice(0)
-        @Suppress("MISSING_DEPENDENCY_CLASS")
-        val rootF = eUDevice.getUsbFiles(eUDevice.readDevice(device!!)!!)
-//        @Suppress("MISSING_DEPENDENCY_CLASS")
-//        for (root in rootF)
-//            eLog("root----:${root.name}")
+        /* 主板SDK*/
+        if (Build.MODEL == "ZK-R32A")
+            XHA = XHApiManager()
+        /*身份证阅读器*/
+        mCardOTG = eCardOTG.eInit(mAPP, mHandler, object : eCardOTG.IResult {
+            override fun CONNECT_SUCCESS(successMsg: String, SAMID: String) {
+                eLog("$SAMID--$successMsg")
+            }
+
+            override fun CONNECT_ERROR(errorMsg: String, SAMID: String) {
+                eLog("$SAMID--$errorMsg")
+            }
+
+            override fun READ_SUCCESS(cardInfo: HSIDCardInfo, fingerprintStr: String, imgPath: String, SAMID: String) {
+                eLog("$SAMID--${Gson().toJson(cardInfo)}--$fingerprintStr--$imgPath")
+            }
+
+            override fun READ_ERROR(msg: String, SAMID: String) {
+                eLog("$SAMID--$msg")
+            }
+
+        })
+        /*SB设备*/
+        mDevice = eUDevice.eInit(mAPP, uHandler)
+
+        /*数据库*/
+        mGreenDao=eGreenDao.eInit(this)
+
 
     }
 
@@ -484,7 +532,7 @@ class MainActivity : Activity() {
      */
     fun Hint(str: String) {
         tv_Hint.post {
-            val Str = "${eGetCurrentTime("MM-dd HH:mm:ss")}： $str\n\n\n"
+            val Str = "${eTime.eInit.eGetCurrentTime("MM-dd HH:mm:ss")}： $str\n\n\n"
             str.eLog()
             tv_Hint.append(Str)
             sv_Hint.fullScroll(ScrollView.FOCUS_DOWN)
@@ -569,15 +617,15 @@ class MainActivity : Activity() {
                         when (btList.indexOf(str)) {
                             0 -> {
                                 itemView.bt_item1.visibility = View.VISIBLE
-                                itemView.bt_item1.text = eString.eGetNumberPeriod(str, 2, "MAX")
+                                itemView.bt_item1.text = eString.eInit.eGetNumberPeriod(str, 2, "MAX")
                             }
                             1 -> {
                                 itemView.bt_item2.visibility = View.VISIBLE
-                                itemView.bt_item2.text = eString.eGetNumberPeriod(str, 2, "MAX")
+                                itemView.bt_item2.text = eString.eInit.eGetNumberPeriod(str, 2, "MAX")
                             }
                             2 -> {
                                 itemView.bt_item3.visibility = View.VISIBLE
-                                itemView.bt_item3.text = eString.eGetNumberPeriod(str, 2, "MAX")
+                                itemView.bt_item3.text = eString.eInit.eGetNumberPeriod(str, 2, "MAX")
                             }
                         }
 
@@ -585,7 +633,7 @@ class MainActivity : Activity() {
                 } catch (e: Exception) {
                     if (datas.substring(0, 2) == "bt") {
                         itemView.bt_item1.visibility = View.VISIBLE
-                        itemView.bt_item1.text = eString.eGetNumberPeriod(datas, 2, "MAX")
+                        itemView.bt_item1.text = eString.eInit.eGetNumberPeriod(datas, 2, "MAX")
                     }
                 }
             }
@@ -598,7 +646,7 @@ class MainActivity : Activity() {
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        ePermissions.eSetOnRequestPermissionsResult(this, requestCode, permissions, grantResults)
+        ePermissions.eInit.eSetOnRequestPermissionsResult(this, requestCode, permissions, grantResults)
         if (requestCode != 1) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
@@ -608,7 +656,7 @@ class MainActivity : Activity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         Hint("keyCode:$keyCode")
         eLog("size" + APP.mAPP.mActivityList?.size)
-        return eSetKeyDownExit(this, keyCode, APP.mAPP.mActivityList, false, exitHint = "完成退出")
+        return eKeyEvent.eInit.eSetKeyDownExit(this, keyCode, APP.mAPP.mActivityList, false, exitHint = "完成退出")
     }
 
     override fun onDestroy() {

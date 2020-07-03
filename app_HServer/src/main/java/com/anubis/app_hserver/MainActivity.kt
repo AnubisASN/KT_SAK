@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.view.View
-import com.anubis.kt_extends.eAssets.eAssetsToFile
 import com.anubis.module_httpserver.eResolver
 import com.anubis.module_httpserver.eHttpServer
 import com.anubis.module_httpserver.eResolverType
@@ -46,19 +45,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         File("/sdcard/Web").apply { if (!this.exists()) this.mkdirs() }
-        eAssetsToFile(this, "Web/index.html", "/sdcard/Web/index.html")
-        eAssetsToFile(this, "Web/base64.js", "/sdcard/Web/base64.js")
-        eAssetsToFile(this, "Web/index.js", "/sdcard/Web/index.js")
-        eAssetsToFile(this, "Web/jquery.js", "/sdcard/Web/jquery.js")
-        eAssetsToFile(this, "Web/Vysor5.5.5.crx", "/sdcard/Web/Vysor5.5.5.crx")
-        eAssetsToFile(this, "Web/Vysor.zip", "/sdcard/Web/Vysor.zip")
-        mHttpServer = eHttpServer.eStart(eResolver::class.java, handler = httpHandler)
+        eAssets.eInit.eAssetsToFile(this, "Web/index.html", "/sdcard/Web/index.html")
+        eAssets.eInit.eAssetsToFile(this, "Web/base64.js", "/sdcard/Web/base64.js")
+        eAssets.eInit.eAssetsToFile(this, "Web/index.js", "/sdcard/Web/index.js")
+        eAssets.eInit.eAssetsToFile(this, "Web/jquery.js", "/sdcard/Web/jquery.js")
+        eAssets.eInit.eAssetsToFile(this, "Web/Vysor5.5.5.crx", "/sdcard/Web/Vysor5.5.5.crx")
+        eAssets.eInit.eAssetsToFile(this, "Web/Vysor.zip", "/sdcard/Web/Vysor.zip")
+        mHttpServer = eHttpServer.instance.eStart(eResolver::class.java, handler = httpHandler)
+
+
     }
-
-
     override fun onResume() {
         super.onResume()
-        tvHint.text = String.format(resources.getString(R.string.hint), "${eDevice.eGetHostIP()}:${mHttpServer?.myPort}")
+        tvHint.text = String.format(resources.getString(R.string.hint), "${eDevice.eInit.eGetHostIP()}:${mHttpServer?.myPort}")
     }
 
     fun onClick(v: View) {

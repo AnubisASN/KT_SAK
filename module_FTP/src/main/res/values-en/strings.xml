@@ -110,5 +110,4 @@ implementarán, mira el registro de incidencias en https://github.com/ppareit/sw
     <string name="pst_disconnected">desconectado</string>
     <string name="storage_warning">Aviso: Almacenamiento no disponible. Puede que quieras desmontarlo.</string>
     <string name="widget_name">Widget FTP Server</string>
-    <string name="networkError">Network Connection Error</string>
 </resources>
