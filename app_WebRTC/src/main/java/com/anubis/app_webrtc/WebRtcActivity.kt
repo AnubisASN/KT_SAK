@@ -103,7 +103,7 @@ class WebRtcActivity : AppCompatActivity() {
     }
 
     fun initRRT() {
-        if (!eApp.eIsServiceRunning(this, KeepLiveService::class.java.name)) {
+        if (!eApp.eInit.eIsServiceRunning(this, KeepLiveService::class.java.name)) {
             val intent = Intent(this, KeepLiveService::class.java)
             startService(intent)
         }

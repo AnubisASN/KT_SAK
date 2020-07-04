@@ -23,7 +23,7 @@ import android.widget.Spinner
 import com.alibaba.android.arouter.launcher.ARouter
 import com.android.xhapimanager.XHApiManager
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
-import com.anubis.SwissArmyKnife.GreenDao.eData
+import com.anubis.SwissArmyKnife.GreenDao.Data
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleMsg
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTCP
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTTS
@@ -50,7 +50,6 @@ import com.anubis.module_videochat.eVideoChatUI
 import com.anubis.module_vncs.eVNC
 import com.anubis.module_websocket.eWebSocket
 import com.anubis.utils.util.eToastUtils
-import com.github.mjdev.libaums.fs.UsbFile
 import com.google.gson.Gson
 import com.huashi.otg.sdk.HSIDCardInfo
 import com.lzy.okgo.OkGo
@@ -114,7 +113,7 @@ class MainActivity : Activity() {
         ePermissions.eInit.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         TTS = eTTS.ttsInit(mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
         //业务测试模块
         LoadingData()
@@ -370,7 +369,6 @@ class MainActivity : Activity() {
                             uiThread { progressDialog?.dismiss() }
                         }
 //                            progressDialog.secondaryProgress
-
 //                        }
 
                     }
@@ -385,7 +383,7 @@ class MainActivity : Activity() {
                             eToastUtils.showShort("Toast测试")
                         }
                     }
-                    getDigit("APP重启") -> Hint("APP重启:${eApp.eInit.eAppRestart(APP.mAPP, this@MainActivity)}")
+                    getDigit("APP重启") -> Hint("APP重启:${eApp.eInit.eAppRestart(mAPP, this@MainActivity)}")
                     getDigit("串口通信") -> {
                         val msg = "A55501FB"
                         when (view?.id) {
@@ -404,16 +402,15 @@ class MainActivity : Activity() {
                             R.id.bt_item3 -> Hint("串口关闭：" + ePortMSG.closeMSG())
                         }
                     }
-
                     getDigit("数据库") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(eData(eTime.eInit.eGetCurrentTime(), MSG?:""))}")
+                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(Data(eTime.eInit.eGetCurrentTime(), MSG?:""))}")
                         R.id.bt_item2 -> {
                             Hint("数据库查询:")
-                            mGreenDao?.eQueryAllUser(eData())?.forEach {
+                            mGreenDao?.eQueryAllUser(Data())?.forEach {
                                 Hint("${it.time}:${it.name}")
                             }
                         }
-                        R.id.bt_item3 -> Hint("数据库删除：${mGreenDao?.eDeleteAll(eData("", ""))}")
+                        R.id.bt_item3 -> Hint("数据库删除：${mGreenDao?.eDeleteAll(Data("", ""))}")
                     }
                     getDigit("系统设置权限检测") -> when (view?.id) {
                         R.id.bt_item1 -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

@@ -20,15 +20,16 @@ import org.greenrobot.greendao.annotation.Generated;
  * 说明：
  */
 @Entity
-public class eData {
+public class Data {
     public String time;
     public   String name;
-    @Generated(hash = 1172605371)
-    public eData(String time, String name) {
+    @Generated(hash = 966176266)
+    public Data(String time, String name) {
         this.time = time;
         this.name = name;
     }
-    public eData() {
+    @Generated(hash = 2135787902)
+    public Data() {
     }
     public String getTime() {
         return this.time;

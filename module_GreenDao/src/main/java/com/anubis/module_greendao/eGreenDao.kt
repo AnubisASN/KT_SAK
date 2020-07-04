@@ -1,11 +1,8 @@
 package com.anubis.module_greendao
 
 import android.content.Context
-import android.util.Log
-
 import org.greenrobot.greendao.AbstractDao
 import org.greenrobot.greendao.AbstractDaoSession
-import org.greenrobot.greendao.test.DbTest.DB_NAME
 
 /**
  * Author  ： AnubisASN   on 2018-08-07 11:52.
@@ -23,21 +20,22 @@ import org.greenrobot.greendao.test.DbTest.DB_NAME
  * Router :  /'Module'/'Function'
  * 说明：数据库
  */
-class eGreenDao private constructor() {
-    private val mManager: DaoManager = DaoManager(mContext, mGreenDaoClassName, DB_NAME)
-    private   var daoSession: AbstractDaoSession
+class eGreenDao private constructor(){
+    private val mManager: DaoManager = DaoManager(mContext, mGreenDaoClassName, mDB_NAME)
+    private var daoSession: AbstractDaoSession? = null
     companion object {
         private lateinit var mContext: Context
         private lateinit var mGreenDaoClassName: String
-        private lateinit var DB_NAME: String
-        fun eInit(context: Context, greenDaoClassName: String = "com.anubis.modlue_greendao.Gen", DBName: String = "DB_ASN"): eGreenDao {
-            mContext=  context
-            mGreenDaoClassName=greenDaoClassName
-            DB_NAME=DBName
+        private lateinit var mDB_NAME: String
+        fun eInit(mContext: Context, mGreenDaoClassName: String = "com.anubis.modlue_greendao.Gen", mDB_NAME: String = "DB_ASN"): eGreenDao {
+            this.mContext = mContext
+            this.mGreenDaoClassName = mGreenDaoClassName
+            this.mDB_NAME = mDB_NAME
             return eInit
         }
         private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eGreenDao() }
     }
+
     init {
         daoSession = mManager.daoSession as AbstractDaoSession
     }
@@ -49,7 +47,7 @@ class eGreenDao private constructor() {
      */
     fun <T>eInsertUser(user: T): Boolean {
         var flag = false
-        val dataDao = daoSession::class.java.getMethod("get${(user as Any)::class.java.simpleName}Dao").invoke(daoSession) as AbstractDao<Any, Any>
+        val dataDao = daoSession!!::class.java.getMethod("get${(user as Any)::class.java.simpleName}Dao").invoke(daoSession) as AbstractDao<Any, Any>
         flag = dataDao.insert(user) != (-1).toLong()
         return flag
     }
@@ -62,9 +60,9 @@ class eGreenDao private constructor() {
     fun <T>eInsertMultUser(userList: List<T>): Boolean {
         var flag = false
         try {
-            daoSession.runInTx {
+            daoSession!!.runInTx {
                 for (user in userList) {
-                    daoSession.insertOrReplace(user)
+                    daoSession!!.insertOrReplace(user)
                 }
             }
             flag = true
@@ -82,7 +80,7 @@ class eGreenDao private constructor() {
     fun <T>eUpdateUser(user: T): Boolean {
         var flag = false
         try {
-            daoSession.update(user)
+            daoSession!!.update(user)
             flag = true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -100,11 +98,12 @@ class eGreenDao private constructor() {
         var flag = false
         try {
             //按照id删除
-            daoSession.delete(user)
+            daoSession!!.delete(user)
             flag = true
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
         return flag
     }
 
@@ -116,11 +115,12 @@ class eGreenDao private constructor() {
         var flag = false
         try {
             //按照id删除
-            daoSession.deleteAll((user as Any)::class.java)
+            daoSession!!.deleteAll((user as Any)::class.java)
             flag = true
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
         return flag
     }
 
@@ -128,8 +128,8 @@ class eGreenDao private constructor() {
      * 查询所有记录
      * @return
      */
-    fun <T> eQueryAllUser(user: T): List<T> {
-        return daoSession.loadAll<Any, Any>((user as Any)::class.java as Class<Any>?) as List<T>
+    fun <T>eQueryAllUser(user: T): List<T> {
+        return daoSession!!.loadAll<Any, Any>((user as Any)::class.java as Class<Any>?) as List<T>
     }
 
     /**
@@ -137,16 +137,18 @@ class eGreenDao private constructor() {
      * @param key
      * @return
      */
-    fun <T>eQueryUserById(key: Long, user: T): T {
-        return daoSession.load((user as Any)::class.java, key) as T
+    fun <T>eQueryUserById(key: Long, user: Any): T {
+        return daoSession!!.load((user as Any)::class.java, key) as T
     }
 
     /**
      * 使用native sql进行查询操作
      */
     fun <T>eQueryUserByNativeSql(user: T, sql: String, conditions: Array<String>): List<T> {
-        return daoSession.queryRaw<Any, Any>((user as Any)::class.java as Class<Any>?, sql, *conditions) as List<T>
+        return daoSession!!.queryRaw<Any, Any>((user as Any)::class.java as Class<Any>?, sql, *conditions) as List<T>
     }
+
+
     /**
      * 关闭数据库连接
      * @return
