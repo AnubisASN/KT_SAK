@@ -4,24 +4,14 @@ package com.anubis.module_httpserver
 import android.annotation.TargetApi
 import android.os.Build
 import android.os.Handler
-import android.util.Log
-import com.anubis.kt_extends.eLog
-import com.anubis.module_httpserver.eManage.fileDownload
-import com.anubis.module_httpserver.eManage.fileParse
-import com.anubis.module_httpserver.eManage.filePush
 import com.anubis.module_httpserver.protocols.http.IHTTPSession
 import com.anubis.module_httpserver.protocols.http.eHTTPD
 import com.anubis.module_httpserver.protocols.http.response.Response
-import com.anubis.module_httpserver.eManage.httpResult
-import com.anubis.module_httpserver.eManage.rawParse
-import com.anubis.module_httpserver.eManage.sessionParse
 import com.anubis.module_httpserver.eResolverType.FILE_PARSE
 import com.anubis.module_httpserver.eResolverType.FILE_PUSH
 import com.anubis.module_httpserver.eResolverType.NULL_PARSE
 import com.anubis.module_httpserver.eResolverType.RAW_PARSE
 import com.anubis.module_httpserver.eResolverType.SESSION_PARSE
-import okhttp3.MediaType
-import okhttp3.RequestBody
 import java.io.File
 
 
@@ -39,7 +29,7 @@ import java.io.File
  * Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  * Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  * Router :  /'Module'/'Function'
- * 说明：默认常用解析   可用Handler 回调参数
+ * 说明：默认常用解析(接口定义)   可用Handler 回调参数
  */
 @TargetApi(Build.VERSION_CODES.N)
 class eResolver(port: Int = 3335, handler: Handler? = null) : eHTTPD(port, handler) {
@@ -47,7 +37,7 @@ class eResolver(port: Int = 3335, handler: Handler? = null) : eHTTPD(port, handl
     public override fun serve(session: IHTTPSession, handler: Handler?): Response {
         val uri = session.uri.replace("/", "")
         return Response.newFixedLengthResponse(when (uri) {
-            "File" -> if (fileParse(session, "file").apply {
+            "File" -> if (eManage.eInit.eFileParse(session, "file").apply {
                         val msg = handler?.obtainMessage()
                         msg?.what = FILE_PARSE
                         msg?.obj = this
@@ -56,30 +46,30 @@ class eResolver(port: Int = 3335, handler: Handler? = null) : eHTTPD(port, handl
                 "上传成功"
             else "上传失败"
 //        RAW发送    upRequestBody(RequestBody.create(MediaType.parse("application/json; charset=utf-8"),"{\"type\":\"Response\"}"))
-            "Raw" -> rawParse(session).apply {
+            "Raw" -> eManage.eInit.eRawParse(session).apply {
                 val msg = handler?.obtainMessage()
                 msg?.what = RAW_PARSE
                 msg?.obj = this
                 handler?.sendMessage(msg)
             }
-            "Data" -> if (sessionParse(session).apply {
+            "Data" -> if (eManage.eInit.eSessionParse(session).apply {
                         val msg = handler?.obtainMessage()
                         msg?.what = SESSION_PARSE
                         msg?.obj = this
                         handler?.sendMessage(msg)
                     } != null) "成功" else "解析错误"
             "" -> if (uri.contains(".zip")){
-                val fs= fileDownload(File("/sdcard/Web/$uri"))
+                val fs= eManage.eInit.eFileDownload(File("/sdcard/Web/$uri"))
                if (fs==null)"404" else return fs
             }else
-                httpResult.apply {
+                eManage.eInit.httpResult.apply {
                     val msg = handler?.obtainMessage()
                     msg?.what = NULL_PARSE
                     msg?.obj = this
                     handler?.sendMessage(msg)
                 }
 
-            else -> return filePush(session, (eManage.path + uri).apply {
+            else -> return eManage.eInit.eFilePush(session, (eManage.eInit.eHttpPath + uri).apply {
                 val msg = handler?.obtainMessage()
                 msg?.what = FILE_PUSH
                 msg?.obj = this

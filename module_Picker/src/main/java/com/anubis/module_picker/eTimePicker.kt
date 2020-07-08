@@ -2,18 +2,23 @@ package com.anubis.module_picker
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
+import android.support.v4.app.Fragment
 import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
+import com.anubis.kt_extends.eTime
 import com.anubis.module_picker.Utils.DateUtil
 import com.anubis.module_picker.Utils.ScreenUtil
 import com.anubis.module_picker.Utils.TextUtil
 import com.anubis.module_picker.view.PickerView
+import me.rosuh.filepicker.FilePickerActivity
 
 
 import java.util.ArrayList
@@ -22,25 +27,20 @@ import java.util.Calendar
 /**
  * Created by liuli on 2015/11/27.
  */
-class eTimePicker(private val context: Context, private val handler: ResultHandler, startDate: String, endDate: String) {
-
-
+class eTimePicker private constructor() {
     private var scrollUnits = SCROLLTYPE.HOUR.value + SCROLLTYPE.MINUTE.value
     private val FORMAT_STR = "yyyy-MM-dd HH:mm"
-
     private var seletorDialog: Dialog? = null
     private var year_pv: PickerView? = null
     private var month_pv: PickerView? = null
     private var day_pv: PickerView? = null
     private var hour_pv: PickerView? = null
     private var minute_pv: PickerView? = null
-
     private val MAXMINUTE = 59
     private var MAXHOUR = 23
     private val MINMINUTE = 0
     private var MINHOUR = 0
     private val MAXMONTH = 12
-
     private var year: ArrayList<String>? = null
     private var month: ArrayList<String>? = null
     private var day: ArrayList<String>? = null
@@ -68,8 +68,8 @@ class eTimePicker(private val context: Context, private val handler: ResultHandl
     private val selectedCalender = Calendar.getInstance()
     private val ANIMATORDELAY = 200L
     private val CHANGEDELAY = 90L
-    private var workStart_str: String?=null
-    private var workEnd_str: String?=null
+    private var workStart_str: String? = null
+    private var workEnd_str: String? = null
     private val startCalendar: Calendar
     private val endCalendar: Calendar
     private var tv_cancle: TextView? = null
@@ -78,65 +78,62 @@ class eTimePicker(private val context: Context, private val handler: ResultHandl
     private var hour_text: TextView? = null
     private var minute_text: TextView? = null
 
+    companion object {
+        private lateinit var mContext: Context
+        private lateinit var mRHandler: ResultHandler
+        fun eInit(context: Context, rhandler: ResultHandler): eTimePicker {
+            mContext = context
+            mRHandler = rhandler
+            return eInit
+        }
+        private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eTimePicker() }
+    }
+
     interface ResultHandler {
         fun handle(time: String)
     }
 
     enum class SCROLLTYPE private constructor(var value: Int) {
-
         HOUR(1),
         MINUTE(2)
-
     }
 
     enum class MODE private constructor(var value: Int) {
-
         YMD(1),
         YMDHM(2)
-
     }
-
 
     init {
         startCalendar = Calendar.getInstance()
         endCalendar = Calendar.getInstance()
-        startCalendar.time = DateUtil.parse(startDate, FORMAT_STR)
-        endCalendar.time = DateUtil.parse(endDate, FORMAT_STR)
         initDialog()
         initView()
     }
 
-
-    constructor(context: Context, resultHandler: ResultHandler, startDate: String, endDate: String, workStartTime: String, workEndTime: String) : this(context, resultHandler, startDate, endDate) {
-        this.workStart_str = workStartTime
-        this.workEnd_str = workEndTime
-    }
-
-    fun show() {
+    fun eShowTimeSelect(startDate: String, endDate: String = eTime.eInit.eGetCurrentTime()) {
+        startCalendar.time = DateUtil.parse(startDate, FORMAT_STR)
+        endCalendar.time = DateUtil.parse(endDate, FORMAT_STR)
         if (startCalendar.time.time >= endCalendar.time.time) {
-            Toast.makeText(context, "start>end", Toast.LENGTH_LONG).show()
+            Toast.makeText(mContext, "start>end", Toast.LENGTH_LONG).show()
             return
         }
-
         if (!excuteWorkTime()) return
         initParameter()
         initTimer()
         addListener()
         seletorDialog!!.show()
-
-
     }
 
     private fun initDialog() {
         if (seletorDialog == null) {
-            seletorDialog = Dialog(context, R.style.time_dialog)
+            seletorDialog = Dialog(mContext, R.style.time_dialog)
             seletorDialog!!.setCancelable(false)
             seletorDialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
             seletorDialog!!.setContentView(R.layout.dialog_selector)
             val window = seletorDialog!!.window
             window!!.setGravity(Gravity.BOTTOM)
             val lp = window.attributes
-            val width = ScreenUtil.getInstance(context).screenWidth
+            val width = ScreenUtil.getInstance(mContext).screenWidth
             lp.width = width
             window.attributes = lp
         }
@@ -156,10 +153,9 @@ class eTimePicker(private val context: Context, private val handler: ResultHandl
 
         tv_cancle!!.setOnClickListener { seletorDialog!!.dismiss() }
         tv_select!!.setOnClickListener {
-            handler.handle(DateUtil.format(selectedCalender.time, FORMAT_STR))
-            seletorDialog!!.dismiss()
+                mRHandler.handle(DateUtil.format(selectedCalender.time, FORMAT_STR))
+                seletorDialog!!.dismiss()
         }
-
     }
 
     private fun initParameter() {
@@ -183,7 +179,6 @@ class eTimePicker(private val context: Context, private val handler: ResultHandl
 
     private fun initTimer() {
         initArrayList()
-
         if (spanYear) {
             for (i in startYear..endYear) {
                 year!!.add(i.toString())
@@ -201,7 +196,6 @@ class eTimePicker(private val context: Context, private val handler: ResultHandl
                     hour!!.add(fomatTimeUnit(i))
                 }
             }
-
             if (scrollUnits and SCROLLTYPE.MINUTE.value != SCROLLTYPE.MINUTE.value) {
                 minute!!.add(fomatTimeUnit(startMininute))
             } else {
@@ -209,7 +203,6 @@ class eTimePicker(private val context: Context, private val handler: ResultHandl
                     minute!!.add(fomatTimeUnit(i))
                 }
             }
-
         } else if (spanMon) {
             year!!.add(startYear.toString())
             for (i in startMonth..endMonth) {
@@ -293,11 +286,8 @@ class eTimePicker(private val context: Context, private val handler: ResultHandl
                 }
             }
         }
-
         loadComponent()
-
     }
-
     private fun excuteWorkTime(): Boolean {
         val res = true
         if (!TextUtil.isEmpty(workStart_str) && !TextUtil.isEmpty(workEnd_str)) {
@@ -315,37 +305,28 @@ class eTimePicker(private val context: Context, private val handler: ResultHandl
             workStartCalendar.set(Calendar.MINUTE, minute_workStart)
             workEndCalendar.set(Calendar.HOUR_OF_DAY, hour_workEnd)
             workEndCalendar.set(Calendar.MINUTE, minute_workEnd)
-
-
             val startTime = Calendar.getInstance()
             val endTime = Calendar.getInstance()
             val startWorkTime = Calendar.getInstance()
             val endWorkTime = Calendar.getInstance()
-
             startTime.set(Calendar.HOUR_OF_DAY, startCalendar.get(Calendar.HOUR_OF_DAY))
             startTime.set(Calendar.MINUTE, startCalendar.get(Calendar.MINUTE))
             endTime.set(Calendar.HOUR_OF_DAY, endCalendar.get(Calendar.HOUR_OF_DAY))
             endTime.set(Calendar.MINUTE, endCalendar.get(Calendar.MINUTE))
-
             startWorkTime.set(Calendar.HOUR_OF_DAY, workStartCalendar.get(Calendar.HOUR_OF_DAY))
             startWorkTime.set(Calendar.MINUTE, workStartCalendar.get(Calendar.MINUTE))
             endWorkTime.set(Calendar.HOUR_OF_DAY, workEndCalendar.get(Calendar.HOUR_OF_DAY))
             endWorkTime.set(Calendar.MINUTE, workEndCalendar.get(Calendar.MINUTE))
-
-
             if (startTime.time.time == endTime.time.time || startWorkTime.time.time < startTime.time.time && endWorkTime.time.time < startTime.time.time) {
-                Toast.makeText(context, "Wrong parames!", Toast.LENGTH_LONG).show()
+                Toast.makeText(mContext, "Wrong parames!", Toast.LENGTH_LONG).show()
                 return false
             }
             startCalendar.time = if (startCalendar.time.time < workStartCalendar.time.time) workStartCalendar.time else startCalendar.time
             endCalendar.time = if (endCalendar.time.time > workEndCalendar.time.time) workEndCalendar.time else endCalendar.time
             MINHOUR = workStartCalendar.get(Calendar.HOUR_OF_DAY)
             MAXHOUR = workEndCalendar.get(Calendar.HOUR_OF_DAY)
-
         }
         return res
-
-
     }
 
     private fun fomatTimeUnit(unit: Int): String {
@@ -364,7 +345,6 @@ class eTimePicker(private val context: Context, private val handler: ResultHandl
         hour!!.clear()
         minute!!.clear()
     }
-
 
     private fun addListener() {
         year_pv!!.setOnSelectListener { text ->
@@ -542,7 +522,6 @@ class eTimePicker(private val context: Context, private val handler: ResultHandl
                 1.3f, 1f)
         ObjectAnimator.ofPropertyValuesHolder(view, pvhX, pvhY, pvhZ).setDuration(ANIMATORDELAY).start()
     }
-
 
     fun setNextBtTip(str: String) {
         tv_select!!.text = str

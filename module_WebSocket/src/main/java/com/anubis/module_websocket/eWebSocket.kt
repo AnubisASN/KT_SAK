@@ -24,7 +24,78 @@ import javax.websocket.WebSocketContainer
 
 
 @ClientEndpoint
-class eWebSocket {
+class eWebSocket internal constructor() {
+    companion object {
+        val WEBSOCKET_CONNECT_CLOSE = 0     //连接关闭
+        val WEBSOCKET_CONNECT_FAILURE = -1  //连接失败
+        val WEBSOCKET_CONNECT_SUCCESS = 1  //连接成功
+        val WEBSOCKET_CONNECT_STOP = -2   //连接中断
+        val WEBSOCKET_RECEIVE_MSG = 2    //接收消息
+        val WEBSOCKET_SENDMSG_SUCCESS = 3    //消息发送成功
+        val WEBSOCKET_SENDMSG_FAILURE = -3    //消息发送失败
+        private var mHandler: Handler? = null
+        private var isReconnect = true
+        private var mReconnectTime = 10000L
+        private var wsURI: URI? = null
+        private var wsURL: String? = null
+        private var container: WebSocketContainer? = null
+        private var session: Session? = null
+        private var reconJob: Job? = null
+        private var client: eWebSocket? = null
+        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eWebSocket() }
+    }
+
+    fun eConnect(url: String, handler: Handler? = null, reconnect: Boolean = true, reconnectTime: Long = mReconnectTime) {
+        /*WebSocket 配置*/
+        isReconnect = reconnect
+        mHandler = handler
+        mReconnectTime = reconnectTime
+        wsURL = url
+        wsURI = URI.create(url)
+        client = eWebSocket()
+        client?.start()
+    }
+
+    fun eSendMSG(any: Any) {
+        async {
+            try {
+                when (any) {
+                    is String -> {
+                        session?.asyncRemote?.sendText(any)
+                        client?.handlerReceiveMSG(WEBSOCKET_SENDMSG_SUCCESS, any)
+                    }
+                    is ByteBuffer -> {
+                        session?.asyncRemote?.sendBinary(any)
+                        client?.handlerReceiveMSG(WEBSOCKET_SENDMSG_SUCCESS, Charset.forName("utf-8").decode(any).toString())
+                    }
+                    else -> {
+                        val gson = GsonBuilder().disableHtmlEscaping().create()
+                        val json = gson.toJson(any).replace("\\n", "").trim()
+                        session?.asyncRemote?.sendText(json)
+                        client?.handlerReceiveMSG(WEBSOCKET_SENDMSG_SUCCESS, json)
+                    }
+                }
+            } catch (e: Exception) {
+                client?.handlerReceiveMSG(WEBSOCKET_SENDMSG_FAILURE, e.toString())
+            }
+        }
+    }
+
+    fun eClose() {
+        isReconnect = false
+        GlobalScope.launch { session?.close() }
+    }
+
+    //消息封装类
+    private data class receiveMSG(var address: String, var code: Int? = null, var msg: String? = null)
+
+    private fun handlerReceiveMSG(code: Int? = null, str: String? = null) {
+        eLog("webSocketMSG:$str")
+        val msg = Message()
+        msg.obj = receiveMSG(wsURL.toString(), code, str)
+        mHandler?.sendMessage(msg)
+    }
+
     @OnOpen
     @Throws(JSONException::class)
     fun onOpen(session: Session) {
@@ -97,75 +168,5 @@ class eWebSocket {
             }
 
         }
-    }
-
-
-    companion object {
-        val WEBSOCKET_CONNECT_CLOSE = 0     //连接关闭
-        val WEBSOCKET_CONNECT_FAILURE = -1  //连接失败
-        val WEBSOCKET_CONNECT_SUCCESS = 1  //连接成功
-        val WEBSOCKET_CONNECT_STOP = -2   //连接中断
-        val WEBSOCKET_RECEIVE_MSG = 2    //接收消息
-        val WEBSOCKET_SENDMSG_SUCCESS = 3    //消息发送成功
-        val WEBSOCKET_SENDMSG_FAILURE = -3    //消息发送失败
-        private var mHandler: Handler? = null
-        private var isReconnect = true
-        private var mReconnectTime = 10000L
-        private var wsURI: URI? = null
-        private var wsURL: String? = null
-        private var container: WebSocketContainer? = null
-        private var session: Session? = null
-        private var reconJob: Job? = null
-        private var client: eWebSocket? = null
-        fun eConnect(url: String, handler: Handler? = null, reconnect: Boolean = true, reconnectTime: Long = mReconnectTime) {
-            /*WebSocket 配置*/
-            isReconnect = reconnect
-            mHandler = handler
-            mReconnectTime = reconnectTime
-            wsURL = url
-            wsURI = URI.create(url)
-            client = eWebSocket()
-            client?.start()
-        }
-
-        fun eSendMSG(any: Any) {
-            async {
-                try {
-                    when (any) {
-                        is String -> {
-                            session?.asyncRemote?.sendText(any)
-                            client?.handlerReceiveMSG(WEBSOCKET_SENDMSG_SUCCESS, any)
-                        }
-                        is ByteBuffer -> {
-                            session?.asyncRemote?.sendBinary(any)
-                            client?.handlerReceiveMSG(WEBSOCKET_SENDMSG_SUCCESS, Charset.forName("utf-8").decode(any).toString())
-                        }
-                        else -> {
-                            val gson = GsonBuilder().disableHtmlEscaping().create()
-                            val json = gson.toJson(any).replace("\\n", "").trim()
-                            session?.asyncRemote?.sendText(json)
-                            client?.handlerReceiveMSG(WEBSOCKET_SENDMSG_SUCCESS, json)
-                        }
-                    }
-                } catch (e: Exception) {
-                    client?.handlerReceiveMSG(WEBSOCKET_SENDMSG_FAILURE, e.toString())
-                }
-            }
-        }
-
-        fun eClose() {
-            isReconnect = false
-            GlobalScope.launch { session?.close() }
-        }
-    }
-
-    //消息封装类
-    private data class receiveMSG(var address: String, var code: Int? = null, var msg: String? = null)
-
-    private fun handlerReceiveMSG(code: Int? = null, str: String? = null) {
-        eLog("webSocketMSG:$str")
-        val msg = Message()
-        msg.obj = receiveMSG(wsURL.toString(), code, str)
-        mHandler?.sendMessage(msg)
     }
 }

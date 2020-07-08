@@ -71,7 +71,7 @@ import kotlin.experimental.and
  */
 
 
-  fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
+fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, str.toString(), i).show()
 }
 
@@ -81,36 +81,36 @@ import kotlin.experimental.and
 var eIsTagD: Boolean = true
 var eIsTagI: Boolean = true
 
-  fun Any?.eIsBaseType() = this is String || this is Int || this is Int || this is Log || this is Double || this is Float || this is Char || this is Short || this is Boolean || this is Byte
+fun Any?.eIsBaseType() = this is String || this is Int || this is Int || this is Log || this is Double || this is Float || this is Char || this is Short || this is Boolean || this is Byte
 
 
-  fun <T> T.eLog(hint: Any? = "", TAG: String = "TAGd"): T {
+fun <T> T.eLog(hint: Any? = "", TAG: String = "TAGd"): T {
     if (eIsTagD)
         Log.d(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
 
 
-  fun <T> T.eLogI(hint: Any? = "", TAG: String = "TAGi"): T {
+fun <T> T.eLogI(hint: Any? = "", TAG: String = "TAGi"): T {
     if (eIsTagI)
         Log.i(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
 
 
-    fun <T> T?.eLogE(hint: Any? = "", TAG: String = "TAGe"): T? {
+fun <T> T?.eLogE(hint: Any? = "", TAG: String = "TAGe"): T? {
     Log.e(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint\n${eErrorOut(this)} ")
     return this
 }
 
-    fun eLogE(hint: Any? = "", e: Any? = null, TAG: String = "TAGe") {
+fun eLogE(hint: Any? = "", e: Any? = null, TAG: String = "TAGe") {
     e.eLogE(hint, TAG)
 }
 
 /**
  * 错误输出
  */
-    fun eErrorOut(e: Any?): String? {
+fun eErrorOut(e: Any?): String? {
     e ?: return null
     val os = ByteArrayOutputStream()
     when (e) {
@@ -121,7 +121,7 @@ var eIsTagI: Boolean = true
 }
 
 
-    fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "${eTime.eInit.eGetCurrentTime("yyyy-MM-dd")}.log", parame: String = "-v long AndroidRuntime:E *:S TAG:E TAG:I *E") = async {
+fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "${eTime.eInit.eGetCurrentTime("yyyy-MM-dd")}.log", parame: String = "-v long AndroidRuntime:E *:S TAG:E TAG:I *E") = async {
     if (!File(savePath).exists()) {
         File(savePath).mkdirs()
     }
@@ -144,7 +144,7 @@ var eIsTagI: Boolean = true
     }
 }
 
-    fun Application.eCrash(saveFile: File = File("${Environment.getExternalStorageDirectory()}/errorLogs.log")) {
+fun Application.eCrash(saveFile: File = File("${Environment.getExternalStorageDirectory()}/errorLogs.log")) {
     //记录崩溃信息
     val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
     Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
@@ -174,7 +174,7 @@ var eIsTagI: Boolean = true
  * SharedPreferences数据文件存储扩展-------------------------------------------------------------------
  */
 //系统数据文件存储扩展
-    fun Context.eSetSystemSharedPreferences(key: Any, value: Any, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)): Boolean {
+fun Context.eSetSystemSharedPreferences(key: Any, value: Any, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)): Boolean {
     val key = key.toString()
     val editor = sharedPreferences.edit()
     when (value) {
@@ -189,7 +189,7 @@ var eIsTagI: Boolean = true
 }
 
 //系统数据文件存储读取扩展
-    fun <T> Context.eGetSystemSharedPreferences(key: String, value: T, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)): T = when (value) {
+fun <T> Context.eGetSystemSharedPreferences(key: String, value: T, sharedPreferences: SharedPreferences = getSharedPreferences(packageName, Context.MODE_PRIVATE)): T = when (value) {
     is Int -> sharedPreferences.getInt(key, value)
     is Long -> sharedPreferences.getLong(key, value)
     is Float -> sharedPreferences.getFloat(key, value)
@@ -201,7 +201,7 @@ var eIsTagI: Boolean = true
 
 
 //用户文件数据存储扩展
-    fun Context.eSetUserSharedPreferences(userID: String, key: String, value: Any, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)): Boolean {
+fun Context.eSetUserSharedPreferences(userID: String, key: String, value: Any, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)): Boolean {
     val editor = sharedPreferences.edit()
     when (value) {
         is String -> editor.putString(key, value)
@@ -216,7 +216,7 @@ var eIsTagI: Boolean = true
 }
 
 //用户文件数据读取扩展
-    fun <T> Context.eGetUserSharedPreferences(userID: String, key: String, value: T, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)): T = when (value) {
+fun <T> Context.eGetUserSharedPreferences(userID: String, key: String, value: T, sharedPreferences: SharedPreferences = getSharedPreferences(userID, Context.MODE_PRIVATE)): T = when (value) {
     is Int -> sharedPreferences.getInt(key, value)
     is Long -> sharedPreferences.getLong(key, value)
     is Float -> sharedPreferences.getFloat(key, value)
@@ -228,7 +228,7 @@ var eIsTagI: Boolean = true
 
 
 //首选项数据文件存储扩展
-    fun Context.eSetDefaultSharedPreferences(key: String, value: Any, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)): Boolean {
+fun Context.eSetDefaultSharedPreferences(key: String, value: Any, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)): Boolean {
     val editor = sharedPref.edit()
     when (value) {
         is String -> editor.putString(key, value)
@@ -243,7 +243,7 @@ var eIsTagI: Boolean = true
 }
 
 //首选项数据文件读取扩展
-    fun <T> Context.eGetDefaultSharedPreferences(key: String, value: T, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)): T = when (value) {
+fun <T> Context.eGetDefaultSharedPreferences(key: String, value: T, sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)): T = when (value) {
     is Int -> sharedPref.getInt(key, value)
     is Long -> sharedPref.getLong(key, value)
     is Float -> sharedPref.getFloat(key, value)
@@ -254,10 +254,10 @@ var eIsTagI: Boolean = true
 } as T
 
 //Intent Get传递扩展
-    fun Intent.eGetMessage(Sign: String): String = getStringExtra(Sign)
+fun Intent.eGetMessage(Sign: String): String = getStringExtra(Sign)
 
 
-    fun Bundle.eSetMessage(Sign: String, Message: Any) = when (Message) {
+fun Bundle.eSetMessage(Sign: String, Message: Any) = when (Message) {
     is String -> putString(Sign, Message)
     is Int -> putInt(Sign, Message)
     is Float -> putFloat(Sign, Message)
@@ -273,7 +273,7 @@ var eIsTagI: Boolean = true
 //音频播放
 var mp: MediaPlayer? = null
 
-    fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false): Boolean {
+fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false): Boolean {
     try {
         mp?.stop()
         mp?.release()
@@ -295,7 +295,7 @@ var mp: MediaPlayer? = null
 }
 
 //PCM播放
-    fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = AudioFormat.CHANNEL_OUT_MONO, audioFormat: Int = AudioFormat.ENCODING_PCM_16BIT) {
+fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = AudioFormat.CHANNEL_OUT_MONO, audioFormat: Int = AudioFormat.ENCODING_PCM_16BIT) {
     val bufferSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat)
     var audioTrack: AudioTrack? = AudioTrack(AudioManager.STREAM_MUSIC, sampleRateInHz, channelConfig, audioFormat, bufferSize, AudioTrack.MODE_STREAM)
     var fis: FileInputStream? = null
@@ -338,7 +338,7 @@ open class eJson internal constructor() {
     }
 
     //Object Json解析扩展
-    open   fun <T> eGetJsonObject(json: String, resultKey: String, default: T = "" as T): T {
+    open fun <T> eGetJsonObject(json: String, resultKey: String, default: T = "" as T): T {
         return try {
             when (default) {
                 is String -> JSONObject(json).getString(resultKey)
@@ -353,7 +353,7 @@ open class eJson internal constructor() {
         }
     }
 
-    open   fun eGetJsonObject(json: String, resultKey: String) = try {
+    open fun eGetJsonObject(json: String, resultKey: String) = try {
         JSONObject(json).getInt(resultKey)
     } catch (e: Exception) {
         try {
@@ -376,9 +376,9 @@ open class eJson internal constructor() {
     }
 
     //Array Json解析扩展
-    open   fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).optJSONArray(resultKey).getJSONObject(i).toString()
+    open fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).optJSONArray(resultKey).getJSONObject(i).toString()
 
-    open   fun eGetJsonArray(json: String, resultKey: String) = JSONObject(json).optJSONArray(resultKey)
+    open fun eGetJsonArray(json: String, resultKey: String) = JSONObject(json).optJSONArray(resultKey)
 }
 
 /**
@@ -437,7 +437,7 @@ open class eBReceiver internal constructor() {
 /**
  * App程序扩展类--------------------------------------------------------------------------------------
  */
-open  class eApp internal constructor() {
+open class eApp internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eApp() }
     }
@@ -872,7 +872,7 @@ open class eNetWork internal constructor() {
 
 
     // 获取PING延迟
-    open   fun eGetNetDelayTime(url: String): String {
+    open fun eGetNetDelayTime(url: String): String {
         var delay = String()
         var output = ""
         try {
@@ -906,7 +906,7 @@ open class eDevice internal constructor() {
     }
 
     // 获取屏幕密度，宽高
-    open   fun eGetDensityWidthHeight(mContext: Context): Array<Any> {
+    open fun eGetDensityWidthHeight(mContext: Context): Array<Any> {
         val resources = mContext.resources
         val dm = resources.displayMetrics
         val density = dm.density
@@ -916,23 +916,23 @@ open class eDevice internal constructor() {
     }
 
     // 根据手机的分辨率从 dp 的单位 转成为 px(像素)
-    open   fun eGetDpToPx(context: Context, dpValue: Float) = (dpValue * context.resources.displayMetrics.density + 0.5f).toInt()
+    open fun eGetDpToPx(context: Context, dpValue: Float) = (dpValue * context.resources.displayMetrics.density + 0.5f).toInt()
 
     //获取系统的名称
-    open   fun eGetSysVersionName() = Build.MODEL
+    open fun eGetSysVersionName() = Build.MODEL
 
     //获取系统的SDK版本
-    open   fun eGetSysSDKVersion() = Build.VERSION.SDK
+    open fun eGetSysSDKVersion() = Build.VERSION.SDK
 
     //获取系统的无线电固件版本
-    open   fun eGetRadioVersion() = Build.RADIO
+    open fun eGetRadioVersion() = Build.RADIO
 
     //获得显示
-    open   fun eGetDisPlay() = Build.DISPLAY
+    open fun eGetDisPlay() = Build.DISPLAY
 
 
     //获取本地IP
-    open   fun eGetHostIP(): String {
+    open fun eGetHostIP(): String {
         var hostIp: String = "0.0.0.0"
         try {
             val nis = NetworkInterface.getNetworkInterfaces()
@@ -969,7 +969,7 @@ open class eBluetooth internal constructor() {
     }
 
     // 打开蓝牙
-    open   fun eOpenBluetooth(bel_name: String, context: Context) {
+    open fun eOpenBluetooth(bel_name: String, context: Context) {
         val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (mBluetoothAdapter == null) {
             context.eShowTip("该设备不支持蓝牙")
@@ -985,7 +985,7 @@ open class eBluetooth internal constructor() {
     }
 
     //关闭蓝牙
-    open   fun eCloseBluetooth(context: Context) {
+    open fun eCloseBluetooth(context: Context) {
         val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (mBluetoothAdapter == null) {
             context.eShowTip("该设备不支持蓝牙")
@@ -998,7 +998,7 @@ open class eBluetooth internal constructor() {
     }
 
     //设置开放检测
-    open   fun eSetDiscoverableTimeout(timeout: Int = 0) {
+    open fun eSetDiscoverableTimeout(timeout: Int = 0) {
         val adapter = BluetoothAdapter.getDefaultAdapter()
         try {
             val setDiscoverableTimeout = BluetoothAdapter::class.java.getMethod("setDiscoverableTimeout", Int::class.javaPrimitiveType)
@@ -1022,7 +1022,7 @@ open class eAssets internal constructor() {
     }
 
     //assets文件复制 文件夹路径
-    open   fun eAssetsToFile(context: Context, assetsFilePath: String, copyFilePath: String): Boolean {
+    open fun eAssetsToFile(context: Context, assetsFilePath: String, copyFilePath: String): Boolean {
         try {
             if (!File(copyFilePath).exists() && eFile.eInit.eCheckFile(copyFilePath)) {
                 val inputStream = context.resources.assets.open(assetsFilePath)// assets文件夹下的文件
@@ -1044,7 +1044,7 @@ open class eAssets internal constructor() {
     }
 
     //获取Assets文件图片
-    open   fun eGetBitmap(context: Context, filename: String): Bitmap? {
+    open fun eGetBitmap(context: Context, filename: String): Bitmap? {
         val bitmap: Bitmap
         val asm = context.assets
         try {
@@ -1059,7 +1059,7 @@ open class eAssets internal constructor() {
     }
 
     //加载Assets文件模型
-    open   fun eLoadModelFile(assetManager: AssetManager, modelPath: String): MappedByteBuffer {
+    open fun eLoadModelFile(assetManager: AssetManager, modelPath: String): MappedByteBuffer {
         val fileDescriptor = assetManager.openFd(modelPath)
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
         val fileChannel = inputStream.channel
@@ -1076,7 +1076,7 @@ open class eMatrix internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eMatrix() }
 
-          open fun eRectFtoRect(rectF: RectF) = Rect(rectF.left.toInt(), rectF.top.toInt(), rectF.right.toInt(), rectF.bottom.toInt())
+        open fun eRectFtoRect(rectF: RectF) = Rect(rectF.left.toInt(), rectF.top.toInt(), rectF.right.toInt(), rectF.bottom.toInt())
 
     }
 }
@@ -1090,7 +1090,7 @@ open class eBitmap internal constructor() {
     }
 
     //Bitmap释放
-      open fun eGcBitmap(bitmap: Bitmap?) {
+    open fun eGcBitmap(bitmap: Bitmap?) {
         if (bitmap != null && !bitmap.isRecycled) {
             bitmap.recycle() // 回收图片所占的内存
             System.gc() // 提醒系统及时回收
@@ -1108,16 +1108,19 @@ open class eBitmap internal constructor() {
     open fun eBitmapRect(bitmap: Bitmap, rect: Rect, paint: Paint? = null): Bitmap {
         return eBitmapRect(bitmap, arrayListOf(rect), paint)
     }
-    open fun eBitmapRect(bitmap: Bitmap, rect: ArrayList<Rect>):Bitmap {
-        return eBitmapRect(bitmap,rect, null)
+
+    open fun eBitmapRect(bitmap: Bitmap, rect: ArrayList<Rect>): Bitmap {
+        return eBitmapRect(bitmap, rect, null)
     }
-    open fun eBitmapRect(bitmap: Bitmap, rect: ArrayList<Rect>, color: Int=Color.GREEN ):Bitmap {
+
+    open fun eBitmapRect(bitmap: Bitmap, rect: ArrayList<Rect>, color: Int = Color.GREEN): Bitmap {
         val mPaint = Paint()
         mPaint.color = color
         mPaint.style = Paint.Style.STROKE
         mPaint.strokeWidth = 5f
-          return eBitmapRect(bitmap,rect, mPaint)
+        return eBitmapRect(bitmap, rect, mPaint)
     }
+
     open fun eBitmapRect(bitmap: Bitmap, rect: ArrayList<Rect>, paint: Paint? = null): Bitmap {
         val drawBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
         val mPaint = if (paint == null) {
@@ -1746,15 +1749,15 @@ open class eFile internal constructor() {
 
     open fun eCheckFile(file: File, isCreate: Boolean = true): Boolean {
         return if (isCreate) {
-            val isDir = if (!file.exists()) {
-                !file.name.contains(".")
-            } else null
-            if (isDir ?: file.isDirectory) {
-                file.mkdirs()
-
+            if (file.exists()) {
+                return true
             } else {
-                File(file.parent).mkdirs()
-                File(file.path).createNewFile()
+                if (file.isDirectory|| !file.name.contains(".")) {
+                    file.mkdirs()
+                } else {
+                        File(file.parent).mkdirs()
+                        File(file.path).createNewFile()
+                }
             }
         } else {
             file.exists()

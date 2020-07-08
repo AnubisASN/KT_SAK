@@ -42,11 +42,14 @@ import java.lang.reflect.InvocationTargetException
 /**
  * 创建Wifi热点-------------------------------------------------------------------------------------
  */
-object eWiFi {
+open class eWiFi internal  constructor(){
+    companion object{
+        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eWiFi() }
+    }
     private var mWifiManager: WifiManager? = null
     private var mWifiInfo: WifiInfo? = null
     //创建热点
-    fun eCreateWifiHotspot(context: Context, SSID: String = "AnubisASN", PSW: String = "anubisasn", HiddenSSID: Boolean = true): String {
+    open fun eCreateWifiHotspot(context: Context, SSID: String = "AnubisASN", PSW: String = "anubisasn", HiddenSSID: Boolean = true): String {
         mWifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         mWifiInfo = mWifiManager!!.connectionInfo
         if (mWifiManager!!.isWifiEnabled) {
@@ -80,7 +83,7 @@ object eWiFi {
 
 
     //关闭热点
-    fun eCloseWifiHotspot(context: Context): Boolean {
+    open fun eCloseWifiHotspot(context: Context): Boolean {
         try {
             val mWifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val method = mWifiManager::class.java.getMethod("getWifiApConfiguration")
@@ -108,7 +111,7 @@ object eWiFi {
 
 
     //Wifi扫描结果
-    fun eGetScanWiFi(context: Context): MutableList<ScanResult>? {
+    open fun eGetScanWiFi(context: Context): MutableList<ScanResult>? {
         mWifiManager = context.getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
         mWifiInfo = mWifiManager!!.connectionInfo
         if (!mWifiManager!!.isWifiEnabled) {

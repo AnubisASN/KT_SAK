@@ -51,9 +51,7 @@ class MainActivity : AppCompatActivity() {
         eAssets.eInit.eAssetsToFile(this, "Web/jquery.js", "/sdcard/Web/jquery.js")
         eAssets.eInit.eAssetsToFile(this, "Web/Vysor5.5.5.crx", "/sdcard/Web/Vysor5.5.5.crx")
         eAssets.eInit.eAssetsToFile(this, "Web/Vysor.zip", "/sdcard/Web/Vysor.zip")
-        mHttpServer = eHttpServer.instance.eStart(eResolver::class.java, handler = httpHandler)
-
-
+        mHttpServer = eHttpServer.eInit.eStart(eResolver::class.java, handler = httpHandler)
     }
     override fun onResume() {
         super.onResume()
@@ -62,6 +60,13 @@ class MainActivity : AppCompatActivity() {
 
     fun onClick(v: View) {
         when (v.id) {
+            btTest1.id->{
+                Test.s1.eLog()
+               val s= Test.eInit
+                s.init()
+                s.s2.eLog()
+                Test.s1.eLog()
+            }
         }
     }
 

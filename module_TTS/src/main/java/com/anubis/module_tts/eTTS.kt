@@ -6,10 +6,7 @@ package com.anubis.module_tts
 import android.app.Application
 import android.os.Handler
 import android.util.Pair
-import com.anubis.kt_extends.eGetSystemSharedPreferences
-import com.anubis.kt_extends.eLog
-import com.anubis.kt_extends.eLogE
-import com.anubis.kt_extends.eSetSystemSharedPreferences
+import com.anubis.kt_extends.*
 import com.anubis.module_tts.Bean.ParamMixMode
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
@@ -50,19 +47,44 @@ import java.util.*
  * 根据网络状况优先走在线，在线时访问服务器失败后转为离线。
  */
 //(val mActivity: Context, val mHandler: Handler)
-object eTTS {
+class eTTS private constructor() {
     // ================== 初始化参数设置开始 ==========================
-    private var mActivity: Application? = null
-    private var mHandler: Handler? = null
+
     private var TTS: Unit? = null
-    private var KEYS: Array<String>? = null
     // TtsMode.MIX; 离在线融合，在线优先； TtsMode.ONLINE 纯在线； 没有纯离线
-    private var ttsMode = TTSMode.MIX
     // 离线发音选择，VOICE_FEMALE即为离线女声发音。
     // assets目录下bd_etts_common_speech_m15_mand_eng_high_am-mix_v3.0.0_20170505.dat为离线男声模型；
     // assets目录下bd_etts_common_speech_f7_mand_eng_high_am-mix_v3.0.0_20170512.dat为离线女声模型
     private var offlineVoice = OfflineResource.VOICE_DUYY
-     var synthesizer: MySyntherizer? = null
+    var synthesizer: MySyntherizer? = null
+
+    companion object {
+        private lateinit var mActivity: Application
+        private lateinit var mHandler: Handler
+        private lateinit var KEYS: Array<String>
+        private var mTTSMode = TTSMode.MIX
+        private var mVoiceModel :VoiceModel = VoiceModel.CHILDREN
+        private lateinit var mListener: SpeechSynthesizerListener
+        fun eInit(mApplication: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK, listener: SpeechSynthesizerListener = UiMessageListener(mHandler), AID_AKY_SKY: Array<String> = arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o")): eTTS {
+            this.mActivity = mApplication
+            this.mHandler = mHandler
+            KEYS = AID_AKY_SKY
+            mVoiceModel=voiceMode
+
+            mApplication.eSetSystemSharedPreferences("set_tts_load_model", when (mVoiceModel) {
+                VoiceModel.FEMALE -> "F"
+                VoiceModel.MALE -> "M"
+                VoiceModel.EMOTIONAL_MALE -> "X"
+                VoiceModel.CHILDREN -> "Y"
+            })
+            mApplication.eSetSystemSharedPreferences("set_PARAM_MIX_MODE", ParamMixMode)
+            mTTSMode = ttsMode
+            mListener = listener
+            return eInit
+        }
+
+        private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eTTS() }
+    }
 
     /**
      * 合成的参数，可以初始化时填写，也可以在合成前设置。
@@ -80,9 +102,9 @@ object eTTS {
     private val params: HashMap<String, String>
         get() {
             val params = HashMap<String, String>()
-            eLog("设置在线发声音人:" + mActivity!!.eGetSystemSharedPreferences("set_tts_load_model",""))
+            eLog("设置在线发声音人:" + mActivity.eGetSystemSharedPreferences("set_tts_load_model", ""))
 //设置本地发音人
-            params[SpeechSynthesizer.PARAM_SPEAKER] = when (mActivity!!.eGetSystemSharedPreferences("set_tts_load_model","")) {
+            params[SpeechSynthesizer.PARAM_SPEAKER] = when (mActivity.eGetSystemSharedPreferences("set_tts_load_model", "")) {
                 "F" -> "0"
                 "M" -> "1"
                 "X" -> "3"
@@ -92,14 +114,14 @@ object eTTS {
                 }
             }
             // 设置合成的音量，0-9 ，默认 9
-            params[SpeechSynthesizer.PARAM_VOLUME] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_VOLUME","9")
+            params[SpeechSynthesizer.PARAM_VOLUME] = mActivity.eGetSystemSharedPreferences("set_PARAM_VOLUME", "9")
 
             // 设置合成的语速，0-9 ，默认 5
-            params[SpeechSynthesizer.PARAM_SPEED] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_SPEED","5")
+            params[SpeechSynthesizer.PARAM_SPEED] = mActivity.eGetSystemSharedPreferences("set_PARAM_SPEED", "5")
             // 设置合成的语调，0-9 ，默认 5
-            params[SpeechSynthesizer.PARAM_PITCH] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_PITCH","5")
+            params[SpeechSynthesizer.PARAM_PITCH] = mActivity.eGetSystemSharedPreferences("set_PARAM_PITCH", "5")
 //            params[SpeechSynthesizer.PARAM_MIX_MODE] = SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI
-            params[SpeechSynthesizer.PARAM_MIX_MODE] = mActivity!!.eGetSystemSharedPreferences("set_PARAM_MIX_MODE",SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE)
+            params[SpeechSynthesizer.PARAM_MIX_MODE] = mActivity.eGetSystemSharedPreferences("set_PARAM_MIX_MODE", SpeechSynthesizer.MIX_MODE_HIGH_SPEED_SYNTHESIZE)
             val offlineResource = createOfflineResource(offlineVoice)
             if (offlineResource == null) {
                 eLog("offlineResource==null")
@@ -124,43 +146,31 @@ object eTTS {
 //        checkResult(result, "loadModel")
     }
 
-    fun ttsInit(mApplication: Application, mHandler: Handler, ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.CHILDREN, ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK, listener:SpeechSynthesizerListener=UiMessageListener(mHandler),AID_AKY_SKY: Array<String> = arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o")): eTTS {
-        KEYS = AID_AKY_SKY
-        val mode = when (voiceMode) {
-            VoiceModel.FEMALE -> "F"
-            VoiceModel.MALE -> "M"
-            VoiceModel.EMOTIONAL_MALE -> "X"
-            VoiceModel.CHILDREN -> "Y"
-        }
-        VoiceModel(mode)
-        mApplication.eSetSystemSharedPreferences("set_tts_load_model", mode)
-        mApplication.eSetSystemSharedPreferences("set_PARAM_MIX_MODE", ParamMixMode)
-        this.mActivity = mApplication
-        this.mHandler = mHandler
-        this.ttsMode = ttsMode
-        try {
-            init(listener)
-        } catch (e: Exception) {
-            e.eLogE("initTTS错误" )
-            ttsDestroy()
-            init(listener)
-        }
-        return this
+    init {
+        eLog("类初始化")
+        setParams()
     }
 
-    fun setParams(voiceMode: VoiceModel = VoiceModel.CHILDREN, volume: Int = 9, speed: Int = 5, pitch: Int = 5): eTTS {
-        val mode = when (voiceMode) {
+    fun setParams(voiceMode: VoiceModel = mVoiceModel, volume: Int = 9, speed: Int = 5, pitch: Int = 5) {
+        mVoiceModel=voiceMode
+        val mode = when (mVoiceModel) {
             VoiceModel.FEMALE -> "F"
             VoiceModel.MALE -> "M"
             VoiceModel.EMOTIONAL_MALE -> "X"
             VoiceModel.CHILDREN -> "Y"
         }
         VoiceModel(mode)
-        mActivity!!.eSetSystemSharedPreferences("set_tts_load_model", mode)
-        mActivity!!.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
-        mActivity!!.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
-        mActivity!!.eSetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString())
-        return ttsInit(mActivity!!, mHandler!!, ttsMode, voiceMode)
+        mActivity.eSetSystemSharedPreferences("set_tts_load_model", mode)
+        mActivity.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
+        mActivity.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
+        mActivity.eSetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString())
+        try {
+            init(mListener)
+        } catch (e: Exception) {
+            e.eLogE("initTTS错误")
+            ttsDestroy()
+            init(mListener)
+        }
     }
 
 
@@ -177,17 +187,17 @@ object eTTS {
         // 设置初始化参数
         // 此处可以改为 含有您业务逻辑的SpeechSynthesizerListener的实现类
         val params = params
-        val initConfig = InitConfig(if (ttsMode == TTSMode.MIX) TtsMode.MIX else TtsMode.ONLINE, params, listener)
-        synthesizer = NonBlockSyntherizer(mActivity!!, initConfig, mHandler!!) // 此处可以改为MySyntherizer 了解调用过程
+        val initConfig = InitConfig(if (mTTSMode == TTSMode.MIX) TtsMode.MIX else TtsMode.ONLINE, params, listener)
+        synthesizer = NonBlockSyntherizer(mActivity, initConfig, mHandler) // 此处可以改为MySyntherizer 了解调用过程
     }
 
     private fun createOfflineResource(voiceType: String): OfflineResource? {
         var offlineResource: OfflineResource? = null
         try {
-            offlineResource = OfflineResource(mActivity!!, voiceType)
+            offlineResource = OfflineResource(mActivity, voiceType)
         } catch (e: Exception) {
             // IO 错误自行处理
-            e.printStackTrace()
+            e.eLogE("createOfflineResource")
             eLog("【error】:copy files from assets failed." + e.message)
         }
 
@@ -212,8 +222,8 @@ object eTTS {
     /**
      * 合成
      */
-    fun synthesize(text: String,id:String="0"): Boolean {
-        val result = synthesizer?.synthesize(text,id)
+    fun synthesize(text: String, id: String = "0"): Boolean {
+        val result = synthesizer?.synthesize(text, id)
         if (result != null) {
             return checkResult(result, "synthesize")
         } else {
@@ -221,7 +231,8 @@ object eTTS {
             return false
         }
     }
-    fun ss(){
+
+    fun ss() {
     }
 
     /**

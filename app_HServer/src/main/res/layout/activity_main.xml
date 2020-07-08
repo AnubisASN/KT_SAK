@@ -22,10 +22,10 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
-        android:id="@+id/btChinese"
+        android:id="@+id/btTest1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="中文"
+        android:text="Test1"
         android:onClick="onClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

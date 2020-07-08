@@ -48,7 +48,7 @@ class LockerSerialportUtil private constructor(private val path: String, private
     protected var boxPort: SerialPort? = null
     internal var firstRegisterBox = true
     private var m_Receiver2: SerialBroadcastReceiverBox? = null
-
+    internal var mResult=true
     internal var boxFlag = true
 
     init {
@@ -108,14 +108,20 @@ class LockerSerialportUtil private constructor(private val path: String, private
     /**
      * 串口关闭
      */
-    fun closeSerialPort() {
-        if (boxPort != null) {
-            boxPort!!.close()
-            boxPort = null
-            val filter = IntentFilter()
-            filter.addAction(Intent.ACTION_SCREEN_ON)
-            filter.addAction(Intent.ACTION_SCREEN_OFF)
-            mContext!!.unregisterReceiver(m_Receiver2)
+    fun closeSerialPort() :Boolean{
+           try {
+            if (boxPort != null) {
+                boxPort!!.close()
+                boxPort = null
+                val filter = IntentFilter()
+                filter.addAction(Intent.ACTION_SCREEN_ON)
+                filter.addAction(Intent.ACTION_SCREEN_OFF)
+                mContext!!.unregisterReceiver(m_Receiver2)
+            }
+               return true
+        } catch (e: Exception) {
+               e.eLogE("closeSerialPort")
+           return false
         }
     }
 
@@ -153,14 +159,14 @@ class LockerSerialportUtil private constructor(private val path: String, private
                     size = mInputStreamBox!!.read(buffer)
                     //                    sendMessage();
                     if (size > 0) {
-                        val bytes= ByteArray(size)
-                        for (i in 0 until size){
-                            bytes[i]=buffer[i]
+                        val bytes = ByteArray(size)
+                        for (i in 0 until size) {
+                            bytes[i] = buffer[i]
                         }
                         sportInterface!!.onLockerDataReceived(bytes, size, path)
                     }
                 } catch (e: IOException) {
-                    e.eLogE("Thread:$e" )
+                    e.eLogE("Thread:$e")
                     return
                 }
 
@@ -203,27 +209,27 @@ class LockerSerialportUtil private constructor(private val path: String, private
                 Log.i(TAG, "----locker port--- 注册完毕")
             }
             lockerPortInterface.onLockerOutputStream(mOutputStreamBox!!)
-
+            mResult=true
         } catch (e: SecurityException) {
             e.printStackTrace()
             //            BaseUtils.setTips(mContext,path);
             DisplayError(mContext, R.string.error_security)
             mContext!!.sendBroadcast(Intent("open_fail"))
-            ePortMSG.Result=false
+            mResult = false
         } catch (e: IOException) {
             e.printStackTrace()
             DisplayError(mContext, R.string.error_unknown)
             mContext!!.sendBroadcast(Intent("open_fail"))
-            ePortMSG.Result=false
+            mResult = false
         } catch (e: InvalidParameterException) {
             e.printStackTrace()
             DisplayError(mContext, R.string.error_configuration)
             mContext!!.sendBroadcast(Intent("open_fail"))
-            ePortMSG.Result=false
-        }catch (e:UnsatisfiedLinkError){
-            e. eLogE("LockerSerialportUtil错误 " )
+            mResult = false
+        } catch (e: UnsatisfiedLinkError) {
+            e.eLogE("LockerSerialportUtil错误 ")
             mContext?.eShowTip("CUP框架不支持")
-            ePortMSG.Result=false
+            mResult = false
         }
     }
 

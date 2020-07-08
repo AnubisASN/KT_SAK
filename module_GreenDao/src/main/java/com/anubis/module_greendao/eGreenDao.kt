@@ -45,7 +45,7 @@ class eGreenDao private constructor(){
      * @param user
      * @return
      */
-    fun <T>eInsertUser(user: T): Boolean {
+    fun <T> eInsertUser(user: T): Boolean {
         var flag = false
         val dataDao = daoSession!!::class.java.getMethod("get${(user as Any)::class.java.simpleName}Dao").invoke(daoSession) as AbstractDao<Any, Any>
         flag = dataDao.insert(user) != (-1).toLong()

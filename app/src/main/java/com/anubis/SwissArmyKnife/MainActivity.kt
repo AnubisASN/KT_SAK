@@ -36,11 +36,10 @@ import com.anubis.module_ewifi.eWiFi
 import com.anubis.module_ftp.FsService
 import com.anubis.module_ftp.GUI.eFTPUIs
 import com.anubis.module_greendao.eGreenDao
+import com.anubis.module_office.eOffice
 import com.anubis.module_portMSG.ePortMSG
 import com.anubis.module_qrcode.eQRCode
 import com.anubis.module_tcp.eTCP
-import com.anubis.module_tcp.eTCP.eClientHashMap
-import com.anubis.module_tcp.eTCP.eServerHashMap
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
@@ -56,6 +55,7 @@ import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.list_edit_item.*
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -85,7 +85,6 @@ import kotlin.collections.ArrayList
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //               佛祖保佑         永无BUG
 class MainActivity : Activity() {
-    private var TTS: eTTS? = null
     private var filePath = ""
     private var file: File? = null
     private var datas: Array<String>? = null
@@ -94,9 +93,12 @@ class MainActivity : Activity() {
     var progressDialog: ProgressDialog? = null
 
     /*扩展库对象*/
-    private   var mCardOTG: eCardOTG?=null
-    private   var mDevice: eUDevice?=null
-    private   var mGreenDao: eGreenDao?=null
+    private var mCardOTG: eCardOTG? = null
+    private var mDevice: eUDevice? = null
+    private var mGreenDao: eGreenDao? = null
+    private  var mPortMSG:ePortMSG?=null
+    private var mOffice: eOffice? = null
+    private  var mTTS:eTTS?=null
 
     companion object {
         var mainActivity: MainActivity? = null
@@ -112,8 +114,7 @@ class MainActivity : Activity() {
         ParameHandleMSG.mainActivity = mainActivity
         ePermissions.eInit.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
-        TTS = eTTS.ttsInit(mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗_bt导出Excel_bt导出ExcelS", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
         //业务测试模块
         LoadingData()
@@ -156,9 +157,9 @@ class MainActivity : Activity() {
                         }
                         when (view?.id) {
                             R.id.bt_item1 -> {
-                                TTS = TTS!!.setParams(voiceModel[spID])
+                                 mTTS!!.setParams(voiceModel[spID])
                                 Handler().postDelayed({
-                                    val state = TTS!!.speak("发音人切换发音调用")
+                                    val state = mTTS!!.speak("发音人切换发音调用")
                                     Hint("发音人切换发音调用:$state")
                                 }, 800)
 
@@ -175,13 +176,13 @@ class MainActivity : Activity() {
                     }
                     getDigit("二维码") -> when (view?.id) {
                         R.id.bt_item1 -> {
-                            iv_Hint.setImageBitmap(eQRCode.eCreateQRCode(MSG ?: "请输入内容"))
+                            iv_Hint.setImageBitmap(eQRCode.eInit.eCreateQRCode(MSG ?: "请输入内容"))
                             iv_Hint.visibility = View.VISIBLE
                             Handler().postDelayed({ iv_Hint.visibility = View.GONE }, 5000)
                         }
                     }
                     getDigit("语音合成") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("语音合成：${TTS!!.synthesize(MSG ?: "语音合成", "0")}")
+                        R.id.bt_item1 -> Hint("语音合成：${mTTS!!.synthesize(MSG ?: "语音合成", "0")}")
                         R.id.bt_item2 -> Hint("语音播放：${ePlayPCM("/sdcard/img/info/output-${"0"}.pcm")}")
                     }
                     getDigit("读取身份证") ->
@@ -213,33 +214,33 @@ class MainActivity : Activity() {
                     getDigit("TCP创建") -> when (view?.id) {
                         R.id.bt_item1 -> {
                             GlobalScope.launch {
-                                eTCP.eSocketConnect(MSG?.split("||")?.get(0)
+                                eTCP.eInit.eSocketConnect(MSG?.split("||")?.get(0)
                                         ?: "192.168.1.110", MSG?.split("||")?.get(1)?.toInt()
                                         ?: 3335, handleTCP)
                             }
                         }
-                        R.id.bt_item2 -> Hint("数据发送:${eTCP.eSocketSend(MSG?.split("||")?.get(0)
+                        R.id.bt_item2 -> Hint("数据发送:${eTCP.eInit.eSocketSend(MSG?.split("||")?.get(0)
                                 ?: "123", MSG?.split("||")?.get(1)
-                                ?: "192.168.1.110", eTCP.eClientHashMap)}")
+                                ?: "192.168.1.110", eTCP.eInit.eClientHashMap)}")
                         R.id.bt_item3 -> {
                             GlobalScope.launch {
-                                eTCP.eServerSocket(handleTCP, MSG?.toInt() ?: 3335)
+                                eTCP.eInit.eServerSocket(handleTCP, MSG?.toInt() ?: 3335)
                             }
                         }
                     }
                     getDigit("服务关闭") -> when (view?.id) {
                         R.id.bt_item1 -> {
-                            Hint("TCP连接C关闭:${eTCP.eCloseReceives(eClientHashMap, MSG)} ")
+                            Hint("TCP连接C关闭:${eTCP.eInit.eCloseReceives(eTCP.eInit.eClientHashMap, MSG)} ")
                         }
-                        R.id.bt_item2 -> Hint("TCP连接S关闭:${eTCP.eCloseReceives(eServerHashMap, MSG)} ")
-                        R.id.bt_item3 -> Hint("TCP服务关闭 ：" + eTCP.eCloseServer())
+                        R.id.bt_item2 -> Hint("TCP连接S关闭:${eTCP.eInit.eCloseReceives(eTCP.eInit.eServerHashMap, MSG)} ")
+                        R.id.bt_item3 -> Hint("TCP服务关闭 ：" + eTCP.eInit.eCloseServer())
                     }
 
                     getDigit("Web") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("Web服务连接:${eWebSocket.eConnect(MSG
+                        R.id.bt_item1 -> Hint("Web服务连接:${eWebSocket.eInit.eConnect(MSG
                                 ?: "ws://121.40.165.18:8800", handleWeb)}")
-                        R.id.bt_item2 -> Hint("Web服务发送:${eWebSocket.eSendMSG(MSG ?: "123")}")
-                        R.id.bt_item3 -> Hint("Web服务关闭 ：" + eWebSocket.eClose())
+                        R.id.bt_item2 -> Hint("Web服务发送:${eWebSocket.eInit.eSendMSG(MSG ?: "123")}")
+                        R.id.bt_item3 -> Hint("Web服务关闭 ：" + eWebSocket.eInit.eClose())
                     }
 
                     getDigit("GPIO") -> when (view?.id) {
@@ -302,7 +303,7 @@ class MainActivity : Activity() {
                     }
 
                     getDigit("VNC") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("VNC二进制文件执行:${if (eVNC.startVNCs(this@MainActivity)) "成功：5901" else "失败"}")
+                        R.id.bt_item1 -> Hint("VNC二进制文件执行:${if (eVNC.eInit(this@MainActivity).eStartVNCs()) "成功：5901" else "失败"}")
                     }
                     getDigit("音视频") -> {
                         val intent = Intent(this@MainActivity, eVideoChatUI::class.java)
@@ -347,30 +348,36 @@ class MainActivity : Activity() {
                         R.id.bt_item1 -> Hint("FTP服务启动:${startActivity(Intent(this@MainActivity, eFTPUIs::class.java))}")
                         R.id.bt_item2 -> Hint("FTP服务关闭:${sendBroadcast(Intent(FsService.ACTION_STOP_FTPSERVER))}")
                     }
-                    getDigit("加载弹窗") -> {
-                        progressDialog = ProgressDialog(this@MainActivity)
-                        progressDialog!!.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-                        // 设置ProgressDialog 标题
-                        progressDialog!!.setTitle("下载提示")
-                        // 设置ProgressDialog 提示信息
-                        progressDialog!!.setMessage("当前下载进度:")
-                        // 设置ProgressDialog 是否可以按退回按键取消
-                        progressDialog!!.setCancelable(false)
-                        progressDialog!!.show()
-                        progressDialog!!.max = 5000
-                        progressDialog!!.progress = 0
+                    getDigit("加载弹窗") -> when (view?.id) {
+                        bt_item1.id -> {
+                            progressDialog = ProgressDialog(this@MainActivity)
+                            progressDialog!!.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+                            // 设置ProgressDialog 标题
+                            progressDialog!!.setTitle("下载提示")
+                            // 设置ProgressDialog 提示信息
+                            progressDialog!!.setMessage("当前下载进度:")
+                            // 设置ProgressDialog 是否可以按退回按键取消
+                            progressDialog!!.setCancelable(false)
+                            progressDialog!!.show()
+                            progressDialog!!.max = 5000
+                            progressDialog!!.progress = 0
 //                        for (i in 0..5000){
-                        async {
-                            for (i in 0..5000) {
-                                mHandler?.post { progressDialog!!.incrementProgressBy(1) }
+                            async {
+                                for (i in 0..5000) {
+                                    mHandler?.post { progressDialog!!.incrementProgressBy(1) }
 //                                handleMsg.sendMessage(msg)
-                                eLog("i$i")
+                                    eLog("i$i")
+                                }
+                                uiThread { progressDialog?.dismiss() }
                             }
-                            uiThread { progressDialog?.dismiss() }
                         }
-//                            progressDialog.secondaryProgress
-//                        }
-
+                        bt_item2.id -> {
+                            Hint("Excel导出测试数据库：${mOffice?.eExportExcel(arrayOf("Time", "Name"), mGreenDao?.eQueryAllUser(Data())!!)}")
+                        }
+                        bt_item3.id -> {
+                           val  tDatas=mGreenDao?.eQueryAllUser(Data())!!
+                            Hint("ExcelS导出测试数据库：${mOffice?.eExportExcel(arrayOf(arrayOf("Time1", "Name1"),arrayOf("Time2", "Name2")),arrayOf(tDatas,   tDatas.asReversed()),mSheetNames = arrayOf("记录1","记录2"))}")
+                        }
                     }
                     getDigit("后台杀死") -> when (view?.id) {
                         R.id.bt_item1 -> {
@@ -387,23 +394,13 @@ class MainActivity : Activity() {
                     getDigit("串口通信") -> {
                         val msg = "A55501FB"
                         when (view?.id) {
-                            R.id.bt_item1 -> Hint("串口数据发送：" + ePortMSG.sendMSG(this@MainActivity, msg, "/dev/ttyS1", 115200, object : ePortMSG.ICallBack {
-                                override fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
-                                    Hint("串口数据接收:${eString.eInit.eGetByteArrToHexStr(buffer)}--$path")
-                                }
-                            }))
-                            R.id.bt_item2 -> Hint("串口监听：" + ePortMSG.getMSG(this@MainActivity, callback = object : ePortMSG.ICallBack {
-                                override fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
-                                    Hint("串口接收:${eString.eInit.eGetByteArrToHexStr(buffer)}--$path")
-                                }
-                            }, mPATH = MSG?.split("||")?.get(0)
-                                    ?: "/dev/ttyS3", BAUDRATE = MSG?.split("||")?.get(1)?.toInt()
-                                    ?: 9600))
-                            R.id.bt_item3 -> Hint("串口关闭：" + ePortMSG.closeMSG())
+                            R.id.bt_item1 -> Hint("串口数据发送：" + mPortMSG?.eSendMSG(msg))
+                            R.id.bt_item2 -> Hint("串口监听：" + mPortMSG?.eGetMSG())
+                            R.id.bt_item3 -> Hint("串口关闭：" + mPortMSG?.eClosePort())
                         }
                     }
                     getDigit("数据库") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(Data(eTime.eInit.eGetCurrentTime(), MSG?:""))}")
+                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(Data(eTime.eInit.eGetCurrentTime(), MSG?: ""))}")
                         R.id.bt_item2 -> {
                             Hint("数据库查询:")
                             mGreenDao?.eQueryAllUser(Data())?.forEach {
@@ -420,15 +417,15 @@ class MainActivity : Activity() {
                         }
                         R.id.bt_item2 -> {
                             Hint("搜索WIFI:")
-                            for (wifi in eWiFi.eGetScanWiFi(this@MainActivity)!!) {
+                            for (wifi in eWiFi.eInit.eGetScanWiFi(this@MainActivity)!!) {
                                 Hint("SSID:${wifi.SSID}")
                             }
                         }
                     }
                     getDigit("热点") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("创建WIFI热点0:${eWiFi.eCreateWifiHotspot(this@MainActivity)}")
-                        R.id.bt_item2 -> Hint("创建WIFI热点:${eWiFi.eCreateWifiHotspot(this@MainActivity)}")
-                        R.id.bt_item3 -> Hint("关闭WIFI热点：${eWiFi.eCloseWifiHotspot(this@MainActivity)}")
+                        R.id.bt_item1 -> Hint("创建WIFI热点0:${eWiFi.eInit.eCreateWifiHotspot(this@MainActivity)}")
+                        R.id.bt_item2 -> Hint("创建WIFI热点:${eWiFi.eInit.eCreateWifiHotspot(this@MainActivity)}")
+                        R.id.bt_item3 -> Hint("关闭WIFI热点：${eWiFi.eInit.eCloseWifiHotspot(this@MainActivity)}")
                     }
                     getDigit("路由转发跳转") ->
                         when (view?.id) {
@@ -519,9 +516,20 @@ class MainActivity : Activity() {
         mDevice = eUDevice.eInit(mAPP, uHandler)
 
         /*数据库*/
-        mGreenDao=eGreenDao.eInit(this)
+        mGreenDao = eGreenDao.eInit(this)
 
+        /*Excel导出*/
+        mOffice = eOffice.eInit(this)
 
+        /*串口通信*/
+        mPortMSG=ePortMSG.eInit(this,callback = object : ePortMSG.ICallBack {
+            override fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
+                Hint("串口数据接收:${eString.eInit.eGetByteArrToHexStr(buffer)}--$path")
+            }
+        })
+
+        /*TTS语音合成*/
+        mTTS= eTTS.eInit(mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
     }
 
     /**
@@ -567,7 +575,7 @@ class MainActivity : Activity() {
                     editContext = if (editContext?.isEmpty() != false) null else editContext
                     mCallbacks.CallResult(it, position, editContext, holder.itemView.sp_item1)
                 } catch (e: Exception) {
-                    mainActivity?.Hint("数据操作错误-:$e")
+                    mainActivity?.Hint("执行错误-:${eErrorOut(e)}")
                 }
             }
             holder.itemView.bt_item2.setOnClickListener {

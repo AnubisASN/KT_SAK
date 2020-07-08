@@ -43,4 +43,7 @@ public class Data {
     public void setName(String name) {
         this.name = name;
     }
+    public  String[] getData(){
+        return new String[]{time,name};
+    }
 }

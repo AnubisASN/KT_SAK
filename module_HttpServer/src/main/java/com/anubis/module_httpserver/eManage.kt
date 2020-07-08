@@ -23,22 +23,25 @@ import java.io.*
  *Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  *Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  *Router :  /'Module'/'Function'
- *说明： 处理
+ *说明： 数据接收处理
  */
-object eManage {
-    val path = "/sdcard/Web/"
-    var httpResult: String = "HTTP Server 创建成功"
-    var delay = 0L
+class eManage private  constructor(){
+  var httpResult: String = "HTTP Server 创建成功"
+  var eHttpPath = "/sdcard/Web/"
+    companion object{
+        val eInit by lazy (LazyThreadSafetyMode.SYNCHRONIZED){ eManage() }
+    }
+
 
     /**
      *说明： 文件上传解析
-     * @调用方法：fileParse()
+     * @调用方法：eFileParse()
      * @param session: IHTTPSession； 会话通道
      * @param fileParms: String ; 上传文件属性名
      * @param savePath: String ; 保存路径
      * @return: String?
      */
-    fun fileParse(session: IHTTPSession, fileParms: String, savePath: String = path): String? {
+    fun eFileParse(session: IHTTPSession, fileParms: String, savePath: String = eHttpPath): String? {
         val hashMap = HashMap<String, String>()
         session.parseBody(hashMap)
         val tmpFilePath = hashMap[fileParms]
@@ -50,12 +53,12 @@ object eManage {
 
     /**
      *说明： 服务端文件推送
-     * @调用方法：filePush()
+     * @调用方法：eFilePush()
      * @param session: IHTTPSession； 会话通道
      * @param pathName: String ; 文件路径
      * @return: Response?
      */
-    fun filePush(session: IHTTPSession, pathName: String): Response {
+    fun eFilePush(session: IHTTPSession, pathName: String): Response {
         val fis = FileInputStream(pathName)
         return Response.newFixedLengthResponse(Status.OK, eHTTPD.MIME_HTML, readHtml(pathName))
     }
@@ -78,16 +81,15 @@ object eManage {
     }
 
     /**
-     *说明：  Raw 解析
+     *说明：eRawParse 解析
      * @param session: IHTTPSession； 会话通道
      * @return: String? 结果
      */
-    fun rawParse(session: IHTTPSession): String? {
-        return rawParseBody(session)
-//        return Response.newFixedLengthResponse(rawParseBody(session))
+    fun eRawParse(session: IHTTPSession): String? {
+        return eRawParseBody(session)
     }
 
-    private fun rawParseBody(session: IHTTPSession): String? {
+    private fun eRawParseBody(session: IHTTPSession): String? {
         var body: String? = null
         try {
             val `is` = session.inputStream ?: return body
@@ -112,7 +114,7 @@ object eManage {
      * @param session: IHTTPSession； 会话通道
      * @return: MutableMap<String, String>? ； 参数集合
      */
-    fun sessionParse(session: IHTTPSession): MutableMap<String, String>? {
+    fun eSessionParse(session: IHTTPSession): MutableMap<String, String>? {
         session.parseBody(HashMap())
         return session.parms
     }
@@ -122,7 +124,7 @@ object eManage {
      * @param session: IHTTPSession； 会话通道
      * @return: MutableMap<String, String>? ； 参数集合
      */
-    fun fileDownload(file: File):Response? {
+    fun eFileDownload(file: File):Response? {
         if (!file.exists()){
             eLogE("文件不存在")
             return null

@@ -23,9 +23,11 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 
 import java.util.Hashtable
 
-object eQRCode {
+open class eQRCode internal  constructor(){
     private var IMAGE_HALFWIDTH = 50
-
+    companion object{
+        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eQRCode() }
+    }
     /**
      * 生成二维码
      *
@@ -34,7 +36,7 @@ object eQRCode {
      * @return bitmap
      */
     @JvmOverloads
-    fun eCreateQRCode(text: String, size: Int = 500): Bitmap? {
+    open  fun eCreateQRCode(text: String, size: Int = 500): Bitmap? {
         try {
             val hints = Hashtable<EncodeHintType, String>()
             hints[EncodeHintType.CHARACTER_SET] = "utf-8"
@@ -69,7 +71,7 @@ object eQRCode {
      * @param mBitmap
      * @return
      */
-    fun eCreateQRCodeWithLogo2(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    open fun eCreateQRCodeWithLogo2(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -114,7 +116,7 @@ object eQRCode {
      * @param mBitmap
      * @return
      */
-    fun eCreateQRCodeWithLogo3(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    open  fun eCreateQRCodeWithLogo3(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -158,7 +160,7 @@ object eQRCode {
      * @param mBitmap
      * @return
      */
-    fun eCreateQRCodeWithLogo4(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    open fun eCreateQRCodeWithLogo4(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -207,7 +209,7 @@ object eQRCode {
      * @param mBitmap
      * @return
      */
-    fun eCreateQRCodeWithLogo5(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    open fun eCreateQRCodeWithLogo5(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -271,7 +273,7 @@ object eQRCode {
      * @param mBitmap
      * @return
      */
-    fun eCreateQRCodeWithLogo6(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    open  fun eCreateQRCodeWithLogo6(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10

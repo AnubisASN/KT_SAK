@@ -27,19 +27,24 @@ import me.rosuh.filepicker.config.FilePickerManager.REQUEST_CODE
  *Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  *Router :  /'Module'/'Function'
  */
- /**
- *说明： 图片选择器框架
- * @调用方法：eImageStart()
- * @param activity: Application；应用程序
- * @param REQUEST_CODE: Int=0x000111；成功回调代码
- * @param Type: Int = PhoenixOption.TYPE_PICK_MEDIA；显示类型（TYPE_PICK_MEDIA or TYPE_TAKE_PICTURE or TYPE_BROWSER_PICTURE）
- * @param phoenix: PhoenixOption = Phoenix.with();默认初始化与主动初始化
- * @return: void
- */
-object ePicker {
-    private var IMAGE_REQUEST_CODE = 0x000111
-    private var FILE_REQUEST_CODE = FilePickerManager.REQUEST_CODE
-    fun eImageStart(activity: Activity, REQUEST_CODE: Int = 0x000111, Type: Int = PhoenixOption.TYPE_PICK_MEDIA, phoenix: PhoenixOption = Phoenix.with()) {
+class ePicker private constructor() {
+    var IMAGE_REQUEST_CODE = 101
+    var FILE_REQUEST_CODE = 102
+
+    companion object {
+        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { ePicker() }
+    }
+
+    /**
+     *说明： 图片选择器框架
+     * @调用方法：eImageStart()
+     * @param activity: Application；应用程序
+     * @param REQUEST_CODE: Int=101；成功回调代码
+     * @param Type: Int = PhoenixOption.TYPE_PICK_MEDIA；显示类型（TYPE_PICK_MEDIA or TYPE_TAKE_PICTURE or TYPE_BROWSER_PICTURE）
+     * @param phoenix: PhoenixOption = Phoenix.with();默认初始化与主动初始化
+     * @return: void
+     */
+    fun eImageStart(activity: Activity, REQUEST_CODE: Int = IMAGE_REQUEST_CODE, Type: Int = PhoenixOption.TYPE_PICK_MEDIA, phoenix: PhoenixOption = Phoenix.with()) {
         phoenix.theme(PhoenixOption.THEME_BLUE)// 主题
                 .fileType(MimeType.ofImage())//显示的文件类型图片、视频、图片和视频
                 .maxPickNumber(3)// 最大选择数量
@@ -60,36 +65,33 @@ object ePicker {
         IMAGE_REQUEST_CODE = REQUEST_CODE
     }
 
+
     /**
      *说明： 文件选择器
      * @调用方法：eFileStart()
      * @param activity: Activity；界面活动
-     * @param REQUEST_CODE: Int=FilePickerManager.REQUEST_CODE；成功回调代码
+     * @param REQUEST_CODE: Int=101；成功回调代码
      * @param filePicker: FilePickerConfig = FilePickerManager.from(activity)；默认初始化与主动初始化
      * @return: void
      */
-    fun eFileStart(activity: Activity, REQUEST_CODE: Int = FilePickerManager.REQUEST_CODE, filePicker: FilePickerConfig = FilePickerManager.from(activity)) {
+    fun eFileStart(activity: Activity, REQUEST_CODE: Int = FILE_REQUEST_CODE, filePicker: FilePickerConfig = FilePickerManager.from(activity)) {
         filePicker.forResult(REQUEST_CODE)
         FILE_REQUEST_CODE = REQUEST_CODE
     }
-     /**
-      *说明：选择器结果回调
-      * @调用方法：eResult()
-      * @param activity: Activity；界面活动
-      * @param requestCode: Int；请求回调代码
-      * @param resultCode: Int；结果回调代码
-      * @param data: Intent;回调数据
-      * @return: List<Any>
-      */
+
+    /**
+     *说明：选择器结果回调
+     * @调用方法：eResult()
+     * @param activity: Activity；界面活动
+     * @param requestCode: Int；请求回调代码
+     * @param resultCode: Int；结果回调代码
+     * @param data: Intent;回调数据
+     * @return: List<Any>
+     */
     fun eResult(activity: Activity, requestCode: Int, resultCode: Int, data: Intent?) = if (resultCode === Activity.RESULT_OK) {
         when (requestCode) {
-            IMAGE_REQUEST_CODE -> {
-                //返回的数据
-                Phoenix.result(data)
-            }
-            FILE_REQUEST_CODE -> {
-                FilePickerManager.obtainData()
-            }
+            IMAGE_REQUEST_CODE -> Phoenix.result(data)
+            FILE_REQUEST_CODE ->FilePickerManager.obtainData()
             else -> null
         }
     } else {

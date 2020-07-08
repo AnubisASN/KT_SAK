@@ -30,24 +30,32 @@ import java.nio.file.Files.exists
  *Router :  /'Module'/'Function'
  *说明：
  */
-object eVNC {
-    fun startVNCs(context: Context): Boolean {
+open  class eVNC internal  constructor(){
+    companion object{
+        private  lateinit var  mContext: Context
+        fun  eInit(context: Context):eVNC{
+            mContext=context
+            return  eInit
+        }
+        private val eInit by lazy (LazyThreadSafetyMode.SYNCHRONIZED){ eVNC() }
+    }
+    open  fun eStartVNCs(): Boolean {
         val inputStream: InputStream
         var result = false
         try {
             if (!eShell.eInit.eHaveRoot()) {
-                context.eShowTip("无ROOT权限，无法执行")
+                mContext.eShowTip("无ROOT权限，无法执行")
                 return false
             }
             if (File("/data/local/vncs").exists()) {
                 async { eShell.eInit.eExecShellSilent("/data/local/vncs") }
             } else {
-                inputStream = context.getResources().getAssets().open("vncs")// assets文件夹下的文件
-                val file = File(context.externalCacheDir.path)
+                inputStream = mContext.getResources().getAssets().open("vncs")// assets文件夹下的文件
+                val file = File(mContext.externalCacheDir.path)
                 if (!file.exists()) {
                     file.mkdirs()
                 }
-                val fileOutputStream = FileOutputStream(context.externalCacheDir.path + "/" + "vncs")// 保存到本地的文件夹下的文件
+                val fileOutputStream = FileOutputStream(mContext.externalCacheDir.path + "/" + "vncs")// 保存到本地的文件夹下的文件
                 val buffer = ByteArray(1024)
                 var count = 0
                 while (inputStream.read(buffer).apply { count = this } > 0) {
@@ -56,7 +64,7 @@ object eVNC {
                 fileOutputStream.flush()
                 fileOutputStream.close()
                 inputStream.close()
-                async {eShell.eInit.eExecShellSilent("cp  ${context.externalCacheDir.path}/vncs /data/local && chmod 777 /data/local/vncs && rm -rf ${context.externalCacheDir.path}/vncs && /data/local/vncs") }
+                async {eShell.eInit.eExecShellSilent("cp  ${mContext.externalCacheDir.path}/vncs /data/local && chmod 777 /data/local/vncs && rm -rf ${mContext.externalCacheDir.path}/vncs && /data/local/vncs") }
             }
             result = true
         } catch (e: IOException) {

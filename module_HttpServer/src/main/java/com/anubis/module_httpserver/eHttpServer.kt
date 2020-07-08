@@ -22,20 +22,21 @@ import java.lang.Exception
  * Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  * Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  * Router :  /'Module'/'Function'
- * 说明：
+ * 说明： http 服务
  */
-class eHttpServer private  constructor(){
-    companion object{
-        val instance by lazy(LazyThreadSafetyMode.SYNCHRONIZED){
+class eHttpServer private constructor() {
+    private var server: eHTTPD? = null
+    companion object {
+        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             eHttpServer()
         }
     }
-    var  server: eHTTPD? = null
-    fun eStart(`class`: Class<*>?=eResolver::class.java, port: Int = 3334, handler: Handler?=null): eHTTPD? {
+
+    fun eStart(`class`: Class<*>? = eResolver::class.java, port: Int = 3334, handler: Handler? = null): eHTTPD? {
         if (server == null) {
             try {
-                val con = eReflection.eInit.eGetClass(`class`!!.name).getConstructor(Int::class.java,Handler::class.java)
-                server = con.newInstance(port,handler) as eHTTPD
+                val con = eReflection.eInit.eGetClass(`class`!!.name).getConstructor(Int::class.java, Handler::class.java)
+                server = con.newInstance(port, handler) as eHTTPD
                 eLog("定义开启HTTP服务成功")
             } catch (e: NoSuchMethodException) {
                 val con = eReflection.eInit.eGetClass(`class`!!.name).getConstructor()
@@ -45,7 +46,7 @@ class eHttpServer private  constructor(){
                 e.eLogE("HTTP服务开启失败")
             }
             server?.start()
-        }else{
+        } else {
             eLog("服务运行中")
         }
         return server
@@ -53,7 +54,7 @@ class eHttpServer private  constructor(){
 
     fun eStop(): Boolean {
         val status = server?.stop() ?: false
-        server=null
+        server = null
         return status
     }
 

@@ -35,15 +35,37 @@ import kotlin.experimental.or
  *Router :  /'Module'/'Function'
  *类说明：串口通讯封装开发库
  */
-object ePortMSG : LockerPortInterface {
-    private var PATH: String? = null //串口名称         RS485开门方式
-    private var BAUDRATE: Int? = null            //波特率
+class ePortMSG private constructor() : LockerPortInterface {
+    //波特率
     private var outputStream: OutputStream? = null     //发送串口的输出流
-    internal var Result: Boolean = true
-    private var mCallback: ICallBack? = null
+    private lateinit var mLockerSerialportUtil: LockerSerialportUtil
+
+    companion object {
+        private lateinit var mActivity: Activity
+        private var mPATH: String = "/dev/ttyS3" //串口名称
+        private var mBAUDRATE: Int = 9600
+        private var mCallback: ICallBack? = null
+        fun eInit(activity: Activity, PATH: String = mPATH, BAUDRATE: Int = mBAUDRATE, callback: ICallBack? = null): ePortMSG {
+            mActivity = activity
+            mPATH = PATH
+            mBAUDRATE = BAUDRATE
+            mCallback = callback
+            return eInit
+        }
+
+        private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { ePortMSG() }
+    }
+
+
+    interface ICallBack {
+        @Throws(Exception::class)
+        fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String)
+    }
+
+
     /**
      * 方法说明：串口数据发送
-     * @调用方法：sendMSG()
+     * @调用方法：eSendMSG()
      * @param mAcitvity: Activity；活动
      * @param msg: Any ;String or ByteArray 信息
      * @param mPATH: String；串口名
@@ -51,31 +73,23 @@ object ePortMSG : LockerPortInterface {
      * @param callback：: ICallBack?=null;接收回调
      * @return: Boolean
      */
-
-    interface ICallBack {
-        @Throws(Exception::class)
-        fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String)
-    }
-
     @Throws(Exception::class)
-    fun sendMSG(activity: Activity,  msg: Any = "A", mPATH: String = "/dev/ttyS3", BAUDRATE: Int = 9600,callback: ICallBack?=null): Boolean {
-        PATH = mPATH
-        this.BAUDRATE = BAUDRATE
-        this.mCallback = callback
-        openPort(activity)
+    fun eOpenSendMSG(msg: Any, PATH: String = mPATH, BAUDRATE: Int = mBAUDRATE, callback: ICallBack? = mCallback): Boolean {
+        mPATH = PATH
+        mBAUDRATE = BAUDRATE
+        mCallback = callback
+        openPort()
         when (msg) {
-            is String -> sendParams(msg)
-            is ByteArray -> sendParams(msg)
-            else -> {
-                sendParams(msg.toString())
-            }
+            is String -> eSendMSG(msg)
+            is ByteArray -> eSendMSG(msg)
+            else -> eSendMSG(msg.toString())
         }
-        return Result
+        return LockerSerialportUtil.instance?.mResult ?: false
     }
 
     /**
      * 方法说明：串口数据监听
-     * @调用方法：getMSG()
+     * @调用方法：eGetMSG()
      * @param mAcitvity: Activity；活动
      * @param  callback: ICallBack；消息回调
      * @param mPATH: String；串口名
@@ -83,50 +97,50 @@ object ePortMSG : LockerPortInterface {
      * @return: Boolean
      */
     @Throws(Exception::class)
-    fun getMSG(activity: Activity,callback: ICallBack, mPATH: String = "/dev/ttyS3", BAUDRATE: Int = 9600): Boolean {
-        PATH = mPATH
-        this.BAUDRATE = BAUDRATE
-        this.mCallback = callback
-        openPort(activity)
-        return Result
+    fun eGetMSG(PATH: String = mPATH, BAUDRATE: Int = mBAUDRATE, callback: ICallBack? = mCallback): Boolean {
+        mPATH = PATH
+        mBAUDRATE = BAUDRATE
+        mCallback = callback
+        openPort()
+        return LockerSerialportUtil.instance?.mResult ?: false
     }
 
     /**
      * 关闭串口
      */
-    fun closeMSG() {
-        LockerSerialportUtil.instance?.closeSerialPort()
-    }
+    fun eClosePort() =LockerSerialportUtil.instance?.closeSerialPort()
 
     /**
      * 打开串口
      */
-  private  fun openPort(activity: Activity) {
-        println("打开串口")
-        LockerSerialportUtil.init(activity, PATH!!, BAUDRATE!!, this)
-        //        LockerSerialportUtil.init(this,PATH1,BAUDRATE,this);
+    private fun openPort() {
+        LockerSerialportUtil.init(mActivity, mPATH, mBAUDRATE, this)
     }
 
     /**
      * 发送指令
      * @param msg
      */
-    fun sendParams(msg: String) {
+    fun eSendMSG(msg: String)= msg.let {
+            try {
+                outputStream!!.write(eString.eInit.eGetHexStringToBytes(msg))
+                true
+            } catch (e: Exception) {
+                return@let false
+            }
 
-        if (outputStream == null) {
-            return
         }
-        outputStream!!.write(eString.eInit.eGetHexStringToBytes(msg))
+
+
+    fun eSendMSG(msg: ByteArray)= msg.let {
+        try {
+            outputStream!!.write(msg)
+            true
+        } catch (e: Exception) {
+            return@let  false
+        }
     }
 
-    fun sendParams(msg: ByteArray) {
-
-        if (outputStream == null) {
-            return
-        }
-        outputStream!!.write(msg)
-
-    }
 
 
     /**
@@ -135,9 +149,8 @@ object ePortMSG : LockerPortInterface {
      * @param path   串口名，如果有多个串口需要识别是哪个串口返回的数据（传或不传可以根据自己的编码习惯）
      */
     override fun onLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
-        mCallback?.IonLockerDataReceived(buffer,size,path)
+        mCallback?.IonLockerDataReceived(buffer, size, path)
     }
-
 
 
     override fun onLockerOutputStream(outputStream: OutputStream) {
