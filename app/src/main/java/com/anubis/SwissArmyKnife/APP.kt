@@ -41,7 +41,6 @@ class APP : Application() {
         super.onCreate()
         mInit = this
         CrashReport.initCrashReport(applicationContext, "47d98f44ec", false)
-        CrashReport.initCrashReport(applicationContext)
         ARouter.openLog()
         ARouter.openDebug()
         ARouter.init(mInit)

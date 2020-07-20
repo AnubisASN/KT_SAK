@@ -1,8 +1,11 @@
 package com.anubis.kt_extends
 
+import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
+import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
@@ -25,13 +28,20 @@ import android.support.v4.content.ContextCompat
 import android.text.TextUtils.indexOf
 import android.util.Base64
 import android.util.Log
+import android.view.Gravity
 import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
+import com.anubis.module_extends.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.onClick
+import org.jetbrains.anko.textColor
 import org.json.JSONObject
 import java.io.*
 import java.lang.Process
@@ -49,6 +59,7 @@ import java.util.regex.Pattern
 import kotlin.Error
 import kotlin.collections.ArrayList
 import kotlin.experimental.and
+import kotlin.properties.Delegates
 
 
 /**
@@ -382,7 +393,7 @@ open class eJson internal constructor() {
 }
 
 /**
- * 广播接收器辅助扩展类--------------------------------------------------------------------------------------
+ *广播接收器辅助扩展类--------------------------------------------------------------------------------------
  */
 open class eBReceiver internal constructor() {
     companion object {
@@ -433,6 +444,155 @@ open class eBReceiver internal constructor() {
         return false
     }
 }
+/**
+ * Alert扩展类--------------------------------------------------------------------------------------
+ */
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+open class eDiaAlert private constructor() {
+    private var dismissTime=100L
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        private lateinit var mContext: Context
+        private var mICallBack: ICallBack? = null
+        private var mStyle by Delegates.notNull<Int>()
+        fun eInit(
+                context: Context,
+                style: Int = R.style.dialog,
+                ICallBack: ICallBack? = null
+        ): eDiaAlert {
+            mContext = context
+            mICallBack = ICallBack
+            mStyle = style
+            return eInit
+        }
+
+        private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eDiaAlert() }
+    }
+
+    open fun eShow(
+            title: String? = null,
+            body: String? = null,
+            foot: String? = null,
+            isShowOK: Boolean = true,
+            isShowCancel: Boolean = true,
+            isShowClose: Boolean = false,
+            isShowAVI: Boolean = false,
+            isDisableBack: Boolean = true,
+            gravity: Int = Gravity.CENTER,
+            x: Int = 0,
+            y: Int = 0,
+            alpha: Float = 0.9f,
+            dismissTime: Long = 100L,
+            ICallBack: ICallBack? = mICallBack
+    ): Dialog {
+        this.dismissTime=dismissTime
+        mICallBack = ICallBack
+        val dia = Dialog(mContext, mStyle)
+        with(dia) {
+            val view = LayoutInflater.from(mContext).inflate(R.layout.sample_dia, null)
+            setContentView(view)
+            setCanceledOnTouchOutside(false)
+            mICallBack?.editUI(view, this)
+            if (title == null)
+                view.dia_tvTitle.visibility = View.GONE
+            else
+                view.dia_tvTitle.text = title
+            if (body == null)
+                view.dia_tvBody.visibility = View.GONE
+            else
+                view.dia_tvBody.text = body
+            if (foot == null)
+                view.dia_tvFoot.visibility = View.GONE
+            else
+                view.dia_tvFoot.text = foot
+            if (isShowOK)
+                view.dia_btOk.onClick {
+                    onClickUI(view, it)
+                    Handler().postDelayed({ mICallBack?.onClickOK(it, this) }, dismissTime)
+                }
+            else
+                view.dia_btOk.visibility = View.GONE
+            if (isShowCancel)
+                view.dia_btCancel.onClick {
+                    onClickUI(view, it)
+                    Handler().postDelayed({
+                        mICallBack?.onClickCancel(it, this)
+                    }, dismissTime)
+                }
+            else
+                view.dia_btCancel.visibility = View.GONE
+            if (isShowClose)
+                view.dia_ivClose.onClick {
+                    mICallBack?.onClickClose(it, this)
+                    dismiss()
+                } else
+                view.dia_ivClose.visibility = View.GONE
+            if (isShowAVI)
+                view.dia_avi.visibility = View.VISIBLE
+            if (isDisableBack)
+                setOnKeyListener { _, keyCode, _ ->
+                    when (keyCode) {
+                        KeyEvent.KEYCODE_BACK -> return@setOnKeyListener true
+                        else -> return@setOnKeyListener false
+                    }
+                }
+            show()
+            val params = window.attributes
+            params.alpha = alpha
+            params.x = x
+            params.y = y
+            window.attributes = params
+            window.setGravity(gravity)
+
+        }
+        return dia
+    }
+
+    fun eDIYShow(layout: Int, iCallBack: IDIYCallBack? = null): Dialog {
+        val dia = Dialog(mContext, mStyle)
+        with(dia) {
+            val v = LayoutInflater.from(mContext).inflate(layout, null)
+            setCanceledOnTouchOutside(false)
+            val params = window.attributes
+            params.alpha = 0.9f
+            window.attributes = params
+            setOnKeyListener { _, keyCode, _ ->
+                when (keyCode) {
+                    KeyEvent.KEYCODE_BACK -> return@setOnKeyListener true
+                    else -> return@setOnKeyListener false
+                }
+            }
+            iCallBack?.DIY(v, this)
+            setContentView(v)
+            show()
+
+        }
+        return dia
+    }
+
+
+    open fun onClickUI(view: View?, it: View?) {
+        with(it as? Button) {
+            this?.textColor = Color.parseColor("#ffffff")
+            this?.background = mContext.getDrawable(R.drawable.dia_btbackground1)
+            Handler().postDelayed({
+                this?.textColor = Color.parseColor("#25CEFB")
+                this?.background = mContext.getDrawable(R.drawable.dia_btbackground0)
+            }, dismissTime)
+        }
+    }
+
+    interface ICallBack {
+        fun editUI(view: View, dia: Dialog)
+        fun onClickOK(view: View?, dia: Dialog)
+        fun onClickCancel(view: View?, dia: Dialog)
+        fun onClickClose(view: View?, dia: Dialog)
+    }
+
+    interface IDIYCallBack {
+        fun DIY(view: View, dia: Dialog)
+    }
+}
 
 /**
  * App程序扩展类--------------------------------------------------------------------------------------
@@ -477,6 +637,9 @@ open class eApp internal constructor() {
             activity.startActivity(it)
         }
     }
+
+    //获取软件版本
+    fun eGetVersion(context: Context) = context.packageManager.getPackageInfo(context.packageName, 0).versionName
 
     //获取所有安装的app
     open fun eGetLocalApps(context: Context) = context.packageManager.queryIntentActivities(Intent(Intent.ACTION_MAIN, null), 0)
@@ -918,8 +1081,8 @@ open class eDevice internal constructor() {
     // 根据手机的分辨率从 dp 的单位 转成为 px(像素)
     open fun eGetDpToPx(context: Context, dpValue: Float) = (dpValue * context.resources.displayMetrics.density + 0.5f).toInt()
 
-    //获取系统的名称
-    open fun eGetSysVersionName() = Build.MODEL
+    //获取主板型号
+    open fun eGetMotherboardModel() = Build.MODEL
 
     //获取系统的SDK版本
     open fun eGetSysSDKVersion() = Build.VERSION.SDK
@@ -1752,11 +1915,11 @@ open class eFile internal constructor() {
             if (file.exists()) {
                 return true
             } else {
-                if (file.isDirectory|| !file.name.contains(".")) {
+                if (file.isDirectory || !file.name.contains(".")) {
                     file.mkdirs()
                 } else {
-                        File(file.parent).mkdirs()
-                        File(file.path).createNewFile()
+                    File(file.parent).mkdirs()
+                    File(file.path).createNewFile()
                 }
             }
         } else {

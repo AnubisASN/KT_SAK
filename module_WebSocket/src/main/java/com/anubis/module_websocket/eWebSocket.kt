@@ -6,13 +6,10 @@ import com.anubis.kt_extends.*
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
 import org.jetbrains.anko.custom.async
-
 import org.json.JSONException
-
 import java.net.URI
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
-
 import javax.websocket.ClientEndpoint
 import javax.websocket.ContainerProvider
 import javax.websocket.OnClose
