@@ -21,7 +21,7 @@ import android.graphics.*
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.view.View
 import com.anubis.app_discern.Activity.DiscernActivity
 import com.anubis.kt_extends.eBitmap

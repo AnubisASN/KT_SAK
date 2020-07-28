@@ -55,8 +55,8 @@ repositories {
 
 dependencies {
     api fileTree(include: ['*.jar'], excludes: ['BaiduLBS_Android.jar'], dir: 'libs')
-    api 'com.android.support:appcompat-v7:27.0.2'
-    api 'com.android.support:recyclerview-v7:27.0.2'
+    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'androidx.recyclerview:recyclerview:1.0.0'
     api(name: 'onsdk_all', ext: 'aar')
     api(name: 'NaviTts', ext: 'aar')
     //    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

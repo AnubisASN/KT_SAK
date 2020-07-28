@@ -6,7 +6,7 @@ import android.graphics.Paint.Cap
 import android.graphics.Paint.Join
 import android.graphics.Paint.Style
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.util.TypedValue
 import com.anubis.kt_extends.eLog
 import com.anubis.module_camera.Camera.customview.eBorderedText

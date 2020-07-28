@@ -23,18 +23,20 @@ import android.net.Uri
 import android.os.*
 import android.preference.*
 import android.provider.Settings
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import android.text.TextUtils.indexOf
 import android.util.Base64
 import android.util.Log
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
+import android.util.TypedValue
+import android.view.*
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import com.anubis.module_extends.R
+import com.tencent.bugly.proguard.s
+import com.tencent.bugly.proguard.v
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -60,7 +62,7 @@ import kotlin.Error
 import kotlin.collections.ArrayList
 import kotlin.experimental.and
 import kotlin.properties.Delegates
-
+import kotlinx.android.synthetic.main.sample_dia.view.*
 
 /**
  * Author  ： AnubisASN   on 2018-07-23 9:12.
@@ -343,13 +345,13 @@ fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = Aud
 /**
  * String Json解析扩展--------------------------------------------------------------------------------
  */
-open class eJson internal constructor() {
+class eJson private constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eJson() }
     }
 
     //Object Json解析扩展
-    open fun <T> eGetJsonObject(json: String, resultKey: String, default: T = "" as T): T {
+    fun <T> eGetJsonObject(json: String, resultKey: String, default: T = "" as T): T {
         return try {
             when (default) {
                 is String -> JSONObject(json).getString(resultKey)
@@ -364,7 +366,7 @@ open class eJson internal constructor() {
         }
     }
 
-    open fun eGetJsonObject(json: String, resultKey: String) = try {
+    fun eGetJsonObject(json: String, resultKey: String) = try {
         JSONObject(json).getInt(resultKey)
     } catch (e: Exception) {
         try {
@@ -387,15 +389,15 @@ open class eJson internal constructor() {
     }
 
     //Array Json解析扩展
-    open fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).optJSONArray(resultKey).getJSONObject(i).toString()
+    fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).optJSONArray(resultKey).getJSONObject(i).toString()
 
-    open fun eGetJsonArray(json: String, resultKey: String) = JSONObject(json).optJSONArray(resultKey)
+    fun eGetJsonArray(json: String, resultKey: String) = JSONObject(json).optJSONArray(resultKey)
 }
 
 /**
  *广播接收器辅助扩展类--------------------------------------------------------------------------------------
  */
-open class eBReceiver internal constructor() {
+class eBReceiver private constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eBReceiver() }
     }
@@ -403,7 +405,7 @@ open class eBReceiver internal constructor() {
     //开机启动
     private var isSetAutoBoot = true
 
-    open fun eSetPowerBoot(context: Context, intent: Intent, cls: Class<*>): Boolean {
+    fun eSetPowerBoot(context: Context, intent: Intent, cls: Class<*>): Boolean {
         return if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             eLog("开机自启", "SAK")
             if (isSetAutoBoot) {
@@ -417,7 +419,7 @@ open class eBReceiver internal constructor() {
     }
 
     //APP更新启动
-    open fun eSetAPPUpdateBoot(context: Context, intent: Intent, cls: Class<*>, hint: Array<String>? = arrayOf("升级了一个安装包", "安装了一个安装包", "卸载了一个安装包")): Boolean {
+    fun eSetAPPUpdateBoot(context: Context, intent: Intent, cls: Class<*>, hint: Array<String>? = arrayOf("升级了一个安装包", "安装了一个安装包", "卸载了一个安装包")): Boolean {
         //接收更新广播
         if (intent.action == "android.intent.action.PACKAGE_REPLACED") {
             Toast.makeText(context, hint!![0], Toast.LENGTH_SHORT).show()
@@ -444,12 +446,12 @@ open class eBReceiver internal constructor() {
         return false
     }
 }
+
 /**
  * Alert扩展类--------------------------------------------------------------------------------------
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-open class eDiaAlert private constructor() {
-    private var dismissTime=100L
+open class eDiaAlert internal constructor() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         private lateinit var mContext: Context
@@ -485,14 +487,12 @@ open class eDiaAlert private constructor() {
             dismissTime: Long = 100L,
             ICallBack: ICallBack? = mICallBack
     ): Dialog {
-        this.dismissTime=dismissTime
         mICallBack = ICallBack
         val dia = Dialog(mContext, mStyle)
         with(dia) {
             val view = LayoutInflater.from(mContext).inflate(R.layout.sample_dia, null)
             setContentView(view)
             setCanceledOnTouchOutside(false)
-            mICallBack?.editUI(view, this)
             if (title == null)
                 view.dia_tvTitle.visibility = View.GONE
             else
@@ -507,28 +507,31 @@ open class eDiaAlert private constructor() {
                 view.dia_tvFoot.text = foot
             if (isShowOK)
                 view.dia_btOk.onClick {
-                    onClickUI(view, it)
-                    Handler().postDelayed({ mICallBack?.onClickOK(it, this) }, dismissTime)
+                    onClickUI(it, dismissTime)
+                    Handler().postDelayed({
+                        mICallBack?.onClickOK(this, it) ?: dismiss()
+                    }, dismissTime)
                 }
             else
                 view.dia_btOk.visibility = View.GONE
             if (isShowCancel)
                 view.dia_btCancel.onClick {
-                    onClickUI(view, it)
+                    onClickUI(it, dismissTime)
                     Handler().postDelayed({
-                        mICallBack?.onClickCancel(it, this)
+                        mICallBack?.onClickCancel(this, it) ?: dismiss()
                     }, dismissTime)
                 }
             else
                 view.dia_btCancel.visibility = View.GONE
             if (isShowClose)
                 view.dia_ivClose.onClick {
-                    mICallBack?.onClickClose(it, this)
-                    dismiss()
+                    mICallBack?.onClickClose(this, it) ?: dismiss()
+
                 } else
                 view.dia_ivClose.visibility = View.GONE
             if (isShowAVI)
                 view.dia_avi.visibility = View.VISIBLE
+            mICallBack?.editUI(this, view)
             if (isDisableBack)
                 setOnKeyListener { _, keyCode, _ ->
                     when (keyCode) {
@@ -548,61 +551,105 @@ open class eDiaAlert private constructor() {
         return dia
     }
 
-    fun eDIYShow(layout: Int, iCallBack: IDIYCallBack? = null): Dialog {
+    open fun eDIYShow(layout: Int, iCallBack: IDIYCallBack? = null, onClick: IDIYClickCallBack? = null, isDisableBack: Boolean = true): Dialog {
         val dia = Dialog(mContext, mStyle)
         with(dia) {
-            val v = LayoutInflater.from(mContext).inflate(layout, null)
+            val view = LayoutInflater.from(mContext).inflate(layout, null)
             setCanceledOnTouchOutside(false)
             val params = window.attributes
+            window.setGravity(Gravity.CENTER)
             params.alpha = 0.9f
             window.attributes = params
-            setOnKeyListener { _, keyCode, _ ->
-                when (keyCode) {
-                    KeyEvent.KEYCODE_BACK -> return@setOnKeyListener true
-                    else -> return@setOnKeyListener false
+            if (isDisableBack)
+                setOnKeyListener { _, keyCode, _ ->
+                    when (keyCode) {
+                        KeyEvent.KEYCODE_BACK -> return@setOnKeyListener true
+                        else -> return@setOnKeyListener false
+                    }
                 }
-            }
-            iCallBack?.DIY(v, this)
-            setContentView(v)
+            iCallBack?.DIY(this, view, onClick)
+            setContentView(view)
             show()
 
         }
         return dia
     }
 
-
-    open fun onClickUI(view: View?, it: View?) {
+    open fun onClickUI(it: View?, dismissTime: Long, block: () -> Unit = {}) {
         with(it as? Button) {
+
             this?.textColor = Color.parseColor("#ffffff")
             this?.background = mContext.getDrawable(R.drawable.dia_btbackground1)
             Handler().postDelayed({
                 this?.textColor = Color.parseColor("#25CEFB")
                 this?.background = mContext.getDrawable(R.drawable.dia_btbackground0)
+                block()
             }, dismissTime)
         }
     }
 
     interface ICallBack {
-        fun editUI(view: View, dia: Dialog)
-        fun onClickOK(view: View?, dia: Dialog)
-        fun onClickCancel(view: View?, dia: Dialog)
-        fun onClickClose(view: View?, dia: Dialog)
+        fun editUI(dia: Dialog, view: View)
+        fun onClickOK(dia: Dialog, it: View?)
+        fun onClickCancel(dia: Dialog, it: View?)
+        fun onClickClose(dia: Dialog, it: View?)
     }
 
     interface IDIYCallBack {
-        fun DIY(view: View, dia: Dialog)
+        fun DIY(dia: Dialog, view: View, onClick: IDIYClickCallBack?)
+    }
+
+    interface IDIYClickCallBack {
+        fun onClick(view: View, it: View?)
     }
 }
 
 /**
  * App程序扩展类--------------------------------------------------------------------------------------
  */
-open class eApp internal constructor() {
+class eApp private constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eApp() }
     }
+    //清除栈重启
+    fun Activity.eTaskCleanAndRestart() {
+        finish()
+        val intent = intent
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        overridePendingTransition(0, 0)
+    }
+    //APK安装
+    fun eInstallApkFile(context: Context, filePath: String,authority:String="com.anubis.module_extends") {
+        eInstallApkFile(context, File(filePath),authority)
+    }
 
-    /*     通过APK地址获取此APP的包名和版本等信息*/
+    fun eInstallApkFile(context: Context, file: File,authority:String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            val uri = FileProvider.getUriForFile(context, authority, file);
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+        }
+        try {
+            context.startActivity(intent);
+        } catch (e: Exception) {
+            e.eLogE("installApkFile")
+        }
+    }
+
+    //窗口全屏
+    fun eSetWindowFullScreen(activity: Activity) {
+        activity.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        activity.window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN)
+    }
+
+    //通过APK地址获取此APP的包名和版本等信息
     open fun eGetApkInfo(context: Context, apkPath: String): Array<String?> {
         val infos = arrayOfNulls<String>(3)
         val pm = context.packageManager
@@ -617,10 +664,7 @@ open class eApp internal constructor() {
         return infos
     }
 
-    /*
-    * APP国际化
-    * @parame
-    * */
+    //APP国际化
     open fun eInternationalization(activity: Context, locale: Locale = Locale.getDefault()) {
         //设置应用语言类型
         val resources = activity.resources
@@ -804,8 +848,6 @@ open class eApp internal constructor() {
         }
         return packageInfo != null
     }
-
-
     //首选Summary项动态改变
     //sSummaryDynamicSetting(findPreference("root_screen") as PreferenceScreen)
     //Summary修改
@@ -833,7 +875,12 @@ open class eRegex internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eRegex() }
     }
-
+    //自定义正则
+    fun eRegex(str: String, regEx: String = "[^0-9.]"): String {
+        val p = Pattern.compile(regEx)
+        val m = p.matcher(str)
+        return (m.replaceAll("").trim { it <= ' ' })
+    }
     //获取数字
     open fun eGetNumber(str: String): Int {
         val regEx = "[^0-9]"
@@ -1183,7 +1230,13 @@ open class eAssets internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eAssets() }
     }
-
+    //获取attr
+    fun eGetAttr(context:Context,id: Int): Int {
+        return with(TypedValue()) {
+            context.theme.resolveAttribute(id, this, true)
+            data
+        }
+    }
     //assets文件复制 文件夹路径
     open fun eAssetsToFile(context: Context, assetsFilePath: String, copyFilePath: String): Boolean {
         try {
@@ -2164,7 +2217,22 @@ open class ePermissions internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { ePermissions() }
     }
-
+    //系统安装权限
+    open fun eSetInstallPermissions(context: Context): Boolean {
+        var str = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (context.packageManager.canRequestPackageInstalls()) {
+                str = true
+            } else {
+                val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+                intent.data = Uri.parse("package:${context.packageName}")
+                (context as Activity).startActivityForResult(intent, 1)
+            }
+        } else {
+            str = true
+        }
+        return str
+    }
     //系统设置修改权限
     open fun eSetSystemPermissions(context: Context): Boolean {
         var str = false
@@ -2184,35 +2252,63 @@ open class ePermissions internal constructor() {
 
 
     //授权判断
-    open fun eSetPermissions(activity: Activity, permissionsArray: Array<out String>, requestCode: Int = 1): Boolean {
+    open fun eSetPermissions(
+            activity: Activity,
+            permissionsArray: Array<out String>,
+            requestCode: Int = 1
+    ): Boolean {
         val permissionsList = ArrayList<String>()
         for (permission in permissionsArray) {
-            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                            activity,
+                            permission
+                    ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 permissionsList.add(permission)
             }
         }
         return if (permissionsList.isEmpty()) {
+            eLog("全部授权")
             //未授予的权限为空，表示都授予了
             true
         } else {
-            ActivityCompat.requestPermissions(activity, permissionsList.toArray(arrayOfNulls<String>(permissionsList.size)), 1)
+            ActivityCompat.requestPermissions(
+                    activity,
+                    permissionsList.toArray(arrayOfNulls<String>(permissionsList.size)),
+                    1
+            )
+            permissionsList.size.eLog("permissionsList.size")
+            eLog("未授权")
             false
         }
 
     }
 
     //显示授权设置
-    open fun eSetOnRequestPermissionsResult(activity: Activity, requestCode: Int, permissions: Array<String>, grantResults: IntArray, isPermissionsOKHint: String = "", isPermissionsNoHint: String = "") {
+    open fun eSetOnRequestPermissionsResult(
+            activity: Activity,
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray,
+            isPermissionsOKHint: String = "授权完成",
+            isPermissionsNoHint: String = "授权未完成"
+    ) {
+        var statusPermissions = Pair<Boolean, ArrayList<String>>(true, arrayListOf())
         when (requestCode) {
-            1 -> for (i in permissions.indices) {
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    if (isPermissionsOKHint.isEmpty()) {
+            1 -> {
+                permissions.forEachIndexed { index, s ->
+                    if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+                        val ps = statusPermissions.second
+                        ps.add(s)
+                        statusPermissions = statusPermissions.copy(false, ps)
+                    }
+                }
+                if (statusPermissions.first) {
+                    if (isPermissionsOKHint.isNotEmpty())
                         activity.eShowTip(isPermissionsOKHint)
-                    }
                 } else {
-                    if (isPermissionsNoHint.isEmpty()) {
-                        activity.eShowTip(isPermissionsNoHint)
-                    }
+                    if (isPermissionsNoHint.isNotEmpty())
+                        activity.eShowTip("$isPermissionsNoHint:${statusPermissions.second.toArray()!!.contentToString()}")
                 }
             }
         }

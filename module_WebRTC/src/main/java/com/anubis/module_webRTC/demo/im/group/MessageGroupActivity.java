@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.anubis.module_webRTC.R;
 import com.anubis.module_webRTC.demo.MLOC;
 import com.anubis.module_webRTC.database.CoreDB;
 import com.anubis.module_webRTC.database.HistoryBean;

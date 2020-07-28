@@ -13,9 +13,9 @@ import android.media.ImageReader
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.SwitchCompat
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import android.util.Size
 import android.view.Surface
 import android.view.WindowManager

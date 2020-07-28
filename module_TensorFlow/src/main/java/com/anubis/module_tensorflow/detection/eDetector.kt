@@ -21,7 +21,7 @@ import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.util.Size
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE

@@ -10,8 +10,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -96,9 +96,9 @@ class MainActivity : Activity() {
     private var mCardOTG: eCardOTG? = null
     private var mDevice: eUDevice? = null
     private var mGreenDao: eGreenDao? = null
-    private  var mPortMSG:ePortMSG?=null
+    private var mPortMSG: ePortMSG? = null
     private var mOffice: eOffice? = null
-    private  var mTTS:eTTS?=null
+    private var mTTS: eTTS? = null
 
     companion object {
         var mainActivity: MainActivity? = null
@@ -114,7 +114,7 @@ class MainActivity : Activity() {
         ParameHandleMSG.mainActivity = mainActivity
         ePermissions.eInit.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗_bt导出Excel_bt导出ExcelS", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗_bteAlert弹窗","bt导出Excel_bt导出ExcelS", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
         //业务测试模块
         LoadingData()
@@ -138,7 +138,7 @@ class MainActivity : Activity() {
         } else {
             file!!.createNewFile()
         }
-        rvList.layoutManager = LinearLayoutManager(this)
+        rvList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         val voiceModel = arrayOf(VoiceModel.FEMALE, VoiceModel.MALE, VoiceModel.EMOTIONAL_MALE, VoiceModel.CHILDREN)
         var spID = 0
         val adapter = ArrayAdapter<VoiceModel>(this@MainActivity, android.R.layout.simple_spinner_item, voiceModel)
@@ -157,7 +157,7 @@ class MainActivity : Activity() {
                         }
                         when (view?.id) {
                             R.id.bt_item1 -> {
-                                 mTTS!!.setParams(voiceModel[spID])
+                                mTTS!!.setParams(voiceModel[spID])
                                 Handler().postDelayed({
                                     val state = mTTS!!.speak("发音人切换发音调用")
                                     Hint("发音人切换发音调用:$state")
@@ -371,12 +371,15 @@ class MainActivity : Activity() {
                                 uiThread { progressDialog?.dismiss() }
                             }
                         }
-                        bt_item2.id -> {
+                        bt_item2.id -> eDiaAlert.eInit(this@MainActivity).eShow("动态弹窗测试")
+                    }
+                    getDigit("Excel导出") -> when (view?.id) {
+                        bt_item1.id -> {
                             Hint("Excel导出测试数据库：${mOffice?.eExportExcel(arrayOf("Time", "Name"), mGreenDao?.eQueryAllUser(Data())!!)}")
                         }
-                        bt_item3.id -> {
-                           val  tDatas=mGreenDao?.eQueryAllUser(Data())!!
-                            Hint("ExcelS导出测试数据库：${mOffice?.eExportExcel(arrayOf(arrayOf("Time1", "Name1"),arrayOf("Time2", "Name2")),arrayOf(tDatas,   tDatas.asReversed()),mSheetNames = arrayOf("记录1","记录2"))}")
+                        bt_item2.id -> {
+                            val tDatas = mGreenDao?.eQueryAllUser(Data())!!
+                            Hint("ExcelS导出测试数据库：${mOffice?.eExportExcel(arrayOf(arrayOf("Time1", "Name1"), arrayOf("Time2", "Name2")), arrayOf(tDatas, tDatas.asReversed()), mSheetNames = arrayOf("记录1", "记录2"))}")
                         }
                     }
                     getDigit("后台杀死") -> when (view?.id) {
@@ -400,7 +403,8 @@ class MainActivity : Activity() {
                         }
                     }
                     getDigit("数据库") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(Data(eTime.eInit.eGetCurrentTime(), MSG?: ""))}")
+                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(Data(eTime.eInit.eGetCurrentTime(), MSG
+                                ?: ""))}")
                         R.id.bt_item2 -> {
                             Hint("数据库查询:")
                             mGreenDao?.eQueryAllUser(Data())?.forEach {
@@ -522,14 +526,14 @@ class MainActivity : Activity() {
         mOffice = eOffice.eInit(this)
 
         /*串口通信*/
-        mPortMSG=ePortMSG.eInit(this,callback = object : ePortMSG.ICallBack {
+        mPortMSG = ePortMSG.eInit(this, callback = object : ePortMSG.ICallBack {
             override fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
                 Hint("串口数据接收:${eString.eInit.eGetByteArrToHexStr(buffer)}--$path")
             }
         })
 
         /*TTS语音合成*/
-        mTTS= eTTS.eInit(mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
+        mTTS = eTTS.eInit(mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
     }
 
     /**
@@ -554,7 +558,7 @@ class MainActivity : Activity() {
         return Digit
     }
 
-    class MyAdapter(val mContext: Context, val mDatas: Array<String>, val mCallbacks: ICallBack) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
+    class MyAdapter(val mContext: Context, val mDatas: Array<String>, val mCallbacks: ICallBack) : androidx.recyclerview.widget.RecyclerView.Adapter<MyAdapter.MyHolder>() {
         var mPosition: Int? = null
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
             val view = LayoutInflater.from(mContext).inflate(R.layout.list_edit_item, parent, false)
@@ -600,7 +604,7 @@ class MainActivity : Activity() {
         }
 
         //界面设置 ed_    sp_  bt_x3
-        inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class MyHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
             fun setData(datas: String, position: Int) {
                 try {
                     var datas = datas.split("_")

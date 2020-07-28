@@ -4,15 +4,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.anubis.module_webRTC.demo.beauty.DemoVideoSourceCallback;
 import com.anubis.module_webRTC.demo.MLOC;
-import com.anubis.module_webRTC.demo.beauty.DemoVideoSourceCallback;
 import com.anubis.module_webRTC.demo.p2p.VoipP2PRingingActivity;
 import com.anubis.module_webRTC.demo.voip.VoipAudioRingingActivity;
 import com.anubis.module_webRTC.demo.voip.VoipRingingActivity;
-import com.anubis.module_webRTC.eDataRTC;
 import com.anubis.module_webRTC.listener.XHChatManagerListener;
 import com.anubis.module_webRTC.listener.XHGroupManagerListener;
 import com.anubis.module_webRTC.listener.XHLoginManagerListener;

@@ -7,7 +7,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -22,7 +22,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     //Dex分包
-    api 'com.android.support:multidex:1.0.3'
+    api 'androidx.multidex:multidex:2.0.0'
     api project(':module_Extends')
     api ('com.rmtheis:tess-two:9.0.0'){exclude group:'com.android.support',module:'multidex'}
 }

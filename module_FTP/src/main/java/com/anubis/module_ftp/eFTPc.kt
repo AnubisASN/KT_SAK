@@ -5,8 +5,8 @@ import android.app.Application
 import android.content.Context
 import android.os.Handler
 import android.os.Message
-import android.support.annotation.UiThread
-import android.support.v4.app.Fragment
+import androidx.annotation.UiThread
+import androidx.fragment.app.Fragment
 import android.util.Log
 import com.anubis.kt_extends.eJson
 import com.anubis.kt_extends.eLog

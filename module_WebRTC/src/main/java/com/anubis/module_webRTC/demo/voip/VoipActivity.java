@@ -1,22 +1,18 @@
 package com.anubis.module_webRTC.demo.voip;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Chronometer;
 import android.widget.TextView;
 
-import com.anubis.kt_extends.EExtendsKt;
 import com.anubis.module_webRTC.R;
 import com.anubis.module_webRTC.database.CoreDB;
 import com.anubis.module_webRTC.database.HistoryBean;

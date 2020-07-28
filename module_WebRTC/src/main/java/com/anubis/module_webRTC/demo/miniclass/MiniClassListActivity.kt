@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,13 +36,13 @@ import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.util.ArrayList
 
-class MiniClassListActivity : BaseActivity(), AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+class MiniClassListActivity : BaseActivity(), AdapterView.OnItemClickListener, androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
 
     private var vList: ListView? = null
     private var myListAdapter: MyListAdapter? = null
     private var mDatas: ArrayList<MiniClassInfo>? = null
     private var mInflater: LayoutInflater? = null
-    private var refreshLayout: SwipeRefreshLayout? = null
+    private var refreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.anubis.module_webRTC.R.layout.activity_mini_class_list)
@@ -50,7 +50,7 @@ class MiniClassListActivity : BaseActivity(), AdapterView.OnItemClickListener, S
         findViewById<View>(com.anubis.module_webRTC.R.id.title_left_btn).visibility = View.VISIBLE
         findViewById<View>(com.anubis.module_webRTC.R.id.title_left_btn).setOnClickListener { finish() }
         findViewById<View>(com.anubis.module_webRTC.R.id.create_btn).setOnClickListener { startActivity(Intent(this@MiniClassListActivity, MiniClassCreateActivity::class.java)) }
-        refreshLayout = findViewById<View>(com.anubis.module_webRTC.R.id.refresh_layout) as SwipeRefreshLayout
+        refreshLayout = findViewById<View>(com.anubis.module_webRTC.R.id.refresh_layout) as androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         //设置刷新时动画的颜色，可以设置4个
         refreshLayout!!.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light)
         refreshLayout!!.setOnRefreshListener(this)

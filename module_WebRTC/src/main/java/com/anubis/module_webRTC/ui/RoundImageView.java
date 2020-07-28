@@ -18,10 +18,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.util.AttributeSet;
 
-import com.anubis.module_webRTC.R;
 
-
-public class RoundImageView extends android.support.v7.widget.AppCompatImageView {
+public class RoundImageView extends androidx.appcompat.widget.AppCompatImageView {
     private int mBorderThickness = 0;
     private Context mContext;
     private int defaultColor = 0xFFFFFFFF;

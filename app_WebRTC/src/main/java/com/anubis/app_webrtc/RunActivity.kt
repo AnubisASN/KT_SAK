@@ -1,6 +1,6 @@
 package com.anubis.app_webrtc
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.anubis.kt_extends.eLog

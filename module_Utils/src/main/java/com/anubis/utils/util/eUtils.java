@@ -8,7 +8,7 @@ import android.app.Application.ActivityLifecycleCallbacks;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 import android.util.DisplayMetrics;
 
 import java.lang.reflect.Field;

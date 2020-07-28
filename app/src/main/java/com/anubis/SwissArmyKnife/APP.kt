@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Environment
-import android.support.multidex.MultiDex
+import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.kt_extends.eCrash
 import com.anubis.module_ftp.eDataFTP

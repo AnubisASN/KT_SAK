@@ -1,6 +1,6 @@
 package com.anubis.module_arcface.util.face;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.arcsoft.face.FaceFeature;
 

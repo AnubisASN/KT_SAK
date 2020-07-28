@@ -4,7 +4,7 @@ import android.annotation.TargetApi
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eJson

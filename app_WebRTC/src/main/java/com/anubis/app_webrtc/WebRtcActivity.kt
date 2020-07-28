@@ -1,7 +1,7 @@
 package com.anubis.app_webrtc
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import com.anubis.app_webrtc.APP.Companion.mAPP

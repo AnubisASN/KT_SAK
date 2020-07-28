@@ -16,7 +16,7 @@
 
 package com.anubis.module_tensorflow.detection
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ScrollView
 import android.graphics.Bitmap
@@ -30,7 +30,7 @@ import android.graphics.Typeface
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.Build
 import android.os.SystemClock
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.util.Size
 import android.util.TypedValue
 import android.view.View

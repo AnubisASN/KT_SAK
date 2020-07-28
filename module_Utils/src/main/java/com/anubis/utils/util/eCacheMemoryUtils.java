@@ -1,8 +1,8 @@
 package com.anubis.utils.util;
 
-import android.support.annotation.NonNull;
-import android.support.v4.util.LruCache;
-import android.support.v4.util.SimpleArrayMap;
+import androidx.annotation.NonNull;
+import androidx.collection.LruCache;
+import androidx.collection.SimpleArrayMap;
 
 import com.anubis.utils.constant.CacheConstants;
 

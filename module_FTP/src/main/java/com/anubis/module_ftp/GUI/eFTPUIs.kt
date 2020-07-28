@@ -42,7 +42,7 @@ import android.preference.PreferenceActivity
 import android.preference.PreferenceManager
 import android.preference.PreferenceScreen
 import android.preference.TwoStatePreference
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.text.util.Linkify
 import android.view.View
 import android.widget.BaseAdapter
