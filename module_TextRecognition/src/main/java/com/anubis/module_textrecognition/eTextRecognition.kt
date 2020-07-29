@@ -5,13 +5,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Environment
 import com.googlecode.tesseract.android.TessBaseAPI
-import android.os.Environment.getExternalStorageDirectory
-import com.anubis.kt_extends.eAssets.eAssetsToFile
-import com.anubis.kt_extends.eFile
+import com.anubis.kt_extends.eAssets
 import com.anubis.kt_extends.eShowTip
 import org.jetbrains.anko.custom.async
 import java.io.File
-import java.io.IOException
 
 
 /**
@@ -49,7 +46,7 @@ object eTextRecognition {
             mDialog?.setCanceledOnTouchOutside(false)
             mDialog?.show()
             async {
-                eAssetsToFile(context, "chi_sim.traineddata", tessdata + File.separator +
+                eAssets.eInit.eAssetsToFile(context, "chi_sim.traineddata", tessdata + File.separator +
                         language + ".traineddata")
                 context.eShowTip("训练文件复制完成")
             }
