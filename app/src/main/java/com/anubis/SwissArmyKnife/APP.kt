@@ -7,7 +7,6 @@ import android.os.Environment
 import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.kt_extends.eCrash
-import com.anubis.module_ftp.eDataFTP
 import com.tencent.bugly.crashreport.CrashReport
 import java.io.File
 
@@ -44,7 +43,7 @@ class APP : Application() {
         ARouter.openLog()
         ARouter.openDebug()
         ARouter.init(mInit)
-        eDataFTP.init(mInit!!, 3335, "anubis", "anubis")
+//        eDataFTP.init(mInit!!, 3335, "anubis", "anubis")
 //        createDir()
         eCrash()
     }

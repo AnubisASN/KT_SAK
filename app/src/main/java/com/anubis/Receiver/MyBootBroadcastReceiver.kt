@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.anubis.SwissArmyKnife.APP
-import com.anubis.SwissArmyKnife.MainActivity
 
 import com.anubis.kt_extends.*
 
@@ -26,7 +25,7 @@ import com.anubis.kt_extends.*
 class MyBootBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         eLog("接收到自启广播")
-        eBReceiver.eInit.eSetPowerBoot(context,intent, MainActivity::class.java)
+     //   eBReceiver.eInit.eSetPowerBoot(context,intent, MainActivity::class.java)
        eLog("\n接收到自启广播\n")
     }
 }

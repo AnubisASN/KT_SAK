@@ -17,4 +17,7 @@
         <item name="android:windowFullscreen">true</item>
         <!-- 全屏 -->
     </style>
+<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+<!--  Customize your theme here.  -->
+</style>
 </resources>

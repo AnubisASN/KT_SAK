@@ -28,11 +28,11 @@ class MainActivity : AppCompatActivity() {
         var bitmap:Bitmap?=null
         when (v.id) {
             button0.id -> {
-                  bitmap = eBitmap.eDrawableToBitmap(resources.getDrawable(R.drawable.m0))
+                  bitmap = eBitmap.eInit.eDrawableToBitmap(resources.getDrawable(R.drawable.m0))
 
             }
             button1.id -> {
-                bitmap = eBitmap.eDrawableToBitmap(resources.getDrawable(R.drawable.m1))
+                bitmap = eBitmap.eInit.eDrawableToBitmap(resources.getDrawable(R.drawable.m1))
             }
         }
         val bit=bitmap!!.copy(Bitmap.Config.ARGB_8888,true)

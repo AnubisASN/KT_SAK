@@ -20,6 +20,7 @@ import com.anubis.module_webRTC.demo.service.KeepLiveService
 import com.anubis.module_webRTC.demo.setting.SettingActivity
 import com.anubis.module_webRTC.demo.voip.VoipActivity
 import com.anubis.module_webRTC.eDataRTC
+import com.anubis.module_webRTC.utils.AEvent
 import com.starrtc.starrtcsdk.api.XHClient
 
 class WebRtcActivity : AppCompatActivity() {
@@ -111,6 +112,11 @@ class WebRtcActivity : AppCompatActivity() {
 
     }
 
+    fun logoutRTC() {
+        XHClient.getInstance().loginManager.logout()
+        AEvent.notifyListener(AEvent.AEVENT_LOGOUT, true, null)
+        MLOC.hasLogout = true
+    }
     fun startVoip(targetId: String, outTime: Long, cameraId: Int = 0) {
         val intent = Intent(this, VoipActivity::class.java)
         intent.putExtra("targetId", targetId)

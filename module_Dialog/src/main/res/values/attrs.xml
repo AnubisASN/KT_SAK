@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="eArrowDownloadButton">
+        <attr name="arcPaintColor" format="reference|color" />
+        <attr name="arrowPaintColor" format="reference|color" />
+        <attr name="smallPaintColor" format="reference|color"/>
+        <attr name="triPaintColor" format="reference|color"/>
+        <attr name="loadingPaintColor" format="reference|color"/>
+        <attr name="textPaintColor" format="reference|color"/>
+        <attr name="textPaintSize" format="dimension"/>
+    </declare-styleable>
+</resources>

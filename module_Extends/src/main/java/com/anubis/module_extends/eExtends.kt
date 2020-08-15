@@ -1,11 +1,8 @@
 package com.anubis.kt_extends
 
-import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
-import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
@@ -13,6 +10,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.res.AssetFileDescriptor
 import android.content.res.AssetManager
 import android.graphics.*
 import android.graphics.drawable.Drawable
@@ -30,20 +28,16 @@ import android.util.Base64
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
-import android.widget.Button
-import android.widget.TextView
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
-import com.anubis.module_extends.R
-import com.tencent.bugly.proguard.s
-import com.tencent.bugly.proguard.v
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.custom.async
-import org.jetbrains.anko.onClick
-import org.jetbrains.anko.textColor
 import org.json.JSONObject
 import java.io.*
 import java.lang.Process
@@ -61,8 +55,7 @@ import java.util.regex.Pattern
 import kotlin.Error
 import kotlin.collections.ArrayList
 import kotlin.experimental.and
-import kotlin.properties.Delegates
-import kotlinx.android.synthetic.main.sample_dia.view.*
+import org.jetbrains.anko.inputMethodManager
 
 /**
  * Author  ： AnubisASN   on 2018-07-23 9:12.
@@ -284,27 +277,48 @@ fun Bundle.eSetMessage(Sign: String, Message: Any) = when (Message) {
 }
 
 //音频播放
-var mp: MediaPlayer? = null
-
-fun ePlayVoice(context: Context, music: Any, isLoop: Boolean = false): Boolean {
+var eMediaPlayer: MediaPlayer? = null
+@RequiresApi(Build.VERSION_CODES.N)
+fun ePlayVoice(
+        context: Context,
+        music: Any,
+        isAsync: Boolean = false,
+        isLoop: Boolean = false
+): Boolean {
     try {
-        mp?.stop()
-        mp?.release()
+        eMediaPlayer?.release()
         when (music) {
-            is Int -> mp = MediaPlayer.create(context, music)//重新设置要播放的音频}
+            is Int -> eMediaPlayer = MediaPlayer.create(context, music)//重新设置要播放的音频}
             is String -> {
-                mp = MediaPlayer()
-                mp?.setDataSource(music)
-                mp?.prepareAsync()
+                eMediaPlayer = MediaPlayer()
+                eMediaPlayer?.setDataSource(music)
+                if (isAsync)
+                    eMediaPlayer?.prepareAsync()
+                else
+                    eMediaPlayer?.prepare()
+            }
+            is AssetFileDescriptor -> {
+                eMediaPlayer = MediaPlayer()
+                eMediaPlayer?.setDataSource(music)
+                if (isAsync)
+                    eMediaPlayer?.prepareAsync()
+                else
+                    eMediaPlayer?.prepare()
             }
         }
-        mp?.isLooping = isLoop
-        mp?.start()//开始播放
+        eMediaPlayer?.isLooping = isLoop
+        eMediaPlayer?.start()//开始播放
         return true
     } catch (e: Exception) {
         e.eLogE("ePlayVoice 错误")
         return false
     }
+}
+
+fun MediaPlayer.eClean() {
+    stop()
+    release()
+    eMediaPlayer = null
 }
 
 //PCM播放
@@ -447,162 +461,7 @@ class eBReceiver private constructor() {
     }
 }
 
-/**
- * Alert扩展类--------------------------------------------------------------------------------------
- */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-open class eDiaAlert internal constructor() {
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        private lateinit var mContext: Context
-        private var mICallBack: ICallBack? = null
-        private var mStyle by Delegates.notNull<Int>()
-        fun eInit(
-                context: Context,
-                style: Int = R.style.dialog,
-                ICallBack: ICallBack? = null
-        ): eDiaAlert {
-            mContext = context
-            mICallBack = ICallBack
-            mStyle = style
-            return eInit
-        }
 
-        private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eDiaAlert() }
-    }
-
-    open fun eShow(
-            title: String? = null,
-            body: String? = null,
-            foot: String? = null,
-            isShowOK: Boolean = true,
-            isShowCancel: Boolean = true,
-            isShowClose: Boolean = false,
-            isShowAVI: Boolean = false,
-            isDisableBack: Boolean = true,
-            gravity: Int = Gravity.CENTER,
-            x: Int = 0,
-            y: Int = 0,
-            alpha: Float = 0.9f,
-            dismissTime: Long = 100L,
-            ICallBack: ICallBack? = mICallBack
-    ): Dialog {
-        mICallBack = ICallBack
-        val dia = Dialog(mContext, mStyle)
-        with(dia) {
-            val view = LayoutInflater.from(mContext).inflate(R.layout.sample_dia, null)
-            setContentView(view)
-            setCanceledOnTouchOutside(false)
-            if (title == null)
-                view.dia_tvTitle.visibility = View.GONE
-            else
-                view.dia_tvTitle.text = title
-            if (body == null)
-                view.dia_tvBody.visibility = View.GONE
-            else
-                view.dia_tvBody.text = body
-            if (foot == null)
-                view.dia_tvFoot.visibility = View.GONE
-            else
-                view.dia_tvFoot.text = foot
-            if (isShowOK)
-                view.dia_btOk.onClick {
-                    onClickUI(it, dismissTime)
-                    Handler().postDelayed({
-                        mICallBack?.onClickOK(this, it) ?: dismiss()
-                    }, dismissTime)
-                }
-            else
-                view.dia_btOk.visibility = View.GONE
-            if (isShowCancel)
-                view.dia_btCancel.onClick {
-                    onClickUI(it, dismissTime)
-                    Handler().postDelayed({
-                        mICallBack?.onClickCancel(this, it) ?: dismiss()
-                    }, dismissTime)
-                }
-            else
-                view.dia_btCancel.visibility = View.GONE
-            if (isShowClose)
-                view.dia_ivClose.onClick {
-                    mICallBack?.onClickClose(this, it) ?: dismiss()
-
-                } else
-                view.dia_ivClose.visibility = View.GONE
-            if (isShowAVI)
-                view.dia_avi.visibility = View.VISIBLE
-            mICallBack?.editUI(this, view)
-            if (isDisableBack)
-                setOnKeyListener { _, keyCode, _ ->
-                    when (keyCode) {
-                        KeyEvent.KEYCODE_BACK -> return@setOnKeyListener true
-                        else -> return@setOnKeyListener false
-                    }
-                }
-            show()
-            val params = window.attributes
-            params.alpha = alpha
-            params.x = x
-            params.y = y
-            window.attributes = params
-            window.setGravity(gravity)
-
-        }
-        return dia
-    }
-
-    open fun eDIYShow(layout: Int, iCallBack: IDIYCallBack? = null, onClick: IDIYClickCallBack? = null, isDisableBack: Boolean = true): Dialog {
-        val dia = Dialog(mContext, mStyle)
-        with(dia) {
-            val view = LayoutInflater.from(mContext).inflate(layout, null)
-            setCanceledOnTouchOutside(false)
-            val params = window.attributes
-            window.setGravity(Gravity.CENTER)
-            params.alpha = 0.9f
-            window.attributes = params
-            if (isDisableBack)
-                setOnKeyListener { _, keyCode, _ ->
-                    when (keyCode) {
-                        KeyEvent.KEYCODE_BACK -> return@setOnKeyListener true
-                        else -> return@setOnKeyListener false
-                    }
-                }
-            iCallBack?.DIY(this, view, onClick)
-            setContentView(view)
-            show()
-
-        }
-        return dia
-    }
-
-    open fun onClickUI(it: View?, dismissTime: Long, block: () -> Unit = {}) {
-        with(it as? Button) {
-
-            this?.textColor = Color.parseColor("#ffffff")
-            this?.background = mContext.getDrawable(R.drawable.dia_btbackground1)
-            Handler().postDelayed({
-                this?.textColor = Color.parseColor("#25CEFB")
-                this?.background = mContext.getDrawable(R.drawable.dia_btbackground0)
-                block()
-            }, dismissTime)
-        }
-    }
-
-    interface ICallBack {
-        fun editUI(dia: Dialog, view: View)
-        fun onClickOK(dia: Dialog, it: View?)
-        fun onClickCancel(dia: Dialog, it: View?)
-        fun onClickClose(dia: Dialog, it: View?)
-    }
-
-    interface IDIYCallBack {
-        fun DIY(dia: Dialog, view: View, onClick: IDIYClickCallBack?)
-    }
-
-    interface IDIYClickCallBack {
-        fun onClick(view: View, it: View?)
-    }
-}
 
 /**
  * App程序扩展类--------------------------------------------------------------------------------------
@@ -611,20 +470,26 @@ class eApp private constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eApp() }
     }
-    //清除栈重启
-    fun Activity.eTaskCleanAndRestart() {
-        finish()
-        val intent = intent
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        overridePendingTransition(0, 0)
-    }
-    //APK安装
-    fun eInstallApkFile(context: Context, filePath: String,authority:String="com.anubis.module_extends") {
-        eInstallApkFile(context, File(filePath),authority)
+
+    fun Context.es(et:EditText) {
+        inputMethodManager.hideSoftInputFromWindow(et.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
-    fun eInstallApkFile(context: Context, file: File,authority:String) {
+    //清除栈重启
+    fun eTaskCleanAndRestart(activity: Activity) {
+        activity.finish()
+        val intent = activity.intent
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        activity.startActivity(intent)
+        activity.overridePendingTransition(0, 0)
+    }
+
+    //APK安装
+    fun eInstallApkFile(context: Context, filePath: String, authority: String = "com.anubis.module_extends") {
+        eInstallApkFile(context, File(filePath), authority)
+    }
+
+    fun eInstallApkFile(context: Context, file: File, authority: String) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -848,6 +713,7 @@ class eApp private constructor() {
         }
         return packageInfo != null
     }
+
     //首选Summary项动态改变
     //sSummaryDynamicSetting(findPreference("root_screen") as PreferenceScreen)
     //Summary修改
@@ -875,12 +741,14 @@ open class eRegex internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eRegex() }
     }
+
     //自定义正则
     fun eRegex(str: String, regEx: String = "[^0-9.]"): String {
         val p = Pattern.compile(regEx)
         val m = p.matcher(str)
         return (m.replaceAll("").trim { it <= ' ' })
     }
+
     //获取数字
     open fun eGetNumber(str: String): Int {
         val regEx = "[^0-9]"
@@ -1073,9 +941,9 @@ open class eNetWork internal constructor() {
             val exitValue = ipProcess.waitFor()
             return exitValue == 0
         } catch (e: IOException) {
-            e.printStackTrace()
+            e.eLogE("eIsNetworkOnline")
         } catch (e: InterruptedException) {
-            e.printStackTrace()
+            e.eLogE("eIsNetworkOnline")
         }
         return false
     }
@@ -1230,13 +1098,15 @@ open class eAssets internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eAssets() }
     }
+
     //获取attr
-    fun eGetAttr(context:Context,id: Int): Int {
+    fun eGetAttr(context: Context, id: Int): Int {
         return with(TypedValue()) {
             context.theme.resolveAttribute(id, this, true)
             data
         }
     }
+
     //assets文件复制 文件夹路径
     open fun eAssetsToFile(context: Context, assetsFilePath: String, copyFilePath: String): Boolean {
         try {
@@ -2217,6 +2087,7 @@ open class ePermissions internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { ePermissions() }
     }
+
     //系统安装权限
     open fun eSetInstallPermissions(context: Context): Boolean {
         var str = false
@@ -2233,6 +2104,7 @@ open class ePermissions internal constructor() {
         }
         return str
     }
+
     //系统设置修改权限
     open fun eSetSystemPermissions(context: Context): Boolean {
         var str = false

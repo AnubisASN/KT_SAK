@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.usb.UsbManager
 import com.anubis.SwissArmyKnife.APP
-import com.anubis.SwissArmyKnife.MainActivity
 
 import com.anubis.kt_extends.*
 

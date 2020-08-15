@@ -1,5 +1,6 @@
 package com.anubis.app_piceker
 
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
@@ -10,10 +11,16 @@ import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eTime
+import com.anubis.module_dialog.View.eArrowDownloadButton
+import com.anubis.module_dialog.eDiaAlert
 import com.anubis.module_picker.ePicker
 import com.anubis.module_picker.eTimePicker
 import com.guoxiaoxing.phoenix.core.model.MediaEntity
 import kotlinx.android.synthetic.main.picker.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.jetbrains.anko.custom.onUiThread
 import org.jetbrains.anko.imageBitmap
 
 @Route(path = "/app/piceker")
@@ -32,12 +39,24 @@ class PicekerActivity : AppCompatActivity() {
 
     fun onClick(v: View) {
         when (v.id) {
-            picker_btPX.id ->ePicker.eInit.eImageStart(this@PicekerActivity)
+            picker_btPX.id -> ePicker.eInit.eImageStart(this@PicekerActivity)
 
-            picker_btFile.id ->ePicker.eInit.eFileStart(this@PicekerActivity)
+            picker_btFile.id -> ePicker.eInit.eFileStart(this@PicekerActivity)
 
-            picker_btTime.id ->timeSelector?.eShowTimeSelect("2000-01-01 00:00")
-
+            picker_btTime.id -> timeSelector?.eShowTimeSelect("2000-01-01 00:00")
+            imageView.id -> eDiaAlert.eInit(this).eDefaultShow { dialog: Dialog, view: View ->
+                with(view.findViewById<eArrowDownloadButton>(R.id.dia_adb)) {
+                    startAnimating()
+                    GlobalScope.launch {
+                        for (i in 0..100) {
+                           delay(200)
+                            onUiThread {
+                                progress = i.toFloat()
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -51,7 +70,7 @@ class PicekerActivity : AppCompatActivity() {
                     val bitmap = BitmapFactory.decodeFile(data.localPath)
                     imageView.imageBitmap = bitmap
                 }
-                ePicker.eInit.FILE_REQUEST_CODE-> for (batch in datas)
+                ePicker.eInit.FILE_REQUEST_CODE -> for (batch in datas)
                     Hint("batch :$batch}")
             }
         }

@@ -3,7 +3,6 @@ package readsense.face.Receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.anubis.SwissArmyKnife.MainActivity
 
 import com.anubis.kt_extends.*
 import java.io.File
@@ -28,6 +27,6 @@ class MyUpdateBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         eLog("接收到更新广播")
         File("/sdcard/img/info/face.apk").delete()
-        eBReceiver.eInit.eSetAPPUpdateBoot(context,intent, MainActivity::class.java)
+     //   eBReceiver.eInit.eSetAPPUpdateBoot(context,intent, MainActivity::class.java)
     }
 }

@@ -9,7 +9,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eImage
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
-import com.anubis.module_arcface.eArcFace
 import kotlinx.android.synthetic.main.main_preview.*
 import org.jetbrains.anko.textColor
 
@@ -35,19 +34,19 @@ class ArcFace : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_preview)
-        var camera: eArcFace? = null
-        try {
-            camera = eArcFace.init(this, findViewById(R.id.texture_preview), findViewById(R.id.face_rect_view))
-        } catch (e: Exception) {
-            e.eLogE("ArcFace")
-        }
-        mRunnable = Runnable {
-            camera!!.mIsState = true
-            if (camera.mBitmap != null) {
-                imageView0.setImageBitmap(camera.mBitmap!!)
-            }
-            Handler().postDelayed(mRunnable, 1000)
-        }
+//        var camera: eArcFace? = null
+//        try {
+//            camera = eArcFace.init(this, findViewById(R.id.texture_preview), findViewById(R.id.face_rect_view))
+//        } catch (e: Exception) {
+//            e.eLogE("ArcFace")
+//        }
+//        mRunnable = Runnable {
+//            camera!!.mIsState = true
+//            if (camera.mBitmap != null) {
+//                imageView0.setImageBitmap(camera.mBitmap!!)
+//            }
+//            Handler().postDelayed(mRunnable, 1000)
+//        }
         Handler().postDelayed(mRunnable, 1000)
     }
 

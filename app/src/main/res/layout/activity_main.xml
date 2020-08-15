@@ -34,6 +34,5 @@
         android:id="@+id/iv_Hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/bdspeech_btn_normal"
         android:visibility="gone"/>
 </LinearLayout>

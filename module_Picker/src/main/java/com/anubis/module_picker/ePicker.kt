@@ -1,16 +1,13 @@
 package com.anubis.module_picker
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
 import com.guoxiaoxing.phoenix.core.PhoenixOption
 import com.guoxiaoxing.phoenix.core.model.MimeType
 import com.guoxiaoxing.phoenix.picker.Phoenix
 import me.rosuh.filepicker.config.FilePickerConfig
 import me.rosuh.filepicker.config.FilePickerManager
-import me.rosuh.filepicker.config.FilePickerManager.REQUEST_CODE
 
 /**
  * Author  ： AnubisASN   on 19-6-29 下午4:13.
@@ -27,7 +24,7 @@ import me.rosuh.filepicker.config.FilePickerManager.REQUEST_CODE
  *Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  *Router :  /'Module'/'Function'
  */
-class ePicker private constructor() {
+open class ePicker internal constructor() {
     var IMAGE_REQUEST_CODE = 101
     var FILE_REQUEST_CODE = 102
 
@@ -44,24 +41,30 @@ class ePicker private constructor() {
      * @param phoenix: PhoenixOption = Phoenix.with();默认初始化与主动初始化
      * @return: void
      */
-    fun eImageStart(activity: Activity, REQUEST_CODE: Int = IMAGE_REQUEST_CODE, Type: Int = PhoenixOption.TYPE_PICK_MEDIA, phoenix: PhoenixOption = Phoenix.with()) {
-        phoenix.theme(PhoenixOption.THEME_BLUE)// 主题
-                .fileType(MimeType.ofImage())//显示的文件类型图片、视频、图片和视频
-                .maxPickNumber(3)// 最大选择数量
-                .minPickNumber(0)// 最小选择数量
-                .spanCount(4)// 每行显示个数
-                .enablePreview(false)// 是否开启预览
-                .enableCamera(true)// 是否开启拍照
-                .enableAnimation(true)// 选择界面图片点击效果
-                .enableCompress(false)// 是否开启压缩
-                .compressPictureFilterSize(1024)//多少kb以下的图片不压缩
-                .compressVideoFilterSize(2018)//多少kb以下的视频不压缩
-                .thumbnailHeight(160)// 选择界面图片高度
-                .thumbnailWidth(160)// 选择界面图片宽度
-                .enableClickSound(false)// 是否开启点击声音
-                .videoFilterTime(0)//显示多少秒以内的视频
-                .mediaFilterSize(10000)//显示多少kb以下的图片/视频，默认为0，表示不限制
-                .start(activity, Type, REQUEST_CODE)
+    open fun eImageStart(activity: Activity, REQUEST_CODE: Int = IMAGE_REQUEST_CODE, Type: Int = PhoenixOption.TYPE_PICK_MEDIA, phoenix: PhoenixOption? = null,block:(PhoenixOption)->Unit={}) {
+        var tPhoenix =phoenix
+        if (tPhoenix == null) {
+              tPhoenix = Phoenix.with()
+            tPhoenix.theme(PhoenixOption.THEME_BLUE)// 主题
+                    .fileType(MimeType.ofImage())//显示的文件类型图片、视频、图片和视频
+                    .maxPickNumber(3)// 最大选择数量
+                    .minPickNumber(0)// 最小选择数量
+                    .spanCount(4)// 每行显示个数
+                    .enablePreview(false)// 是否开启预览
+                    .previewEggs(true)
+                    .enableCamera(true)// 是否开启拍照
+                    .enableAnimation(true)// 选择界面图片点击效果
+                    .enableCompress(false)// 是否开启压缩
+                    .compressPictureFilterSize(1024)//多少kb以下的图片不压缩
+                    .compressVideoFilterSize(2018)//多少kb以下的视频不压缩
+                    .thumbnailHeight(160)// 选择界面图片高度
+                    .thumbnailWidth(160)// 选择界面图片宽度
+                    .enableClickSound(false)// 是否开启点击声音
+                    .videoFilterTime(0)//显示多少秒以内的视频
+                    .mediaFilterSize(10000)//显示多少kb以下的图片/视频，默认为0，表示不限制
+        }
+        block(tPhoenix!!)
+        tPhoenix.start(activity, Type, REQUEST_CODE)
         IMAGE_REQUEST_CODE = REQUEST_CODE
     }
 
@@ -91,7 +94,7 @@ class ePicker private constructor() {
     fun eResult(activity: Activity, requestCode: Int, resultCode: Int, data: Intent?) = if (resultCode === Activity.RESULT_OK) {
         when (requestCode) {
             IMAGE_REQUEST_CODE -> Phoenix.result(data)
-            FILE_REQUEST_CODE ->FilePickerManager.obtainData()
+            FILE_REQUEST_CODE -> FilePickerManager.obtainData()
             else -> null
         }
     } else {

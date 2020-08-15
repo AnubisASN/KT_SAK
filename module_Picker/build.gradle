@@ -28,8 +28,6 @@ dependencies {
     api 'me.rosuh:AndroidFilePicker:0.4.3'
     //图片选择器
     api 'com.github.guoxiaoxing:phoenix:1.0.15'
-    //ImagePicker
-    api 'com.lzy.widget:imagepicker:0.6.1'
     //选填 - 图片压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()
 //    api 'com.github.guoxiaoxing.phoenix:phoenix-compress-picture:0.0.11'
     //选填 - 视频压缩，开启功能：Phoenix.with().enableCompress(true)，获取结果：MediaEntity.getCompressPath()

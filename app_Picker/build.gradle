@@ -45,4 +45,5 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api project(':module_Extends')
     api project(':module_Picker')
+    implementation project(path: ':module_Dialog')
 }
