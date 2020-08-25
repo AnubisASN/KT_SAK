@@ -24,7 +24,7 @@ import com.anubis.kt_extends.*
 class MyBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         eLog("接收到广播")
-      //  eBReceiver.eInit.eSetPowerBoot(context,intent,MainActivity::class.java)
-       // eBReceiver.eInit.eSetAPPUpdateBoot(context,intent,MainActivity::class.java)
+        eBReceiver.eInit.eSetPowerBoot(context,intent,MainActivity::class.java)
+        eBReceiver.eInit.eSetAPPUpdateBoot(context,intent,MainActivity::class.java)
     }
 }

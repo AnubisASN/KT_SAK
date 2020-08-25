@@ -4,8 +4,15 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Handler
 import android.os.Message
+import com.anubis.SwissArmyKnife.MainActivity.Companion.mainActivity
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
+import com.anubis.module_asrw.eASRW
+import com.anubis.module_asrw.recognization.IStatus
+import com.anubis.module_asrw.recognization.PidBuilder
+import com.anubis.module_tcp.eTCP
+import com.baidu.speech.asr.SpeechConstant
+import com.huashi.otg.sdk.HandlerMsg
 import java.util.LinkedHashMap
 
 /**
@@ -26,7 +33,7 @@ import java.util.LinkedHashMap
  */
 @SuppressLint("StaticFieldLeak")
 object ParameHandleMSG {
-   // var mainActivity: MainActivity? = null
+    var mainActivity: MainActivity? = null
     var state = true
     val handleMsg = @SuppressLint("HandlerLeak")
     object : Handler() {
@@ -88,7 +95,7 @@ object ParameHandleMSG {
     private val MSG_TYPE_TTS = 33
     private val MSG_STATE_TTS_SPEAK_OVER = 0
     private val MSG_STATE_TTS_SPEAK_START = 1
-//    var asrw: eASRW? = null
+    var asrw: eASRW? = null
     private fun handleMsg(msg: Message) {
         if (msg.what == 5000) {
             if (msg.arg1 == 5000) {
@@ -100,7 +107,7 @@ object ParameHandleMSG {
         }
 
 
-   /*     if (msg.what == IStatus.STATUS_WAKEUP_SUCCESS) {
+        if (msg.what == IStatus.STATUS_WAKEUP_SUCCESS) {
             mainActivity!!.Hint("语音唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
             eLog("语音唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
             mainActivity!!.eShowTip("语音唤醒成功")
@@ -115,8 +122,8 @@ object ParameHandleMSG {
             }
             asrw?.myRecognizer?.cancel()
             asrw?.myRecognizer?.start(params)
-        }*/
-  /*      when (msg.what) {
+        }
+        when (msg.what) {
             0 -> {
                 //唤醒成功
                 mainActivity!!.Hint("唤醒成功:--arg1:${msg.arg1}--arg2:${msg.arg2}--what:${msg.what}--obj:${msg.obj}")
@@ -152,7 +159,7 @@ object ParameHandleMSG {
                 }
 
             }
-        }*/
+        }
     }
 
     private fun handleOtg(msg: Message) {
@@ -160,7 +167,7 @@ object ParameHandleMSG {
             eLog(msg.obj)
         }
         //第一次授权时候的判断是利用handler判断，授权过后就不用这个判断了
-     /*   if (msg.what == HandlerMsg.CONNECT_SUCCESS) {
+        if (msg.what == HandlerMsg.CONNECT_SUCCESS) {
             eLog("msg连接成功---${msg.obj}")
         }
         if (msg.what == HandlerMsg.CONNECT_ERROR) {
@@ -174,7 +181,7 @@ object ParameHandleMSG {
         if (msg.what == HandlerMsg.READ_SUCCESS) {
             eLog("msg读卡成功")
             eLog("读卡成功：" + msg.obj)
-        }*/
+        }
     }
 
     private fun handleProt(msg: Message) {
@@ -189,45 +196,45 @@ object ParameHandleMSG {
     }
 
     private fun handleTCP(msg: Message) {
-     //   mainActivity?.Hint("TCP:${msg.obj}")
-//        val reMsg = msg.obj as eTCP.receiveMSG
-//        when (reMsg.code) {
-////                val HANDLER_FAILURE_CODE = -1  //连接失败
-//            eTCP.HANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.ip}：${reMsg.msg}  连接失败")
-////                val HANDLER_ERROR_CODE = -2   //连接错误
-//            eTCP.HANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.ip}：${reMsg.msg}  连接错误")
-////                val HANDLER_CLOSE_CODE = 0     //关闭连接
-//            eTCP.HANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.ip}：${reMsg.msg}  连接关闭")
-////                val HANDLER_CONNECT_CODE = 1  //连接成功
-//            eTCP.HANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.ip}：${reMsg.msg}  连接成功")
-////                val HANDLER_MSG_CODE = 2    //接收消息
-//            eTCP.HANDLER_MSG_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.ip}：接收到 ${reMsg.msg}")
-//
-////                val SHANDLER_FAILURE_CODE = -11  //创建失败
-////            eTCP.SHANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建失败")
-//////                val SHANDLER_ERROR_CODE = -22   //创建错误
-////            eTCP.SHANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建错误")
-//////                val SHANDLER_CLOSE_CODE = -33     //连接关闭
-////            eTCP.SHANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  连接关闭")
-//////                val SHANDLER_SUCCEED_CODE = 33     //创建成功
-////            eTCP.SHANDLER_SUCCEED_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建成功")
-//////                val SHANDLER_CONNECT_CODE = 11  //连接成功
-////            eTCP.SHANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  连接成功")
-//////                val SHANDLER_MSG_CODE = 22    //接收消息
-////            eTCP.SHANDLER_MSG_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：接收到${obj.msg}")
-//        }
+        mainActivity?.Hint("TCP:${msg.obj}")
+        val reMsg = msg.obj as eTCP.receiveMSG
+        when (reMsg.code) {
+//                val HANDLER_FAILURE_CODE = -1  //连接失败
+            eTCP.eInit.HANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.address}：${reMsg.msg}  连接失败")
+//                val HANDLER_ERROR_CODE = -2   //连接错误
+            eTCP.eInit.HANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.address}：${reMsg.msg}  连接错误")
+//                val HANDLER_CLOSE_CODE = 0     //关闭连接
+            eTCP.eInit.HANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.address}：${reMsg.msg}  连接关闭")
+//                val HANDLER_CONNECT_CODE = 1  //连接成功
+            eTCP.eInit.HANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.address}：${reMsg.msg}  连接成功")
+//                val HANDLER_MSG_CODE = 2    //接收消息
+            eTCP.eInit.HANDLER_MSG_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.address}：接收到 ${reMsg.msg}")
+
+//                val SHANDLER_FAILURE_CODE = -11  //创建失败
+            eTCP.eInit.SHANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：${reMsg.msg}  创建失败")
+//                val SHANDLER_ERROR_CODE = -22   //创建错误
+            eTCP.eInit.SHANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：${reMsg.msg}  创建错误")
+//                val SHANDLER_CLOSE_CODE = -33     //连接关闭
+            eTCP.eInit.SHANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：${reMsg.msg}  连接关闭")
+//                val SHANDLER_SUCCEED_CODE = 33     //创建成功
+            eTCP.eInit.SHANDLER_SUCCEED_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：${reMsg.msg}  创建成功")
+//                val SHANDLER_CONNECT_CODE = 11  //连接成功
+            eTCP.eInit.SHANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：${reMsg.msg}  连接成功")
+//                val SHANDLER_MSG_CODE = 22    //接收消息
+            eTCP.eInit.SHANDLER_MSG_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：接收到${reMsg.msg}")
+        }
     }
 
     private fun handleWeb(msg: Message) {
-     //   mainActivity?.Hint("Web:${msg.obj}")
+        mainActivity?.Hint("Web:${msg.obj}")
     }
 
     private fun handleUSB(msg: Message) {
         when (msg.what) {
             1 -> {
-        //        mainActivity!!.eShowTip("USB连接")
+                mainActivity!!.eShowTip("USB连接")
             }
-       //     0 -> mainActivity!!.eShowTip("USB断开")
+            0 -> mainActivity!!.eShowTip("USB断开")
         }
     }
 }

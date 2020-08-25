@@ -195,13 +195,13 @@ open class eTCP internal  constructor(){
                         val Json = if (condition == null) receiveData else
                             condition.callCondition(receiveData)
                         val msg = Message()
-                        msg.obj = eTCP.receiveMSG("$ip:$port", if (hashMap == eClientHashMap) HANDLER_MSG_CODE else SHANDLER_MSG_CODE, Json)
+                        msg.obj = receiveMSG("$ip:$port", if (hashMap == eClientHashMap) HANDLER_MSG_CODE else SHANDLER_MSG_CODE, Json)
                         tcpHandler.sendMessage(msg)
                     }
                 } catch (e: StringIndexOutOfBoundsException) {
-                    msg.obj = eTCP.receiveMSG("$ip:$port", if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, "eSocketReceive-StringIndexOutOfBoundsException")
+                    msg.obj = receiveMSG("$ip:$port", if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, "eSocketReceive-StringIndexOutOfBoundsException")
                 } catch (e: Exception) {
-                    msg.obj = eTCP.receiveMSG("$ip:$port", if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, "eSocketReceive-Exception")
+                    msg.obj = receiveMSG("$ip:$port", if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE, "eSocketReceive-Exception")
                 } finally {
                     hashMap[ip] = null
                     tcpHandler.sendMessage(msg)
@@ -295,28 +295,28 @@ open class eTCP internal  constructor(){
 //    val obj = msg.obj as eTCP.receiveMSG
 //    when (obj.code) {
 ////                val HANDLER_FAILURE_CODE = -1  //连接失败
-//        eTCP.HANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接失败")
+//        eTCP.eInit.HANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接失败")
 ////                val HANDLER_ERROR_CODE = -2   //连接错误
-//        eTCP.HANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接错误")
+//        eTCP.eInit.HANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接错误")
 ////                val HANDLER_CLOSE_CODE = 0     //关闭连接
-//        eTCP.HANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接关闭")
+//        eTCP.eInit.HANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接关闭")
 ////                val HANDLER_CONNECT_CODE = 1  //连接成功
-//        eTCP.HANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接成功")
+//        eTCP.eInit.HANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：${obj.msg}  连接成功")
 ////                val HANDLER_MSG_CODE = 2    //接收消息
-//        eTCP.HANDLER_MSG_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：接收到 ${obj.msg}")
+//        eTCP.eInit.HANDLER_MSG_CODE -> mainActivity!!.Hint("TCP客户端-${obj.ip}：接收到 ${obj.msg}")
 //
 ////                val SHANDLER_FAILURE_CODE = -11  //创建失败
-//        eTCP.SHANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建失败")
+//        eTCP.eInit.SHANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建失败")
 ////                val SHANDLER_ERROR_CODE = -22   //创建错误
-//        eTCP.SHANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建错误")
+//        eTCP.eInit.SHANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建错误")
 ////                val SHANDLER_CLOSE_CODE = -33     //连接关闭
-//        eTCP.SHANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  连接关闭")
+//        eTCP.eInit.SHANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  连接关闭")
 ////                val SHANDLER_SUCCEED_CODE = 33     //创建成功
-//        eTCP.SHANDLER_SUCCEED_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建成功")
+//        eTCP.eInit.SHANDLER_SUCCEED_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  创建成功")
 ////                val SHANDLER_CONNECT_CODE = 11  //连接成功
-//        eTCP.SHANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  连接成功")
+//        eTCP.eInit.SHANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：${obj.msg}  连接成功")
 ////                val SHANDLER_MSG_CODE = 22    //接收消息
-//        eTCP.SHANDLER_MSG_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：接收到${obj.msg}")
+//        eTCP.eInit.SHANDLER_MSG_CODE -> mainActivity!!.Hint("TCP服务端-${obj.ip}：接收到${obj.msg}")
 //    }
 //}
 

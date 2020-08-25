@@ -262,7 +262,6 @@ fun <T> Context.eGetDefaultSharedPreferences(key: String, value: T, sharedPref: 
 //Intent Get传递扩展
 fun Intent.eGetMessage(Sign: String): String = getStringExtra(Sign)
 
-
 fun Bundle.eSetMessage(Sign: String, Message: Any) = when (Message) {
     is String -> putString(Sign, Message)
     is Int -> putInt(Sign, Message)
@@ -272,8 +271,7 @@ fun Bundle.eSetMessage(Sign: String, Message: Any) = when (Message) {
     is Byte -> putByte(Sign, Message)
     is ArrayList<*> -> putStringArrayList(Sign, Message as ArrayList<String>)
     is IntArray -> putIntArray(Sign, Message)
-    else -> {
-    }
+    else -> {}
 }
 
 //音频播放
