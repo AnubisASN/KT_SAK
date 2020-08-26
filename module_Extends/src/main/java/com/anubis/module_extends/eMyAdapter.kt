@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.anubis.kt_extends.eLogE
 import org.jetbrains.anko.onClick
+import org.jetbrains.anko.onLongClick
 
 /**
  * Author  ： AnubisASN   on 20-7-30 上午9:26.
@@ -28,8 +29,9 @@ class eMyAdapter<T>(
         val mActivity: Context,
         val layoutId: Int,
         val mDatas: ArrayList<T>,
-        val itemBlock: (data: T, position: Int) -> Unit = { _, _ -> },
-        val block: (itemView: View, position: Int) -> Unit = { _, _ -> }
+        val itemEditBlock: (data: T, position: Int) -> Unit,
+        val longClickBlock: ((itemView: View, position: Int) -> Unit)? = null,
+        val clickBlock: ((itemView: View, position: Int) -> Unit)? = null
 ) : RecyclerView.Adapter<eMyAdapter<T>.MyHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         val view = LayoutInflater.from(mActivity).inflate(layoutId, parent, false)
@@ -52,9 +54,20 @@ class eMyAdapter<T>(
     inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun setData(data: T, position: Int) {
             try {
-                itemBlock(data,position)
-                itemView.onClick {
-                    block(itemView, position)
+                itemEditBlock(data, position)
+                itemView.onLongClick {
+                    return@onLongClick true
+                }
+                longClickBlock?.let {lcb->
+                    itemView.onLongClick {
+                        lcb(itemView, position)
+                        return@onLongClick  true
+                    }
+                }
+                clickBlock?.let {cb->
+                    itemView.onClick {
+                        cb(itemView, position)
+                    }
                 }
             } catch (e: Exception) {
                 e.eLogE("MyHolder")

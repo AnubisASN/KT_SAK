@@ -1034,6 +1034,22 @@ open class eDevice internal constructor() {
         }
         return hostIp
     }
+
+    /**震动器
+     * @param patter;patter[0]表示静止的时间，patter[1]代表的是震动的时间 类推
+     * @param repeat;0循环 -1不循环
+     */
+    fun Context.eVibrator(
+            isRepeat: Boolean = false,
+            patter: LongArray = longArrayOf(0, 1000)
+    ): Vibrator {
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vibrator.vibrate(patter, if (isRepeat) 0 else -1)
+        return vibrator
+    }
+    fun Vibrator.eClean() {
+        cancel()
+    }
 }
 
 /**
