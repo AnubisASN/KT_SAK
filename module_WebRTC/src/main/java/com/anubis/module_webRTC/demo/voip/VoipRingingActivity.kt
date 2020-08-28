@@ -4,11 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import com.anubis.kt_extends.eGetSystemSharedPreferences
+import com.anubis.kt_extends.eLog
 
 import com.anubis.module_webRTC.R
 import com.anubis.module_webRTC.demo.BaseActivity
@@ -22,13 +26,13 @@ import com.anubis.module_webRTC.utils.DensityUtils
 import com.starrtc.starrtcsdk.api.XHClient
 import com.starrtc.starrtcsdk.apiInterface.IXHResultCallback
 import kotlinx.android.synthetic.main.activity_voip_ringing.*
+import org.jetbrains.anko.inputMethodManager
 
 import java.text.SimpleDateFormat
 
 class VoipRingingActivity : BaseActivity(), View.OnClickListener {
-
+    private var status = false
     private var targetId: String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -56,6 +60,7 @@ class VoipRingingActivity : BaseActivity(), View.OnClickListener {
         if (this.eGetSystemSharedPreferences<Boolean>("isAutoAnswer", false, getSharedPreferences(this.packageName, Context.MODE_PRIVATE))) {
             onClick(ring_pickup)
         }
+
     }
 
     fun addListener() {
@@ -113,4 +118,6 @@ class VoipRingingActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
+
+
 }

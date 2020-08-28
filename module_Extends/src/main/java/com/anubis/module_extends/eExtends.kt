@@ -21,18 +21,25 @@ import android.net.Uri
 import android.os.*
 import android.preference.*
 import android.provider.Settings
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.TextPaint
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.text.TextUtils.indexOf
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Base64
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
+import com.tencent.bugly.proguard.v
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -127,7 +134,7 @@ fun eErrorOut(e: Any?): String? {
 }
 
 
-fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "${eTime.eInit.eGetCurrentTime("yyyy-MM-dd")}.log", parame: String = "-v long AndroidRuntime:E *:S TAG:E TAG:I *E") = async {
+fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "${eTime.eInit.eGetTime("yyyy-MM-dd")}.log", parame: String = "-v long AndroidRuntime:E *:S TAG:E TAG:I *E") = async {
     if (!File(savePath).exists()) {
         File(savePath).mkdirs()
     }
@@ -156,7 +163,7 @@ fun Application.eCrash(saveFile: File = File("${Environment.getExternalStorageDi
     Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
         //获取崩溃时的UNIX时间戳
         //将时间戳转换成人类能看懂的格式，建立一个String拼接器
-        val stringBuilder = StringBuilder(eTime.eInit.eGetCurrentTime("yyyy/MM/dd HH:mm:ss"))
+        val stringBuilder = StringBuilder(eTime.eInit.eGetTime("yyyy/MM/dd HH:mm:ss"))
         stringBuilder.append(":\n")
         //获取错误信息退票手续费
         stringBuilder.append(throwable.message)
@@ -175,6 +182,50 @@ fun Application.eCrash(saveFile: File = File("${Environment.getExternalStorageDi
     }
 }
 
+fun TextView.eSpannableTextView(str: String, startAndEndIndexArray: Array<Pair<Int, Int>>? = arrayOf(Pair(0, 0)), colorArray: Array<Int>? = arrayOf(Color.RED), clickBlockArray: Array<() -> Unit>? = null) {
+    if (str.isEmpty())
+        return
+    text = ""
+    var startIndex = 0
+    //这个一定要记得设置，不然点击不生效
+    movementMethod = LinkMovementMethod.getInstance()
+    startAndEndIndexArray?.forEachIndexed { index, pair ->
+        var subStr = ""
+        try {
+            subStr = str.substring(startIndex, if (index + 1 == startAndEndIndexArray.size) str.length else pair.second).eLog("substring")
+            val ssb = SpannableStringBuilder(subStr)
+            ssb.setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    clickBlockArray?.let {
+                        if (index > it.size - 1) {
+                            it.last()()
+                        } else {
+                            it[index]()
+                        }
+                    }
+                }
+
+                override fun updateDrawState(ds: TextPaint) {
+                    colorArray?.let {
+                        if (index > it.size - 1) {
+                            ds.color = it.last()
+                        } else {
+                            ds.color = it[index]
+                        }
+                    }
+                }
+            }, pair.first - startIndex, pair.second - startIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            append(ssb)
+            startIndex = pair.second
+        } catch (e: IndexOutOfBoundsException) {
+            append(subStr)
+            return@forEachIndexed
+        } catch (e: Exception) {
+            e.eLogE("eSpannableTextView")
+            return@forEachIndexed
+        }
+    }
+}
 
 /**
  * SharedPreferences数据文件存储扩展-------------------------------------------------------------------
@@ -271,11 +322,13 @@ fun Bundle.eSetMessage(Sign: String, Message: Any) = when (Message) {
     is Byte -> putByte(Sign, Message)
     is ArrayList<*> -> putStringArrayList(Sign, Message as ArrayList<String>)
     is IntArray -> putIntArray(Sign, Message)
-    else -> {}
+    else -> {
+    }
 }
 
 //音频播放
 var eMediaPlayer: MediaPlayer? = null
+
 @RequiresApi(Build.VERSION_CODES.N)
 fun ePlayVoice(
         context: Context,
@@ -460,7 +513,6 @@ class eBReceiver private constructor() {
 }
 
 
-
 /**
  * App程序扩展类--------------------------------------------------------------------------------------
  */
@@ -469,7 +521,7 @@ class eApp private constructor() {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eApp() }
     }
 
-    fun Context.es(et:EditText) {
+    fun Context.es(et: EditText) {
         inputMethodManager.hideSoftInputFromWindow(et.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
@@ -511,6 +563,9 @@ class eApp private constructor() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
+
+    //输入法隐藏
+    fun Context.eInputHide(editText: EditText) = inputMethodManager.hideSoftInputFromWindow(editText.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
     //通过APK地址获取此APP的包名和版本等信息
     open fun eGetApkInfo(context: Context, apkPath: String): Array<String?> {
@@ -880,13 +935,26 @@ open class eTime internal constructor() {
     }
 
     //获取当前时间   (yyyy-MM-dd HH:mm:ss)
-    open fun eGetCurrentTime(format: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(format).format(Date())
+    fun eGetTime(format: String = "yyyy-MM-dd HH:mm:ss", distanceDay: Int = 0): String {
+        val dft = SimpleDateFormat(format)
+        val beginDate = Date()
+        val date = Calendar.getInstance()
+        date.setTime(beginDate)
+        date.set(Calendar.DATE, date.get(Calendar.DATE) + distanceDay)
+        var endDate: Date? = null
+        try {
+            endDate = dft.parse(dft.format(date.getTime()))
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return dft.format(endDate)
+    }
 
     //获取时间戳格式转时间
     open fun eGetCuoFormatTime(dateCuo: Long, format: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(format).format(Date(dateCuo))
 
     //时间转时间戳
-    open fun eGetCuoTime(date: String = eGetCurrentTime(), pattern: String = "yyyy-MM-dd HH:mm:ss", type: String = "s"): String {
+    open fun eGetCuoTime(date: String = eGetTime(), pattern: String = "yyyy-MM-dd HH:mm:ss", type: String = "s"): String {
         val date = SimpleDateFormat(pattern).parse(date).time.toString()
         return if (type == "s") date.substring(0, 10) else date
     }
@@ -1047,6 +1115,7 @@ open class eDevice internal constructor() {
         vibrator.vibrate(patter, if (isRepeat) 0 else -1)
         return vibrator
     }
+
     fun Vibrator.eClean() {
         cancel()
     }
@@ -1934,6 +2003,51 @@ open class eFile internal constructor() {
 open class eString internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eString() }
+    }
+
+    fun TextView.eSpannableTextView(str: String, startAndEndIndexArray: Array<Pair<Int, Int>>? = arrayOf(Pair(0, 0)), colorArray: Array<Int>? = arrayOf(Color.RED), clickBlockArray: Array<() -> Unit>? = null) {
+        if (str.isEmpty())
+            return
+        text = ""
+        var startIndex = 0
+        //这个一定要记得设置，不然点击不生效
+        movementMethod = LinkMovementMethod.getInstance()
+        startAndEndIndexArray?.forEachIndexed { index, pair ->
+            var subStr = ""
+            try {
+                subStr = str.substring(startIndex, if (index + 1 == startAndEndIndexArray.size) str.length else pair.second).eLog("substring")
+                val spb = SpannableStringBuilder(subStr)
+                spb.setSpan(object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        clickBlockArray?.let {
+                            if (index > it.size - 1) {
+                                it.last()()
+                            } else {
+                                it[index]()
+                            }
+                        }
+                    }
+
+                    override fun updateDrawState(ds: TextPaint) {
+                        colorArray?.let {
+                            if (index > it.size - 1) {
+                                ds.color = it.last()
+                            } else {
+                                ds.color = it[index]
+                            }
+                        }
+                    }
+                }, pair.first - startIndex, pair.second - startIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                append(spb)
+                startIndex = pair.second
+            } catch (e: IndexOutOfBoundsException) {
+                append(subStr)
+                return@forEachIndexed
+            } catch (e: Exception) {
+                e.eLogE("eSpannableTextView")
+                return@forEachIndexed
+            }
+        }
     }
 
     //数据转换

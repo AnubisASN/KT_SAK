@@ -416,7 +416,7 @@ class MainActivity : Activity() {
                         }
                     }
                     getDigit("数据库") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(Data(eTime.eInit.eGetCurrentTime(), MSG
+                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(Data(eTime.eInit.eGetTime(), MSG
                                 ?: ""))}")
                         R.id.bt_item2 -> {
                             Hint("数据库查询:")
@@ -554,7 +554,7 @@ class MainActivity : Activity() {
      */
     fun Hint(str: String) {
         tv_Hint.post {
-            val Str = "${eTime.eInit.eGetCurrentTime("MM-dd HH:mm:ss")}： $str\n\n\n"
+            val Str = "${eTime.eInit.eGetTime("MM-dd HH:mm:ss")}： $str\n\n\n"
             str.eLog()
             tv_Hint.append(Str)
             sv_Hint.fullScroll(ScrollView.FOCUS_DOWN)

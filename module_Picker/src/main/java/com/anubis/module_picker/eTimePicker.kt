@@ -2,15 +2,11 @@ package com.anubis.module_picker
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
-import androidx.fragment.app.Fragment
 import android.view.Gravity
 import android.view.View
 import android.view.Window
-import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import com.anubis.kt_extends.eTime
@@ -18,7 +14,6 @@ import com.anubis.module_picker.Utils.DateUtil
 import com.anubis.module_picker.Utils.ScreenUtil
 import com.anubis.module_picker.Utils.TextUtil
 import com.anubis.module_picker.view.PickerView
-import me.rosuh.filepicker.FilePickerActivity
 
 
 import java.util.ArrayList
@@ -110,7 +105,7 @@ class eTimePicker private constructor() {
         initView()
     }
 
-    fun eShowTimeSelect(startDate: String, endDate: String = eTime.eInit.eGetCurrentTime()) {
+    fun eShowTimeSelect(startDate: String, endDate: String = eTime.eInit.eGetTime()) {
         startCalendar.time = DateUtil.parse(startDate, FORMAT_STR)
         endCalendar.time = DateUtil.parse(endDate, FORMAT_STR)
         if (startCalendar.time.time >= endCalendar.time.time) {

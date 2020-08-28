@@ -50,11 +50,11 @@ open class eOffice internal constructor() {
      * @param mTitle: Array<String>; 标题组
      * @param  mData: List<Any>; 数据组
      * @param mSavePath: String = Environment.getExternalStorageDirectory().path； 保存路径
-     * @param mFileName: String = eTime.eInit.eGetCurrentTime("yyyy-MM-dd HHmmss"); 保存文件名
+     * @param mFileName: String = eTime.eInit.eGetTime("yyyy-MM-dd HHmmss"); 保存文件名
      * @param mSheetName: String = "记录"; 单页标题
      * @return Boolean
      */
-    open  fun eExportExcel(mTitle: Array<String>, mData: List<Any>, mSavePath: String = Environment.getExternalStorageDirectory().path, mFileName: String = eTime.eInit.eGetCurrentTime("yyyy-MM-dd HHmmss"), mSheetName: String = "记录"): Boolean {
+    open  fun eExportExcel(mTitle: Array<String>, mData: List<Any>, mSavePath: String = Environment.getExternalStorageDirectory().path, mFileName: String = eTime.eInit.eGetTime("yyyy-MM-dd HHmmss"), mSheetName: String = "记录"): Boolean {
         eExportExcel(arrayOf(mTitle), arrayOf(mData), mSavePath, mFileName, arrayOf(mSheetName))
         return true
     }
@@ -64,11 +64,11 @@ open class eOffice internal constructor() {
      * @param mTitle: Array<Array<String>>; 多页标题组
      * @param  mData: Array<List<Any>>; 多页数据组
      * @param mSavePath: String = Environment.getExternalStorageDirectory().path； 保存路径
-     * @param mFileName: String = eTime.eInit.eGetCurrentTime("yyyy-MM-dd HHmmss"); 保存文件名
+     * @param mFileName: String = eTime.eInit.eGetTime("yyyy-MM-dd HHmmss"); 保存文件名
      * @param mSheetName: Array<String> = "记录"; 多页标题
      * @return Boolean
      */
-    open  fun eExportExcel(mTitles: Array<Array<String>>, mDatas: Array<List<Any>>, mSavePath: String = Environment.getExternalStorageDirectory().path, mFileName: String = eTime.eInit.eGetCurrentTime("yyyy-MM-dd HHmmss"), mSheetNames: Array<String>): Boolean {
+    open  fun eExportExcel(mTitles: Array<Array<String>>, mDatas: Array<List<Any>>, mSavePath: String = Environment.getExternalStorageDirectory().path, mFileName: String = eTime.eInit.eGetTime("yyyy-MM-dd HHmmss"), mSheetNames: Array<String>): Boolean {
         ExcelUtils.initExcel("$mSavePath/$mFileName.xls", mTitles, mSheetNames)
         try {
             mSheetNames.forEachIndexed { i, s ->

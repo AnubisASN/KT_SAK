@@ -13,18 +13,22 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
         >
+
         <com.anubis.module_webRTC.ui.CircularCoverView
             android:id="@+id/head_cover"
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_centerInParent="true"
-            app:left_top_radius="45dp"/>
+            android:visibility="invisible"
+            app:left_top_radius="45dp" />
+
         <ImageView
             android:id="@+id/head_img"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/starfox_500"/>
+            android:src="@drawable/starfox_500"
+            android:visibility="invisible" />
     </RelativeLayout>
     <TextView
         android:id="@+id/targetid_text"
@@ -47,6 +51,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/head_bg"
         android:layout_marginTop="55dp"/>
+
     <LinearLayout
         android:id="@+id/ring_view"
         android:layout_width="match_parent"
@@ -106,4 +111,5 @@
             android:layout_height="1dp"
             android:layout_weight="1"/>
     </LinearLayout>
+
 </RelativeLayout>

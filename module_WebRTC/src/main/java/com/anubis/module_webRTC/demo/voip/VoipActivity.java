@@ -1,5 +1,6 @@
 package com.anubis.module_webRTC.demo.voip;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.projection.MediaProjectionManager;
@@ -9,8 +10,13 @@ import android.os.Handler;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.anubis.module_webRTC.R;
@@ -38,7 +44,7 @@ import java.util.TimerTask;
 import static com.anubis.kt_extends.EExtendsKt.eLog;
 
 public class VoipActivity extends BaseActivity implements View.OnClickListener {
-
+    private InputMethodManager inputMethodManager;
     private XHVoipManager voipManager;
     private StarPlayer targetPlayer;
     private StarPlayer selfPlayer;
@@ -53,13 +59,13 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
     private Handler mHandler;
     private TextView tvOutTime;
     private int cameraId = 0;
-    private Boolean isRemoteVideo=false;
+    private Boolean isRemoteVideo = false;
     private TextView tvTimer;
     private StarRTCAudioManager starRTCAudioManager;
     private XHSDKHelper xhsdkHelper;
     private TimerTask mTimerTask;
     private TimerTask mTalkingTiTask;
-
+    private static Boolean status = false;
 
 //    private PushUVCTest pushUVCTest;
 
@@ -86,8 +92,8 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
         mHandler = new Handler();
         tvOutTime = (TextView) findViewById(R.id.tv_outtime);
         targetId = getIntent().getStringExtra("targetId");
-        cameraId = getIntent().getIntExtra("cameraId",0);
-        isRemoteVideo=getIntent().getBooleanExtra("isisRemoteVideo",false);
+        cameraId = getIntent().getIntExtra("cameraId", 0);
+        isRemoteVideo = getIntent().getBooleanExtra("isisRemoteVideo", false);
         outTime = getIntent().getLongExtra("outTime", 60);
         final Long[] time = {outTime};
         mTimerTask = new TimerTask() {
@@ -99,7 +105,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
                     public void run() {
                         tvOutTime.setText("等待倒计时:" + time[0]);
                         if (time[0] == 0) {
-                            eLog(this,"倒计时关闭","TAG");
+                            eLog(this, "倒计时关闭", "TAG");
                             //接听等待
                             onClick(findViewById(R.id.calling_hangup));
                         }
@@ -145,7 +151,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.camera_btn).setOnClickListener(this);
         findViewById(R.id.speaker_on_btn).setOnClickListener(this);
         findViewById(R.id.speaker_off_btn).setOnClickListener(this);
-
+        inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         if (action.equals(CALLING)) {
             showCallingView();
             eLog(this, "newVoip-CALLING", "TAG");
@@ -174,6 +180,51 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
 //        if (isRemoteVideo){
 //            onClick(findViewById(R.id.camera_btn));
 //        }
+        findViewById(R.id.editText).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(final View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    v.setFocusable(true);
+                    v.setFocusableInTouchMode(true);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        }
+                    }, 300);
+                }
+            }
+        });
+        findViewById(R.id.editText).setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (event.getKeyCode()==KeyEvent.KEYCODE_SHIFT_LEFT) {
+                        status = true;
+                        return true;
+                    }
+                    if (status) {
+
+                        switch (event.getKeyCode()) {
+                            case KeyEvent.KEYCODE_8:
+                                Boolean st = findViewById(R.id.calling_view).getVisibility() == View.VISIBLE;
+                                if (st)
+                                    findViewById(R.id.calling_hangup).callOnClick();
+                                else
+                                    findViewById(R.id.talking_hangup).callOnClick();
+                                break;
+                        }
+                    }
+                }
+                return true;
+            }
+        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                inputMethodManager.hideSoftInputFromWindow(     findViewById(R.id.editText).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        }, 300);
     }
 
     private void setupViews() {
@@ -334,7 +385,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
         try {
             time = new Long[]{Long.parseLong(MLOC.INSTANCE.getMaxTime())};
         } catch (NumberFormatException e) {
-            time=new Long[]{outTime};
+            time = new Long[]{outTime};
         }
         final Long[] finalTime = time;
         mTalkingTiTask = new TimerTask() {
@@ -347,7 +398,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
                         tvTimer.setText("剩余时间:" + finalTime[0]);
                         if (finalTime[0] == 0) {
                             onClick(null);
-                            eLog(this,"倒计时关闭","TAG");
+                            eLog(this, "倒计时关闭", "TAG");
                         }
                     }
                 });
@@ -491,5 +542,8 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
         }
         VoipActivity.this.finish();
     }
+
+
+
 
 }

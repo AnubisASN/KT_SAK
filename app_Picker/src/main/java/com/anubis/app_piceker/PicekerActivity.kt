@@ -78,7 +78,7 @@ class PicekerActivity : AppCompatActivity() {
     }
 
     private fun Hint(str: String) {
-        val Str = "${eTime.eInit.eGetCurrentTime("MM-dd HH:mm:ss")}： $str\n\n\n"
+        val Str = "${eTime.eInit.eGetTime("MM-dd HH:mm:ss")}： $str\n\n\n"
         eLog(Str, "SAK")
         tv_Hint.append(Str)
         sv_Hint.fullScroll(ScrollView.FOCUS_DOWN)

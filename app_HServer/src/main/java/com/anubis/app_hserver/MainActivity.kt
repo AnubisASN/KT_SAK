@@ -1,11 +1,15 @@
 package com.anubis.app_hserver
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.view.View
+import android.widget.TextView
 import com.anubis.module_httpserver.eResolver
 import com.anubis.module_httpserver.eHttpServer
 import com.anubis.module_httpserver.eResolverType
@@ -14,6 +18,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import kotlin.collections.HashMap
 import com.anubis.kt_extends.*
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 
 
 @SuppressLint("SetTextI18n")
@@ -55,7 +62,8 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
-        tvHint.text = String.format(resources.getString(R.string.hint), "${eDevice.eInit.eGetHostIP()}:${mHttpServer?.myPort}")
+//
+        tvHint.eSpannableTextView( String.format(resources.getString(R.string.hint), "${eDevice.eInit.eGetHostIP()}:${mHttpServer?.myPort}"))
     }
 
     fun onClick(v: View) {
@@ -69,6 +77,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 
 
 }
