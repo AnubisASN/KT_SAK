@@ -1,7 +1,7 @@
 package com.anubis.module_videochat
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -121,7 +121,7 @@ object eVideoChat {
         leaveChannel()
         RtcEngine.destroy()
         mRtcEngine = null
-        (mContext as Activity).finish()
+        (mContext as androidx.appcompat.app.AppCompatActivity).finish()
 
     }
 

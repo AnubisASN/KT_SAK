@@ -2,7 +2,7 @@ package com.anubis.module_webRTC.demo.videolive;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -28,15 +28,6 @@ import com.anubis.module_webRTC.demo.videomeeting.ViewPosition;
 import com.anubis.module_webRTC.listener.XHLiveManagerListener;
 import com.anubis.module_webRTC.serverAPI.InterfaceUrls;
 import com.anubis.module_webRTC.ui.CircularCoverView;
-import com.anubis.module_webRTC.utils.AEvent;
-import com.anubis.module_webRTC.utils.DensityUtils;
-import com.anubis.module_webRTC.R;
-import com.anubis.module_webRTC.demo.BaseActivity;
-import com.anubis.module_webRTC.demo.MLOC;
-import com.anubis.module_webRTC.listener.XHLiveManagerListener;
-import com.anubis.module_webRTC.serverAPI.InterfaceUrls;
-import com.anubis.module_webRTC.ui.CircularCoverView;
-import com.anubis.module_webRTC.demo.videomeeting.ViewPosition;
 import com.anubis.module_webRTC.utils.AEvent;
 import com.anubis.module_webRTC.utils.DensityUtils;
 import com.starrtc.starrtcsdk.api.XHClient;
@@ -829,7 +820,7 @@ public class VideoLiveActivity extends BaseActivity {
                 }
                 break;
             case AEvent.AEVENT_LIVE_INVITE_LINK:
-                new AlertDialog.Builder(VideoLiveActivity.this).setCancelable(true)
+                new androidx.appcompat.app.AlertDialog.Builder(VideoLiveActivity.this).setCancelable(true)
                         .setTitle(eventObj+"邀请您上麦")
                         .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
                             @Override
@@ -966,7 +957,7 @@ public class VideoLiveActivity extends BaseActivity {
 
     private void showManagerDialog(final String userId,final String msgText) {
         if(!userId.equals(MLOC.INSTANCE.getUserId())){
-            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            androidx.appcompat.app.AlertDialog.Builder builder=new AlertDialog.Builder(this);
             if(createrId.equals(MLOC.INSTANCE.getUserId())){
                 Boolean ac = false;
                 for(int i = 0 ;i<mPlayerList.size();i++){

@@ -1,6 +1,6 @@
 package com.anubis.utils.util;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -52,7 +52,7 @@ public final class eActivityUtils {
      *
      * @param clz The activity class.
      */
-    public static void startActivity(@NonNull final Class<? extends Activity> clz) {
+    public static void startActivity(@NonNull final Class<? extends AppCompatActivity> clz) {
         Context context = eUtils.getTopActivityOrApp();
         startActivity(context, null, context.getPackageName(), clz.getName(), null);
     }
@@ -63,7 +63,7 @@ public final class eActivityUtils {
      * @param clz     The activity class.
      * @param options Additional options for how the Activity should be started.
      */
-    public static void startActivity(@NonNull final Class<? extends Activity> clz,
+    public static void startActivity(@NonNull final Class<? extends AppCompatActivity> clz,
                                      final Bundle options) {
         Context context = eUtils.getTopActivityOrApp();
         startActivity(context, null, context.getPackageName(), clz.getName(), options);
@@ -78,14 +78,14 @@ public final class eActivityUtils {
      * @param exitAnim  A resource ID of the animation resource to use for the
      *                  outgoing activity.
      */
-    public static void startActivity(@NonNull final Class<? extends Activity> clz,
+    public static void startActivity(@NonNull final Class<? extends AppCompatActivity> clz,
                                      @AnimRes final int enterAnim,
                                      @AnimRes final int exitAnim) {
         Context context = eUtils.getTopActivityOrApp();
         startActivity(context, null, context.getPackageName(), clz.getName(),
                 getOptionsBundle(context, enterAnim, exitAnim));
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof Activity) {
-            ((Activity) context).overridePendingTransition(enterAnim, exitAnim);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).overridePendingTransition(enterAnim, exitAnim);
         }
     }
 
@@ -95,8 +95,8 @@ public final class eActivityUtils {
      * @param activity The activity.
      * @param clz      The activity class.
      */
-    public static void startActivity(@NonNull final Activity activity,
-                                     @NonNull final Class<? extends Activity> clz) {
+    public static void startActivity(@NonNull final AppCompatActivity activity,
+                                     @NonNull final Class<? extends AppCompatActivity> clz) {
         startActivity(activity, null, activity.getPackageName(), clz.getName(), null);
     }
 
@@ -107,8 +107,8 @@ public final class eActivityUtils {
      * @param clz      The activity class.
      * @param options  Additional options for how the Activity should be started.
      */
-    public static void startActivity(@NonNull final Activity activity,
-                                     @NonNull final Class<? extends Activity> clz,
+    public static void startActivity(@NonNull final AppCompatActivity activity,
+                                     @NonNull final Class<? extends AppCompatActivity> clz,
                                      final Bundle options) {
         startActivity(activity, null, activity.getPackageName(), clz.getName(), options);
     }
@@ -121,8 +121,8 @@ public final class eActivityUtils {
      * @param sharedElements The names of the shared elements to transfer to the called
      *                       Activity and their associated Views.
      */
-    public static void startActivity(@NonNull final Activity activity,
-                                     @NonNull final Class<? extends Activity> clz,
+    public static void startActivity(@NonNull final AppCompatActivity activity,
+                                     @NonNull final Class<? extends AppCompatActivity> clz,
                                      final View... sharedElements) {
         startActivity(activity, null, activity.getPackageName(), clz.getName(),
                 getOptionsBundle(activity, sharedElements));
@@ -138,8 +138,8 @@ public final class eActivityUtils {
      * @param exitAnim  A resource ID of the animation resource to use for the
      *                  outgoing activity.
      */
-    public static void startActivity(@NonNull final Activity activity,
-                                     @NonNull final Class<? extends Activity> clz,
+    public static void startActivity(@NonNull final AppCompatActivity activity,
+                                     @NonNull final Class<? extends AppCompatActivity> clz,
                                      @AnimRes final int enterAnim,
                                      @AnimRes final int exitAnim) {
         startActivity(activity, null, activity.getPackageName(), clz.getName(),
@@ -156,7 +156,7 @@ public final class eActivityUtils {
      * @param clz    The activity class.
      */
     public static void startActivity(@NonNull final Bundle extras,
-                                     @NonNull final Class<? extends Activity> clz) {
+                                     @NonNull final Class<? extends AppCompatActivity> clz) {
         Context context = eUtils.getTopActivityOrApp();
         startActivity(context, extras, context.getPackageName(), clz.getName(), null);
     }
@@ -169,7 +169,7 @@ public final class eActivityUtils {
      * @param options Additional options for how the Activity should be started.
      */
     public static void startActivity(@NonNull final Bundle extras,
-                                     @NonNull final Class<? extends Activity> clz,
+                                     @NonNull final Class<? extends AppCompatActivity> clz,
                                      @NonNull final Bundle options) {
         Context context = eUtils.getTopActivityOrApp();
         startActivity(context, extras, context.getPackageName(), clz.getName(), options);
@@ -186,14 +186,14 @@ public final class eActivityUtils {
      *                  outgoing activity.
      */
     public static void startActivity(@NonNull final Bundle extras,
-                                     @NonNull final Class<? extends Activity> clz,
+                                     @NonNull final Class<? extends AppCompatActivity> clz,
                                      @AnimRes final int enterAnim,
                                      @AnimRes final int exitAnim) {
         Context context = eUtils.getTopActivityOrApp();
         startActivity(context, extras, context.getPackageName(), clz.getName(),
                 getOptionsBundle(context, enterAnim, exitAnim));
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof Activity) {
-            ((Activity) context).overridePendingTransition(enterAnim, exitAnim);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).overridePendingTransition(enterAnim, exitAnim);
         }
     }
 
@@ -205,8 +205,8 @@ public final class eActivityUtils {
      * @param clz      The activity class.
      */
     public static void startActivity(@NonNull final Bundle extras,
-                                     @NonNull final Activity activity,
-                                     @NonNull final Class<? extends Activity> clz) {
+                                     @NonNull final AppCompatActivity activity,
+                                     @NonNull final Class<? extends AppCompatActivity> clz) {
         startActivity(activity, extras, activity.getPackageName(), clz.getName(), null);
     }
 
@@ -219,8 +219,8 @@ public final class eActivityUtils {
      * @param options  Additional options for how the Activity should be started.
      */
     public static void startActivity(@NonNull final Bundle extras,
-                                     @NonNull final Activity activity,
-                                     @NonNull final Class<? extends Activity> clz,
+                                     @NonNull final AppCompatActivity activity,
+                                     @NonNull final Class<? extends AppCompatActivity> clz,
                                      @NonNull final Bundle options) {
         startActivity(activity, extras, activity.getPackageName(), clz.getName(), options);
     }
@@ -235,8 +235,8 @@ public final class eActivityUtils {
      *                       Activity and their associated Views.
      */
     public static void startActivity(@NonNull final Bundle extras,
-                                     @NonNull final Activity activity,
-                                     @NonNull final Class<? extends Activity> clz,
+                                     @NonNull final AppCompatActivity activity,
+                                     @NonNull final Class<? extends AppCompatActivity> clz,
                                      final View... sharedElements) {
         startActivity(activity, extras, activity.getPackageName(), clz.getName(),
                 getOptionsBundle(activity, sharedElements));
@@ -254,8 +254,8 @@ public final class eActivityUtils {
      *                  outgoing activity.
      */
     public static void startActivity(@NonNull final Bundle extras,
-                                     @NonNull final Activity activity,
-                                     @NonNull final Class<? extends Activity> clz,
+                                     @NonNull final AppCompatActivity activity,
+                                     @NonNull final Class<? extends AppCompatActivity> clz,
                                      @AnimRes final int enterAnim,
                                      @AnimRes final int exitAnim) {
         startActivity(activity, extras, activity.getPackageName(), clz.getName(),
@@ -305,8 +305,8 @@ public final class eActivityUtils {
                                      @AnimRes final int exitAnim) {
         Context context = eUtils.getTopActivityOrApp();
         startActivity(context, null, pkg, cls, getOptionsBundle(context, enterAnim, exitAnim));
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof Activity) {
-            ((Activity) context).overridePendingTransition(enterAnim, exitAnim);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).overridePendingTransition(enterAnim, exitAnim);
         }
     }
 
@@ -317,7 +317,7 @@ public final class eActivityUtils {
      * @param pkg      The name of the package.
      * @param cls      The name of the class.
      */
-    public static void startActivity(@NonNull final Activity activity,
+    public static void startActivity(@NonNull final AppCompatActivity activity,
                                      @NonNull final String pkg,
                                      @NonNull final String cls) {
         startActivity(activity, null, pkg, cls, null);
@@ -331,7 +331,7 @@ public final class eActivityUtils {
      * @param cls      The name of the class.
      * @param options  Additional options for how the Activity should be started.
      */
-    public static void startActivity(@NonNull final Activity activity,
+    public static void startActivity(@NonNull final AppCompatActivity activity,
                                      @NonNull final String pkg,
                                      @NonNull final String cls,
                                      final Bundle options) {
@@ -347,7 +347,7 @@ public final class eActivityUtils {
      * @param sharedElements The names of the shared elements to transfer to the called
      *                       Activity and their associated Views.
      */
-    public static void startActivity(@NonNull final Activity activity,
+    public static void startActivity(@NonNull final AppCompatActivity activity,
                                      @NonNull final String pkg,
                                      @NonNull final String cls,
                                      final View... sharedElements) {
@@ -365,7 +365,7 @@ public final class eActivityUtils {
      * @param exitAnim  A resource ID of the animation resource to use for the
      *                  outgoing activity.
      */
-    public static void startActivity(@NonNull final Activity activity,
+    public static void startActivity(@NonNull final AppCompatActivity activity,
                                      @NonNull final String pkg,
                                      @NonNull final String cls,
                                      @AnimRes final int enterAnim,
@@ -422,8 +422,8 @@ public final class eActivityUtils {
                                      @AnimRes final int exitAnim) {
         Context context = eUtils.getTopActivityOrApp();
         startActivity(context, extras, pkg, cls, getOptionsBundle(context, enterAnim, exitAnim));
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof Activity) {
-            ((Activity) context).overridePendingTransition(enterAnim, exitAnim);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).overridePendingTransition(enterAnim, exitAnim);
         }
     }
 
@@ -436,7 +436,7 @@ public final class eActivityUtils {
      * @param cls      The name of the class.
      */
     public static void startActivity(@NonNull final Bundle extras,
-                                     @NonNull final Activity activity,
+                                     @NonNull final AppCompatActivity activity,
                                      @NonNull final String pkg,
                                      @NonNull final String cls) {
         startActivity(activity, extras, pkg, cls, null);
@@ -452,7 +452,7 @@ public final class eActivityUtils {
      * @param options  Additional options for how the Activity should be started.
      */
     public static void startActivity(@NonNull final Bundle extras,
-                                     @NonNull final Activity activity,
+                                     @NonNull final AppCompatActivity activity,
                                      @NonNull final String pkg,
                                      @NonNull final String cls,
                                      final Bundle options) {
@@ -470,7 +470,7 @@ public final class eActivityUtils {
      *                       Activity and their associated Views.
      */
     public static void startActivity(@NonNull final Bundle extras,
-                                     @NonNull final Activity activity,
+                                     @NonNull final AppCompatActivity activity,
                                      @NonNull final String pkg,
                                      @NonNull final String cls,
                                      final View... sharedElements) {
@@ -489,7 +489,7 @@ public final class eActivityUtils {
      *                  outgoing activity.
      */
     public static void startActivity(@NonNull final Bundle extras,
-                                     @NonNull final Activity activity,
+                                     @NonNull final AppCompatActivity activity,
                                      @NonNull final String pkg,
                                      @NonNull final String cls,
                                      @AnimRes final int enterAnim,
@@ -534,8 +534,8 @@ public final class eActivityUtils {
                                      @AnimRes final int exitAnim) {
         Context context = eUtils.getTopActivityOrApp();
         startActivity(intent, context, getOptionsBundle(context, enterAnim, exitAnim));
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof Activity) {
-            ((Activity) context).overridePendingTransition(enterAnim, exitAnim);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).overridePendingTransition(enterAnim, exitAnim);
         }
     }
 
@@ -545,7 +545,7 @@ public final class eActivityUtils {
      * @param activity The activity.
      * @param intent   The description of the activity to start.
      */
-    public static void startActivity(@NonNull final Activity activity,
+    public static void startActivity(@NonNull final AppCompatActivity activity,
                                      @NonNull final Intent intent) {
         startActivity(intent, activity, null);
     }
@@ -557,7 +557,7 @@ public final class eActivityUtils {
      * @param intent   The description of the activity to start.
      * @param options  Additional options for how the Activity should be started.
      */
-    public static void startActivity(@NonNull final Activity activity,
+    public static void startActivity(@NonNull final AppCompatActivity activity,
                                      @NonNull final Intent intent,
                                      final Bundle options) {
         startActivity(intent, activity, options);
@@ -571,7 +571,7 @@ public final class eActivityUtils {
      * @param sharedElements The names of the shared elements to transfer to the called
      *                       Activity and their associated Views.
      */
-    public static void startActivity(@NonNull final Activity activity,
+    public static void startActivity(@NonNull final AppCompatActivity activity,
                                      @NonNull final Intent intent,
                                      final View... sharedElements) {
         startActivity(intent, activity, getOptionsBundle(activity, sharedElements));
@@ -587,7 +587,7 @@ public final class eActivityUtils {
      * @param exitAnim  A resource ID of the animation resource to use for the
      *                  outgoing activity.
      */
-    public static void startActivity(@NonNull final Activity activity,
+    public static void startActivity(@NonNull final AppCompatActivity activity,
                                      @NonNull final Intent intent,
                                      @AnimRes final int enterAnim,
                                      @AnimRes final int exitAnim) {
@@ -605,8 +605,8 @@ public final class eActivityUtils {
      * @param requestCode if &gt;= 0, this code will be returned in
      *                    onActivityResult() when the activity exits.
      */
-    public static void startActivityForResult(@NonNull final Activity activity,
-                                              @NonNull final Class<? extends Activity> clz,
+    public static void startActivityForResult(@NonNull final AppCompatActivity activity,
+                                              @NonNull final Class<? extends AppCompatActivity> clz,
                                               final int requestCode) {
         startActivityForResult(activity, null, activity.getPackageName(), clz.getName(),
                 requestCode, null);
@@ -621,8 +621,8 @@ public final class eActivityUtils {
      *                    onActivityResult() when the activity exits.
      * @param options     Additional options for how the Activity should be started.
      */
-    public static void startActivityForResult(@NonNull final Activity activity,
-                                              @NonNull final Class<? extends Activity> clz,
+    public static void startActivityForResult(@NonNull final AppCompatActivity activity,
+                                              @NonNull final Class<? extends AppCompatActivity> clz,
                                               final int requestCode,
                                               final Bundle options) {
         startActivityForResult(activity, null, activity.getPackageName(), clz.getName(),
@@ -639,8 +639,8 @@ public final class eActivityUtils {
      * @param sharedElements The names of the shared elements to transfer to the called
      *                       Activity and their associated Views.
      */
-    public static void startActivityForResult(@NonNull final Activity activity,
-                                              @NonNull final Class<? extends Activity> clz,
+    public static void startActivityForResult(@NonNull final AppCompatActivity activity,
+                                              @NonNull final Class<? extends AppCompatActivity> clz,
                                               final int requestCode,
                                               final View... sharedElements) {
         startActivityForResult(activity, null, activity.getPackageName(), clz.getName(),
@@ -659,8 +659,8 @@ public final class eActivityUtils {
      * @param exitAnim    A resource ID of the animation resource to use for the
      *                    outgoing activity.
      */
-    public static void startActivityForResult(@NonNull final Activity activity,
-                                              @NonNull final Class<? extends Activity> clz,
+    public static void startActivityForResult(@NonNull final AppCompatActivity activity,
+                                              @NonNull final Class<? extends AppCompatActivity> clz,
                                               final int requestCode,
                                               @AnimRes final int enterAnim,
                                               @AnimRes final int exitAnim) {
@@ -681,8 +681,8 @@ public final class eActivityUtils {
      *                    onActivityResult() when the activity exits.
      */
     public static void startActivityForResult(@NonNull final Bundle extras,
-                                              @NonNull final Activity activity,
-                                              @NonNull final Class<? extends Activity> clz,
+                                              @NonNull final AppCompatActivity activity,
+                                              @NonNull final Class<? extends AppCompatActivity> clz,
                                               final int requestCode) {
         startActivityForResult(activity, extras, activity.getPackageName(), clz.getName(),
                 requestCode, null);
@@ -699,8 +699,8 @@ public final class eActivityUtils {
      * @param options     Additional options for how the Activity should be started.
      */
     public static void startActivityForResult(@NonNull final Bundle extras,
-                                              @NonNull final Activity activity,
-                                              @NonNull final Class<? extends Activity> clz,
+                                              @NonNull final AppCompatActivity activity,
+                                              @NonNull final Class<? extends AppCompatActivity> clz,
                                               final int requestCode,
                                               @NonNull final Bundle options) {
         startActivityForResult(activity, extras, activity.getPackageName(), clz.getName(),
@@ -719,8 +719,8 @@ public final class eActivityUtils {
      *                       Activity and their associated Views.
      */
     public static void startActivityForResult(@NonNull final Bundle extras,
-                                              @NonNull final Activity activity,
-                                              @NonNull final Class<? extends Activity> clz,
+                                              @NonNull final AppCompatActivity activity,
+                                              @NonNull final Class<? extends AppCompatActivity> clz,
                                               final int requestCode,
                                               final View... sharedElements) {
         startActivityForResult(activity, extras, activity.getPackageName(), clz.getName(),
@@ -741,8 +741,8 @@ public final class eActivityUtils {
      *                    outgoing activity.
      */
     public static void startActivityForResult(@NonNull final Bundle extras,
-                                              @NonNull final Activity activity,
-                                              @NonNull final Class<? extends Activity> clz,
+                                              @NonNull final AppCompatActivity activity,
+                                              @NonNull final Class<? extends AppCompatActivity> clz,
                                               final int requestCode,
                                               @AnimRes final int enterAnim,
                                               @AnimRes final int exitAnim) {
@@ -764,7 +764,7 @@ public final class eActivityUtils {
      *                    onActivityResult() when the activity exits.
      */
     public static void startActivityForResult(@NonNull final Bundle extras,
-                                              @NonNull final Activity activity,
+                                              @NonNull final AppCompatActivity activity,
                                               @NonNull final String pkg,
                                               @NonNull final String cls,
                                               final int requestCode) {
@@ -783,7 +783,7 @@ public final class eActivityUtils {
      * @param options     Additional options for how the Activity should be started.
      */
     public static void startActivityForResult(@NonNull final Bundle extras,
-                                              @NonNull final Activity activity,
+                                              @NonNull final AppCompatActivity activity,
                                               @NonNull final String pkg,
                                               @NonNull final String cls,
                                               final int requestCode,
@@ -804,7 +804,7 @@ public final class eActivityUtils {
      *                       Activity and their associated Views.
      */
     public static void startActivityForResult(@NonNull final Bundle extras,
-                                              @NonNull final Activity activity,
+                                              @NonNull final AppCompatActivity activity,
                                               @NonNull final String pkg,
                                               @NonNull final String cls,
                                               final int requestCode,
@@ -827,7 +827,7 @@ public final class eActivityUtils {
      *                    outgoing activity.
      */
     public static void startActivityForResult(@NonNull final Bundle extras,
-                                              @NonNull final Activity activity,
+                                              @NonNull final AppCompatActivity activity,
                                               @NonNull final String pkg,
                                               @NonNull final String cls,
                                               final int requestCode,
@@ -848,7 +848,7 @@ public final class eActivityUtils {
      * @param requestCode if &gt;= 0, this code will be returned in
      *                    onActivityResult() when the activity exits.
      */
-    public static void startActivityForResult(@NonNull final Activity activity,
+    public static void startActivityForResult(@NonNull final AppCompatActivity activity,
                                               @NonNull final Intent intent,
                                               final int requestCode) {
         startActivityForResult(intent, activity, requestCode, null);
@@ -863,7 +863,7 @@ public final class eActivityUtils {
      *                    onActivityResult() when the activity exits.
      * @param options     Additional options for how the Activity should be started.
      */
-    public static void startActivityForResult(@NonNull final Activity activity,
+    public static void startActivityForResult(@NonNull final AppCompatActivity activity,
                                               @NonNull final Intent intent,
                                               final int requestCode,
                                               final Bundle options) {
@@ -880,7 +880,7 @@ public final class eActivityUtils {
      * @param sharedElements The names of the shared elements to transfer to the called
      *                       Activity and their associated Views.
      */
-    public static void startActivityForResult(@NonNull final Activity activity,
+    public static void startActivityForResult(@NonNull final AppCompatActivity activity,
                                               @NonNull final Intent intent,
                                               final int requestCode,
                                               final View... sharedElements) {
@@ -900,7 +900,7 @@ public final class eActivityUtils {
      * @param exitAnim    A resource ID of the animation resource to use for the
      *                    outgoing activity.
      */
-    public static void startActivityForResult(@NonNull final Activity activity,
+    public static void startActivityForResult(@NonNull final AppCompatActivity activity,
                                               @NonNull final Intent intent,
                                               final int requestCode,
                                               @AnimRes final int enterAnim,
@@ -946,8 +946,8 @@ public final class eActivityUtils {
                                        @AnimRes final int exitAnim) {
         Context context = eUtils.getTopActivityOrApp();
         startActivities(intents, context, getOptionsBundle(context, enterAnim, exitAnim));
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof Activity) {
-            ((Activity) context).overridePendingTransition(enterAnim, exitAnim);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN && context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).overridePendingTransition(enterAnim, exitAnim);
         }
     }
 
@@ -957,7 +957,7 @@ public final class eActivityUtils {
      * @param activity The activity.
      * @param intents  The descriptions of the activities to start.
      */
-    public static void startActivities(@NonNull final Activity activity,
+    public static void startActivities(@NonNull final AppCompatActivity activity,
                                        @NonNull final Intent[] intents) {
         startActivities(intents, activity, null);
     }
@@ -969,7 +969,7 @@ public final class eActivityUtils {
      * @param intents  The descriptions of the activities to start.
      * @param options  Additional options for how the Activity should be started.
      */
-    public static void startActivities(@NonNull final Activity activity,
+    public static void startActivities(@NonNull final AppCompatActivity activity,
                                        @NonNull final Intent[] intents,
                                        final Bundle options) {
         startActivities(intents, activity, options);
@@ -985,7 +985,7 @@ public final class eActivityUtils {
      * @param exitAnim  A resource ID of the animation resource to use for the
      *                  outgoing activity.
      */
-    public static void startActivities(@NonNull final Activity activity,
+    public static void startActivities(@NonNull final AppCompatActivity activity,
                                        @NonNull final Intent[] intents,
                                        @AnimRes final int enterAnim,
                                        @AnimRes final int exitAnim) {
@@ -1009,7 +1009,7 @@ public final class eActivityUtils {
      *
      * @return the list of activity
      */
-    public static List<Activity> getActivityList() {
+    public static List<AppCompatActivity> getActivityList() {
         return eUtils.getActivityList();
     }
 
@@ -1047,7 +1047,7 @@ public final class eActivityUtils {
      *
      * @return the top activity in activity's stack
      */
-    public static Activity getTopActivity() {
+    public static AppCompatActivity getTopActivity() {
         return eUtils.getActivityLifecycle().getTopActivity();
     }
 
@@ -1057,9 +1057,9 @@ public final class eActivityUtils {
      * @param activity The activity.
      * @return {@code true}: yes<br>{@code false}: no
      */
-    public static boolean isActivityExistsInStack(@NonNull final Activity activity) {
-        List<Activity> activities = eUtils.getActivityList();
-        for (Activity aActivity : activities) {
+    public static boolean isActivityExistsInStack(@NonNull final AppCompatActivity activity) {
+        List<AppCompatActivity> activities = eUtils.getActivityList();
+        for (AppCompatActivity aActivity : activities) {
             if (aActivity.equals(activity)) {
                 return true;
             }
@@ -1073,9 +1073,9 @@ public final class eActivityUtils {
      * @param clz The activity class.
      * @return {@code true}: yes<br>{@code false}: no
      */
-    public static boolean isActivityExistsInStack(@NonNull final Class<? extends Activity> clz) {
-        List<Activity> activities = eUtils.getActivityList();
-        for (Activity aActivity : activities) {
+    public static boolean isActivityExistsInStack(@NonNull final Class<? extends AppCompatActivity> clz) {
+        List<AppCompatActivity> activities = eUtils.getActivityList();
+        for (AppCompatActivity aActivity : activities) {
             if (aActivity.getClass().equals(clz)) {
                 return true;
             }
@@ -1088,7 +1088,7 @@ public final class eActivityUtils {
      *
      * @param activity The activity.
      */
-    public static void finishActivity(@NonNull final Activity activity) {
+    public static void finishActivity(@NonNull final AppCompatActivity activity) {
         finishActivity(activity, false);
     }
 
@@ -1098,7 +1098,7 @@ public final class eActivityUtils {
      * @param activity   The activity.
      * @param isLoadAnim True to use animation for the outgoing activity, false otherwise.
      */
-    public static void finishActivity(@NonNull final Activity activity, final boolean isLoadAnim) {
+    public static void finishActivity(@NonNull final AppCompatActivity activity, final boolean isLoadAnim) {
         activity.finish();
         if (!isLoadAnim) {
             activity.overridePendingTransition(0, 0);
@@ -1114,7 +1114,7 @@ public final class eActivityUtils {
      * @param exitAnim  A resource ID of the animation resource to use for the
      *                  outgoing activity.
      */
-    public static void finishActivity(@NonNull final Activity activity,
+    public static void finishActivity(@NonNull final AppCompatActivity activity,
                                       @AnimRes final int enterAnim,
                                       @AnimRes final int exitAnim) {
         activity.finish();
@@ -1126,7 +1126,7 @@ public final class eActivityUtils {
      *
      * @param clz The activity class.
      */
-    public static void finishActivity(@NonNull final Class<? extends Activity> clz) {
+    public static void finishActivity(@NonNull final Class<? extends AppCompatActivity> clz) {
         finishActivity(clz, false);
     }
 
@@ -1136,10 +1136,10 @@ public final class eActivityUtils {
      * @param clz        The activity class.
      * @param isLoadAnim True to use animation for the outgoing activity, false otherwise.
      */
-    public static void finishActivity(@NonNull final Class<? extends Activity> clz,
+    public static void finishActivity(@NonNull final Class<? extends AppCompatActivity> clz,
                                       final boolean isLoadAnim) {
-        List<Activity> activities = eUtils.getActivityList();
-        for (Activity activity : activities) {
+        List<AppCompatActivity> activities = eUtils.getActivityList();
+        for (AppCompatActivity activity : activities) {
             if (activity.getClass().equals(clz)) {
                 activity.finish();
                 if (!isLoadAnim) {
@@ -1158,11 +1158,11 @@ public final class eActivityUtils {
      * @param exitAnim  A resource ID of the animation resource to use for the
      *                  outgoing activity.
      */
-    public static void finishActivity(@NonNull final Class<? extends Activity> clz,
+    public static void finishActivity(@NonNull final Class<? extends AppCompatActivity> clz,
                                       @AnimRes final int enterAnim,
                                       @AnimRes final int exitAnim) {
-        List<Activity> activities = eUtils.getActivityList();
-        for (Activity activity : activities) {
+        List<AppCompatActivity> activities = eUtils.getActivityList();
+        for (AppCompatActivity activity : activities) {
             if (activity.getClass().equals(clz)) {
                 activity.finish();
                 activity.overridePendingTransition(enterAnim, exitAnim);
@@ -1176,7 +1176,7 @@ public final class eActivityUtils {
      * @param activity      The activity.
      * @param isIncludeSelf True to include the activity, false otherwise.
      */
-    public static boolean finishToActivity(@NonNull final Activity activity,
+    public static boolean finishToActivity(@NonNull final AppCompatActivity activity,
                                            final boolean isIncludeSelf) {
         return finishToActivity(activity, isIncludeSelf, false);
     }
@@ -1188,12 +1188,12 @@ public final class eActivityUtils {
      * @param isIncludeSelf True to include the activity, false otherwise.
      * @param isLoadAnim    True to use animation for the outgoing activity, false otherwise.
      */
-    public static boolean finishToActivity(@NonNull final Activity activity,
+    public static boolean finishToActivity(@NonNull final AppCompatActivity activity,
                                            final boolean isIncludeSelf,
                                            final boolean isLoadAnim) {
-        List<Activity> activities = eUtils.getActivityList();
+        List<AppCompatActivity> activities = eUtils.getActivityList();
         for (int i = activities.size() - 1; i >= 0; --i) {
-            Activity aActivity = activities.get(i);
+            AppCompatActivity aActivity = activities.get(i);
             if (aActivity.equals(activity)) {
                 if (isIncludeSelf) {
                     finishActivity(aActivity, isLoadAnim);
@@ -1215,13 +1215,13 @@ public final class eActivityUtils {
      * @param exitAnim      A resource ID of the animation resource to use for the
      *                      outgoing activity.
      */
-    public static boolean finishToActivity(@NonNull final Activity activity,
+    public static boolean finishToActivity(@NonNull final AppCompatActivity activity,
                                            final boolean isIncludeSelf,
                                            @AnimRes final int enterAnim,
                                            @AnimRes final int exitAnim) {
-        List<Activity> activities = eUtils.getActivityList();
+        List<AppCompatActivity> activities = eUtils.getActivityList();
         for (int i = activities.size() - 1; i >= 0; --i) {
-            Activity aActivity = activities.get(i);
+            AppCompatActivity aActivity = activities.get(i);
             if (aActivity.equals(activity)) {
                 if (isIncludeSelf) {
                     finishActivity(aActivity, enterAnim, exitAnim);
@@ -1239,7 +1239,7 @@ public final class eActivityUtils {
      * @param clz           The activity class.
      * @param isIncludeSelf True to include the activity, false otherwise.
      */
-    public static boolean finishToActivity(@NonNull final Class<? extends Activity> clz,
+    public static boolean finishToActivity(@NonNull final Class<? extends AppCompatActivity> clz,
                                            final boolean isIncludeSelf) {
         return finishToActivity(clz, isIncludeSelf, false);
     }
@@ -1251,12 +1251,12 @@ public final class eActivityUtils {
      * @param isIncludeSelf True to include the activity, false otherwise.
      * @param isLoadAnim    True to use animation for the outgoing activity, false otherwise.
      */
-    public static boolean finishToActivity(@NonNull final Class<? extends Activity> clz,
+    public static boolean finishToActivity(@NonNull final Class<? extends AppCompatActivity> clz,
                                            final boolean isIncludeSelf,
                                            final boolean isLoadAnim) {
-        List<Activity> activities = eUtils.getActivityList();
+        List<AppCompatActivity> activities = eUtils.getActivityList();
         for (int i = activities.size() - 1; i >= 0; --i) {
-            Activity aActivity = activities.get(i);
+            AppCompatActivity aActivity = activities.get(i);
             if (aActivity.getClass().equals(clz)) {
                 if (isIncludeSelf) {
                     finishActivity(aActivity, isLoadAnim);
@@ -1278,13 +1278,13 @@ public final class eActivityUtils {
      * @param exitAnim      A resource ID of the animation resource to use for the
      *                      outgoing activity.
      */
-    public static boolean finishToActivity(@NonNull final Class<? extends Activity> clz,
+    public static boolean finishToActivity(@NonNull final Class<? extends AppCompatActivity> clz,
                                            final boolean isIncludeSelf,
                                            @AnimRes final int enterAnim,
                                            @AnimRes final int exitAnim) {
-        List<Activity> activities = eUtils.getActivityList();
+        List<AppCompatActivity> activities = eUtils.getActivityList();
         for (int i = activities.size() - 1; i >= 0; --i) {
-            Activity aActivity = activities.get(i);
+            AppCompatActivity aActivity = activities.get(i);
             if (aActivity.getClass().equals(clz)) {
                 if (isIncludeSelf) {
                     finishActivity(aActivity, enterAnim, exitAnim);
@@ -1301,7 +1301,7 @@ public final class eActivityUtils {
      *
      * @param clz The activity class.
      */
-    public static void finishOtherActivities(@NonNull final Class<? extends Activity> clz) {
+    public static void finishOtherActivities(@NonNull final Class<? extends AppCompatActivity> clz) {
         finishOtherActivities(clz, false);
     }
 
@@ -1312,11 +1312,11 @@ public final class eActivityUtils {
      * @param clz        The activity class.
      * @param isLoadAnim True to use animation for the outgoing activity, false otherwise.
      */
-    public static void finishOtherActivities(@NonNull final Class<? extends Activity> clz,
+    public static void finishOtherActivities(@NonNull final Class<? extends AppCompatActivity> clz,
                                              final boolean isLoadAnim) {
-        List<Activity> activities = eUtils.getActivityList();
+        List<AppCompatActivity> activities = eUtils.getActivityList();
         for (int i = activities.size() - 1; i >= 0; i--) {
-            Activity activity = activities.get(i);
+            AppCompatActivity activity = activities.get(i);
             if (!activity.getClass().equals(clz)) {
                 finishActivity(activity, isLoadAnim);
             }
@@ -1332,12 +1332,12 @@ public final class eActivityUtils {
      * @param exitAnim  A resource ID of the animation resource to use for the
      *                  outgoing activity.
      */
-    public static void finishOtherActivities(@NonNull final Class<? extends Activity> clz,
+    public static void finishOtherActivities(@NonNull final Class<? extends AppCompatActivity> clz,
                                              @AnimRes final int enterAnim,
                                              @AnimRes final int exitAnim) {
-        List<Activity> activities = eUtils.getActivityList();
+        List<AppCompatActivity> activities = eUtils.getActivityList();
         for (int i = activities.size() - 1; i >= 0; i--) {
-            Activity activity = activities.get(i);
+            AppCompatActivity activity = activities.get(i);
             if (!activity.getClass().equals(clz)) {
                 finishActivity(activity, enterAnim, exitAnim);
             }
@@ -1357,9 +1357,9 @@ public final class eActivityUtils {
      * @param isLoadAnim True to use animation for the outgoing activity, false otherwise.
      */
     public static void finishAllActivities(final boolean isLoadAnim) {
-        List<Activity> activityList = eUtils.getActivityList();
+        List<AppCompatActivity> activityList = eUtils.getActivityList();
         for (int i = activityList.size() - 1; i >= 0; --i) {// remove from top
-            Activity activity = activityList.get(i);
+            AppCompatActivity activity = activityList.get(i);
             // sActivityList remove the index activity at onActivityDestroyed
             activity.finish();
             if (!isLoadAnim) {
@@ -1378,9 +1378,9 @@ public final class eActivityUtils {
      */
     public static void finishAllActivities(@AnimRes final int enterAnim,
                                            @AnimRes final int exitAnim) {
-        List<Activity> activityList = eUtils.getActivityList();
+        List<AppCompatActivity> activityList = eUtils.getActivityList();
         for (int i = activityList.size() - 1; i >= 0; --i) {// remove from top
-            Activity activity = activityList.get(i);
+            AppCompatActivity activity = activityList.get(i);
             // sActivityList remove the index activity at onActivityDestroyed
             activity.finish();
             activity.overridePendingTransition(enterAnim, exitAnim);
@@ -1400,7 +1400,7 @@ public final class eActivityUtils {
      * @param isLoadAnim True to use animation for the outgoing activity, false otherwise.
      */
     public static void finishAllActivitiesExceptNewest(final boolean isLoadAnim) {
-        List<Activity> activities = eUtils.getActivityList();
+        List<AppCompatActivity> activities = eUtils.getActivityList();
         for (int i = activities.size() - 2; i >= 0; i--) {
             finishActivity(activities.get(i), isLoadAnim);
         }
@@ -1416,7 +1416,7 @@ public final class eActivityUtils {
      */
     public static void finishAllActivitiesExceptNewest(@AnimRes final int enterAnim,
                                                        @AnimRes final int exitAnim) {
-        List<Activity> activities = eUtils.getActivityList();
+        List<AppCompatActivity> activities = eUtils.getActivityList();
         for (int i = activities.size() - 2; i >= 0; i--) {
             finishActivity(activities.get(i), enterAnim, exitAnim);
         }
@@ -1428,7 +1428,7 @@ public final class eActivityUtils {
      * @param activity The activity.
      * @return the icon of activity
      */
-    public static Drawable getActivityIcon(@NonNull final Activity activity) {
+    public static Drawable getActivityIcon(@NonNull final AppCompatActivity activity) {
         return getActivityIcon(activity.getComponentName());
     }
 
@@ -1438,7 +1438,7 @@ public final class eActivityUtils {
      * @param clz The activity class.
      * @return the icon of activity
      */
-    public static Drawable getActivityIcon(@NonNull final Class<? extends Activity> clz) {
+    public static Drawable getActivityIcon(@NonNull final Class<? extends AppCompatActivity> clz) {
         return getActivityIcon(new ComponentName(eUtils.getApp(), clz));
     }
 
@@ -1464,7 +1464,7 @@ public final class eActivityUtils {
      * @param activity The activity.
      * @return the logo of activity
      */
-    public static Drawable getActivityLogo(@NonNull final Activity activity) {
+    public static Drawable getActivityLogo(@NonNull final AppCompatActivity activity) {
         return getActivityLogo(activity.getComponentName());
     }
 
@@ -1474,7 +1474,7 @@ public final class eActivityUtils {
      * @param clz The activity class.
      * @return the logo of activity
      */
-    public static Drawable getActivityLogo(@NonNull final Class<? extends Activity> clz) {
+    public static Drawable getActivityLogo(@NonNull final Class<? extends AppCompatActivity> clz) {
         return getActivityLogo(new ComponentName(eUtils.getApp(), clz));
     }
 
@@ -1508,7 +1508,7 @@ public final class eActivityUtils {
     private static void startActivity(final Intent intent,
                                       final Context context,
                                       final Bundle options) {
-        if (!(context instanceof Activity)) {
+        if (!(context instanceof AppCompatActivity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         if (options != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -1518,7 +1518,7 @@ public final class eActivityUtils {
         }
     }
 
-    private static void startActivityForResult(final Activity activity,
+    private static void startActivityForResult(final AppCompatActivity activity,
                                                final Bundle extras,
                                                final String pkg,
                                                final String cls,
@@ -1531,7 +1531,7 @@ public final class eActivityUtils {
     }
 
     private static void startActivityForResult(final Intent intent,
-                                               final Activity activity,
+                                               final AppCompatActivity activity,
                                                final int requestCode,
                                                final Bundle options) {
         if (options != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -1544,7 +1544,7 @@ public final class eActivityUtils {
     private static void startActivities(final Intent[] intents,
                                         final Context context,
                                         final Bundle options) {
-        if (!(context instanceof Activity)) {
+        if (!(context instanceof AppCompatActivity)) {
             for (Intent intent : intents) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
@@ -1562,7 +1562,7 @@ public final class eActivityUtils {
         return ActivityOptionsCompat.makeCustomAnimation(context, enterAnim, exitAnim).toBundle();
     }
 
-    private static Bundle getOptionsBundle(final Activity activity,
+    private static Bundle getOptionsBundle(final AppCompatActivity activity,
                                            final View[] sharedElements) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return null;
         if (sharedElements == null) return null;

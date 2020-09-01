@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/icn_chevron_up"/>
+            app:srcCompat="@drawable/icn_chevron_up"/>
 
     </LinearLayout>
 
@@ -132,7 +132,7 @@
                 android:id="@+id/minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_remove"/>
+                app:srcCompat="@drawable/ic_baseline_remove"/>
 
             <TextView
                 android:id="@+id/threads"
@@ -148,7 +148,7 @@
                 android:id="@+id/plus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_add"/>
+                app:srcCompat="@drawable/ic_baseline_add"/>
         </LinearLayout>
     </RelativeLayout>
 

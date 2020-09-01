@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.demo.audiolive;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -198,7 +198,7 @@ public class AudioLiveActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if(isUploader){
-                    new AlertDialog.Builder(AudioLiveActivity.this).setCancelable(true)
+                    new androidx.appcompat.app.AlertDialog.Builder(AudioLiveActivity.this).setCancelable(true)
                             .setTitle("是否结束上麦?")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
@@ -228,7 +228,7 @@ public class AudioLiveActivity extends BaseActivity {
                             }
                     ).show();
                 }else{
-                    new AlertDialog.Builder(AudioLiveActivity.this).setCancelable(true)
+                    new androidx.appcompat.app.AlertDialog.Builder(AudioLiveActivity.this).setCancelable(true)
                             .setTitle("是否申请上麦?")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
@@ -606,7 +606,7 @@ public class AudioLiveActivity extends BaseActivity {
                 }
                 break;
             case AEvent.AEVENT_LIVE_INVITE_LINK:
-                new AlertDialog.Builder(AudioLiveActivity.this).setCancelable(true)
+                new androidx.appcompat.app.AlertDialog.Builder(AudioLiveActivity.this).setCancelable(true)
                         .setTitle(eventObj+"邀请您上麦")
                         .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
                             @Override
@@ -735,7 +735,7 @@ public class AudioLiveActivity extends BaseActivity {
 
     private void showManagerDialog(final String userId,final String msgText) {
         if(!userId.equals(MLOC.INSTANCE.getUserId())){
-            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            AlertDialog.Builder builder=new androidx.appcompat.app.AlertDialog.Builder(this);
             if(createrId.equals(MLOC.INSTANCE.getUserId())){
                 Boolean ac = false;
                 for(int i = 0 ;i<mPlayerList.size();i++){
@@ -794,7 +794,7 @@ public class AudioLiveActivity extends BaseActivity {
                 });
             }
             builder.setCancelable(true);
-            AlertDialog dialog=builder.create();
+            androidx.appcompat.app.AlertDialog dialog=builder.create();
             dialog.show();
         }
 

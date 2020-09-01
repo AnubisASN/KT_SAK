@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -53,7 +54,7 @@
                 android:layout_height="60dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="100dp"
-                android:src="@drawable/starfox_500"
+                app:srcCompat="@drawable/starfox_500"
                 android:visibility="invisible" />
 
             <TextView
@@ -103,7 +104,7 @@
                     android:id="@+id/calling_hangup"
                     android:layout_width="66dp"
                     android:layout_height="66dp"
-                    android:src="@drawable/icon_hangup" />
+                    app:srcCompat="@drawable/icon_hangup" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -207,7 +208,7 @@
                             android:id="@+id/screen_btn"
                             android:layout_width="66dp"
                             android:layout_height="66dp"
-                            android:src="@drawable/btn_record_screen" />
+                            app:srcCompat="@drawable/btn_record_screen" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -236,7 +237,7 @@
                             android:id="@+id/talking_hangup"
                             android:layout_width="66dp"
                             android:layout_height="66dp"
-                            android:src="@drawable/icon_hangup" />
+                            app:srcCompat="@drawable/icon_hangup" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -266,7 +267,7 @@
                             android:id="@+id/switch_camera"
                             android:layout_width="66dp"
                             android:layout_height="66dp"
-                            android:src="@drawable/btn_turn_camera" />
+                            app:srcCompat="@drawable/btn_turn_camera" />
 
                         <TextView
                             android:layout_width="wrap_content"

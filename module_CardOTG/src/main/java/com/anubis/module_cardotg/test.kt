@@ -16,7 +16,7 @@ import com.huashi.otg.sdk.HsOtgApi
 import com.huashi.otg.sdk.HsSerialPortSDK
 import com.huashi.otg.sdk.Test
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap

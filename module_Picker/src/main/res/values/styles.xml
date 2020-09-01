@@ -4,11 +4,187 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
     </style>
+    <style name="PhoenixTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
     <style name="time_dialog" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@color/white</item>
+    </style>
+    <style name="theme_activity" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+    <style name="theme_activity_text_input" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/transparent_6f</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="style_window">
+        <item name="android:windowEnterAnimation">@anim/phoenix_fade_in</item>
+        <item name="android:windowExitAnimation">@anim/phoenix_fade_out</item>
+    </style>
+
+    <style name="style_dialog" parent="android:Theme.Dialog">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+    </style>
+
+    <style name="style_base">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="style_text" parent="style_base">
+        <item name="android:textSize">@dimen/phoenix_text_16</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginRight">12dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="style_blur_finish">
+        <item name="android:layout_height">@dimen/phoenix_dimen_30</item>
+        <item name="android:layout_width">@dimen/phoenix_dimen_75</item>
+        <item name="android:textSize">@dimen/phoenix_text_16</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:layout_marginRight">12dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="style_title_text" parent="style_base">
+        <item name="android:textSize">@dimen/phoenix_text_16</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="style_rephotograph" parent="style_base">
+
+        <item name="android:textSize">@dimen/phoenix_text_16</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="style_rephotograph_black" parent="style_base">
+
+        <item name="android:textSize">@dimen/phoenix_text_16</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:paddingLeft">4dp</item>
+    </style>
+
+    <style name="style_mark" parent="style_base">
+        <item name="android:textSize">@dimen/phoenix_text_14</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">@dimen/phoenix_text_8</item>
+    </style>
+
+    <style name="style_icon">
+        <item name="android:layout_height">@dimen/phoenix_dimen_22</item>
+        <item name="android:layout_width">@dimen/phoenix_dimen_22</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="style_ll_edit" parent="style_base">
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">28dp</item>
+    </style>
+
+    <style name="style_full_screen" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize ythemeColorheme here. -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="style_seekbar" parent="android:Widget">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/abc_seekbar_track_material</item>
+        <item name="android:indeterminateDrawable">@drawable/abc_seekbar_track_material</item>
+        <item name="android:thumb">@drawable/abc_seekbar_thumb_material</item>
+        <item name="android:focusable">true</item>
+        <item name="android:paddingLeft">16dip</item>
+        <item name="android:paddingRight">16dip</item>
+    </style>
+
+    <style name="PictureEditTheme" parent="@style/PhoenixTheme">
+        <item name="colorPrimary">@color/theme_color_black</item>
+        <item name="android:windowBackground">@color/transparent_6f</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <style name="FilePickerThemeRail" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/rail_color_primary</item>
+        <item name="colorPrimaryDark">@color/rail_color_primary_dark</item>
+        <item name="colorAccent">@color/rail_color_accent</item>
+        <item name="android:textColor">@color/rail_text_color</item>
+        <item name="android:textColorPrimary">@color/rail_textColor_Primary</item>
+        <item name="buttonStyle">@style/FilePickerThemeRailButtonStyle</item>
+    </style>
+
+    <style name="FilePickerThemeRailButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="background">@drawable/btn_selector_file_picker_rail</item>
+    </style>
+
+
+    <!--https://material.io/design/material-studies/reply.html#-->
+    <style name="FilePickerThemeReply" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/reply_color_primary</item>
+        <item name="colorPrimaryDark">@color/reply_color_primary_dark</item>
+        <item name="colorAccent">@color/reply_color_accent</item>
+        <item name="android:textColor">@color/reply_text_color</item>
+        <item name="android:textColorPrimary">@color/reply_textColor_Primary</item>
+        <item name="buttonStyle">@style/FilePickerThemeReplyButtonStyle</item>
+    </style>
+
+    <style name="FilePickerThemeReplyButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="background">@drawable/btn_selector_file_picker_reply</item>
+    </style>
+
+    <!--https://material.io/design/material-studies/crane.html#about-crane-->
+    <style name="FilePickerThemeCrane" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/crane_color_primary</item>
+        <item name="colorPrimaryDark">@color/crane_color_primary_dark</item>
+        <item name="colorAccent">@color/crane_color_accent</item>
+        <item name="buttonStyle">@style/FilePickerThemeCraneButtonStyle</item>
+        <item name="android:textColor">@color/crane_text_color</item>
+        <item name="android:textColorPrimary">@color/crane_textColor_Primary</item>
+    </style>
+
+    <style name="FilePickerThemeCraneButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="background">@drawable/btn_selector_file_picker_crane</item>
+    </style>
+    <!--https://material.io/design/material-studies/shrine.html#about-shrine-->
+    <style name="FilePickerThemeShrine" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/shrine_color_primary</item>
+        <item name="colorPrimaryDark">@color/shrine_color_primary_dark</item>
+        <item name="colorAccent">@color/shrine_color_accent</item>
+        <item name="buttonStyle">@style/FilePickerThemeShrineButtonStyle</item>
+        <item name="android:textColor">@color/shrine_text_color</item>
+        <item name="android:textColorPrimary">@color/shrine_textColor_Primary</item>
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+    </style>
+
+    <style name="FilePickerThemeShrineButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="background">@drawable/btn_selector_file_picker_shrine</item>
     </style>
 </resources>

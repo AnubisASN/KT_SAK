@@ -24,7 +24,7 @@
         android:id="@+id/log_close"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/icon_ctrl_close"
+        app:srcCompat="@drawable/icon_ctrl_close"
         android:layout_alignParentRight="true"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"

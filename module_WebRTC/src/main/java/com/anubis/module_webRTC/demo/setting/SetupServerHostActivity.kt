@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.demo.setting
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -14,7 +14,7 @@ import com.anubis.module_webRTC.demo.service.KeepLiveService
 import com.anubis.module_webRTC.R
 import com.starrtc.starrtcsdk.api.XHClient
 
-class SetupServerHostActivity : Activity() {
+class SetupServerHostActivity : androidx.appcompat.app.AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.anubis.module_webRTC.R.layout.activity_setup_server_host)

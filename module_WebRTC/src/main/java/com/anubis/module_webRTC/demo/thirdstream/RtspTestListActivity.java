@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.demo.thirdstream;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -231,7 +231,7 @@ public class RtspTestListActivity extends BaseActivity implements AdapterView.On
         final StreamInfo streamInfo = mDatas.get(position);
         String[] arr = new String[]{"停止拉流","恢复拉流","删除记录"};
 
-        AlertDialog.Builder builder=new AlertDialog.Builder(RtspTestListActivity.this);
+        androidx.appcompat.app.AlertDialog.Builder builder=new androidx.appcompat.app.AlertDialog.Builder(RtspTestListActivity.this);
         builder.setItems(arr, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

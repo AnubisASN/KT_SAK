@@ -2,4 +2,150 @@
 <resources>
     <color name="colorPrimary">#FF5722</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="blue">#7D7DFF</color>
+    <color name="orange">#FF571A</color>
+    <color name="green">#4CAF50</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="phoenix_transparent_black">#4D000000</color>
+    <color name="phoenix_transparent_white">#4DFFFFFF</color>
+    <color name="phoenix_transparent_gray">#BFCCCCCC</color>
+
+    <color name="color_white_1">#FAFAFA</color>
+    <color name="color_white_2">#F0FFFFFF</color>
+    <color name="color_white_3">#EEEEEE</color>
+
+    <color name="color_black_1">#1A1A1A</color>
+    <color name="color_black_2">#4d4d4d</color>
+    <color name="color_black_3">#53575e</color>
+    <color name="color_black_4">#80000000</color>
+    <color name="color_black_5">#20000000</color>
+
+    <color name="color_gray_1">#9b9b9b</color>
+    <color name="color_gray_2">#e6e6e6</color>
+    <color name="color_gray_3">#D9D9D9</color>
+    <color name="color_gray_4">#E0DBDBDB</color>
+    <color name="color_gray_5">#999999</color>
+
+    <color name="theme_color_black">#333333</color>
+    <color name="theme_color_red">#FF4040</color>
+    <color name="theme_color_orange">#FF571A</color>
+    <color name="theme_color_blue">#538EEB</color>
+
+    <color name="editor_line_space">#444444</color>
+    <color name="transparent_6f">#6f000000</color>
+    <array name="color_seeds">
+        <item>#ffffff</item>
+        <item>#ff0000</item>
+        <item>#FFFFE100</item>
+        <item>#edf10c</item>
+        <item>#b3ff00</item>
+        <item>#00ff04</item>
+        <item>#02f7ff</item>
+        <item>#006fff</item>
+        <item>#1500ff</item>
+        <item>#bc02ff</item>
+        <item>#ee00ff</item>
+        <item>#ff00e1</item>
+    </array>
+
+    <color name="button_background">#4CAF50</color>
+    <color name="circle_shallow_translucent_background">#26ffffff</color>
+
+    <color name="black_btn_text_color">#ff000000</color>
+    <color name="black_eighty_percent">#cc000000</color>
+    <color name="black_fifty_percent">#80000000</color>
+    <color name="black_forty_percent">#66000000</color>
+    <color name="black_seventy_percent">#b2000000</color>
+    <color name="black_sixty_percent">#99000000</color>
+    <color name="black_tenth_percent">#1a000000</color>
+    <color name="black_thirty_percent">#4c000000</color>
+    <color name="black_twenty_percent">#33000000</color>
+    <color name="black_two_percent">#05000000</color>
+
+    <color name="white_fifty_percent">#80ffffff</color>
+    <color name="white_forty_percent">#66ffffff</color>
+    <color name="white_ninety_percent">#e6ffffff</color>
+    <color name="white_seventy_percent">#b2ffffff</color>
+    <color name="white_sixty_percent">#99ffffff</color>
+    <color name="white_ten_percent">#1affffff</color>
+    <color name="white_thirty_percent">#4cffffff</color>
+    <color name="white_twenty_percent">#33ffffff</color>
+    <color name="rail_color_primary">#434150</color>
+    <color name="rail_color_primary_dark">#27262f</color>
+    <color name="rail_color_accent">#00c381</color>
+    <color name="rail_button_focus">#01714b</color>
+    <color name="rail_text_color">#fff</color>
+    <color name="rail_textColor_Primary">#fff</color>
+    <color name="rail_swl_color_1">#9900C381</color>
+    <color name="rail_swl_color_2">#BF00C381</color>
+    <color name="rail_swl_color_3">#CC00C381</color>
+    <color name="rail_swl_color_4">#E600C381</color>
+    <color name="rail_swl_color_5">#00c381</color>
+    <integer-array name="rail_swl_colors">
+        <item>@color/rail_swl_color_1</item>
+        <item>@color/rail_swl_color_2</item>
+        <item>@color/rail_swl_color_3</item>
+        <item>@color/rail_swl_color_4</item>
+        <item>@color/rail_swl_color_5</item>
+    </integer-array>
+
+
+    <color name="reply_color_primary">#304956</color>
+    <color name="reply_color_primary_dark">#446576</color>
+    <color name="reply_color_accent">#ffa900</color>
+    <color name="reply_button_focus">#865900</color>
+    <color name="reply_text_color">#fff</color>
+    <color name="reply_textColor_Primary">#fff</color>
+    <color name="reply_swl_color_1">#99ffa900</color>
+    <color name="reply_swl_color_2">#BFffa900</color>
+    <color name="reply_swl_color_3">#CCffa900</color>
+    <color name="reply_swl_color_4">#E6ffa900</color>
+    <color name="reply_swl_color_5">#ffa900</color>
+    <integer-array name="reply_swl_colors">
+        <item>@color/reply_swl_color_1</item>
+        <item>@color/reply_swl_color_2</item>
+        <item>@color/reply_swl_color_3</item>
+        <item>@color/reply_swl_color_4</item>
+        <item>@color/reply_swl_color_5</item>
+    </integer-array>
+
+    <color name="crane_color_primary">#7d005c</color>
+    <color name="crane_color_primary_dark">#57003a</color>
+    <color name="crane_color_accent">#f60000</color>
+    <color name="crane_button_focus">#8f0000</color>
+    <color name="crane_text_color">#fff</color>
+    <color name="crane_textColor_Primary">#fff</color>
+    <color name="crane_swl_color_1">#99f60000</color>
+    <color name="crane_swl_color_2">#BFf60000</color>
+    <color name="crane_swl_color_3">#CCf60000</color>
+    <color name="crane_swl_color_4">#E6f60000</color>
+    <color name="crane_swl_color_5">#f60000</color>
+    <integer-array name="crane_swl_colors">
+        <item>@color/crane_swl_color_1</item>
+        <item>@color/crane_swl_color_2</item>
+        <item>@color/crane_swl_color_3</item>
+        <item>@color/crane_swl_color_4</item>
+        <item>@color/crane_swl_color_5</item>
+    </integer-array>
+
+    <color name="shrine_color_primary">#ffd9cd</color>
+    <color name="shrine_color_primary_dark">#dfc3c2</color>
+    <color name="shrine_color_accent">#48282c</color>
+    <color name="shrine_button_focus">#301b1e</color>
+    <color name="shrine_text_color">#48282c</color>
+    <color name="shrine_textColor_Primary">#fff</color>
+    <color name="shrine_swl_color_1">#99ffd9cd</color>
+    <color name="shrine_swl_color_2">#BFffd9cd</color>
+    <color name="shrine_swl_color_3">#CC48282c</color>
+    <color name="shrine_swl_color_4">#E648282c</color>
+    <color name="shrine_swl_color_5">#48282c</color>
+    <integer-array name="shrine_swl_colors">
+        <item>@color/shrine_swl_color_1</item>
+        <item>@color/shrine_swl_color_2</item>
+        <item>@color/shrine_swl_color_3</item>
+        <item>@color/shrine_swl_color_4</item>
+        <item>@color/shrine_swl_color_5</item>
+    </integer-array>
 </resources>

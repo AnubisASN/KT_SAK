@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.guoxiaoxing.phoenix.picker.Phoenix
+import px_picker.Phoenix
 
 /**
  * Author  ： AnubisASN   on 19-6-29 下午3:14.

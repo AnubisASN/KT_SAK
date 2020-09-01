@@ -3,7 +3,7 @@
  */
 package com.anubis.module_navi.activity;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -31,7 +31,7 @@ import com.baidu.navisdk.adapter.map.BNOverlayItem;
 /**
  * 诱导界面
  */
-public class DemoGuideActivity extends Activity {
+public class DemoGuideActivity extends AppCompatActivity {
 
     private static final String TAG = DemoGuideActivity.class.getName();
 

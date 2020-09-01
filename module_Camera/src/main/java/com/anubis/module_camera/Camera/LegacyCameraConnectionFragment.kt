@@ -46,7 +46,7 @@ import java.io.IOException
 class LegacyCameraConnectionFragment(
         private val imageListener: Camera.PreviewCallback,
         /** The layout identifier to inflate for this Fragment.  */
-        private val layout: Int, private val desiredSize: Size) : Fragment() {
+        private val layout: Int, private val desiredSize: Size) :  Fragment() {
 
     private var camera: Camera? = null
     /** An [eAutoFitTextureView] for camera preview.  */

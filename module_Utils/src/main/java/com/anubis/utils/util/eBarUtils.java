@@ -1,7 +1,7 @@
 package com.anubis.utils.util;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -70,7 +70,7 @@ public final class eBarUtils {
      * @param activity  The activity.
      * @param isVisible True to set status bar visible, false otherwise.
      */
-    public static void setStatusBarVisibility(@NonNull final Activity activity,
+    public static void setStatusBarVisibility(@NonNull final AppCompatActivity activity,
                                               final boolean isVisible) {
         setStatusBarVisibility(activity.getWindow(), isVisible);
     }
@@ -102,7 +102,7 @@ public final class eBarUtils {
      * @param activity The activity.
      * @return {@code true}: yes<br>{@code false}: no
      */
-    public static boolean isStatusBarVisible(@NonNull final Activity activity) {
+    public static boolean isStatusBarVisible(@NonNull final AppCompatActivity activity) {
         int flags = activity.getWindow().getAttributes().flags;
         return (flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == 0;
     }
@@ -113,7 +113,7 @@ public final class eBarUtils {
      * @param activity    The activity.
      * @param isLightMode True to set status bar light mode, false otherwise.
      */
-    public static void setStatusBarLightMode(@NonNull final Activity activity,
+    public static void setStatusBarLightMode(@NonNull final AppCompatActivity activity,
                                              final boolean isLightMode) {
         setStatusBarLightMode(activity.getWindow(), isLightMode);
     }
@@ -196,7 +196,7 @@ public final class eBarUtils {
      * @param activity The activity.
      * @param color    The status bar's color.
      */
-    public static void setStatusBarColor(@NonNull final Activity activity,
+    public static void setStatusBarColor(@NonNull final AppCompatActivity activity,
                                          @ColorInt final int color) {
         setStatusBarColor(activity, color, DEFAULT_ALPHA, false);
     }
@@ -208,7 +208,7 @@ public final class eBarUtils {
      * @param color    The status bar's color.
      * @param alpha    The status bar's alpha which isn't the same as alpha in the color.
      */
-    public static void setStatusBarColor(@NonNull final Activity activity,
+    public static void setStatusBarColor(@NonNull final AppCompatActivity activity,
                                          @ColorInt final int color,
                                          @IntRange(from = 0, to = 255) final int alpha) {
         setStatusBarColor(activity, color, alpha, false);
@@ -223,7 +223,7 @@ public final class eBarUtils {
      * @param isDecor  True to add fake status bar in DecorView,
      *                 false to add fake status bar in ContentView.
      */
-    public static void setStatusBarColor(@NonNull final Activity activity,
+    public static void setStatusBarColor(@NonNull final AppCompatActivity activity,
                                          @ColorInt final int color,
                                          @IntRange(from = 0, to = 255) final int alpha,
                                          final boolean isDecor) {
@@ -256,7 +256,7 @@ public final class eBarUtils {
                                          @IntRange(from = 0, to = 255) final int alpha) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
         fakeStatusBar.setVisibility(View.VISIBLE);
-        transparentStatusBar((Activity) fakeStatusBar.getContext());
+        transparentStatusBar((AppCompatActivity) fakeStatusBar.getContext());
         ViewGroup.LayoutParams layoutParams = fakeStatusBar.getLayoutParams();
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         layoutParams.height = getStatusBarHeight();
@@ -268,7 +268,7 @@ public final class eBarUtils {
      *
      * @param activity The activity.
      */
-    public static void setStatusBarAlpha(@NonNull final Activity activity) {
+    public static void setStatusBarAlpha(@NonNull final AppCompatActivity activity) {
         setStatusBarAlpha(activity, DEFAULT_ALPHA, false);
     }
 
@@ -278,7 +278,7 @@ public final class eBarUtils {
      * @param activity The activity.
      * @param alpha    The status bar's alpha.
      */
-    public static void setStatusBarAlpha(@NonNull final Activity activity,
+    public static void setStatusBarAlpha(@NonNull final AppCompatActivity activity,
                                          @IntRange(from = 0, to = 255) final int alpha) {
         setStatusBarAlpha(activity, alpha, false);
     }
@@ -291,7 +291,7 @@ public final class eBarUtils {
      * @param isDecor  True to add fake status bar in DecorView,
      *                 false to add fake status bar in ContentView.
      */
-    public static void setStatusBarAlpha(@NonNull final Activity activity,
+    public static void setStatusBarAlpha(@NonNull final AppCompatActivity activity,
                                          @IntRange(from = 0, to = 255) final int alpha,
                                          final boolean isDecor) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
@@ -319,7 +319,7 @@ public final class eBarUtils {
                                          @IntRange(from = 0, to = 255) final int alpha) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
         fakeStatusBar.setVisibility(View.VISIBLE);
-        transparentStatusBar((Activity) fakeStatusBar.getContext());
+        transparentStatusBar((AppCompatActivity) fakeStatusBar.getContext());
         ViewGroup.LayoutParams layoutParams = fakeStatusBar.getLayoutParams();
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         layoutParams.height = getStatusBarHeight();
@@ -336,7 +336,7 @@ public final class eBarUtils {
      * @param color         The status bar's color.
      * @param isTop         True to set DrawerLayout at the top layer, false otherwise.
      */
-    public static void setStatusBarColor4Drawer(@NonNull final Activity activity,
+    public static void setStatusBarColor4Drawer(@NonNull final AppCompatActivity activity,
                                                 @NonNull final DrawerLayout drawer,
                                                 @NonNull final View fakeStatusBar,
                                                 @ColorInt final int color,
@@ -355,7 +355,7 @@ public final class eBarUtils {
      * @param alpha         The status bar's alpha which isn't the same as alpha in the color.
      * @param isTop         True to set DrawerLayout at the top layer, false otherwise.
      */
-    public static void setStatusBarColor4Drawer(@NonNull final Activity activity,
+    public static void setStatusBarColor4Drawer(@NonNull final AppCompatActivity activity,
                                                 @NonNull final DrawerLayout drawer,
                                                 @NonNull final View fakeStatusBar,
                                                 @ColorInt final int color,
@@ -384,7 +384,7 @@ public final class eBarUtils {
      * @param fakeStatusBar The fake status bar view.
      * @param isTop         True to set DrawerLayout at the top layer, false otherwise.
      */
-    public static void setStatusBarAlpha4Drawer(@NonNull final Activity activity,
+    public static void setStatusBarAlpha4Drawer(@NonNull final AppCompatActivity activity,
                                                 @NonNull final DrawerLayout drawer,
                                                 @NonNull final View fakeStatusBar,
                                                 final boolean isTop) {
@@ -401,7 +401,7 @@ public final class eBarUtils {
      * @param alpha         The status bar's alpha.
      * @param isTop         True to set DrawerLayout at the top layer, false otherwise.
      */
-    public static void setStatusBarAlpha4Drawer(@NonNull final Activity activity,
+    public static void setStatusBarAlpha4Drawer(@NonNull final AppCompatActivity activity,
                                                 @NonNull final DrawerLayout drawer,
                                                 @NonNull final View fakeStatusBar,
                                                 @IntRange(from = 0, to = 255) final int alpha,
@@ -420,7 +420,7 @@ public final class eBarUtils {
         }
     }
 
-    private static void addStatusBarColor(final Activity activity,
+    private static void addStatusBarColor(final AppCompatActivity activity,
                                           final int color,
                                           final int alpha,
                                           boolean isDecor) {
@@ -438,7 +438,7 @@ public final class eBarUtils {
         }
     }
 
-    private static void addStatusBarAlpha(final Activity activity,
+    private static void addStatusBarAlpha(final AppCompatActivity activity,
                                           final int alpha,
                                           boolean isDecor) {
         ViewGroup parent = isDecor ?
@@ -455,11 +455,11 @@ public final class eBarUtils {
         }
     }
 
-    private static void hideColorView(final Activity activity) {
+    private static void hideColorView(final AppCompatActivity activity) {
         hideColorView(activity.getWindow());
     }
 
-    private static void hideAlphaView(final Activity activity) {
+    private static void hideAlphaView(final AppCompatActivity activity) {
         hideAlphaView(activity.getWindow());
     }
 
@@ -523,7 +523,7 @@ public final class eBarUtils {
         return statusBarView;
     }
 
-    private static void transparentStatusBar(final Activity activity) {
+    private static void transparentStatusBar(final AppCompatActivity activity) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
         Window window = activity.getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -616,7 +616,7 @@ public final class eBarUtils {
      * @param isVisible True to set navigation bar visible, false otherwise.
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static void setNavBarVisibility(@NonNull final Activity activity, boolean isVisible) {
+    public static void setNavBarVisibility(@NonNull final AppCompatActivity activity, boolean isVisible) {
         setNavBarVisibility(activity.getWindow(), isVisible);
     }
 
@@ -645,7 +645,7 @@ public final class eBarUtils {
      * @param activity The activity.
      * @return {@code true}: yes<br>{@code false}: no
      */
-    public static boolean isNavBarVisible(@NonNull final Activity activity) {
+    public static boolean isNavBarVisible(@NonNull final AppCompatActivity activity) {
         return isNavBarVisible(activity.getWindow());
     }
 
@@ -668,7 +668,7 @@ public final class eBarUtils {
      * @param color    The navigation bar's color.
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void setNavBarColor(@NonNull final Activity activity, @ColorInt final int color) {
+    public static void setNavBarColor(@NonNull final AppCompatActivity activity, @ColorInt final int color) {
         setNavBarColor(activity.getWindow(), color);
     }
 
@@ -690,7 +690,7 @@ public final class eBarUtils {
      * @return the color of navigation bar
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    public static int getNavBarColor(@NonNull final Activity activity) {
+    public static int getNavBarColor(@NonNull final AppCompatActivity activity) {
         return getNavBarColor(activity.getWindow());
     }
 

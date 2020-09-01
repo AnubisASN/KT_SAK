@@ -189,7 +189,7 @@
                 android:id="@+id/chat_btn"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:src="@drawable/icon_audio_live_chat"
+                app:srcCompat="@drawable/icon_audio_live_chat"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="110dp"/>
             <TextView
@@ -216,7 +216,7 @@
                 android:id="@+id/audio_btn"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:src="@drawable/mic_open"
+                app:srcCompat="@drawable/mic_open"
                 android:layout_marginRight="10dp"/>
             <EditText
                 android:id="@+id/id_input"

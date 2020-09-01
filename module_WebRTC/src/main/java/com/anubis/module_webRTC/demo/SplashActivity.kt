@@ -6,8 +6,8 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -26,7 +26,7 @@ import com.anubis.module_webRTC.utils.AEvent
 
 import java.util.ArrayList
 
-class SplashActivity : Activity() {
+class SplashActivity : androidx.appcompat.app.AppCompatActivity() {
     private var isLogin = false
     private val checkNetState = false
 
@@ -58,7 +58,7 @@ class SplashActivity : Activity() {
                     requestPermissions(permissionsList.toTypedArray(),
                             REQUEST_PHONE_PERMISSIONS)
                 } else {
-                    AlertDialog.Builder(this)
+                    androidx.appcompat.app.AlertDialog.Builder(this)
                             .setCancelable(true)
                             .setTitle("提示")
                             .setMessage("获取不到授权，APP将无法正常使用，请允许APP获取权限！")

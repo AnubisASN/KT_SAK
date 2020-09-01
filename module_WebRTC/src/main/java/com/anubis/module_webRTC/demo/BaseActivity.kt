@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.demo
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,7 +12,7 @@ import com.starrtc.starrtcsdk.core.im.message.XHIMMessage
 import org.json.JSONException
 import org.json.JSONObject
 
-open class BaseActivity : Activity(), IEventListener {
+open class BaseActivity : androidx.appcompat.app.AppCompatActivity(), IEventListener {
 
     override fun onResume() {
         super.onResume()

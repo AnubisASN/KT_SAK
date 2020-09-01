@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.demo.im.chatroom;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;

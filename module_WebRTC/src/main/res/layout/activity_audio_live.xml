@@ -18,7 +18,7 @@
                 android:id="@+id/mic_head"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/icon_add_more"/>
+                app:srcCompat="@drawable/icon_add_more"/>
             <TextView
                 android:id="@+id/mc_id"
                 android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
                     android:id="@+id/mc_head_1"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/icon_add_more"/>
+                    app:srcCompat="@drawable/icon_add_more"/>
                 <TextView
                     android:id="@+id/mc_id_1"
                     android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
                     android:id="@+id/mc_head_2"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/icon_add_more"/>
+                    app:srcCompat="@drawable/icon_add_more"/>
                 <TextView
                     android:id="@+id/mc_id_2"
                     android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
                     android:id="@+id/mc_head_3"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/icon_add_more"/>
+                    app:srcCompat="@drawable/icon_add_more"/>
                 <TextView
                     android:id="@+id/mc_id_3"
                     android:layout_width="wrap_content"
@@ -113,7 +113,7 @@
                     android:id="@+id/mc_head_4"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/icon_add_more"/>
+                    app:srcCompat="@drawable/icon_add_more"/>
                 <TextView
                     android:id="@+id/mc_id_4"
                     android:layout_width="wrap_content"
@@ -133,7 +133,7 @@
                     android:id="@+id/mc_head_5"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/icon_add_more"/>
+                    app:srcCompat="@drawable/icon_add_more"/>
                 <TextView
                     android:id="@+id/mc_id_5"
                     android:layout_width="wrap_content"
@@ -153,7 +153,7 @@
                     android:id="@+id/mc_head_6"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/icon_add_more"/>
+                    app:srcCompat="@drawable/icon_add_more"/>
                 <TextView
                     android:id="@+id/mc_id_6"
                     android:layout_width="wrap_content"
@@ -184,7 +184,7 @@
                 android:id="@+id/chat_btn"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:src="@drawable/icon_audio_live_chat"
+                app:srcCompat="@drawable/icon_audio_live_chat"
                 android:layout_marginRight="10dp"/>
             <TextView
                 android:id="@+id/push_btn"
@@ -210,7 +210,7 @@
                 android:id="@+id/audio_btn"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:src="@drawable/mic_open"
+                app:srcCompat="@drawable/mic_open"
                 android:layout_marginRight="10dp"/>
             <EditText
                 android:id="@+id/id_input"

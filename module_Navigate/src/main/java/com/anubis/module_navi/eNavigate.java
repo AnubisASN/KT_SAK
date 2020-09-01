@@ -4,6 +4,8 @@
 package com.anubis.module_navi;
 
 import android.Manifest;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -128,7 +130,7 @@ public  static synchronized   eNavigate eGetInit(){
     }
 // .latitude(sNodeValue[0])
 //                .longitude(sNodeValue[1])
-     public void eStart(Activity activity,double[] sNode,double[] eNode) {
+     public void eStart(Activity activity, double[] sNode, double[] eNode) {
 
 //        if (mDrivingBtn != null) {
 //            mDrivingBtn.setOnClickListener(new OnClickListener() {

@@ -4,8 +4,8 @@
 package com.anubis.module_navi.activity;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +17,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -39,7 +41,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DemoMainActivity extends Activity {
+public class DemoMainActivity extends AppCompatActivity {
 
     private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
 

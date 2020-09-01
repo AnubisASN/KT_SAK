@@ -240,7 +240,7 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
 
 
     protected fun setFragment() {
-        var fragment: Fragment? = null
+        var fragment:  Fragment? = null
         if (eUseCamera2API) {
             val camera2Fragment = CameraConnectionFragment.newInstance(
                     object : CameraConnectionFragment.ConnectionCallback {

@@ -1,6 +1,5 @@
 package com.anubis.module_facelandmark.Tracking;
 
-import android.app.Fragment;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
@@ -18,6 +17,8 @@ import android.view.ViewGroup;
 import com.anubis.module_facelandmark.R;
 
 import java.util.List;
+
+import androidx.fragment.app.Fragment;
 
 
 public class CameraOverlapFragment extends Fragment {

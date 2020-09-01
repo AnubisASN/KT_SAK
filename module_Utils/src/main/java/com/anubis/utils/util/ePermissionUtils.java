@@ -1,6 +1,6 @@
 package com.anubis.utils.util;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -206,7 +206,7 @@ public final class ePermissionUtils {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private boolean rationale(final Activity activity) {
+    private boolean rationale(final AppCompatActivity activity) {
         boolean isRationale = false;
         if (mOnRationaleListener != null) {
             for (String permission : mPermissionsRequest) {
@@ -231,7 +231,7 @@ public final class ePermissionUtils {
         return isRationale;
     }
 
-    private void getPermissionsStatus(final Activity activity) {
+    private void getPermissionsStatus(final AppCompatActivity activity) {
         for (String permission : mPermissionsRequest) {
             if (isGranted(permission)) {
                 mPermissionsGranted.add(permission);
@@ -271,14 +271,14 @@ public final class ePermissionUtils {
         mThemeCallback = null;
     }
 
-    private void onRequestPermissionsResult(final Activity activity) {
+    private void onRequestPermissionsResult(final AppCompatActivity activity) {
         getPermissionsStatus(activity);
         requestCallback();
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static class PermissionActivity extends Activity {
+    public static class PermissionActivity extends AppCompatActivity {
 
         public static void start(final Context context) {
             Intent starter = new Intent(context, PermissionActivity.class);
@@ -356,6 +356,6 @@ public final class ePermissionUtils {
     }
 
     public interface ThemeCallback {
-        void onActivityCreate(Activity activity);
+        void onActivityCreate(AppCompatActivity activity);
     }
 }

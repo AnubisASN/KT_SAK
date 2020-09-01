@@ -3,7 +3,7 @@
  */
 package com.anubis.module_navi.activity;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,7 +14,7 @@ import com.baidu.navisdk.adapter.BaiduNaviManagerFactory;
 import com.baidu.navisdk.adapter.IBNOuterSettingParams;
 import com.baidu.navisdk.comapi.setting.SettingParams;
 
-public class DemoNaviSettingActivity extends Activity implements View.OnClickListener {
+public class DemoNaviSettingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "DemoNaviSettingActivity";
 

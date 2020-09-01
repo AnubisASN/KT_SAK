@@ -1,0 +1,60 @@
+package px_picture.edit.widget.crop
+
+import android.annotation.SuppressLint
+import android.view.View
+import android.view.ViewTreeObserver
+import android.widget.TextView
+import com.anubis.module_picker.R
+import px_picker.util.MatrixUtils
+import px_picker.util.PreDrawSizeListener
+
+class CropDetailView(val view: View) : ViewTreeObserver.OnPreDrawListener {
+    var cropListener: OnCropOperationListener? = null
+    private val mRestoreView: TextView
+    var onPreDrawListener: PreDrawSizeListener? = null
+
+    init {
+        view.viewTreeObserver.addOnPreDrawListener(this)
+        view.findViewById<View>(R.id.ivCropRotate).setOnClickListener {
+            cropListener?.onCropRotation(90f)
+        }
+        view.findViewById<View>(R.id.ivCropCancel).setOnClickListener {
+            cropListener?.onCropCancel()
+        }
+        mRestoreView = view.findViewById(R.id.tvCropRestore) as TextView
+        mRestoreView.setOnClickListener {
+            cropListener?.onCropRestore()
+        }
+        view.findViewById<View>(R.id.ivCropConfirm).setOnClickListener {
+            cropListener?.onCropConfirm()
+        }
+    }
+
+    override fun onPreDraw(): Boolean {
+        onPreDrawListener?.invoke(view.width, view.height)
+        view.viewTreeObserver.removeOnPreDrawListener(this)
+        return false;
+    }
+
+    @SuppressLint("ResourceAsColor")
+    fun setRestoreTextStatus(restore: Boolean) {
+        var color = if (restore) R.color.green else R.color.white
+        color = MatrixUtils.getResourceColor(view.context, color)
+        mRestoreView.setTextColor(color)
+    }
+
+    fun showOrHide(show: Boolean) {
+        view.visibility = if (show) View.VISIBLE else View.GONE
+    }
+
+    interface OnCropOperationListener {
+
+        fun onCropRotation(degree: Float)
+
+        fun onCropCancel()
+
+        fun onCropConfirm()
+
+        fun onCropRestore()
+    }
+}

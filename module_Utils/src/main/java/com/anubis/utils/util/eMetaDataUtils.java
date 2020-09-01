@@ -1,6 +1,6 @@
 package com.anubis.utils.util;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -50,7 +50,7 @@ public final class eMetaDataUtils {
      * @param key      The key of meta-data.
      * @return the value of meta-data in activity
      */
-    public static String getMetaDataInActivity(@NonNull final Activity activity,
+    public static String getMetaDataInActivity(@NonNull final AppCompatActivity activity,
                                                @NonNull final String key) {
         return getMetaDataInActivity(activity.getClass(), key);
     }
@@ -62,7 +62,7 @@ public final class eMetaDataUtils {
      * @param key The key of meta-data.
      * @return the value of meta-data in activity
      */
-    public static String getMetaDataInActivity(@NonNull final Class<? extends Activity> clz,
+    public static String getMetaDataInActivity(@NonNull final Class<? extends AppCompatActivity> clz,
                                                @NonNull final String key) {
         String value = "";
         PackageManager pm = eUtils.getApp().getPackageManager();

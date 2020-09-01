@@ -1,6 +1,6 @@
 package com.anubis.SwissArmyKnife
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.app.Application
 import android.content.Context
 import android.os.Environment
@@ -28,12 +28,12 @@ import java.io.File
 
 
 class APP : Application() {
-    var mActivityList: ArrayList<Activity>? = null
+    var mActivityList: ArrayList<androidx.appcompat.app.AppCompatActivity>? = null
 
     companion object {
         private var mInit: APP? = null
         val mAPP: APP get() = mInit!!
-        val mActivityList: ArrayList<Activity> = ArrayList()
+        val mActivityList: ArrayList<androidx.appcompat.app.AppCompatActivity> = ArrayList()
     }
 
     override fun onCreate() {

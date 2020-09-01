@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.utils;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -38,11 +38,11 @@ public class ColorUtils {
     }
 
     private static int getColorFromSP(Context context,String key){
-        SharedPreferences sp = context.getSharedPreferences("stardemo", Activity.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences("stardemo", AppCompatActivity.MODE_PRIVATE);
         return sp.getInt(key,-1);
     }
     private static void saveColorInSP(Context context,String key,int value){
-        SharedPreferences sp = context.getSharedPreferences("stardemo", Activity.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences("stardemo", AppCompatActivity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(key, value);
         editor.commit();

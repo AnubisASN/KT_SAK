@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.demo.voip
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -25,7 +25,7 @@ class VoipCreateActivity : BaseActivity() {
             if (TextUtils.isEmpty(inputId)) {
                 MLOC.showMsg(this@VoipCreateActivity, "id不能为空")
             } else {
-                val builder = AlertDialog.Builder(this@VoipCreateActivity)
+                val builder = androidx.appcompat.app.AlertDialog.Builder(this@VoipCreateActivity)
                 builder.setItems(arrayOf("视频通话", "音频通话")) { dialogInterface, i ->
                     if (i == 0) {
                         val intent = Intent(this@VoipCreateActivity, VoipActivity::class.java)

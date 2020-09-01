@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.demo.setting
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -139,7 +139,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
             R.id.btn_video_config_small -> showAddDialog(false)
             R.id.btn_audio_bitrate -> showAudioDialog()
             R.id.btn_video_codec_type -> {
-                val builder = AlertDialog.Builder(this)
+                val builder = androidx.appcompat.app.AlertDialog.Builder(this)
                 builder.setItems(XHConstants.XHVideoCodecConfigEnumName) { dialogInterface, i ->
                     var selected = customConfig.videoCodecType
                     for (e in XHConstants.XHVideoCodecConfigEnum.values()) {
@@ -155,7 +155,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
                 dialog.show()
             }
             R.id.btn_audio_codec_type -> {
-                val builder = AlertDialog.Builder(this)
+                val builder = androidx.appcompat.app.AlertDialog.Builder(this)
                 builder.setItems(XHConstants.XHAudioCodecConfigEnumName) { dialogInterface, i ->
                     var selected = customConfig.audioCodecType
                     for (e in XHConstants.XHAudioCodecConfigEnum.values()) {
@@ -171,7 +171,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
                 dialog.show()
             }
             R.id.btn_audio_source -> {
-                val builder = AlertDialog.Builder(this)
+                val builder = androidx.appcompat.app.AlertDialog.Builder(this)
                 builder.setItems(XHConstants.XHAudioSourceEnumName, DialogInterface.OnClickListener { dialogInterface, i ->
                     for (e in XHConstants.XHAudioSourceEnum.values()) {
                         if (i == e.ordinal) {
@@ -186,7 +186,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
                 dialog.show()
             }
             R.id.btn_audio_stream_type -> {
-                val builder = AlertDialog.Builder(this)
+                val builder = androidx.appcompat.app.AlertDialog.Builder(this)
                 builder.setItems(XHConstants.XHAudioStreamTypeEnumName, DialogInterface.OnClickListener { dialogInterface, i ->
                     for (e in XHConstants.XHAudioStreamTypeEnum.values()) {
                         if (i == e.ordinal) {
@@ -201,7 +201,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
                 dialog.show()
             }
             R.id.btn_video_size -> {
-                val builder = AlertDialog.Builder(this)
+                val builder = androidx.appcompat.app.AlertDialog.Builder(this)
                 builder.setItems(XHConstants.XHCropTypeEnumName) { dialogInterface, i ->
                     var selected = customConfig.videoSize
                     for (e in XHConstants.XHCropTypeEnum.values()) {

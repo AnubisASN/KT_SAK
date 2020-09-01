@@ -1,7 +1,7 @@
 package com.anubis.module_webRTC.demo
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
@@ -192,20 +192,20 @@ object MLOC {
 
 
     fun saveSharedData(context: Context, key: String, value: String?) {
-        val sp = context.applicationContext.getSharedPreferences("stardemo", Activity.MODE_PRIVATE)
+        val sp = context.applicationContext.getSharedPreferences("stardemo", androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE)
         val editor = sp.edit()
         editor.putString(key, value)
         editor.commit()
     }
 
     fun loadSharedData(context: Context, key: String): String {
-        val sp = context.applicationContext.getSharedPreferences("stardemo", Activity.MODE_PRIVATE)
+        val sp = context.applicationContext.getSharedPreferences("stardemo", androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE)
         return sp.getString(key, "")
     }
 
     fun loadSharedData(context: Context, key: String, defValue: String?): String? {
 
-        val sp = context.applicationContext.getSharedPreferences("stardemo", Activity.MODE_PRIVATE)
+        val sp = context.applicationContext.getSharedPreferences("stardemo", androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE)
         return sp.getString(key, defValue)
     }
 

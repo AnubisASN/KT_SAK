@@ -18,8 +18,9 @@ package com.anubis.module_camera.Camera;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -47,6 +48,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import android.util.Size;
 import android.util.SparseIntArray;

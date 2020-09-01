@@ -3,21 +3,20 @@
  */
 package com.anubis.module_navi;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.anubis.module_navi.activity.DemoDrivingActivity;
 import com.anubis.module_navi.activity.DemoNaviSettingActivity;
 
 public class NormalUtils {
 
-    public static void gotoSettings(Activity activity) {
+    public static void gotoSettings(AppCompatActivity activity) {
         Intent it = new Intent(activity, DemoNaviSettingActivity.class);
         activity.startActivity(it);
     }
 
-    public static void gotoDriving(Activity activity) {
+    public static void gotoDriving(AppCompatActivity activity) {
 
     }
 

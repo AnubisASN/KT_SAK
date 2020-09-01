@@ -2,7 +2,7 @@ package com.anubis.module_arcface
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -80,7 +80,7 @@ object eArcFace : ViewTreeObserver.OnGlobalLayoutListener {
     private var previewSize: Camera.Size? = null
     private var mCameraID = Camera.CameraInfo.CAMERA_FACING_FRONT
     private var faceEngine: FaceEngine? = null
-    private var mActivity: Activity? = null
+    private var mActivity: androidx.appcompat.app.AppCompatActivity? = null
     private var afCode = -1
     private var mIsMirror = false
     private val APP_ID = "5Q5zxyFtDAa8fRG6je1YVY7jKv5Gsq7tNEfdYQWaZQG8"
@@ -100,7 +100,7 @@ object eArcFace : ViewTreeObserver.OnGlobalLayoutListener {
     private var mRotation: Int = 0
 
 
-    fun init(activity: Activity, previewView: View, faceRectView: FaceRectView, rotation: Int = 0, cameraId: Int? = null, isMirror: Boolean? = null): eArcFace {
+    fun init(activity: androidx.appcompat.app.AppCompatActivity, previewView: View, faceRectView: FaceRectView, rotation: Int = 0, cameraId: Int? = null, isMirror: Boolean? = null): eArcFace {
         mCameraID = cameraId ?: mCameraID
         mIsMirror = isMirror ?: mIsMirror
         mActivity = activity

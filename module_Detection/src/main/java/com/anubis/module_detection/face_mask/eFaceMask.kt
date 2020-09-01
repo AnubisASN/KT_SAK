@@ -2,7 +2,7 @@ package com.anubis.module_detection.face_mask
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.content.Context
 import android.content.res.AssetManager
 import android.graphics.Bitmap

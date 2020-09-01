@@ -1,6 +1,6 @@
 package com.anubis.utils.util;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -12,6 +12,7 @@ import android.os.Build;
 import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresPermission;
+
 import android.util.DisplayMetrics;
 import android.view.Surface;
 import android.view.View;
@@ -93,7 +94,7 @@ public final class eScreenUtils {
      *
      * @param activity The activity.
      */
-    public static void setFullScreen(@NonNull final Activity activity) {
+    public static void setFullScreen(@NonNull final AppCompatActivity activity) {
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
@@ -102,7 +103,7 @@ public final class eScreenUtils {
      *
      * @param activity The activity.
      */
-    public static void setNonFullScreen(@NonNull final Activity activity) {
+    public static void setNonFullScreen(@NonNull final AppCompatActivity activity) {
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
@@ -111,7 +112,7 @@ public final class eScreenUtils {
      *
      * @param activity The activity.
      */
-    public static void toggleFullScreen(@NonNull final Activity activity) {
+    public static void toggleFullScreen(@NonNull final AppCompatActivity activity) {
         int fullScreenFlag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
         Window window = activity.getWindow();
         if ((window.getAttributes().flags & fullScreenFlag) == fullScreenFlag) {
@@ -129,7 +130,7 @@ public final class eScreenUtils {
      * @param activity The activity.
      * @return {@code true}: yes<br>{@code false}: no
      */
-    public static boolean isFullScreen(@NonNull final Activity activity) {
+    public static boolean isFullScreen(@NonNull final AppCompatActivity activity) {
         int fullScreenFlag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
         return (activity.getWindow().getAttributes().flags & fullScreenFlag) == fullScreenFlag;
     }
@@ -139,7 +140,7 @@ public final class eScreenUtils {
      *
      * @param activity The activity.
      */
-    public static void setLandscape(@NonNull final Activity activity) {
+    public static void setLandscape(@NonNull final AppCompatActivity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
@@ -148,7 +149,7 @@ public final class eScreenUtils {
      *
      * @param activity The activity.
      */
-    public static void setPortrait(@NonNull final Activity activity) {
+    public static void setPortrait(@NonNull final AppCompatActivity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
@@ -178,7 +179,7 @@ public final class eScreenUtils {
      * @param activity The activity.
      * @return the rotation of screen
      */
-    public static int getScreenRotation(@NonNull final Activity activity) {
+    public static int getScreenRotation(@NonNull final AppCompatActivity activity) {
         switch (activity.getWindowManager().getDefaultDisplay().getRotation()) {
             case Surface.ROTATION_0:
                 return 0;
@@ -199,7 +200,7 @@ public final class eScreenUtils {
      * @param activity The activity.
      * @return the bitmap of screen
      */
-    public static Bitmap screenShot(@NonNull final Activity activity) {
+    public static Bitmap screenShot(@NonNull final AppCompatActivity activity) {
         return screenShot(activity, false);
     }
 
@@ -210,7 +211,7 @@ public final class eScreenUtils {
      * @param isDeleteStatusBar True to delete status bar, false otherwise.
      * @return the bitmap of screen
      */
-    public static Bitmap screenShot(@NonNull final Activity activity, boolean isDeleteStatusBar) {
+    public static Bitmap screenShot(@NonNull final AppCompatActivity activity, boolean isDeleteStatusBar) {
         View decorView = activity.getWindow().getDecorView();
         decorView.setDrawingCacheEnabled(true);
         decorView.setWillNotCacheDrawing(false);
@@ -298,7 +299,7 @@ public final class eScreenUtils {
      * @param activity        The activity.
      * @param designWidthInPx The size of design diagram's width, in pixel.
      */
-    public static void adaptScreen4VerticalSlide(final Activity activity,
+    public static void adaptScreen4VerticalSlide(final AppCompatActivity activity,
                                                  final int designWidthInPx) {
         adaptScreen(activity, designWidthInPx, true);
     }
@@ -309,7 +310,7 @@ public final class eScreenUtils {
      * @param activity         The activity.
      * @param designHeightInPx The size of design diagram's height, in pixel.
      */
-    public static void adaptScreen4HorizontalSlide(final Activity activity,
+    public static void adaptScreen4HorizontalSlide(final AppCompatActivity activity,
                                                    final int designHeightInPx) {
         adaptScreen(activity, designHeightInPx, false);
     }
@@ -317,7 +318,7 @@ public final class eScreenUtils {
     /**
      * Reference from: https://mp.weixin.qq.com/s/d9QCoBP6kV9VSWvVldVVwA
      */
-    private static void adaptScreen(final Activity activity,
+    private static void adaptScreen(final AppCompatActivity activity,
                                     final int sizeInPx,
                                     final boolean isVerticalSlide) {
         final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
@@ -344,7 +345,7 @@ public final class eScreenUtils {
      *
      * @param activity The activity.
      */
-    public static void cancelAdaptScreen(final Activity activity) {
+    public static void cancelAdaptScreen(final AppCompatActivity activity) {
         final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
         final DisplayMetrics appDm = eUtils.getApp().getResources().getDisplayMetrics();
         final DisplayMetrics activityDm = activity.getResources().getDisplayMetrics();
@@ -366,8 +367,8 @@ public final class eScreenUtils {
 
     /**
      * Restore adapt the screen.
-     * <p>U should call the method of {@link eScreenUtils#adaptScreen4VerticalSlide(Activity, int)}
-     * or {@link eScreenUtils#adaptScreen4HorizontalSlide(Activity, int)} firstly.</p>
+     * <p>U should call the method of {@link eScreenUtils#adaptScreen4VerticalSlide(AppCompatActivity, int)}
+     * or {@link eScreenUtils#adaptScreen4HorizontalSlide(AppCompatActivity, int)} firstly.</p>
      */
     public static void restoreAdaptScreen() {
         eUtils.restoreAdaptScreen();

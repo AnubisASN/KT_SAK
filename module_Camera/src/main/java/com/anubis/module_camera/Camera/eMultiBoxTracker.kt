@@ -1,6 +1,6 @@
 package com.anubis.module_camera.Camera
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.graphics.*
 import android.graphics.Paint.Cap
 import android.graphics.Paint.Join
@@ -39,7 +39,7 @@ object eMultiBoxTracker {
      * @param paint: Paint? = null ；画笔
      * @return eMultiBoxTracker
      */
-    fun einit(activity: Activity, overlayView: eOverlayView = activity.frame_ov_tracking, paint: Paint? = null): eMultiBoxTracker {
+    fun einit(activity: androidx.appcompat.app.AppCompatActivity, overlayView: eOverlayView = activity.frame_ov_tracking, paint: Paint? = null): eMultiBoxTracker {
         boxPaint.color = Color.GREEN
         boxPaint.style = Style.STROKE
         boxPaint.strokeWidth = 3.0f

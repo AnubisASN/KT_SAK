@@ -1,7 +1,7 @@
 package com.anubis.module_webRTC.utils;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -122,7 +122,7 @@ public class DensityUtils {
      * @param activity 获取屏幕高度对应的Activity
      * @return 状态栏高度
      */
-    public static int getStatusHeight(Activity activity) {
+    public static int getStatusHeight(AppCompatActivity activity) {
         Rect rect = new Rect();
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
         return rect.top;

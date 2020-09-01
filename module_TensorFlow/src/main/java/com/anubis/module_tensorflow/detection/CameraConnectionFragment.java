@@ -18,8 +18,8 @@ package com.anubis.module_tensorflow.detection;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -47,6 +47,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Size;

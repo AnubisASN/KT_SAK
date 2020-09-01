@@ -23,7 +23,7 @@
 package com.anubis.module_ftp.GUI
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -208,7 +208,7 @@ class eFTPUIs : PreferenceActivity(), OnSharedPreferenceChangeListener {
         help.onPreferenceClickListener = OnPreferenceClickListener {
             //                Log.v(TAG, "帮助点击");
             val context = this@eFTPUIs
-            val ad = AlertDialog.Builder(context)
+            val ad = androidx.appcompat.app.AlertDialog.Builder(context)
                     .setTitle(R.string.help_dlg_title)
                     .setMessage(R.string.help_dlg_message)
                     .setPositiveButton(R.string.ok, null).create()

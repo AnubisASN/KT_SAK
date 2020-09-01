@@ -28,14 +28,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/bg_class_video"
+                        app:srcCompat="@drawable/bg_class_video"
                         android:scaleType="centerCrop"/>
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/bg_class_video"
+                        app:srcCompat="@drawable/bg_class_video"
                         android:scaleType="centerCrop"/>
                 </LinearLayout>
                 <LinearLayout
@@ -47,14 +47,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/bg_class_video"
+                        app:srcCompat="@drawable/bg_class_video"
                         android:scaleType="centerCrop"/>
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/bg_class_video"
+                        app:srcCompat="@drawable/bg_class_video"
                         android:scaleType="centerCrop"/>
                 </LinearLayout>
             </LinearLayout>
@@ -91,7 +91,7 @@
                         android:id="@+id/panel_btn"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/btn_panel"
+                        app:srcCompat="@drawable/btn_panel"
                         android:background="@drawable/bg_btn_orange_back"
                         android:layout_marginLeft="10dp"/>
                     <EditText
@@ -149,7 +149,7 @@
                         android:id="@+id/chat_btn"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/icon_chat"
+                        app:srcCompat="@drawable/icon_chat"
                         android:padding="6dp"
                         android:background="@drawable/bg_btn_orange_back"
                         android:layout_marginLeft="10dp"/>
@@ -162,7 +162,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:padding="5dp"
-                        android:src="@drawable/icon_laser_pen_close"
+                        app:srcCompat="@drawable/icon_laser_pen_close"
                         android:background="@drawable/pen_color_bg_black"
                         android:layout_marginRight="10dp"/>
                     <ImageView
@@ -170,7 +170,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:padding="10dp"
-                        android:src="@drawable/btn_switch_laser_pen"
+                        app:srcCompat="@drawable/btn_switch_laser_pen"
                         android:background="@drawable/bg_btn_orange_back"
                         android:layout_marginRight="10dp"/>
                     <ImageView
@@ -181,7 +181,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:src="@drawable/icon_undo"
+                        app:srcCompat="@drawable/icon_undo"
                         android:background="@drawable/bg_btn_orange_back"
                         android:layout_marginRight="10dp"/>
                     <ImageView
@@ -189,7 +189,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:padding="10dp"
-                        android:src="@drawable/icon_clean"
+                        app:srcCompat="@drawable/icon_clean"
                         android:background="@drawable/bg_btn_orange_back"
                         android:layout_marginRight="10dp"/>
                 </LinearLayout>

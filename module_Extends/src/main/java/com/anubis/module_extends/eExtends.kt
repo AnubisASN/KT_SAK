@@ -1,6 +1,6 @@
 package com.anubis.kt_extends
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.app.ActivityManager
 import android.app.Application
 import android.bluetooth.BluetoothAdapter
@@ -192,7 +192,7 @@ fun TextView.eSpannableTextView(str: String, startAndEndIndexArray: Array<Pair<I
     startAndEndIndexArray?.forEachIndexed { index, pair ->
         var subStr = ""
         try {
-            subStr = str.substring(startIndex, if (index + 1 == startAndEndIndexArray.size) str.length else pair.second).eLog("substring")
+            subStr = str.substring(startIndex, if (index + 1 == startAndEndIndexArray.size) str.length else pair.second)
             val ssb = SpannableStringBuilder(subStr)
             ssb.setSpan(object : ClickableSpan() {
                 override fun onClick(widget: View) {
@@ -526,7 +526,7 @@ class eApp private constructor() {
     }
 
     //清除栈重启
-    fun eTaskCleanAndRestart(activity: Activity) {
+    fun eTaskCleanAndRestart(activity: androidx.appcompat.app.AppCompatActivity) {
         activity.finish()
         val intent = activity.intent
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -557,7 +557,7 @@ class eApp private constructor() {
     }
 
     //窗口全屏
-    fun eSetWindowFullScreen(activity: Activity) {
+    fun eSetWindowFullScreen(activity: androidx.appcompat.app.AppCompatActivity) {
         activity.requestWindowFeature(Window.FEATURE_NO_TITLE)
         activity.window.setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -591,7 +591,7 @@ class eApp private constructor() {
         config.locale = locale
         resources.updateConfiguration(config, dm)
         //更新语言后，destroy当前页面，重新绘制
-        if (activity is Activity) {
+        if (activity is androidx.appcompat.app.AppCompatActivity) {
             activity.finish()
             val it = Intent(activity, activity::class.java)
             //清空任务栈确保当前打开activit为前台任务栈栈顶
@@ -624,7 +624,7 @@ class eApp private constructor() {
     }
 
     //APP重启
-    open fun eAppRestart(application: Application, activity: Activity) {
+    open fun eAppRestart(application: Application, activity: androidx.appcompat.app.AppCompatActivity) {
         //启动页
         val intent = Intent(application, activity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -633,7 +633,7 @@ class eApp private constructor() {
     }
 
     //Activity重启
-    open fun eActivityRestart(activity: Activity, activityList: ArrayList<Activity>? = null): Boolean {
+    open fun eActivityRestart(activity: androidx.appcompat.app.AppCompatActivity, activityList: ArrayList<androidx.appcompat.app.AppCompatActivity>? = null): Boolean {
         try {
             if (activityList != null) {
                 for (av in activityList) {
@@ -652,7 +652,7 @@ class eApp private constructor() {
     }
 
     //APP包名启动
-    open fun eAppStart(activity: Activity, packageName: String? = null): Boolean {
+    open fun eAppStart(activity: androidx.appcompat.app.AppCompatActivity, packageName: String? = null): Boolean {
         try {
             val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(packageName
                     ?: activity.packageName)
@@ -865,7 +865,7 @@ open class eKeyEvent internal constructor() {
     }
 
     private var Time: Long = 0
-    open fun eSetKeyDownExit(activity: Activity, keyCode: Int, activityList: ArrayList<Activity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", ClickTime: Long = 2000, isExecute: Boolean = true): Boolean {
+    open fun eSetKeyDownExit(activity: androidx.appcompat.app.AppCompatActivity, keyCode: Int, activityList: ArrayList<androidx.appcompat.app.AppCompatActivity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", ClickTime: Long = 2000, isExecute: Boolean = true): Boolean {
         return if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (System.currentTimeMillis() - Time > ClickTime) {
                 activity.eShowTip(hint)
@@ -1989,7 +1989,7 @@ open class eFile internal constructor() {
      * @param activity
      * @return
      */
-    open fun eActivityScreenShot(activity: Activity): Bitmap {
+    open fun eActivityScreenShot(activity: androidx.appcompat.app.AppCompatActivity): Bitmap {
         val dView = activity.window.decorView
         dView.setDrawingCacheEnabled(true)
         dView.buildDrawingCache()
@@ -2225,7 +2225,7 @@ open class ePermissions internal constructor() {
             } else {
                 val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
                 intent.data = Uri.parse("package:${context.packageName}")
-                (context as Activity).startActivityForResult(intent, 1)
+                (context as androidx.appcompat.app.AppCompatActivity).startActivityForResult(intent, 1)
             }
         } else {
             str = true
@@ -2253,7 +2253,7 @@ open class ePermissions internal constructor() {
 
     //授权判断
     open fun eSetPermissions(
-            activity: Activity,
+            activity: androidx.appcompat.app.AppCompatActivity,
             permissionsArray: Array<out String>,
             requestCode: Int = 1
     ): Boolean {
@@ -2286,7 +2286,7 @@ open class ePermissions internal constructor() {
 
     //显示授权设置
     open fun eSetOnRequestPermissionsResult(
-            activity: Activity,
+            activity: androidx.appcompat.app.AppCompatActivity,
             requestCode: Int,
             permissions: Array<String>,
             grantResults: IntArray,
@@ -2458,7 +2458,7 @@ open class eShell internal constructor() {
     }
 
     //Shell APP重启
-    open fun eAppReboot(activity: Activity) {
+    open fun eAppReboot(activity: androidx.appcompat.app.AppCompatActivity) {
         eExecShell("am force-stop ${activity.packageName} && am start -n ${activity.packageName}/${activity::class.java.name}")
     }
 }

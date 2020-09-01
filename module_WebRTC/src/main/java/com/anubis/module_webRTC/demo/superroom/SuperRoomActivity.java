@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.demo.superroom;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -18,12 +18,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.anubis.module_webRTC.demo.BaseActivity;
-import com.anubis.module_webRTC.demo.MLOC;
-import com.anubis.module_webRTC.listener.XHSuperRoomManagerListener;
-import com.anubis.module_webRTC.serverAPI.InterfaceUrls;
-import com.anubis.module_webRTC.utils.AEvent;
-import com.anubis.module_webRTC.R;
 import com.anubis.module_webRTC.demo.BaseActivity;
 import com.anubis.module_webRTC.demo.MLOC;
 import com.anubis.module_webRTC.listener.XHSuperRoomManagerListener;

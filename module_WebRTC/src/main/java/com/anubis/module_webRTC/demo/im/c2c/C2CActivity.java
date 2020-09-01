@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.demo.im.c2c;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
@@ -36,7 +36,7 @@ import com.starrtc.starrtcsdk.api.XHClient;
 import com.starrtc.starrtcsdk.apiInterface.IXHResultCallback;
 import com.starrtc.starrtcsdk.core.im.message.XHIMMessage;
 
-public class C2CActivity extends Activity implements IEventListener, AdapterView.OnItemLongClickListener {
+public class C2CActivity extends AppCompatActivity implements IEventListener, AdapterView.OnItemLongClickListener {
 
     private EditText vEditText;
     private TextView vTargetId;

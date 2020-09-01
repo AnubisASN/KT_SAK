@@ -2,12 +2,14 @@ package com.anubis.module_picker
 
 import android.app.Activity
 import android.content.Intent
+import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
-import com.guoxiaoxing.phoenix.core.PhoenixOption
-import com.guoxiaoxing.phoenix.core.model.MimeType
-import com.guoxiaoxing.phoenix.picker.Phoenix
-import me.rosuh.filepicker.config.FilePickerConfig
-import me.rosuh.filepicker.config.FilePickerManager
+import px_core.PhoenixOption
+import px_core.model.MimeType
+import file_picker.bean.FileItemBeanImpl
+import file_picker.config.*
+import file_picker.filetype.*
+import px_picker.Phoenix
 
 /**
  * Author  ： AnubisASN   on 19-6-29 下午4:13.
@@ -41,30 +43,27 @@ open class ePicker internal constructor() {
      * @param phoenix: PhoenixOption = Phoenix.with();默认初始化与主动初始化
      * @return: void
      */
-    open fun eImageStart(activity: Activity, REQUEST_CODE: Int = IMAGE_REQUEST_CODE, Type: Int = PhoenixOption.TYPE_PICK_MEDIA, phoenix: PhoenixOption? = null,block:(PhoenixOption)->Unit={}) {
-        var tPhoenix =phoenix
-        if (tPhoenix == null) {
-              tPhoenix = Phoenix.with()
-            tPhoenix.theme(PhoenixOption.THEME_BLUE)// 主题
-                    .fileType(MimeType.ofImage())//显示的文件类型图片、视频、图片和视频
-                    .maxPickNumber(3)// 最大选择数量
-                    .minPickNumber(0)// 最小选择数量
-                    .spanCount(4)// 每行显示个数
-                    .enablePreview(false)// 是否开启预览
-                    .previewEggs(true)
-                    .enableCamera(true)// 是否开启拍照
-                    .enableAnimation(true)// 选择界面图片点击效果
-                    .enableCompress(false)// 是否开启压缩
-                    .compressPictureFilterSize(1024)//多少kb以下的图片不压缩
-                    .compressVideoFilterSize(2018)//多少kb以下的视频不压缩
-                    .thumbnailHeight(160)// 选择界面图片高度
-                    .thumbnailWidth(160)// 选择界面图片宽度
-                    .enableClickSound(false)// 是否开启点击声音
-                    .videoFilterTime(0)//显示多少秒以内的视频
-                    .mediaFilterSize(10000)//显示多少kb以下的图片/视频，默认为0，表示不限制
-        }
-        block(tPhoenix!!)
-        tPhoenix.start(activity, Type, REQUEST_CODE)
+    open fun eImageStart(activity: Activity, REQUEST_CODE: Int = IMAGE_REQUEST_CODE, Type: Int = PhoenixOption.TYPE_PICK_MEDIA, phoenix: PhoenixOption = Phoenix.with(), editBlock: (PhoenixOption) -> Unit = {}) {
+        phoenix.theme(PhoenixOption.THEME_BLUE)// 主题
+                .fileType(MimeType.ofImage())//显示的文件类型图片、视频、图片和视频
+                .maxPickNumber(1)// 最大选择数量
+                .minPickNumber(0)// 最小选择数量
+                .spanCount(5)// 每行显示个数
+                .enablePreview(false)// 是否开启预览
+                .enableShowPreview(true)// 是否开启预览按钮显示
+                .previewEggs(true)
+                .enableCamera(true)// 是否开启拍照
+                .enableAnimation(true)// 选择界面图片点击效果
+                .enableCompress(false)// 是否开启压缩
+                .compressPictureFilterSize(1024)//多少kb以下的图片不压缩
+                .compressVideoFilterSize(2018)//多少kb以下的视频不压缩
+                .thumbnailHeight(160)// 选择界面图片高度
+                .thumbnailWidth(160)// 选择界面图片宽度
+                .enableClickSound(false)// 是否开启点击声音
+                .videoFilterTime(0)//显示多少秒以内的视频
+                .mediaFilterSize(10000)//显示多少kb以下的图片/视频，默认为0，表示不限制
+        editBlock(phoenix)
+        phoenix.start(activity, Type, REQUEST_CODE)
         IMAGE_REQUEST_CODE = REQUEST_CODE
     }
 
@@ -77,7 +76,33 @@ open class ePicker internal constructor() {
      * @param filePicker: FilePickerConfig = FilePickerManager.from(activity)；默认初始化与主动初始化
      * @return: void
      */
-    fun eFileStart(activity: Activity, REQUEST_CODE: Int = FILE_REQUEST_CODE, filePicker: FilePickerConfig = FilePickerManager.from(activity)) {
+    fun eFileStart(activity: Activity, allDefaultFileType: ArrayList<FileType>? = null, REQUEST_CODE: Int = FILE_REQUEST_CODE, filePicker: FilePickerConfig = FilePickerManager.from(activity), editBlock: (FilePickerConfig) -> Unit = {}) {
+        allDefaultFileType?.let {
+        filePicker.customDetector(object :AbstractFileDetector() {
+            override fun fillFileType(itemBeanImpl: FileItemBeanImpl): FileItemBeanImpl {
+                for (type in allDefaultFileType) {
+                    if (type.verify(itemBeanImpl.fileName)) {
+                        itemBeanImpl.fileType = type
+                        break
+                    }
+                }
+                return itemBeanImpl
+            }
+        }) }
+        filePicker.filter(object :AbstractFileFilter(){
+            val tDataList= arrayListOf<FileItemBeanImpl>()
+            override fun doFilter(listData: ArrayList<FileItemBeanImpl>): ArrayList<FileItemBeanImpl> {
+                tDataList.clear()
+                listData.forEach {
+                    if (it.isDir || it.fileType!=null)
+                        tDataList.add(it)
+                }
+                return tDataList
+            }
+
+        })
+        filePicker.maxSelectable(1)
+        editBlock(filePicker)
         filePicker.forResult(REQUEST_CODE)
         FILE_REQUEST_CODE = REQUEST_CODE
     }

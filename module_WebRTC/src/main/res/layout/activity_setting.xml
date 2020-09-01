@@ -40,7 +40,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -72,7 +72,7 @@
                     android:id="@+id/aecurl_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -104,7 +104,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -136,7 +136,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -168,7 +168,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -200,7 +200,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -231,7 +231,7 @@
                     android:id="@+id/no_audio_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -262,7 +262,7 @@
                     android:id="@+id/no_video_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -298,7 +298,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -334,7 +334,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -370,7 +370,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -406,7 +406,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -442,7 +442,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -478,7 +478,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -510,7 +510,7 @@
                     android:id="@+id/dy_bt_fp_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -542,7 +542,7 @@
                     android:id="@+id/hard_encode_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -576,7 +576,7 @@
                     android:id="@+id/opengl_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -608,7 +608,7 @@
                     android:id="@+id/opensl_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -641,7 +641,7 @@
                     android:id="@+id/voip_p2p_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -673,7 +673,7 @@
                     android:id="@+id/aec_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -705,7 +705,7 @@
                     android:id="@+id/agc_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -737,7 +737,7 @@
                     android:id="@+id/ns_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -769,7 +769,7 @@
                     android:id="@+id/rnn_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -801,7 +801,7 @@
                     android:id="@+id/audio_process_qulity_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -836,7 +836,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -871,7 +871,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -903,7 +903,7 @@
                     android:id="@+id/log_switch"
                     android:layout_width="48dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/btn_style_switch_orange"
+                    app:srcCompat="@drawable/btn_style_switch_orange"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>
@@ -965,7 +965,7 @@
                 <ImageView
                     android:layout_width="6dp"
                     android:layout_height="10dp"
-                    android:src="@drawable/icon_right"
+                    app:srcCompat="@drawable/icon_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
             </LinearLayout>

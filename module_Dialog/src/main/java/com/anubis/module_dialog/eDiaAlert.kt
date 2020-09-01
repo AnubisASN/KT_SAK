@@ -71,6 +71,7 @@ open class eDiaAlert internal constructor() {
             isShowClose: Boolean = false,
             isShowAVI: Boolean = false,
             isDisableBack: Boolean = true,
+            isCanceledOnTouchOutside:Boolean=false,
             gravity: Int = Gravity.CENTER,
             x: Int = 0,
             y: Int = 0,
@@ -86,7 +87,7 @@ open class eDiaAlert internal constructor() {
         with(dia) {
             val view = LayoutInflater.from(mContext).inflate(R.layout.sample_dia, null)
             setContentView(view)
-            setCanceledOnTouchOutside(false)
+            setCanceledOnTouchOutside(isCanceledOnTouchOutside)
             if (ICallEdit == null)
                 view.dia_etInput.visibility = View.GONE
             else

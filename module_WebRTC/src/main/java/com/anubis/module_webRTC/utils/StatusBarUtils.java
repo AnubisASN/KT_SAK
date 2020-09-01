@@ -1,13 +1,13 @@
 package com.anubis.module_webRTC.utils;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -21,7 +21,7 @@ import android.widget.LinearLayout;
  */
 
 public class StatusBarUtils {
-    private Activity mActivity;
+    private AppCompatActivity mActivity;
     //状态栏颜色
     private int mColor = -1;
     //状态栏drawble
@@ -33,11 +33,11 @@ public class StatusBarUtils {
     //侧滑菜单页面的内容视图
     private int mContentResourseIdInDrawer;
 
-    public StatusBarUtils(Activity activity) {
+    public StatusBarUtils(AppCompatActivity activity) {
         mActivity = activity;
     }
 
-    public static StatusBarUtils with(Activity activity) {
+    public static StatusBarUtils with(AppCompatActivity activity) {
         return new StatusBarUtils(activity);
     }
 
@@ -126,7 +126,7 @@ public class StatusBarUtils {
      *
      * @param activity
      */
-    private void fitsSystemWindows(Activity activity) {
+    private void fitsSystemWindows(AppCompatActivity activity) {
         ViewGroup contentFrameLayout = (ViewGroup) activity.findViewById(android.R.id.content);
         View parentView = contentFrameLayout.getChildAt(0);
         if (parentView != null && Build.VERSION.SDK_INT >= 14) {
@@ -145,7 +145,7 @@ public class StatusBarUtils {
      *
      * @return
      */
-    public static int getStatusBarHeight(Activity activity) {
+    public static int getStatusBarHeight(AppCompatActivity activity) {
         int result = 0;
         //获取状态栏高度的资源id
         int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -177,7 +177,7 @@ public class StatusBarUtils {
      *
      * @param activity
      */
-    private void addStatusViewWithColor(Activity activity, int color) {
+    private void addStatusViewWithColor(AppCompatActivity activity, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (isDrawerLayout()) {
                 //要在内容布局增加状态栏，否则会盖在侧滑菜单上
@@ -227,7 +227,7 @@ public class StatusBarUtils {
      *
      * @param activity
      */
-    private void addStatusViewWithDrawble(Activity activity, Drawable drawable) {
+    private void addStatusViewWithDrawble(AppCompatActivity activity, Drawable drawable) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //占位状态栏
             View statusBarView = new View(activity);
@@ -273,7 +273,7 @@ public class StatusBarUtils {
      *
      * @param activity
      */
-    private void fullScreen(Activity activity) {
+    private void fullScreen(AppCompatActivity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
@@ -305,7 +305,7 @@ public class StatusBarUtils {
      *
      * @param activity
      */
-    public static void setStatusTransparent(Activity activity) {
+    public static void setStatusTransparent(AppCompatActivity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = activity.getWindow();

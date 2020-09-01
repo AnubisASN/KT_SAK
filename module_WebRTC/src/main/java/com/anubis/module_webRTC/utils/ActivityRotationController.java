@@ -4,7 +4,7 @@ package com.anubis.module_webRTC.utils;
  * Created by zhangjt on 2018/3/16.
  */
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.ContentResolver;
 import android.content.pm.ActivityInfo;
 import android.provider.Settings;
@@ -42,9 +42,9 @@ public class ActivityRotationController extends OrientationEventListener {
     private int systemRotation;
     private boolean activityRotation;
     private int activityOrientation;
-    private Activity activity;
+    private AppCompatActivity activity;
 
-    public ActivityRotationController(Activity activity) {
+    public ActivityRotationController(AppCompatActivity activity) {
         super(activity);
         this.activity = activity;
         activityOrientation = activity.getResources().getConfiguration().orientation;

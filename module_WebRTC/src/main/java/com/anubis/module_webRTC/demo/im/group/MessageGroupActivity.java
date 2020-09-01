@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.demo.im.group;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.RequiresApi;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MessageGroupActivity extends Activity implements IEventListener, AdapterView.OnItemLongClickListener {
+public class MessageGroupActivity extends AppCompatActivity implements IEventListener, AdapterView.OnItemLongClickListener {
     public static String TYPE = "TYPE";
     public static String GROUP_NAME = "GROUP_NAME";
     public static String GROUP_ID = "GROUP_ID";

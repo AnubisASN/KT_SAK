@@ -24,7 +24,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/starfox_500"/>
+            app:srcCompat="@drawable/starfox_500"/>
     </RelativeLayout>
     <TextView
         android:id="@+id/targetid_text"
@@ -67,7 +67,7 @@
                 android:id="@+id/ring_hangoff"
                 android:layout_width="66dp"
                 android:layout_height="66dp"
-                android:src="@drawable/icon_hangup"/>
+                app:srcCompat="@drawable/icon_hangup"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
                 android:id="@+id/ring_pickup_audio"
                 android:layout_width="66dp"
                 android:layout_height="66dp"
-                android:src="@drawable/icon_mic_picup"/>
+                app:srcCompat="@drawable/icon_mic_picup"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

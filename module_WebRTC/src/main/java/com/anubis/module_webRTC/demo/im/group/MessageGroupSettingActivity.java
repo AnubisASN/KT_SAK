@@ -1,6 +1,6 @@
 package com.anubis.module_webRTC.demo.im.group;
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -317,7 +317,7 @@ public class MessageGroupSettingActivity extends BaseActivity{
                 }
             });
             builder.setCancelable(true);
-            AlertDialog dialog=builder.create();
+            androidx.appcompat.app.AlertDialog dialog=builder.create();
             dialog.show();
         }else{
             AlertDialog.Builder builder=new AlertDialog.Builder(this);

@@ -2,7 +2,7 @@ package com.anubis.module_webRTC.demo.videomeeting;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -27,12 +27,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Set;
 
-import com.anubis.module_webRTC.demo.BaseActivity;
-import com.anubis.module_webRTC.demo.MLOC;
-import com.anubis.module_webRTC.listener.XHMeetingManagerListener;
-import com.anubis.module_webRTC.serverAPI.InterfaceUrls;
-import com.anubis.module_webRTC.ui.CircularCoverView;
-import com.anubis.module_webRTC.R;
 import com.anubis.module_webRTC.demo.BaseActivity;
 import com.anubis.module_webRTC.demo.MLOC;
 import com.anubis.module_webRTC.listener.XHMeetingManagerListener;

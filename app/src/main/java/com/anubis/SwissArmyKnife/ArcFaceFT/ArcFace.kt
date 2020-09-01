@@ -1,6 +1,6 @@
 package com.anubis.SwissArmyKnife
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -29,7 +29,7 @@ import org.jetbrains.anko.textColor
  *说明：  活体检测+人脸跟踪
  */
 @Route(path = "/face/ArcFace")
-class ArcFace : Activity() {
+class ArcFace : androidx.appcompat.app.AppCompatActivity() {
     private var mRunnable: Runnable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

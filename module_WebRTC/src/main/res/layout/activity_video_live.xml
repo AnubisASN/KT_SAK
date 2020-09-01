@@ -74,13 +74,13 @@
                 android:id="@+id/mic_btn"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/btn_link_mic"
+                app:srcCompat="@drawable/btn_link_mic"
                 android:layout_marginLeft="5dp"/>
             <ImageView
                 android:id="@+id/switch_camera"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/icon_switch_camera_pink"
+                app:srcCompat="@drawable/icon_switch_camera_pink"
                 android:layout_marginLeft="5dp"/>
         </LinearLayout>
     </LinearLayout>

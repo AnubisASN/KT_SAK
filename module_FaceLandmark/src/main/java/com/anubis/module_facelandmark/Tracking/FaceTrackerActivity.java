@@ -1,7 +1,7 @@
 package com.anubis.module_facelandmark.Tracking;
 
 import android.Manifest;
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -21,7 +21,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class FaceTrackerActivity extends Activity {
+public class FaceTrackerActivity extends AppCompatActivity {
     private final static int CAMERA_REQUEST_CODE = 0x111;
 
     public void copyFilesFromAssets(Context context, String oldPath, String newPath) {
@@ -133,7 +133,7 @@ public class FaceTrackerActivity extends Activity {
     public void onResume() {
         super.onResume();
 
-        final FaceOverlapFragment fragment = (FaceOverlapFragment) getFragmentManager()
+        final FaceOverlapFragment fragment = (FaceOverlapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.overlapFragment);
         fragment.registTrackCallback(new FaceOverlapFragment.TrackCallBack() {
 

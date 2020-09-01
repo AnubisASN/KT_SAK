@@ -1,6 +1,6 @@
 package com.anubis.module_map
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 /**
@@ -19,7 +19,7 @@ import android.os.Bundle
  *Router :  /'Module'/'Function'
  *说明：
  */
-class test :Activity(){
+class test : androidx.appcompat.app.AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

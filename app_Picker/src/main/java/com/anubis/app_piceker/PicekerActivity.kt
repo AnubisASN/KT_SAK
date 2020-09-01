@@ -15,7 +15,10 @@ import com.anubis.module_dialog.View.eArrowDownloadButton
 import com.anubis.module_dialog.eDiaAlert
 import com.anubis.module_picker.ePicker
 import com.anubis.module_picker.eTimePicker
-import com.guoxiaoxing.phoenix.core.model.MediaEntity
+import file_picker.filetype.AudioFileType
+import file_picker.filetype.FileType
+import file_picker.filetype.RasterImageFileType
+import px_core.model.MediaEntity
 import kotlinx.android.synthetic.main.picker.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -34,14 +37,17 @@ class PicekerActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, time, Toast.LENGTH_LONG).show()
             }
         })
-
     }
 
     fun onClick(v: View) {
         when (v.id) {
             picker_btPX.id -> ePicker.eInit.eImageStart(this@PicekerActivity)
 
-            picker_btFile.id -> ePicker.eInit.eFileStart(this@PicekerActivity)
+            picker_btFile.id -> {
+                val array: ArrayList<FileType>? = arrayListOf()
+                array?.add(RasterImageFileType())
+                ePicker.eInit.eFileStart(this@PicekerActivity,array )
+            }
 
             picker_btTime.id -> timeSelector?.eShowTimeSelect("2000-01-01 00:00")
             imageView.id -> eDiaAlert.eInit(this).eDefaultShow { dialog: Dialog, view: View ->
@@ -49,7 +55,7 @@ class PicekerActivity : AppCompatActivity() {
                     startAnimating()
                     GlobalScope.launch {
                         for (i in 0..100) {
-                           delay(200)
+                            delay(200)
                             onUiThread {
                                 progress = i.toFloat()
                             }

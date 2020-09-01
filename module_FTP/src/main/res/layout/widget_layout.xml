@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ImageButton
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/widget_button"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:selectableItemBackground"
-    android:src="@drawable/widget_off" >
+    android:background="?attr/selectableItemBackground"
+    app:srcCompat="@drawable/widget_off" >
 </ImageButton>

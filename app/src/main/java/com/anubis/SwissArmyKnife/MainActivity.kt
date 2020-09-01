@@ -1,7 +1,6 @@
 package com.anubis.SwissArmyKnife
 
 import android.Manifest
-import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Context
@@ -95,7 +94,7 @@ import kotlin.collections.ArrayList
 //                       `=---='
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //               佛祖保佑         永无BUG
-class MainActivity : Activity() {
+class MainActivity : androidx.appcompat.app.AppCompatActivity() {
     private var filePath = ""
     private var file: File? = null
     private var datas: Array<String>? = null

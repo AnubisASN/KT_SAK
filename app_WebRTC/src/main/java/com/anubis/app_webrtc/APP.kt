@@ -1,6 +1,6 @@
 package com.anubis.app_webrtc
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
@@ -29,7 +29,7 @@ import java.io.File
  */
 
 class APP : Application() {
-    var mActivityList: ArrayList<Activity>? = null
+    var mActivityList: ArrayList<androidx.appcompat.app.AppCompatActivity>? = null
 
     companion object {
         private var mInit: APP? = null

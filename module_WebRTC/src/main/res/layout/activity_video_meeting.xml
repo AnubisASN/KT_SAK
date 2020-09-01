@@ -39,7 +39,7 @@
         android:id="@+id/switch_camera"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/icon_switch_camera_white"
+        app:srcCompat="@drawable/icon_switch_camera_white"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_alignParentRight="true"/>

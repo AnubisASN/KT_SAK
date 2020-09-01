@@ -1,7 +1,7 @@
 package com.anubis.SwissArmyKnife
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Handler
 import android.os.Message
 import com.anubis.SwissArmyKnife.MainActivity.Companion.mainActivity
