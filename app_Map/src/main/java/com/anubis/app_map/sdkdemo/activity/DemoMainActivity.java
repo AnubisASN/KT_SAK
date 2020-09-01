@@ -4,8 +4,8 @@
 package com.anubis.app_map.sdkdemo.activity;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -39,7 +39,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DemoMainActivity extends Activity {
+public class DemoMainActivity extends AppCompatActivity {
 
     private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
 

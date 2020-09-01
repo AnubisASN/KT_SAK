@@ -1,7 +1,7 @@
 package com.anubis.utils.util;
 
 import android.annotation.SuppressLint;
-import androidx.appcompat.app.AppCompatActivity;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
@@ -95,7 +95,7 @@ public final class eAppUtils {
      * @param requestCode If &gt;= 0, this code will be returned in
      *                    onActivityResult() when the activity exits.
      */
-    public static void installApp(final AppCompatActivity activity,
+    public static void installApp(final Activity activity,
                                   final String filePath,
                                   final int requestCode) {
         installApp(activity, getFileByPath(filePath), requestCode);
@@ -111,7 +111,7 @@ public final class eAppUtils {
      * @param requestCode If &gt;= 0, this code will be returned in
      *                    onActivityResult() when the activity exits.
      */
-    public static void installApp(final AppCompatActivity activity,
+    public static void installApp(final Activity activity,
                                   final File file,
                                   final int requestCode) {
         if (!isFileExists(file)) return;
@@ -216,7 +216,7 @@ public final class eAppUtils {
      * @param requestCode If &gt;= 0, this code will be returned in
      *                    onActivityResult() when the activity exits.
      */
-    public static void uninstallApp(final AppCompatActivity activity,
+    public static void uninstallApp(final Activity activity,
                                     final String packageName,
                                     final int requestCode) {
         if (isSpace(packageName)) return;
@@ -410,7 +410,7 @@ public final class eAppUtils {
      * @param requestCode If &gt;= 0, this code will be returned in
      *                    onActivityResult() when the activity exits.
      */
-    public static void launchApp(final AppCompatActivity activity,
+    public static void launchApp(final Activity activity,
                                  final String packageName,
                                  final int requestCode) {
         if (isSpace(packageName)) return;
@@ -453,9 +453,9 @@ public final class eAppUtils {
      * Exit the application.
      */
     public static void exitApp() {
-        List<AppCompatActivity> activityList = eUtils.getActivityList();
+        List<Activity> activityList = eUtils.getActivityList();
         for (int i = activityList.size() - 1; i >= 0; --i) {// remove from top
-            AppCompatActivity activity = activityList.get(i);
+            Activity activity = activityList.get(i);
             // sActivityList remove the index activity at onActivityDestroyed
             activity.finish();
         }

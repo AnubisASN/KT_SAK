@@ -1,6 +1,6 @@
 package com.anubis.app_map
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.app.Application
 import android.content.Context
 import android.widget.ImageView

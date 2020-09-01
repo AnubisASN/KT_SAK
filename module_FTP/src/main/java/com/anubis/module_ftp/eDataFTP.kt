@@ -1,5 +1,6 @@
 package com.anubis.module_ftp
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.app.Application
 import android.os.Handler
@@ -25,7 +26,7 @@ object eDataFTP {
     val CONNECTION_SUCCEED=1 //连接成功  what
     val CONNECTION_DISCONNECT=-1 //连接断开  what
     val DATA_TRANSFER=2 //连接断开  what
-    var mFTPUI: androidx.appcompat.app.AppCompatActivity?=null
+    var mFTPUI: Activity?=null
     var hint: String? = "0"
     var type:String="break"
     var UserName: String = "anubis"

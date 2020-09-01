@@ -1,7 +1,8 @@
 package com.anubis.utils.util;
 
 import android.annotation.SuppressLint;
-import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.app.Application.ActivityLifecycleCallbacks;
@@ -118,13 +119,13 @@ public final class eUtils {
         return ACTIVITY_LIFECYCLE;
     }
 
-    static LinkedList<AppCompatActivity> getActivityList() {
+    static LinkedList<Activity> getActivityList() {
         return ACTIVITY_LIFECYCLE.mActivityList;
     }
 
     static Context getTopActivityOrApp() {
         if (isAppForeground()) {
-            AppCompatActivity topActivity = ACTIVITY_LIFECYCLE.getTopActivity();
+            Activity topActivity = ACTIVITY_LIFECYCLE.getTopActivity();
             return topActivity == null ? eUtils.getApp() : topActivity;
         } else {
             return eUtils.getApp();
@@ -150,7 +151,7 @@ public final class eUtils {
     static void restoreAdaptScreen() {
         final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
         final DisplayMetrics appDm = eUtils.getApp().getResources().getDisplayMetrics();
-        final AppCompatActivity activity = ACTIVITY_LIFECYCLE.getTopActivity();
+        final Activity activity = ACTIVITY_LIFECYCLE.getTopActivity();
         if (activity != null) {
             final DisplayMetrics activityDm = activity.getResources().getDisplayMetrics();
             if (ADAPT_SCREEN_ARGS.isVerticalSlide) {
@@ -178,7 +179,7 @@ public final class eUtils {
     static void cancelAdaptScreen() {
         final DisplayMetrics systemDm = Resources.getSystem().getDisplayMetrics();
         final DisplayMetrics appDm = eUtils.getApp().getResources().getDisplayMetrics();
-        final AppCompatActivity activity = ACTIVITY_LIFECYCLE.getTopActivity();
+        final Activity activity = ACTIVITY_LIFECYCLE.getTopActivity();
         if (activity != null) {
             final DisplayMetrics activityDm = activity.getResources().getDisplayMetrics();
             activityDm.density = systemDm.density;
@@ -203,7 +204,7 @@ public final class eUtils {
 
     static class ActivityLifecycleImpl implements ActivityLifecycleCallbacks {
 
-        final LinkedList<AppCompatActivity>                        mActivityList      = new LinkedList<>();
+        final LinkedList<Activity>                        mActivityList      = new LinkedList<>();
         final HashMap<Object, OnAppStatusChangedListener> mStatusListenerMap = new HashMap<>();
 
         private int mForegroundCount = 0;
@@ -275,7 +276,7 @@ public final class eUtils {
             }
         }
 
-        private void setTopActivity(final AppCompatActivity activity) {
+        private void setTopActivity(final Activity activity) {
             if (activity.getClass() == ePermissionUtils.PermissionActivity.class) return;
             if (mActivityList.contains(activity)) {
                 if (!mActivityList.getLast().equals(activity)) {
@@ -287,21 +288,21 @@ public final class eUtils {
             }
         }
 
-        AppCompatActivity getTopActivity() {
+        Activity getTopActivity() {
             if (!mActivityList.isEmpty()) {
-                final AppCompatActivity topActivity = mActivityList.getLast();
+                final Activity topActivity = mActivityList.getLast();
                 if (topActivity != null) {
                     return topActivity;
                 }
             }
-            AppCompatActivity topActivityByReflect = getTopActivityByReflect();
+            Activity topActivityByReflect = getTopActivityByReflect();
             if (topActivityByReflect != null) {
                 setTopActivity(topActivityByReflect);
             }
             return topActivityByReflect;
         }
 
-        private AppCompatActivity getTopActivityByReflect() {
+        private Activity getTopActivityByReflect() {
             try {
                 @SuppressLint("PrivateApi")
                 Class<?> activityThreadClass = Class.forName("android.app.ActivityThread");
@@ -317,7 +318,7 @@ public final class eUtils {
                     if (!pausedField.getBoolean(activityRecord)) {
                         Field activityField = activityRecordClass.getDeclaredField("activity");
                         activityField.setAccessible(true);
-                        return (AppCompatActivity) activityField.get(activityRecord);
+                        return (Activity) activityField.get(activityRecord);
                     }
                 }
             } catch (ClassNotFoundException e) {

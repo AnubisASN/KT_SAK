@@ -1,6 +1,6 @@
 package com.anubis.app_map.sdkdemo.activity;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +9,7 @@ import com.anubis.app_map.sdkdemo.LocationController;
 import com.baidu.navisdk.adapter.BaiduNaviManagerFactory;
 import com.baidu.navisdk.adapter.IBNRouteGuideManager;
 
-public class DemoExtGpsActivity extends Activity {
+public class DemoExtGpsActivity extends AppCompatActivity {
 
     private IBNRouteGuideManager.OnNavigationListener mOnNavigationListener =
             new IBNRouteGuideManager.OnNavigationListener() {

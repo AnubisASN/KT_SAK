@@ -3,7 +3,7 @@
  */
 package com.anubis.app_map.sdkdemo;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -12,12 +12,12 @@ import com.anubis.app_map.sdkdemo.activity.DemoNaviSettingActivity;
 
 public class NormalUtils {
 
-    public static void gotoSettings(Activity activity) {
+    public static void gotoSettings(AppCompatActivity activity) {
         Intent it = new Intent(activity, DemoNaviSettingActivity.class);
         activity.startActivity(it);
     }
 
-    public static void gotoDriving(Activity activity) {
+    public static void gotoDriving(AppCompatActivity activity) {
         Intent it = new Intent(activity, DemoDrivingActivity.class);
         activity.startActivity(it);
     }
