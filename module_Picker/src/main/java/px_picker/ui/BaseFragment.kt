@@ -62,7 +62,7 @@ open class BaseFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mContext = context!!
+        mContext = context
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
