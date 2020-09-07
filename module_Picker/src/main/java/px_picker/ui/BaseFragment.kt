@@ -60,7 +60,7 @@ open class BaseFragment : Fragment() {
 
     protected lateinit var mediaList: MutableList<MediaEntity>
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context!!
     }
