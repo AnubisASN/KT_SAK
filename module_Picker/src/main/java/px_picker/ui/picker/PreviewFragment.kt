@@ -75,7 +75,7 @@ class PreviewFragment : BaseFragment(), View.OnClickListener, Animation.Animatio
         setupData()
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
     }
 
