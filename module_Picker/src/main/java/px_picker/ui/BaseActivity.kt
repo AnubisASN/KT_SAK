@@ -68,7 +68,7 @@ open class BaseActivity : FragmentActivity() {
         setupConfig()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState!!.putString(PhoenixConstant.BUNDLE_CAMERA_PATH, savePath)
         outState!!.putString(PhoenixConstant.BUNDLE_ORIGINAL_PATH, originalPath)
