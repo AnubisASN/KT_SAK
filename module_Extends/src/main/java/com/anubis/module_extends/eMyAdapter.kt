@@ -47,17 +47,11 @@ class eMyAdapter<T>(
         holder.setData(mDatas[position], position)
     }
 
-    var v: View? = null
-    var i: Int = -1
-
     //界面设置
     inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun setData(data: T, position: Int) {
             try {
                 itemEditBlock(data, position)
-                itemView.onLongClick {
-                    return@onLongClick true
-                }
                 longClickBlock?.let {lcb->
                     itemView.onLongClick {
                         lcb(itemView, position)

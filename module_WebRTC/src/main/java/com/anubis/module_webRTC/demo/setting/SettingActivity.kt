@@ -108,7 +108,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_WINDOW_GRANT -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -118,6 +118,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
+
 
 
     override fun onClick(v: View) {

@@ -1,6 +1,7 @@
 package com.anubis.module_webRTC.demo
 
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
