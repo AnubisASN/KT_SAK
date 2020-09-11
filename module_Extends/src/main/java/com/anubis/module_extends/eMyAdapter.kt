@@ -29,7 +29,7 @@ class eMyAdapter<T>(
         val mActivity: Context,
         val layoutId: Int,
         val mDatas: ArrayList<T>,
-        val itemEditBlock: (data: T, position: Int) -> Unit,
+        val itemEditBlock: (itemView:View,data: T, position: Int) -> Unit,
         val longClickBlock: ((itemView: View, position: Int) -> Unit)? = null,
         val clickBlock: ((itemView: View, position: Int) -> Unit)? = null
 ) : RecyclerView.Adapter<eMyAdapter<T>.MyHolder>() {
@@ -51,7 +51,7 @@ class eMyAdapter<T>(
     inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun setData(data: T, position: Int) {
             try {
-                itemEditBlock(data, position)
+                itemEditBlock(itemView,data, position)
                 longClickBlock?.let {lcb->
                     itemView.onLongClick {
                         lcb(itemView, position)

@@ -1,6 +1,6 @@
 package com.anubis.kt_extends
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
 import android.bluetooth.BluetoothAdapter
@@ -39,7 +39,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
-import com.tencent.bugly.proguard.v
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -526,7 +525,7 @@ class eApp private constructor() {
     }
 
     //清除栈重启
-    fun eTaskCleanAndRestart(activity: androidx.appcompat.app.AppCompatActivity) {
+    fun eTaskCleanAndRestart(activity: Activity) {
         activity.finish()
         val intent = activity.intent
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -544,20 +543,20 @@ class eApp private constructor() {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            val uri = FileProvider.getUriForFile(context, authority, file);
-            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+            val uri = FileProvider.getUriForFile(context, authority, file)
+            intent.setDataAndType(uri, "application/vnd.android.package-archive")
         } else {
-            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive")
         }
         try {
-            context.startActivity(intent);
+            context.startActivity(intent)
         } catch (e: Exception) {
             e.eLogE("installApkFile")
         }
     }
 
     //窗口全屏
-    fun eSetWindowFullScreen(activity: androidx.appcompat.app.AppCompatActivity) {
+    fun eSetWindowFullScreen(activity: Activity) {
         activity.requestWindowFeature(Window.FEATURE_NO_TITLE)
         activity.window.setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -591,7 +590,7 @@ class eApp private constructor() {
         config.locale = locale
         resources.updateConfiguration(config, dm)
         //更新语言后，destroy当前页面，重新绘制
-        if (activity is androidx.appcompat.app.AppCompatActivity) {
+        if (activity is Activity) {
             activity.finish()
             val it = Intent(activity, activity::class.java)
             //清空任务栈确保当前打开activit为前台任务栈栈顶
@@ -624,7 +623,7 @@ class eApp private constructor() {
     }
 
     //APP重启
-    open fun eAppRestart(application: Application, activity: androidx.appcompat.app.AppCompatActivity) {
+    open fun eAppRestart(application: Application, activity: Activity) {
         //启动页
         val intent = Intent(application, activity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -633,7 +632,7 @@ class eApp private constructor() {
     }
 
     //Activity重启
-    open fun eActivityRestart(activity: androidx.appcompat.app.AppCompatActivity, activityList: ArrayList<androidx.appcompat.app.AppCompatActivity>? = null): Boolean {
+    open fun eActivityRestart(activity: Activity, activityList: ArrayList<Activity>? = null): Boolean {
         try {
             if (activityList != null) {
                 for (av in activityList) {
@@ -652,7 +651,7 @@ class eApp private constructor() {
     }
 
     //APP包名启动
-    open fun eAppStart(activity: androidx.appcompat.app.AppCompatActivity, packageName: String? = null): Boolean {
+    open fun eAppStart(activity: Activity, packageName: String? = null): Boolean {
         try {
             val LaunchIntent = activity.packageManager.getLaunchIntentForPackage(packageName
                     ?: activity.packageName)
@@ -820,7 +819,7 @@ open class eRegex internal constructor() {
     open fun eIsPhoneNumber(number: String): Boolean {
         val regExp: String = "^((13[0-9])|(15[^[4,5],\\D])|(16[^6,\\D])|(18[0,1,5-9])|(17[6,7,8]))\\d{8}$"
         val p: Pattern = Pattern.compile(regExp)
-        val m: Matcher = p?.matcher(number.toString())
+        val m: Matcher = p.matcher(number)
         return m.find()
     }
 
@@ -832,7 +831,7 @@ open class eRegex internal constructor() {
 
     //邮箱格式判断
     open fun eIsEmail(email: String): Boolean {
-        if (null == email || "" == email) return false
+        if (email.isBlank()) return false
         val regEm = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*"
         return Pattern.compile(regEm).matcher(email).matches()//复杂匹配
     }
@@ -865,13 +864,14 @@ open class eKeyEvent internal constructor() {
     }
 
     private var Time: Long = 0
-    open fun eSetKeyDownExit(activity: androidx.appcompat.app.AppCompatActivity, keyCode: Int, activityList: ArrayList<androidx.appcompat.app.AppCompatActivity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", ClickTime: Long = 2000, isExecute: Boolean = true): Boolean {
+    open fun eSetKeyDownExit(activity: Activity, keyCode: Int, activityList: ArrayList<Activity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", ClickTime: Long = 2000, isExecute: Boolean = true,block:()->Unit={}): Boolean {
         return if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (System.currentTimeMillis() - Time > ClickTime) {
                 activity.eShowTip(hint)
                 Time = System.currentTimeMillis()
                 false
             } else {
+                block()
                 if (isExecute) {
                     if (activityList != null) {
                         for (activity in activityList) {
@@ -939,11 +939,11 @@ open class eTime internal constructor() {
         val dft = SimpleDateFormat(format)
         val beginDate = Date()
         val date = Calendar.getInstance()
-        date.setTime(beginDate)
+        date.time = beginDate
         date.set(Calendar.DATE, date.get(Calendar.DATE) + distanceDay)
         var endDate: Date? = null
         try {
-            endDate = dft.parse(dft.format(date.getTime()))
+            endDate = dft.parse(dft.format(date.time))
         } catch (e: ParseException) {
             e.printStackTrace()
         }
@@ -1380,7 +1380,7 @@ open class eBitmap internal constructor() {
             yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), rotate, out)
             val dataBmp = out.toByteArray()
             // 生成Bitmap
-            val bitmap = BitmapFactory.decodeByteArray(out.toByteArray(), 0, out.size())
+            val bitmap = BitmapFactory.decodeByteArray(dataBmp, 0, out.size())
 
             // 旋转
             val matrix = Matrix()
@@ -1989,7 +1989,7 @@ open class eFile internal constructor() {
      * @param activity
      * @return
      */
-    open fun eActivityScreenShot(activity: androidx.appcompat.app.AppCompatActivity): Bitmap {
+    open fun eActivityScreenShot(activity: Activity): Bitmap {
         val dView = activity.window.decorView
         dView.setDrawingCacheEnabled(true)
         dView.buildDrawingCache()
@@ -2225,7 +2225,7 @@ open class ePermissions internal constructor() {
             } else {
                 val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
                 intent.data = Uri.parse("package:${context.packageName}")
-                (context as androidx.appcompat.app.AppCompatActivity).startActivityForResult(intent, 1)
+                (context as Activity).startActivityForResult(intent, 1)
             }
         } else {
             str = true
@@ -2253,7 +2253,7 @@ open class ePermissions internal constructor() {
 
     //授权判断
     open fun eSetPermissions(
-            activity: androidx.appcompat.app.AppCompatActivity,
+            activity: Activity,
             permissionsArray: Array<out String>,
             requestCode: Int = 1
     ): Boolean {
@@ -2286,7 +2286,7 @@ open class ePermissions internal constructor() {
 
     //显示授权设置
     open fun eSetOnRequestPermissionsResult(
-            activity: androidx.appcompat.app.AppCompatActivity,
+            activity: Activity,
             requestCode: Int,
             permissions: Array<String>,
             grantResults: IntArray,
@@ -2458,7 +2458,7 @@ open class eShell internal constructor() {
     }
 
     //Shell APP重启
-    open fun eAppReboot(activity: androidx.appcompat.app.AppCompatActivity) {
+    open fun eAppReboot(activity: Activity) {
         eExecShell("am force-stop ${activity.packageName} && am start -n ${activity.packageName}/${activity::class.java.name}")
     }
 }
