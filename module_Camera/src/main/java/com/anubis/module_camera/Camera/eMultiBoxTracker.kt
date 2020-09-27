@@ -8,7 +8,6 @@ import android.graphics.Paint.Style
 import android.os.Build
 import androidx.annotation.RequiresApi
 import android.util.TypedValue
-import com.anubis.kt_extends.eLog
 import com.anubis.module_camera.Camera.customview.eBorderedText
 
 import com.anubis.module_camera.Camera.customview.eOverlayView
@@ -39,7 +38,7 @@ object eMultiBoxTracker {
      * @param paint: Paint? = null ；画笔
      * @return eMultiBoxTracker
      */
-    fun einit(activity: androidx.appcompat.app.AppCompatActivity, overlayView: eOverlayView = activity.frame_ov_tracking, paint: Paint? = null): eMultiBoxTracker {
+    fun einit(activity:  AppCompatActivity, overlayView: eOverlayView = activity.frame_ov_tracking, paint: Paint? = null): eMultiBoxTracker {
         boxPaint.color = Color.GREEN
         boxPaint.style = Style.STROKE
         boxPaint.strokeWidth = 3.0f

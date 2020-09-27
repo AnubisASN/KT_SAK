@@ -1,5 +1,6 @@
 package com.anubis.module_dialog
 
+import com.anubis.kt_extends.eLog
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -12,6 +13,13 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+      val  dataList: ArrayList<String?> = arrayListOf()
+        dataList.add("0")
+        dataList.add("1")
+        dataList.add("2")
+
+        dataList.add(null)
+//        dataList[5].eLog("data")
+
     }
 }

@@ -1,10 +1,8 @@
 package com.anubis.SwissArmyKnife
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Handler
 import android.os.Message
-import com.anubis.SwissArmyKnife.MainActivity.Companion.mainActivity
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
 import com.anubis.module_asrw.eASRW

@@ -3,14 +3,8 @@ package com.anubis.app_webrtc
 import androidx.appcompat.app.AppCompatActivity
 import android.app.Application
 import android.content.Context
-import android.content.Intent
-import android.os.Environment
 import androidx.multidex.MultiDex
-import com.alibaba.android.arouter.launcher.ARouter
-import com.anubis.kt_extends.eCrash
 import com.anubis.kt_extends.eLog
-import com.tencent.bugly.crashreport.CrashReport
-import java.io.File
 
 /**
  * Author  ： AnubisASN   on 2018-07-21 17:03.
@@ -29,7 +23,7 @@ import java.io.File
  */
 
 class APP : Application() {
-    var mActivityList: ArrayList<androidx.appcompat.app.AppCompatActivity>? = null
+    var mActivityList: ArrayList<AppCompatActivity>? = null
 
     companion object {
         private var mInit: APP? = null

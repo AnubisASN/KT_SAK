@@ -41,11 +41,11 @@ class ePortMSG private constructor() : LockerPortInterface {
     private lateinit var mLockerSerialportUtil: LockerSerialportUtil
 
     companion object {
-        private lateinit var mActivity: androidx.appcompat.app.AppCompatActivity
+        private lateinit var mActivity: AppCompatActivity
         private var mPATH: String = "/dev/ttyS3" //串口名称
         private var mBAUDRATE: Int = 9600
         private var mCallback: ICallBack? = null
-        fun eInit(activity: androidx.appcompat.app.AppCompatActivity, PATH: String = mPATH, BAUDRATE: Int = mBAUDRATE, callback: ICallBack? = null): ePortMSG {
+        fun eInit(activity:AppCompatActivity, PATH: String = mPATH, BAUDRATE: Int = mBAUDRATE, callback: ICallBack? = null): ePortMSG {
             mActivity = activity
             mPATH = PATH
             mBAUDRATE = BAUDRATE

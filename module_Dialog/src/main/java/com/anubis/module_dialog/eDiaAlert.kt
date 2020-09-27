@@ -13,12 +13,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import com.anubis.kt_extends.eLog
-import com.anubis.kt_extends.eLogE
-import kotlinx.android.synthetic.main.sample_dia.*
-import kotlinx.android.synthetic.main.sample_dia.view.*
-import org.jetbrains.anko.onClick
-import org.jetbrains.anko.textColor
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.anubis.module_base.Utils.eAdapter
+import com.anubis.module_extends.DataItemInfo
+import kotlinx.android.synthetic.main.dia_default.*
+import kotlinx.android.synthetic.main.dia_default.view.*
+import kotlinx.android.synthetic.main.dia_gradeselect.view.*
+import kotlinx.android.synthetic.main.sample_gradeselect.view.*
+import org.jetbrains.anko.*
+import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
 /**
@@ -42,18 +46,14 @@ open class eDiaAlert internal constructor() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         private lateinit var mContext: Context
-        private var mICallEdit: ICallEdit? = null
-        private var mICallBack: ICallBack? = null
         private var mStyle by Delegates.notNull<Int>()
         private var mDismissTime: Long = 100L
         fun eInit(
                 context: Context,
                 style: Int = R.style.dialog,
-                ICallBack: ICallBack? = null,
                 dismissTime: Long = mDismissTime
         ): eDiaAlert {
             mContext = context
-            mICallBack = ICallBack
             mStyle = style
             mDismissTime = dismissTime
             return eInit
@@ -66,29 +66,27 @@ open class eDiaAlert internal constructor() {
             title: String? = null,
             body: String? = null,
             foot: String? = null,
-            isShowOK: Boolean = true,
-            isShowCancel: Boolean = true,
+            btOK: String? = null,
+            btCancel: String? = null,
             isShowClose: Boolean = false,
             isShowAVI: Boolean = false,
             isDisableBack: Boolean = true,
-            isCanceledOnTouchOutside:Boolean=false,
+            isCanceledOnTouchOutside: Boolean = false,
             gravity: Int = Gravity.CENTER,
             x: Int = 0,
             y: Int = 0,
             alpha: Float = 0.9f,
             dismissTime: Long = 100L,
-            ICallBack: ICallBack? = mICallBack,
-            ICallEdit: ICallEdit? = null,
-            block: (Dialog, View) -> Unit = { _, _ -> }
+            ICallBackEdit: ICallBackEdit? = null,
+            ICallBackClick: ICallBackClick? = null,
+            extendBlock: (Dialog, View) -> Unit = { _, _ -> }
     ): Dialog {
-        mICallBack = ICallBack
-        mICallEdit = ICallEdit
         val dia = Dialog(mContext, mStyle)
         with(dia) {
-            val view = LayoutInflater.from(mContext).inflate(R.layout.sample_dia, null)
+            val view = LayoutInflater.from(mContext).inflate(R.layout.dia_default, null)
             setContentView(view)
             setCanceledOnTouchOutside(isCanceledOnTouchOutside)
-            if (ICallEdit == null)
+            if (ICallBackEdit == null)
                 view.dia_etInput.visibility = View.GONE
             else
                 view.dia_etInput.visibility = View.VISIBLE
@@ -104,42 +102,50 @@ open class eDiaAlert internal constructor() {
                 view.dia_tvFoot.visibility = View.GONE
             else
                 view.dia_tvFoot.text = foot
-            if (isShowOK)
+
+            if (btOK==null)
+                view.dia_btOk.visibility=View.GONE
+            else {
+                view.dia_btOk.text = btOK
                 view.dia_btOk.onClick {
                     onClickUI(it, dismissTime)
-                    mICallEdit?.let { ic ->
+                    ICallBackEdit?.let { ic ->
                         ic.onEditInput(dia, dia_etInput, it)
                         return@onClick
                     }
                     Handler().postDelayed({
-                        mICallBack?.onClickOK(this, it) ?: dismiss()
+                        ICallBackClick?.onClickOK(this, it) ?: dismiss()
                     }, dismissTime)
                 }
-            else
-                view.dia_btOk.visibility = View.GONE
-            if (isShowCancel)
+            }
+            
+            
+            if (btCancel==null)
+                view.dia_btCancel.visibility=View.GONE
+            else{
                 view.dia_btCancel.onClick {
                     onClickUI(it, dismissTime)
-                    mICallEdit?.let { ic ->
+                    ICallBackEdit?.let { ic ->
                         ic.onEditInput(dia, dia_etInput, it)
                         return@onClick
                     }
                     Handler().postDelayed({
-                        mICallBack?.onClickCancel(this, it) ?: dismiss()
+                        ICallBackClick?.onClickCancel(this, it) ?: dismiss()
                     }, dismissTime)
                 }
-            else
-                view.dia_btCancel.visibility = View.GONE
+            }
+               
+   
             if (isShowClose)
                 view.dia_ivClose.onClick {
-                    mICallEdit?.onEditInput(dia, dia_etInput, it)
-                    mICallBack?.onClickClose(this, it) ?: dismiss()
+                    ICallBackEdit?.onEditInput(dia, dia_etInput, it)
+                    ICallBackClick?.onClickClose(this, it) ?: dismiss()
 
                 } else
                 view.dia_ivClose.visibility = View.GONE
             if (isShowAVI)
                 view.dia_avi.visibility = View.VISIBLE
-            block(this, view)
+            extendBlock(this, view)
             if (isDisableBack)
                 setOnKeyListener { _, keyCode, _ ->
                     when (keyCode) {
@@ -159,15 +165,11 @@ open class eDiaAlert internal constructor() {
         return dia
     }
 
-    open fun onClickDown(downClickView:View) {
-        mICallEdit = null
-        downClickView.callOnClick()
-    }
 
     open fun eDIYShow(
             layout: Int,
-            iCallBack: IDIYCallBack? = null,
-            onClick: IDIYClickCallBack? = null,
+            ICallBack: IDIYCallBack? = null,
+            ICallBackClick: IDIYCallBackClick? = null,
             isDisableBack: Boolean = true
     ): Dialog {
         val dia = Dialog(mContext, mStyle)
@@ -185,10 +187,9 @@ open class eDiaAlert internal constructor() {
                         else -> return@setOnKeyListener false
                     }
                 }
-            iCallBack?.DIY(this, view, onClick)
+            ICallBack?.DIY(this, view, ICallBackClick)
             setContentView(view)
             show()
-
         }
         return dia
     }
@@ -206,21 +207,78 @@ open class eDiaAlert internal constructor() {
     }
 
 
-    interface ICallBack {
+    /*分级选择器*/
+    open fun <T> eDiaGradeSelect(
+            gradeTitleArray: Array<String> = arrayOf("请选择小区"), //级别1  标题
+            itemDataList: ArrayList<List<T>> = arrayListOf(), //级别2  子项
+            adapterBlock: (ArrayList<eAdapter<T>>) -> Unit, //级别1  返回级别2 适配器
+            itemClickBlock: ((itemView1: View, i1: Int, itemView2: View, T, i2: Int) -> Unit)? = null,//级别2  点击项
+            orientation: Int = LinearLayoutManager.HORIZONTAL,  //方向
+            returnBlock: (ArrayList<T?>) -> Unit  //返回结果组
+
+
+    ) {
+        val gradeReturnData = arrayListOf<T?>()
+        val adapterList = arrayListOf<eAdapter<T>>()
+
+        eDIYShow(R.layout.dia_gradeselect, object : IDIYCallBack {
+            override fun DIY(dia: Dialog, view: View, onClick: IDIYCallBackClick?) {
+                dia.setCanceledOnTouchOutside(true)
+                //分级布局
+                eAdapter(mContext, view.gradedia_ll, R.layout.sample_gradeselect, gradeTitleArray.toMutableList(), { adapter: eAdapter<String>, itemview1: View, s: String, i1: Int ->
+                    itemview1.gradedia_tvTitle.text = s
+                    itemview1.gradedia_rvBody.backgroundColor = Color.parseColor("#525655")
+                    itemview1.gradedia_csLayout.onClick {
+                        itemview1.onDiaGradeSeClickUI(Pair(itemview1.gradedia_tvTitle, itemview1.gradedia_tvDynamic))
+                    }
+                    gradeReturnData.add(null)
+                    adapterList.add(eAdapter(mContext, itemview1.gradedia_rvBody, R.layout.adapter_default_item, itemDataList.getOrNull(i1)) { itemview2: View, t: T, i2: Int ->
+                        itemClickBlock?.let { it(itemview1, i1, itemview2, t, i2) }
+                        gradeReturnData[i1] = t
+                        with(gradeReturnData.filter {
+                            it != null
+                        }) {
+                            if (this.size == gradeReturnData.size) {
+                                returnBlock(gradeReturnData)
+                                dia.dismiss()
+                            }
+                        }
+                    })
+                }, orientation = orientation)
+                adapterBlock(adapterList)
+            }
+        })
+    }
+
+
+    private var colorViewPair: Pair<TextView, TextView>? = null
+    internal open fun View.onDiaGradeSeClickUI(viewPair: Pair<TextView, TextView>? = null) {
+        colorViewPair?.first?.textColor = Color.parseColor("#ffffff")
+        colorViewPair?.second?.backgroundColor = Color.parseColor("#ffffff")
+        viewPair?.let {
+            it.first.textColor = Color.parseColor("#25CEFB")
+            it.second.backgroundColor = Color.parseColor("#25CEFB")
+            colorViewPair = viewPair
+        }
+
+    }
+
+    /*-----*/
+    interface ICallBackClick {
         fun onClickOK(dia: Dialog, it: View?)
         fun onClickCancel(dia: Dialog, it: View?)
         fun onClickClose(dia: Dialog, it: View?)
     }
 
-    interface ICallEdit {
+    interface ICallBackEdit {
         fun onEditInput(dia: Dialog, editText: EditText, iv: View? = null)
     }
 
     interface IDIYCallBack {
-        fun DIY(dia: Dialog, view: View, onClick: IDIYClickCallBack?)
+        fun DIY(dia: Dialog, view: View, onClick: IDIYCallBackClick?)
     }
 
-    interface IDIYClickCallBack {
+    interface IDIYCallBackClick {
         fun onClick(view: View, it: View?)
     }
 }

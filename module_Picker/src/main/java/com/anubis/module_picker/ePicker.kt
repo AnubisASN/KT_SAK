@@ -2,13 +2,12 @@ package com.anubis.module_picker
 
 import android.app.Activity
 import android.content.Intent
-import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
-import px_core.PhoenixOption
 import px_core.model.MimeType
 import file_picker.bean.FileItemBeanImpl
 import file_picker.config.*
 import file_picker.filetype.*
+import px_core.PhoenixOption
 import px_picker.Phoenix
 
 /**

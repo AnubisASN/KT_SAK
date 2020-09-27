@@ -1,45 +1,16 @@
 package com.anubis.module_cardotg
 
 import android.annotation.SuppressLint
-import java.io.File
-import java.io.FileInputStream
 import java.io.FileNotFoundException
-import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.text.SimpleDateFormat
-
-
 import com.huashi.otg.sdk.HSIDCardInfo
-import com.huashi.otg.sdk.HandlerMsg
 import com.huashi.otg.sdk.HsOtgApi
-import com.huashi.otg.sdk.HsSerialPortSDK
-import com.huashi.otg.sdk.Test
-
-import androidx.appcompat.app.AppCompatActivity
-import android.app.Application
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
-import android.os.Message
-import android.os.SystemClock
-import android.util.Log
-import android.view.View
-import android.view.View.OnClickListener
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import com.anubis.kt_extends.eAssets
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
-import com.anubis.kt_extends.eShowTip
-import com.anubis.module_cardotg.R.id.iv_photo
-import com.anubis.module_cardotg.R.id.tv_info
-import com.tencent.bugly.Bugly.applicationContext
 import kotlinx.coroutines.*
 
 /**

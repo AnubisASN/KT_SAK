@@ -3,23 +3,15 @@ package com.anubis.module_arcface
 import android.Manifest
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.hardware.Camera
-import android.os.Build
-import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
-import android.view.WindowManager
-import android.widget.Toast
-
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
@@ -41,13 +33,11 @@ import com.arcsoft.face.VersionInfo
 import java.util.ArrayList
 
 import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.custom.async
 /**
  * Author  ： AnubisASN   on 18-7-16 上午8:37.
  * E-mail  ： anubisasn@gmail.com ( anubisasn@qq.com )
@@ -80,7 +70,7 @@ object eArcFace : ViewTreeObserver.OnGlobalLayoutListener {
     private var previewSize: Camera.Size? = null
     private var mCameraID = Camera.CameraInfo.CAMERA_FACING_FRONT
     private var faceEngine: FaceEngine? = null
-    private var mActivity: androidx.appcompat.app.AppCompatActivity? = null
+    private var mActivity: AppCompatActivity? = null
     private var afCode = -1
     private var mIsMirror = false
     private val APP_ID = "5Q5zxyFtDAa8fRG6je1YVY7jKv5Gsq7tNEfdYQWaZQG8"
@@ -100,7 +90,7 @@ object eArcFace : ViewTreeObserver.OnGlobalLayoutListener {
     private var mRotation: Int = 0
 
 
-    fun init(activity: androidx.appcompat.app.AppCompatActivity, previewView: View, faceRectView: FaceRectView, rotation: Int = 0, cameraId: Int? = null, isMirror: Boolean? = null): eArcFace {
+    fun init(activity: AppCompatActivity, previewView: View, faceRectView: FaceRectView, rotation: Int = 0, cameraId: Int? = null, isMirror: Boolean? = null): eArcFace {
         mCameraID = cameraId ?: mCameraID
         mIsMirror = isMirror ?: mIsMirror
         mActivity = activity

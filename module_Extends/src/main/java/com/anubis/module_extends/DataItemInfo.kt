@@ -1,8 +1,7 @@
-package com.anubis.app_map
-import android.app.Application
+package com.anubis.module_extends
 
 /**
- * Author  ： AnubisASN   on 19-6-29 下午3:14.
+ * Author  ： AnubisASN   on 20-9-16 上午11:06.
  * E-mail  ： anubisasn@gmail.com ( anubisasn@qq.com )
  *  Q Q： 773506352
  *命名规则定义：
@@ -17,14 +16,4 @@ import android.app.Application
  *Router :  /'Module'/'Function'
  *说明：
  */
-class mapAPP : Application() {
-    companion object {
-        var mAPP: mapAPP? = null
-
-    }
-
-    override fun onCreate() {
-        mAPP = this
-        super.onCreate()
-    }
-}
+data class DataItemInfo(var id:Long?=null,var isCb:Boolean?=null, var str1:String?=null, var str2:String?=null, var ico: Any?=null, var str3:String?=null, var str4:String?=null, var isShowLine:Boolean=false,var color: Int?=null)

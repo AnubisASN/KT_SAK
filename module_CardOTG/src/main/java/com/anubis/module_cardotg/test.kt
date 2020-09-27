@@ -15,28 +15,15 @@ import com.huashi.otg.sdk.HandlerMsg
 import com.huashi.otg.sdk.HsOtgApi
 import com.huashi.otg.sdk.HsSerialPortSDK
 import com.huashi.otg.sdk.Test
-
-import androidx.appcompat.app.AppCompatActivity
 import android.app.Application
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Message
 import android.os.SystemClock
 import android.util.Log
-import android.view.View
-import android.view.View.OnClickListener
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import com.anubis.kt_extends.eShowTip
-import com.anubis.module_cardotg.R.id.iv_photo
-import com.anubis.module_cardotg.R.id.tv_info
-import com.tencent.bugly.Bugly.applicationContext
 /**
  * Author  ： AnubisASN   on 18-7-16 上午8:37.
  * E-mail  ： anubisasn@gmail.com ( anubisasn@qq.com )

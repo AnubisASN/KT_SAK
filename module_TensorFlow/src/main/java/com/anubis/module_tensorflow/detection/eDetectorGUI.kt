@@ -15,10 +15,6 @@
  */
 
 package com.anubis.module_tensorflow.detection
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.widget.ScrollView
 import android.graphics.Bitmap
 import android.graphics.Bitmap.Config
 import android.graphics.Canvas

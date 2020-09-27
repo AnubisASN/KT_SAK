@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import px_core.listener.Starter;
 import px_core.model.MediaEntity;
 import px_core.model.MimeType;
-import px_core.util.ReflectUtils;
+import  px_core.util.ReflectUtils;
 
 /**
  * For more information, you can visit https://github.com/guoxiaoxing or contact me by
@@ -310,7 +310,7 @@ public class PhoenixOption implements Parcelable {
     }
 
     public void start(Activity activity, int type, int requestCode) {
-        Starter starter = ReflectUtils.loadStarter(ReflectUtils.Phoenix);
+        Starter starter =ReflectUtils.loadStarter(ReflectUtils.Phoenix);
         if (starter != null) {
             starter.start(activity, this, type, requestCode);
         }

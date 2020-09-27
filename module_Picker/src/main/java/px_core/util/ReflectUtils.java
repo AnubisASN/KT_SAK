@@ -31,7 +31,7 @@ public class ReflectUtils {
     /**
      * 图片/视频选择
      */
-    public static final String Phoenix = "picker.Phoenix";
+    public static final String Phoenix = "px_picker.Phoenix";
 
     public static Processor loadProcessor(String className) {
         try {

@@ -2,7 +2,6 @@ package com.anubis.SwissArmyKnife
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import kotlin.experimental.and
 
 
 /**
@@ -20,7 +19,7 @@ import kotlin.experimental.and
  *Router :  /'Module'/'Function'
  *说明：
  */
-class  Excel: androidx.appcompat.app.AppCompatActivity() {
+class  Excel: AppCompatActivity() {
     private var mRunnable: Runnable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

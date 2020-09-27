@@ -20,6 +20,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ScrollView
 import android.widget.Spinner
+import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.launcher.ARouter
 import com.android.xhapimanager.XHApiManager
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
@@ -94,7 +95,7 @@ import kotlin.collections.ArrayList
 //                       `=---='
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //               佛祖保佑         永无BUG
-class MainActivity : androidx.appcompat.app.AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     private var filePath = ""
     private var file: File? = null
     private var datas: Array<String>? = null
@@ -677,7 +678,7 @@ class MainActivity : androidx.appcompat.app.AppCompatActivity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         Hint("keyCode:$keyCode")
         eLog("size" + APP.mAPP.mActivityList?.size)
-        return eKeyEvent.eInit.eSetKeyDownExit(this, keyCode, APP.mAPP.mActivityList, false, exitHint = "完成退出")
+        return eKeyEvent.eInit.eSetKeyDownExit(this, keyCode, mAPP.mActivityList, false, exitHint = "完成退出")
     }
 
     override fun onDestroy() {

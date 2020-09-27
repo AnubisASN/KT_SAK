@@ -1,14 +1,13 @@
 package com.anubis.SwissArmyKnife
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.app.Application
 import android.content.Context
-import android.os.Environment
 import androidx.multidex.MultiDex
 import com.alibaba.android.arouter.launcher.ARouter
 import com.anubis.kt_extends.eCrash
 import com.tencent.bugly.crashreport.CrashReport
-import java.io.File
 
 /**
  * Author  ： AnubisASN   on 2018-07-21 17:03.
@@ -28,12 +27,12 @@ import java.io.File
 
 
 class APP : Application() {
-    var mActivityList: ArrayList<androidx.appcompat.app.AppCompatActivity>? = null
+    var mActivityList: ArrayList<Activity>? = null
 
     companion object {
         private var mInit: APP? = null
         val mAPP: APP get() = mInit!!
-        val mActivityList: ArrayList<androidx.appcompat.app.AppCompatActivity> = ArrayList()
+        val mActivityList: ArrayList<AppCompatActivity> = ArrayList()
     }
 
     override fun onCreate() {

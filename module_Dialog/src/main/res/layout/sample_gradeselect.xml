@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:id="@+id/gradedia_csLayout"
+        android:layout_width="@dimen/dp_107"
+        android:layout_height="@dimen/dp_200"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/gradedia_tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#333431"
+            android:gravity="center"
+            android:padding="@dimen/dp_5"
+            android:text="请选择XXX"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/gradedia_tvDynamic"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_1"
+            android:background="#ffffff"
+            android:paddingLeft="@dimen/dp_5"
+            android:textColorHint="#2D2D2D"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gradedia_tvTitle" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gradedia_rvBody"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#333431"
+            android:padding="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gradedia_tvDynamic" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

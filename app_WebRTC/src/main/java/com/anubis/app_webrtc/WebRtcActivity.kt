@@ -3,9 +3,7 @@ package com.anubis.app_webrtc
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import com.anubis.app_webrtc.APP.Companion.mAPP
-import com.anubis.app_webrtc.APP.Companion.onlyVoipActivity
 import com.anubis.kt_extends.*
 import com.anubis.module_webRTC.demo.MLOC
 import com.anubis.module_webRTC.demo.MLOC.VOIP_SERVER_URL

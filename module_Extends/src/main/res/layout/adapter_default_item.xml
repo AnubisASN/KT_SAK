@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sample_table_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <CheckBox
+        android:id="@+id/table_item_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/table_item_ll"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/table_item_ll" />
+
+    <LinearLayout
+        android:id="@+id/table_item_ll"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_37"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/table_item_cb"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/table_item_tvStr1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.15"
+            android:gravity="center"
+            android:tag="0"
+            android:text="报修项目"
+            android:textColor="#A2A2A2"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/table_item_tvStr2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.15"
+            android:gravity="center"
+            android:tag="0"
+            android:text="时间"
+            android:textColor="#A2A2A2"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold"
+            tools:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/table_item_tlTV_IV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.9"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/table_item_tvStr3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="现场图片"
+                android:textColor="#A2A2A2"
+                android:textSize="@dimen/sp_13"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/table_item_tvIco"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/table_item_tvStr4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:tag="0"
+            android:text="状态"
+            android:textColor="#A2A2A2"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/table_item_tvLine"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_1"
+        android:layout_marginStart="@dimen/dp_3"
+        android:layout_marginEnd="@dimen/dp_3"
+        android:background="#ffffff"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/table_item_ll"
+        app:layout_constraintStart_toStartOf="@+id/table_item_cb"
+        app:layout_constraintTop_toBottomOf="@+id/table_item_ll" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
