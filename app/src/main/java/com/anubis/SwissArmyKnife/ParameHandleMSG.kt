@@ -57,14 +57,6 @@ object ParameHandleMSG {
         }
     }
 
-    val handleTCP = @SuppressLint("HandlerLeak")
-    object : Handler() {
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            handleTCP(msg)
-        }
-    }
-
     val handleWeb = @SuppressLint("HandlerLeak")
     object : Handler() {
         override fun handleMessage(msg: Message) {
@@ -191,36 +183,6 @@ object ParameHandleMSG {
 
     private fun handleTTS(msg: Message) {
         eLog("what:${msg.what}---obj:${msg.obj}---arg1:${msg.arg1}---arg2:${msg.arg2}")
-    }
-
-    private fun handleTCP(msg: Message) {
-        mainActivity?.Hint("TCP:${msg.obj}")
-        val reMsg = msg.obj as eTCP.receiveMSG
-        when (reMsg.code) {
-//                val HANDLER_FAILURE_CODE = -1  //连接失败
-            eTCP.eInit.HANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.address}：${reMsg.msg}  连接失败")
-//                val HANDLER_ERROR_CODE = -2   //连接错误
-            eTCP.eInit.HANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.address}：${reMsg.msg}  连接错误")
-//                val HANDLER_CLOSE_CODE = 0     //关闭连接
-            eTCP.eInit.HANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.address}：${reMsg.msg}  连接关闭")
-//                val HANDLER_CONNECT_CODE = 1  //连接成功
-            eTCP.eInit.HANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.address}：${reMsg.msg}  连接成功")
-//                val HANDLER_MSG_CODE = 2    //接收消息
-            eTCP.eInit.HANDLER_MSG_CODE -> mainActivity!!.Hint("TCP客户端-${reMsg.address}：接收到 ${reMsg.msg}")
-
-//                val SHANDLER_FAILURE_CODE = -11  //创建失败
-            eTCP.eInit.SHANDLER_FAILURE_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：${reMsg.msg}  创建失败")
-//                val SHANDLER_ERROR_CODE = -22   //创建错误
-            eTCP.eInit.SHANDLER_ERROR_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：${reMsg.msg}  创建错误")
-//                val SHANDLER_CLOSE_CODE = -33     //连接关闭
-            eTCP.eInit.SHANDLER_CLOSE_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：${reMsg.msg}  连接关闭")
-//                val SHANDLER_SUCCEED_CODE = 33     //创建成功
-            eTCP.eInit.SHANDLER_SUCCEED_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：${reMsg.msg}  创建成功")
-//                val SHANDLER_CONNECT_CODE = 11  //连接成功
-            eTCP.eInit.SHANDLER_CONNECT_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：${reMsg.msg}  连接成功")
-//                val SHANDLER_MSG_CODE = 22    //接收消息
-            eTCP.eInit.SHANDLER_MSG_CODE -> mainActivity!!.Hint("TCP服务端-${reMsg.address}：接收到${reMsg.msg}")
-        }
     }
 
     private fun handleWeb(msg: Message) {
