@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +25,6 @@ import com.android.xhapimanager.XHApiManager
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
 import com.anubis.SwissArmyKnife.GreenDao.Data
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleMsg
-import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTCP
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTTS
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleWeb
 import com.anubis.SwissArmyKnife.ParameHandleMSG.uHandler
@@ -52,14 +50,6 @@ import com.anubis.module_videochat.eVideoChatUI
 import com.anubis.module_vncs.eVNC
 import com.anubis.module_websocket.eWebSocket
 import com.anubis.utils.util.eToastUtils
-//import com.anubis.module_ewifi.eWiFi
-//import com.anubis.module_greendao.eGreenDao
-//import com.anubis.module_office.eOffice
-//import com.anubis.module_portMSG.ePortMSG
-//import com.anubis.module_tts.Bean.TTSMode
-//import com.anubis.module_tts.Bean.VoiceModel
-//import com.anubis.module_tts.eTTS
-//import com.anubis.module_tts.listener.FileSaveListener
 import com.google.gson.Gson
 import com.huashi.otg.sdk.HSIDCardInfo
 import com.lzy.okgo.OkGo
@@ -113,7 +103,6 @@ class MainActivity : AppCompatActivity() {
     private var mOffice: eOffice? = null
     private var mTTS: eTTS? = null
     private var mTCP: eTCP?=null
-
     companion object {
         var mainActivity: MainActivity? = null
         lateinit var mHandler: Handler
