@@ -62,6 +62,7 @@ import kotlin.Error
 import kotlin.collections.ArrayList
 import kotlin.experimental.and
 import org.jetbrains.anko.inputMethodManager
+import java.nio.charset.Charset
 
 /**
  * Author  ： AnubisASN   on 2018-07-23 9:12.
@@ -407,7 +408,7 @@ fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = Aud
 
 
 /**
- * String Json解析扩展--------------------------------------------------------------------------------
+ *  Json解析扩展--------------------------------------------------------------------------------
  */
 class eJson private constructor() {
     companion object {
@@ -415,7 +416,7 @@ class eJson private constructor() {
     }
 
     //Object Json解析扩展
-    fun <T> eGetJsonObject(json: String, resultKey: String, default: T = "" as T): T {
+    fun <T> eGetJson(json: String, resultKey: String, default: T): T {
         return try {
             when (default) {
                 is String -> JSONObject(json).getString(resultKey)
@@ -427,28 +428,6 @@ class eJson private constructor() {
             } as T
         } catch (e: Exception) {
             default
-        }
-    }
-
-    fun eGetJsonObject(json: String, resultKey: String) = try {
-        JSONObject(json).getInt(resultKey)
-    } catch (e: Exception) {
-        try {
-            JSONObject(json).getLong(resultKey)
-        } catch (e: Exception) {
-            try {
-                JSONObject(json).getBoolean(resultKey)
-            } catch (e: Exception) {
-                try {
-                    JSONObject(json).getDouble(resultKey)
-                } catch (e: Exception) {
-                    try {
-                        JSONObject(json).getString(resultKey)
-                    } catch (e: Exception) {
-                        null
-                    }
-                }
-            }
         }
     }
 
@@ -864,7 +843,7 @@ open class eKeyEvent internal constructor() {
     }
 
     private var Time: Long = 0
-    open fun eSetKeyDownExit(activity: Activity, keyCode: Int, activityList: ArrayList<Activity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", ClickTime: Long = 2000, isExecute: Boolean = true,block:()->Unit={}): Boolean {
+    open fun eSetKeyDownExit(activity: Activity, keyCode: Int, activityList: ArrayList<Activity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", ClickTime: Long = 2000, isExecute: Boolean = true, block: () -> Unit = {}): Boolean {
         return if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (System.currentTimeMillis() - Time > ClickTime) {
                 activity.eShowTip(hint)
@@ -2186,10 +2165,15 @@ open class eString internal constructor() {
         } catch (e: NoSuchAlgorithmException) {
             e.printStackTrace()
         }
-
         return null
     }
 
+    //base64加密
+    open fun eBase64Encode(str: String, charset: Charset = Charsets.UTF_8, flags: Int = Base64.DEFAULT) = eBase64Encode(str.toByteArray(charset), flags)
+    open fun eBase64Encode(bytes: ByteArray, flags: Int = Base64.DEFAULT) = Base64.encodeToString(bytes, flags)
+    //base64解密
+    open  fun eBase64Decode(strBase64:String, charset: Charset = Charsets.UTF_8, flags: Int = Base64.DEFAULT)=eBase64Decode(strBase64.toByteArray(charset),flags)
+    open fun eBase64Decode(bytes: ByteArray, flags: Int = Base64.DEFAULT)=String(Base64.decode(bytes,flags))
     //字符串截取
     open fun eInterception(str: String, lenght: Int = 1024, symbol: String = ","): String {
         var j = 0

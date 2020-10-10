@@ -101,7 +101,7 @@ class eManage private  constructor(){
             }
             val hbis = ByteArrayInputStream(buf, 0, rlen)
             val hin = BufferedReader(InputStreamReader(hbis, Charsets.UTF_8))
-            body = hin.readLine()
+            body = hin.readText()
             return body
         } catch (ioe: IOException) {
             ioe.eLogE("IOException ")

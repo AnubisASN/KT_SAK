@@ -73,6 +73,8 @@ import kotlinx.coroutines.launch
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.uiThread
 import java.io.*
+import java.net.Socket
+import java.util.HashMap
 import kotlin.collections.ArrayList
 
 //                       _oo0oo_
@@ -110,6 +112,7 @@ class MainActivity : AppCompatActivity() {
     private var mPortMSG: ePortMSG? = null
     private var mOffice: eOffice? = null
     private var mTTS: eTTS? = null
+    private var mTCP: eTCP?=null
 
     companion object {
         var mainActivity: MainActivity? = null
@@ -223,26 +226,30 @@ class MainActivity : AppCompatActivity() {
                     getDigit("TCP创建") -> when (view?.id) {
                         R.id.bt_item1 -> {
                             GlobalScope.launch {
-                                eTCP.eInit.eSocketConnect(MSG?.split("||")?.get(0)
+                                mTCP?.eSocketConnect(MSG?.split("||")?.get(0)
                                         ?: "192.168.1.110", MSG?.split("||")?.get(1)?.toInt()
-                                        ?: 3335, handleTCP)
+                                        ?: 3335){ s: String, i: Int, s1: String, hashMap: HashMap<String, Socket?> ->
+                                    eLog("$s-$i-$s1")
+                                }
                             }
                         }
-                        R.id.bt_item2 -> Hint("数据发送:${eTCP.eInit.eSocketSend(MSG?.split("||")?.get(0)
+                        R.id.bt_item2 -> Hint("数据发送:${ mTCP?.eSocketSend(MSG?.split("||")?.get(0)
                                 ?: "123", MSG?.split("||")?.get(1)
-                                ?: "192.168.1.110", eTCP.eInit.eClientHashMap)}")
+                                ?: "192.168.1.110",mTCP?.eClientHashMap)}")
                         R.id.bt_item3 -> {
                             GlobalScope.launch {
-                                eTCP.eInit.eServerSocket(handleTCP, MSG?.toInt() ?: 3335)
+                              mTCP?.eServerSocket{ s: String, i: Int, s1: String, hashMap: HashMap<String, Socket?> ->
+                                  eLog("$s-$i-$s1")
+                              }
                             }
                         }
                     }
                     getDigit("服务关闭") -> when (view?.id) {
                         R.id.bt_item1 -> {
-                            Hint("TCP连接C关闭:${eTCP.eInit.eCloseReceives(eTCP.eInit.eClientHashMap, MSG)} ")
+                            Hint("TCP连接C关闭:${mTCP?.eCloseServer()} ")
                         }
-                        R.id.bt_item2 -> Hint("TCP连接S关闭:${eTCP.eInit.eCloseReceives(eTCP.eInit.eServerHashMap, MSG)} ")
-                        R.id.bt_item3 -> Hint("TCP服务关闭 ：" + eTCP.eInit.eCloseServer())
+                        R.id.bt_item2 -> Hint("TCP连接S关闭:${mTCP?.eCloseTask(mTCP!!.eServerHashMap, MSG)} ")
+                        R.id.bt_item3 -> Hint("TCP服务关闭 ：" + mTCP?.eCloseServer())
                     }
 
                     getDigit("Web") -> when (view?.id) {
@@ -511,26 +518,26 @@ class MainActivity : AppCompatActivity() {
         if (Build.MODEL == "ZK-R32A")
             XHA = XHApiManager()
         /*身份证阅读器*/
-          mCardOTG = eCardOTG.eInit(mAPP, mHandler, object : eCardOTG.IResult {
-              override fun CONNECT_SUCCESS(successMsg: String, SAMID: String) {
-                  eLog("$SAMID--$successMsg")
-              }
+        mCardOTG = eCardOTG.eInit(mAPP, mHandler, object : eCardOTG.IResult {
+            override fun CONNECT_SUCCESS(successMsg: String, SAMID: String) {
+                eLog("$SAMID--$successMsg")
+            }
 
-              override fun CONNECT_ERROR(errorMsg: String, SAMID: String) {
-                  eLog("$SAMID--$errorMsg")
-              }
+            override fun CONNECT_ERROR(errorMsg: String, SAMID: String) {
+                eLog("$SAMID--$errorMsg")
+            }
 
-              override fun READ_SUCCESS(cardInfo: HSIDCardInfo, fingerprintStr: String, imgPath: String, SAMID: String) {
-                  eLog("$SAMID--${Gson().toJson(cardInfo)}--$fingerprintStr--$imgPath")
-              }
+            override fun READ_SUCCESS(cardInfo: HSIDCardInfo, fingerprintStr: String, imgPath: String, SAMID: String) {
+                eLog("$SAMID--${Gson().toJson(cardInfo)}--$fingerprintStr--$imgPath")
+            }
 
-              override fun READ_ERROR(msg: String, SAMID: String) {
-                  eLog("$SAMID--$msg")
-              }
+            override fun READ_ERROR(msg: String, SAMID: String) {
+                eLog("$SAMID--$msg")
+            }
 
-          })
+        })
         /*SB设备*/
-               mDevice = eUDevice.eInit(mAPP, uHandler)
+        mDevice = eUDevice.eInit(mAPP, uHandler)
 
         /*数据库*/
         mGreenDao = eGreenDao.eInit(this)
@@ -546,7 +553,8 @@ class MainActivity : AppCompatActivity() {
         })
 
         /*TTS语音合成*/
-        mTTS = eTTS.eInit(mAPP, handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
+        mTTS = eTTS.eInit(mAPP, arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o"), handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
+        mTCP= eTCP.eInit(Handler())
     }
 
     /**

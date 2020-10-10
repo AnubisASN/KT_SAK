@@ -65,7 +65,7 @@ class eTTS private constructor() {
         private var mTTSMode = TTSMode.MIX
         private var mVoiceModel :VoiceModel = VoiceModel.CHILDREN
         private lateinit var mListener: SpeechSynthesizerListener
-        fun eInit(mApplication: Application, mHandler: Handler=Handler(), ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.FEMALE, ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK, listener: SpeechSynthesizerListener = UiMessageListener(mHandler), AID_AKY_SKY: Array<String> = arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o")): eTTS {
+        fun eInit(mApplication: Application,AID_AKY_SKY: Array<String>, mHandler: Handler=Handler(), ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.FEMALE, ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK, listener: SpeechSynthesizerListener = UiMessageListener(mHandler) ): eTTS {
             this.mActivity = mApplication
             this.mHandler = mHandler
             KEYS = AID_AKY_SKY

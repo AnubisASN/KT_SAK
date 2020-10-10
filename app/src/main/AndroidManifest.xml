@@ -9,18 +9,18 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-<!--    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>-->
+    <!--    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>-->
     <uses-permission android:name="android.permission.NETWORK_PROVIDER" />
     <!--    //sd卡操作权限-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<!--    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />-->
+    <!--    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />-->
     <!-- Bugly -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<!--    <uses-permission android:name="android.permission.READ_LOGS" />-->
+    <!--    <uses-permission android:name="android.permission.READ_LOGS" />-->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="ACTION_MANAGE_WRITE_SETTINGS" />
-<!--    <uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
+    <!--    <uses-permission android:name="android.permission.WRITE_SETTINGS" />-->
     <!--    //FTP-->
     <!-- 添加删除后台程序的权限 -->
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
@@ -46,7 +46,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity android:name=".ArcFaceFT" />-->
+        <!--        <activity android:name=".ArcFaceFT" />-->
         <activity android:name=".ArcFace" />
 
         <service
@@ -55,13 +55,13 @@
             android:process="system" />
 
         <!-- 开机自启动服务 -->
-        <receiver android:name=".MyBroadcastReceiver">
-            <intent-filter>
-                <!--                //开机自启-->
+        <receiver
+            android:name="readsense.face.Receiver.MyBootBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <!--                 //开机自启 -->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-
-                <category android:name="android.intent.category.HOME" />
-
             </intent-filter>
         </receiver>
         <receiver
@@ -72,7 +72,8 @@
                 <action android:name="android.intent.action.ACTION_PACKAGE_CHANGED" />
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <data android:scheme="package"/>
+
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
     </application>
