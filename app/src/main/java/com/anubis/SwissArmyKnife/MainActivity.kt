@@ -59,8 +59,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.list_edit_item.*
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.uiThread
 import java.io.*
 import java.net.Socket
@@ -373,14 +375,17 @@ class MainActivity : AppCompatActivity() {
                                 uiThread { progressDialog?.dismiss() }
                             }
                         }
-                        bt_item2.id -> eDiaAlert.eInit(this@MainActivity).eDefaultShow("动态弹窗测试") { dialog: Dialog, rootView: View ->
-                            with(view.findViewById<eArrowDownloadButton>(R.id.dia_adb)) {
-                                visibility = View.VISIBLE
-                                startAnimating()
-                                for (i in 0..100)
-                                    progress = i.toFloat()
+                        bt_item2.id -> eDiaAlert.eInit(this@MainActivity).eDefaultShow("动态弹窗测试",adbEditBlock = { dialog: Dialog, view: View, eArrowDownloadButton: eArrowDownloadButton ->
+                            eArrowDownloadButton.startAnimating()
+                            eArrowDownloadButton.textPaintColor=Color.BLUE
+                            GlobalScope.launch {
+                                for (i in 0..100){
+                                    this@MainActivity.runOnUiThread {   eArrowDownloadButton.progress=i.toFloat()}
+                                    delay(100)
+                                }
+                                this@MainActivity.runOnUiThread { dialog.dismiss() }
                             }
-                        }
+                        },isCanceledOnTouchOutside=true)
                     }
                     getDigit("Excel导出") -> when (view?.id) {
                         bt_item1.id -> {

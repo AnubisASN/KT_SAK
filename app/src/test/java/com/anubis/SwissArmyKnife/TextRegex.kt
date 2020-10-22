@@ -24,23 +24,23 @@ import org.junit.Test
 class TextRegex {
     @Test
     fun isEmail() {
-        println(eRegex.eIsEmail("1951536@qq.com"))
-        println(eRegex.eIsEmail("1951536@gmail.com"))
-        println(eRegex.eIsEmail("1951536@qqcom"))
+        println(eRegex.eInit.eIsEmail("1951536@qq.com"))
+        println(eRegex.eInit.eIsEmail("1951536@gmail.com"))
+        println(eRegex.eInit.eIsEmail("1951536@qqcom"))
     }
 
     @Test
     fun isIDcard() {
-        println(eRegex.eIsIDCard("43100219960501101X"))
-        println(eRegex.eIsIDCard("431002200005012010"))
-        println(eRegex.eIsIDCard("43100219900001001X"))
+        println(eRegex.eInit.eIsIDCard("43100219960501101X"))
+        println(eRegex.eInit.eIsIDCard("431002200005012010"))
+        println(eRegex.eInit.eIsIDCard("43100219900001001X"))
     }
 
     @Test
     fun isZh() {
-        println(eRegex.eIsZh("43100219960501101X"))
-        println(eRegex.eIsZh("ss"))
-        println(eRegex.eIsZh("是"))
+        println(eRegex.eInit.eIsZh("43100219960501101X"))
+        println(eRegex.eInit.eIsZh("ss"))
+        println(eRegex.eInit.eIsZh("是"))
     }
 
 }

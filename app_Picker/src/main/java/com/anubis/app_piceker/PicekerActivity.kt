@@ -15,21 +15,16 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
 import com.anubis.kt_extends.eTime
-import com.anubis.module_base.Utils.eAdapter
 import com.anubis.module_extends.DataItemInfo
-import com.anubis.module_dialog.View.eArrowDownloadButton
 import com.anubis.module_dialog.eDiaAlert
+import com.anubis.module_extends.eRvAdapter
 import com.anubis.module_picker.ePicker
 import com.anubis.module_picker.eTimePicker
 import file_picker.filetype.FileType
 import file_picker.filetype.RasterImageFileType
 import px_core.model.MediaEntity
 import kotlinx.android.synthetic.main.picker.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.custom.onUiThread
 import org.jetbrains.anko.imageBitmap
 import org.jetbrains.anko.textColor
 
@@ -46,15 +41,15 @@ class PicekerActivity : AppCompatActivity() {
         })
     }
     private var viewPair:Pair<TextView,Int>?=null
-private var adapterList= arrayListOf<eAdapter<DataItemInfo>>()
+private var adapterList= arrayListOf<eRvAdapter<DataItemInfo>>()
     fun onClick(v: View) {
         when (v.id) {
             picker_btPX.id -> ePicker.eInit.eImageStart(this@PicekerActivity)
             button.id -> {
                 val mDia = eDiaAlert.eInit(this)
-                val list1= listOf(DataItemInfo(str1 = "1"), DataItemInfo(str1 = "2"), DataItemInfo(str1 = "3"))
-                val list2= listOf(DataItemInfo(str1 = "11"), DataItemInfo(str1 = "22"), DataItemInfo(str1 = "33"))
-                val list3=listOf(DataItemInfo(str1 = "111"), DataItemInfo(str1 = "222"), DataItemInfo(str1 = "333"))
+                val list1= arrayListOf(DataItemInfo(str1 = "1"), DataItemInfo(str1 = "2"), DataItemInfo(str1 = "3"))
+                val list2= arrayListOf(DataItemInfo(str1 = "11"), DataItemInfo(str1 = "22"), DataItemInfo(str1 = "33"))
+                val list3=arrayListOf(DataItemInfo(str1 = "111"), DataItemInfo(str1 = "222"), DataItemInfo(str1 = "333"))
                 val dataList=arrayListOf(list1,list2,list3)
                 mDia.eDiaGradeSelect(arrayOf("请选择小区1", "请选择小区2", "请选择小区3"), dataList ,{
                     adapterList=it

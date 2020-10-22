@@ -33,13 +33,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"/>
 
         <com.anubis.module_dialog.View.eArrowDownloadButton
             android:id="@+id/dia_adb"
             android:layout_width="@dimen/dp_150"
             android:layout_height="@dimen/dp_150"
             android:layout_margin="@dimen/dp_10"
+            app:textPaintSize="@dimen/sp_16"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

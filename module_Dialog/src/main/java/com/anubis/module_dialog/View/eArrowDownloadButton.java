@@ -129,13 +129,13 @@ public class eArrowDownloadButton extends View {
     public Paint loadingPaint;
     public Paint textPaint;
 
-    private int arcPaintColor;
-    private int arrowPaintColor;
-    private int smallPaintColor;
-    private int triPaintColor;
-    private int loadingPaintColor;
-    private int textPaintColor;
-    private float textPaintSize;
+    public int arcPaintColor;
+    public int arrowPaintColor;
+    public int smallPaintColor;
+    public int triPaintColor;
+    public int loadingPaintColor;
+    public int textPaintColor;
+    public float textPaintSize;
 
     private Path arrowPath;
     private Path triPath;

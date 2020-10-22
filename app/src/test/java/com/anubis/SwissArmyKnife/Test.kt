@@ -36,7 +36,7 @@ public class Test {
     fun testMSG() {
 
         val MSG_SIG = "123456"
-        val str = eString.eGetEncodeMD5(MSG_SIG )
+        val str = eString.eInit.eGetEncodeMD5(MSG_SIG )
 
         println(str)
     }

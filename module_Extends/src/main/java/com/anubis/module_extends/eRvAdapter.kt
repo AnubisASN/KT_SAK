@@ -1,4 +1,4 @@
-package com.anubis.module_base.Utils
+package com.anubis.module_extends
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,10 +10,9 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anubis.kt_extends.eLogE
-import com.anubis.module_extends.DataItemInfo
-import com.anubis.module_extends.R
 import kotlinx.android.synthetic.main.adapter_default_item.view.*
 import org.jetbrains.anko.*
+
 
 /**
  * Author  ： AnubisASN   on 20-9-12 下午3:18.
@@ -31,30 +30,72 @@ import org.jetbrains.anko.*
  *Router :  /'Module'/'Function'
  *说明：
  */
-class eAdapter<T>(
+class eRvAdapter<T>(
         val mActivity: Context,
         val recyclerView: RecyclerView,
-        val itemLayoutId: Int,
-        tDataArrayList:List<T>?=null,
-        val itemEditBlock: ((mAdapter:eAdapter<T>,itemView: View, data: T, position: Int) -> Unit)?=null,
-        val longClickBlock: ((itemView: View, position: Int) -> Unit)? = null,
+        val layoutId: Int,
+        tDatas: ArrayList<T>? = null,
+        val itemEditBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null,
+        positionForBlock: ((recyclerView: RecyclerView, recyclerBottomCoordinate: Int, lastItemBottomCoordinate: Int, itemTotal: Int, lastItemCount: Int) -> Unit)? = null,
+        val longClickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null,
         orientation: Int = LinearLayoutManager.VERTICAL,
-        layoutManager: LinearLayoutManager = LinearLayoutManager(mActivity),
         val clickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null
-) : RecyclerView.Adapter<eAdapter<T>.MyHolder>() {
-    private var mDatas: MutableList<T>? = arrayListOf()
+) : RecyclerView.Adapter<eRvAdapter<T>.MyHolder>() {
+    //    companion object{
+    var mDatas: ArrayList<T>? = arrayListOf()
 
-  init {
-        tDataArrayList?.let {
-            mDatas=it.toMutableList()
-        }
+    init {
+        val layoutManager = LinearLayoutManager(mActivity)
         layoutManager.orientation = orientation
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = this
+        //ViewPager滑动Pager监听
+        positionForBlock?.let {
+            recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    //得到当前显示的最后一个item的view
+                    val lastChildView =
+                            recyclerView.layoutManager!!.getChildAt(recyclerView.layoutManager!!.childCount - 1)
+                    //得到lastChildView的bottom坐标值
+                    val lastItemBottomCoordinate = lastChildView!!.bottom
+                    //得到Recyclerview的底部坐标减去底部padding值，也就是显示内容最底部的坐标
+                    val recyclerBottomCoordinate = recyclerView.bottom - recyclerView.paddingBottom
+                    //通过这个lastChildView得到这个view当前的position值
+                    val lastItemCount = recyclerView.layoutManager!!.getPosition(lastChildView)
+                    //项目总数
+                    val itemTotal = recyclerView.layoutManager!!.itemCount - 1
+                    //判断lastChildView的bottom值跟recyclerBottom
+                    //判断lastPosition是不是最后一个position
+                    //如果两个条件都满足则说明是真正的滑动到了底部
+                    it(
+                            recyclerView,
+                            recyclerBottomCoordinate,
+                            lastItemBottomCoordinate,
+                            itemTotal,
+                            lastItemCount
+                    )
+                }
+            })
+        }
+
+        tDatas?.let {
+            mDatas = tDatas.clone() as ArrayList<T>
+        }
+    }
+
+    fun eOnScrolledBottom(
+            recyclerBottomCoordinate: Int,
+            lastItemBottomCoordinate: Int,
+            itemTotal: Int,
+            lastItemCount: Int,
+            ReachBottomBlock: () -> Unit
+    ) {
+        if (recyclerBottomCoordinate == lastItemBottomCoordinate && itemTotal == lastItemCount)
+            ReachBottomBlock()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-        val view = LayoutInflater.from(mActivity).inflate(itemLayoutId, parent, false)
+        val view = LayoutInflater.from(mActivity).inflate(layoutId, parent, false)
         return MyHolder(view)
     }
 
@@ -70,14 +111,20 @@ class eAdapter<T>(
         eUpdateData()
     }
 
+    fun eAddData(datas: List<T>?) {
+        datas ?: return
+        mDatas?.addAll(datas)
+        eUpdateData()
+    }
+
     fun eDelData(index: Int) {
         mDatas?.removeAt(index)
         eUpdateData()
     }
 
-    fun eSetData(data: ArrayList<T>) {
+    fun eSetData(data: ArrayList<T>?) {
         mDatas?.clear()
-        mDatas = data.clone() as ArrayList<T>
+        mDatas = data?.clone() as ArrayList<T>
         eUpdateData()
     }
 
@@ -97,12 +144,12 @@ class eAdapter<T>(
     inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun setData(data: T, position: Int) {
             try {
-                itemEditBlock?.invoke(this@eAdapter, itemView, data, position)?:if (data is DataItemInfo){
-                    defaultItemEdit(itemView,data)
+                itemEditBlock?.invoke(itemView, data, position) ?: if (data is DataItemInfo) {
+                    defaultItemEdit(itemView, data)
                 }
                 longClickBlock?.let { lcb ->
                     itemView.onLongClick {
-                        lcb(itemView, position)
+                        lcb(itemView, data, position)
                         return@onLongClick true
                     }
                 }
@@ -119,7 +166,6 @@ class eAdapter<T>(
 
     open fun defaultItemEdit(itemView: View, data: DataItemInfo, itemWidth: Float? = null, itemHeight: Float? = null, itemWeight: FloatArray = floatArrayOf(0f, 0f, 0f, 0f)) {
         try {
-
             with(itemView.table_item_ll) {
                 val param = layoutParams
                 itemWidth?.let {
