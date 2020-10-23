@@ -15,11 +15,13 @@ limitations under the License.
 
 package com.anubis.module_tensorflow.detection.env;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import java.util.HashSet;
 import java.util.Set;
 
 /** Wrapper for the platform log function, allows convenient message prefixing and log disabling. */
+@SuppressLint("LogTagMismatch")
 public final class Logger {
   private static final String DEFAULT_TAG = "tensorflow";
   private static final int DEFAULT_MIN_LOG_LEVEL = Log.DEBUG;
@@ -34,7 +36,7 @@ public final class Logger {
     IGNORED_CLASS_NAMES.add(Logger.class.getCanonicalName());
   }
 
-  private final String tag;
+  private String tag="";
   private final String messagePrefix;
   private int minLogLevel = DEFAULT_MIN_LOG_LEVEL;
 

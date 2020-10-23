@@ -22,6 +22,9 @@ android {
     aaptOptions {
         noCompress "tflite"
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
