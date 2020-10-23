@@ -31,6 +31,8 @@ import android.util.Size
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
+import com.anubis.kt_extends.eLog
+import com.anubis.kt_extends.eLogE
 
 import com.anubis.module_tensorflow.R
 import com.anubis.module_tensorflow.detection.env.Logger
@@ -91,8 +93,7 @@ class eDetectorGUI : CameraActivity(), OnImageAvailableListener {
                     TF_OD_API_IS_QUANTIZED)
             cropSize = TF_OD_API_INPUT_SIZE
         } catch (e: IOException) {
-            e.printStackTrace()
-            LOGGER.e(e, "Exception initializing classifier!")
+            e.eLogE("Exception initializing classifier!")
             val toast = Toast.makeText(
                     applicationContext, "Classifier could not be initialized", Toast.LENGTH_SHORT)
             toast.show()
@@ -103,9 +104,8 @@ class eDetectorGUI : CameraActivity(), OnImageAvailableListener {
         previewHeight = size.height
 
         sensorOrientation = rotation - screenOrientation
-        LOGGER.i("Camera orientation relative to screen canvas: %d", sensorOrientation)
-
-        LOGGER.i("Initializing at size %dx%d", previewWidth, previewHeight)
+        eLog(String.format("Camera orientation relative to screen canvas: %d", sensorOrientation))
+        eLog(String.format("Initializing at size %dx%d", previewWidth, previewHeight))
         rgbFrameBitmap = Bitmap.createBitmap(previewWidth, previewHeight, Config.ARGB_8888)
         croppedBitmap = Bitmap.createBitmap(cropSize, cropSize, Config.ARGB_8888)
 
@@ -139,7 +139,7 @@ class eDetectorGUI : CameraActivity(), OnImageAvailableListener {
             return
         }
         computingDetection = true
-        LOGGER.i("Preparing image $currTimestamp for detection in bg thread.")
+      eLog("Preparing image $currTimestamp for detection in bg thread.")
 
         rgbFrameBitmap!!.setPixels(rgbBytes, 0, previewWidth, 0, 0, previewWidth, previewHeight)
         readyForNextImage()
@@ -152,7 +152,7 @@ class eDetectorGUI : CameraActivity(), OnImageAvailableListener {
         }
 
         runInBackground {
-            LOGGER.i("Running detection on image $currTimestamp")
+            eLog("Running detection on image $currTimestamp")
             val startTime = SystemClock.uptimeMillis()
             val results = detector!!.recognizeImage(croppedBitmap)
             lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime
@@ -166,7 +166,7 @@ class eDetectorGUI : CameraActivity(), OnImageAvailableListener {
 
             var minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API
             when (MODE) {
-                eDetectorGUI.DetectorMode.TF_OD_API -> minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API
+                DetectorMode.TF_OD_API -> minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API
             }
 
             val mappedRecognitions = LinkedList<Classifier.Recognition>()
@@ -219,7 +219,7 @@ class eDetectorGUI : CameraActivity(), OnImageAvailableListener {
     }
 
     companion object {
-        private val LOGGER = Logger()
+//        private val LOGGER = Logger()
 
         // Configuration values for the prepackaged SSD model.
         private val TF_OD_API_INPUT_SIZE = 300
