@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /super/WorkSpace/KT_SAK/module_OpenCV/src/main/aidl/org/opencv/engine/OpenCVEngineInterface.aidl
+ * Original file: /super/WorkSpace/AndroidProject0/KT_SAK/module_OpenCV/src/main/aidl/org/opencv/engine/OpenCVEngineInterface.aidl
  */
 package org.opencv.engine;
 /**

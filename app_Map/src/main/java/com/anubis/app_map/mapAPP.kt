@@ -20,7 +20,6 @@ import android.app.Application
 class mapAPP : Application() {
     companion object {
         var mAPP: mapAPP? = null
-
     }
 
     override fun onCreate() {

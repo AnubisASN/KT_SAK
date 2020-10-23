@@ -59,5 +59,4 @@ dependencies {
     api 'androidx.recyclerview:recyclerview:1.0.0'
     api(name: 'onsdk_all', ext: 'aar')
     api(name: 'NaviTts', ext: 'aar')
-    //    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

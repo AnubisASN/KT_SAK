@@ -38,6 +38,11 @@ android {
     lintOptions {
         abortOnError false
     }
+    //排除依赖
+    configurations {
+        cleanedAnnotations
+        compile.exclude group: 'org.jetbrains', module: 'annotations'
+    }
 }
 kapt {
     arguments {
@@ -52,6 +57,5 @@ repositories {
 }
 dependencies {
     api project(':module_Navigate')
-//    api ('org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.61'){exclude group:'org.jetbrains',module:'annotations'}
 }
 
