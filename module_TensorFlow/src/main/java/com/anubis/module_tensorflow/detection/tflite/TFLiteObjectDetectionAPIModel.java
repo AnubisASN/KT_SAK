@@ -247,11 +247,14 @@ public class TFLiteObjectDetectionAPIModel implements Classifier {
   public void close() {}
 
   public void setNumThreads(int num_threads) {
-    if (tfLite != null) tfLite.setNumThreads(num_threads);
+
+    if (tfLite != null)  new Interpreter.Options().setNumThreads(num_threads);
+//    tfLite.setNumThreads(num_threads);
   }
 
   @Override
   public void setUseNNAPI(boolean isChecked) {
-    if (tfLite != null) tfLite.setUseNNAPI(isChecked);
+    if (tfLite != null)  new Interpreter.Options().setUseNNAPI(isChecked);
+//      tfLite.setUseNNAPI(isChecked);
   }
 }
