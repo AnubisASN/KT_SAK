@@ -15,10 +15,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ScrollView
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.launcher.ARouter
 import com.android.xhapimanager.XHApiManager
@@ -61,8 +58,10 @@ import kotlinx.android.synthetic.main.list_edit_item.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.runOnUiThread
+import org.jetbrains.anko.textColor
 import org.jetbrains.anko.uiThread
 import java.io.*
 import java.net.Socket
@@ -119,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         ParameHandleMSG.mainActivity = mainActivity
         ePermissions.eInit.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗_bteAlert弹窗", "bt导出Excel_bt导出ExcelS", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗_bteAlert弹窗_btButton弹窗", "bt导出Excel_bt导出ExcelS", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
         //业务测试模块
         LoadingData()
@@ -386,6 +385,30 @@ class MainActivity : AppCompatActivity() {
                                 this@MainActivity.runOnUiThread { dialog.dismiss() }
                             }
                         },isCanceledOnTouchOutside=true)
+                        bt_item3.id->eDiaAlert.eInit(this@MainActivity).eDefaultShow("点击弹窗测试",btOK = "测试提交",btCancel = "测试关闭",onClickAnimation = { view: View?, l: Long ->
+                            with(view as? Button) {
+                                this?.textColor = Color.parseColor("#ff0000")
+                                this?.backgroundColor =  Color.parseColor("#04FFE3")
+                                Handler().postDelayed({
+                                    this?.textColor = Color.parseColor("#25CEFB")
+                                    this?.backgroundColor =  Color.parseColor("#04FFE3")
+                                }, l)
+                            }
+                        },ICallBackClick = object :eDiaAlert.ICallBackClick{
+                            override fun onClickOK(dia: Dialog, it: View?) {
+                                eShowTip("确定")
+                                dia.dismiss()
+                            }
+
+                            override fun onClickCancel(dia: Dialog, it: View?) {
+                                eShowTip("关闭")
+                                dia.dismiss()
+                            }
+
+                            override fun onClickClose(dia: Dialog, it: View?) {
+                            }
+
+                        })
                     }
                     getDigit("Excel导出") -> when (view?.id) {
                         bt_item1.id -> {

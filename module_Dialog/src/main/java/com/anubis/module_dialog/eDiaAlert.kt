@@ -1,6 +1,6 @@
 package com.anubis.module_dialog
 
-import android.annotation.SuppressLint
+import android .annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Dialog
 import android.content.Context
@@ -11,6 +11,7 @@ import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.Animation
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -64,6 +65,27 @@ open class eDiaAlert internal constructor() {
         private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eDiaAlert() }
     }
 
+    /**
+     * @param title: String? = null,
+     * @param body: String? = null,
+     * @param foot: String? = null,
+     * @param btOK: String? = null,
+     * @param btCancel: String? = null,
+     * @param isShowClose: Boolean = false,
+     * @param isShowAVI: Boolean = false, 加载动画
+     * @param isDisableBack: Boolean = true, 是否禁用返回
+     * @param isCanceledOnTouchOutside: Boolean = false, 是否外部取消
+     * @param gravity: Int = Gravity.CENTER, 弹窗位置
+     * @param x: Int = 0, 弹窗移动 X
+     * @param y: Int = 0, 弹窗移动 Y
+     * @param alpha: Float = 0.9f, 弹窗透明度
+     * @param buttonReplyTime: Long = 100L,
+     * @param onClickAnimation:Block=,
+     * @param ICallBackEdit: ICallBackEdit? = null,
+     * @param ICallBackClick: ICallBackClick? = null,
+     * @param adbEditBlock:((Dialog, View, eArrowDownloadButton) -> Unit )?=null,
+     * @param itemEditBlock: (Dialog, View) -> Unit = { _, _ -> }
+     * */
     open fun eDefaultShow(
             title: String? = null,
             body: String? = null,
@@ -78,10 +100,11 @@ open class eDiaAlert internal constructor() {
             x: Int = 0,
             y: Int = 0,
             alpha: Float = 0.9f,
-            dismissTime: Long = 100L,
+            buttonReplyTime: Long = 100L,
+            onClickAnimation:((View?,Long)->Unit)?=null,
             ICallBackEdit: ICallBackEdit? = null,
             ICallBackClick: ICallBackClick? = null,
-            adbEditBlock:((Dialog, View, eArrowDownloadButton) -> Unit )?=null,
+            adbEditBlock: ((Dialog, View, eArrowDownloadButton) -> Unit)? = null,
             itemEditBlock: (Dialog, View) -> Unit = { _, _ -> }
     ): Dialog {
         val dia = Dialog(mContext, mStyle)
@@ -105,45 +128,47 @@ open class eDiaAlert internal constructor() {
                 view.dia_tvFoot.visibility = View.GONE
             else
                 view.dia_tvFoot.text = foot
-            if (btOK==null)
-                view.dia_btOk.visibility=View.GONE
+            if (btOK == null)
+                view.dia_btOk.visibility = View.GONE
             else {
                 view.dia_btOk.text = btOK
                 view.dia_btOk.onClick {
-                    onClickUI(it, dismissTime)
+                    if (buttonReplyTime>0L)
+                        onClickAnimation?.invoke(it, buttonReplyTime)?:onDefaultClickAnimation(it, buttonReplyTime)
                     ICallBackEdit?.let { ic ->
                         ic.onEditInput(dia, dia_etInput, it)
                         return@onClick
                     }
                     Handler().postDelayed({
                         ICallBackClick?.onClickOK(this, it) ?: dismiss()
-                    }, dismissTime)
+                    }, buttonReplyTime)
                 }
             }
-            if (btCancel==null)
-                view.dia_btCancel.visibility=View.GONE
-            else{
+            if (btCancel == null)
+                view.dia_btCancel.visibility = View.GONE
+            else {
+                view.dia_btCancel.text = btCancel
                 view.dia_btCancel.onClick {
-                    onClickUI(it, dismissTime)
+                    if (buttonReplyTime>0L)
+                        onClickAnimation?.invoke(it, buttonReplyTime)?:onDefaultClickAnimation(it, buttonReplyTime)
                     ICallBackEdit?.let { ic ->
                         ic.onEditInput(dia, dia_etInput, it)
                         return@onClick
                     }
                     Handler().postDelayed({
                         ICallBackClick?.onClickCancel(this, it) ?: dismiss()
-                    }, dismissTime)
+                    }, buttonReplyTime)
                 }
             }
             if (isShowClose)
                 view.dia_ivClose.onClick {
                     ICallBackEdit?.onEditInput(dia, dia_etInput, it)
                     ICallBackClick?.onClickClose(this, it) ?: dismiss()
-
                 } else
                 view.dia_ivClose.visibility = View.GONE
             if (isShowAVI)
                 view.dia_avi.visibility = View.VISIBLE
-            adbEditBlock?.let { it(dia,view,view.dia_adb) }
+            adbEditBlock?.let { it(dia, view, view.dia_adb) }
             itemEditBlock(dia, view)
             if (isDisableBack)
                 setOnKeyListener { _, keyCode, _ ->
@@ -192,20 +217,27 @@ open class eDiaAlert internal constructor() {
         return dia
     }
 
-    open fun onClickUI(it: View?, dismissTime: Long = mDismissTime, block: () -> Unit = {}) {
+    open fun onDefaultClickAnimation(it: View?, dismissTime: Long = mDismissTime) {
         with(it as? Button) {
             this?.textColor = Color.parseColor("#ffffff")
             this?.background = mContext.getDrawable(R.drawable.dia_btbackground1)
             Handler().postDelayed({
                 this?.textColor = Color.parseColor("#25CEFB")
                 this?.background = mContext.getDrawable(R.drawable.dia_btbackground0)
-                block()
             }, dismissTime)
         }
     }
 
 
-    /*分级选择器*/
+    /**
+     * 说明：分级选择器
+     * @param gradeTitleArray: Array<String> = arrayOf("请选择小区"), //级别1  标题
+     * @param itemDataList: ArrayList<ArrayList<T>> = arrayListOf(), //级别2  子项
+     * @param adapterBlock: (ArrayList<eRvAdapter<T>>) -> Unit, //级别1  返回级别2 适配器
+     * @param itemClickBlock: ((itemView1: View, i1: Int, itemView2: View, T, i2: Int) -> Unit)? = null,//级别2  点击项
+     * @param orientation: Int = LinearLayoutManager.HORIZONTAL,  //方向
+     * @param returnBlock: (ArrayList<T?>) -> Unit  //返回结果组
+     * */
     open fun <T> eDiaGradeSelect(
             gradeTitleArray: Array<String> = arrayOf("请选择小区"), //级别1  标题
             itemDataList: ArrayList<ArrayList<T>> = arrayListOf(), //级别2  子项
@@ -221,14 +253,14 @@ open class eDiaAlert internal constructor() {
             override fun DIY(dia: Dialog, view: View, onClick: IDIYCallBackClick?) {
                 dia.setCanceledOnTouchOutside(true)
                 //分级布局
-                eRvAdapter(mContext, view.gradedia_ll, R.layout.sample_gradeselect, gradeTitleArray.toMutableList() as ArrayList<String>, {itemview1: View, s: String, i1: Int ->
+                eRvAdapter(mContext, view.gradedia_ll, R.layout.sample_gradeselect, gradeTitleArray.toMutableList() as ArrayList<String>, { itemview1: View, s: String, i1: Int ->
                     itemview1.gradedia_tvTitle.text = s
                     itemview1.gradedia_rvBody.backgroundColor = Color.parseColor("#525655")
                     itemview1.gradedia_csLayout.onClick {
                         itemview1.onDiaGradeSeClickUI(Pair(itemview1.gradedia_tvTitle, itemview1.gradedia_tvDynamic))
                     }
                     gradeReturnData.add(null)
-                    adapterList.add(eRvAdapter(mContext, itemview1.gradedia_rvBody, R.layout.adapter_default_item, itemDataList.getOrNull(i1) ) { itemview2: View, t: T, i2: Int ->
+                    adapterList.add(eRvAdapter(mContext, itemview1.gradedia_rvBody, R.layout.adapter_default_item, itemDataList.getOrNull(i1)) { itemview2: View, t: T, i2: Int ->
                         itemClickBlock?.let { it(itemview1, i1, itemview2, t, i2) }
                         gradeReturnData[i1] = t
                         with(gradeReturnData.filter {

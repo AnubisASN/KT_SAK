@@ -30,6 +30,19 @@ import org.jetbrains.anko.*
  *Router :  /'Module'/'Function'
  *说明：
  */
+@SuppressLint("WrongConstant")
+/**
+ *说明：RecyclerView 适配器
+ * @param mActivity: Context; 上下文
+ * @param recyclerView: RecyclerView; 控件ID
+ * @param layoutId: Int; item布局ID
+ * @param tDatas: ArrayList<T>? = null; 数据组
+ * @param itemEditBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null; item编辑回调代码块
+ * @param positionForBlock: ((recyclerView: RecyclerView, recyclerBottomCoordinate: Int, lastItemBottomCoordinate: Int, itemTotal: Int, lastItemCount: Int) -> Unit)? = null; 滑动位置监听回调代码块
+ * @param longClickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null; item长按回调代码块
+ * @param orientation: Int = LinearLayoutManager.VERTICAL； RecyclerView方向
+ * @param clickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null； item点击回调代码块
+ */
 class eRvAdapter<T>(
         val mActivity: Context,
         val recyclerView: RecyclerView,
@@ -56,7 +69,7 @@ class eRvAdapter<T>(
                     //得到当前显示的最后一个item的view
                     val lastChildView =
                             recyclerView.layoutManager!!.getChildAt(recyclerView.layoutManager!!.childCount - 1)
-                    //得到lastChildView的bottom坐标值
+                    //得到lastItemView的bottom坐标值
                     val lastItemBottomCoordinate = lastChildView!!.bottom
                     //得到Recyclerview的底部坐标减去底部padding值，也就是显示内容最底部的坐标
                     val recyclerBottomCoordinate = recyclerView.bottom - recyclerView.paddingBottom
@@ -83,7 +96,15 @@ class eRvAdapter<T>(
         }
     }
 
-    fun eOnScrolledBottom(
+    /**
+     * 说明：滑动底部监听方法
+     * @param              recyclerBottomCoordinate: Int； 内容最底部的坐标
+     * @param    lastItemBottomCoordinate: Int；lastItemView的bottom坐标值
+     * @param   itemTotal: Int； item总数
+     * @param    lastItemCount: Int；最后item 位置
+     * @param   ReachBottomBlock: () -> Unit； 底部回调
+     * */
+    open fun eOnScrolledBottom(
             recyclerBottomCoordinate: Int,
             lastItemBottomCoordinate: Int,
             itemTotal: Int,
@@ -164,6 +185,14 @@ class eRvAdapter<T>(
         }
     }
 
+    /**
+     * 说明：默认item编辑
+     * @param itemView: View； itemView
+     *  @param data: DataItemInfo, 数据
+     *   @param itemWidth: Float? = null, item宽度
+     *  @param  itemHeight: Float? = null, item高度
+     *   @param itemWeight: FloatArray = floatArrayOf(0f, 0f, 0f, 0f) ，item比重
+     * */
     open fun defaultItemEdit(itemView: View, data: DataItemInfo, itemWidth: Float? = null, itemHeight: Float? = null, itemWeight: FloatArray = floatArrayOf(0f, 0f, 0f, 0f)) {
         try {
             with(itemView.table_item_ll) {

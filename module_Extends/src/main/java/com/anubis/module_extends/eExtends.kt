@@ -2265,7 +2265,6 @@ open class ePermissions internal constructor() {
             eLog("未授权")
             false
         }
-
     }
 
     //显示授权设置
