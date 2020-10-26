@@ -42,15 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-/**
- * Wrapper for frozen detection models trained using the Tensorflow Object Detection API:
- * - https://github.com/tensorflow/models/tree/master/research/object_detection
- * where you can find the training code.
- *
- * To use pretrained models in the API or convert to TF Lite models, please see docs for details:
- * - https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
- * - https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_on_mobile_tensorflowlite.md#running-our-model-on-android
- */
+
 public class TFLiteObjectDetectionAPIModel implements Classifier {
   private static final Logger LOGGER = new Logger();
 
@@ -160,8 +152,7 @@ public class TFLiteObjectDetectionAPIModel implements Classifier {
     Trace.beginSection("recognizeImage");
 
     Trace.beginSection("preprocessBitmap");
-    // Preprocess the image data from 0-255 int to normalized float based
-    // on the provided parameters.
+
     Log.i("TAG", "recognizeImage: "+intValues.length);
     bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
@@ -248,13 +239,13 @@ public class TFLiteObjectDetectionAPIModel implements Classifier {
 
   public void setNumThreads(int num_threads) {
 
-    if (tfLite != null)  //new Interpreter.Options().setNumThreads(num_threads);
-    tfLite.setNumThreads(num_threads);
+    if (tfLite != null)  new Interpreter.Options().setNumThreads(num_threads);
+//    tfLite.setNumThreads(num_threads);
   }
 
   @Override
   public void setUseNNAPI(boolean isChecked) {
-    if (tfLite != null)//  new Interpreter.Options().setUseNNAPI(isChecked);
-      tfLite.setUseNNAPI(isChecked);
+    if (tfLite != null)  new Interpreter.Options().setUseNNAPI(isChecked);
+//      tfLite.setUseNNAPI(isChecked);
   }
 }
