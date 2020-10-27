@@ -99,7 +99,7 @@ open class eDiaAlert internal constructor() {
             gravity: Int = Gravity.CENTER,
             x: Int = 0,
             y: Int = 0,
-            alpha: Float = 0.9f,
+            alpha: Float = 1f,
             buttonReplyTime: Long = 100L,
             onClickAnimation:((View?,Long)->Unit)?=null,
             ICallBackEdit: ICallBackEdit? = null,
@@ -191,17 +191,24 @@ open class eDiaAlert internal constructor() {
 
     open fun eDIYShow(
             layout: Int,
-            ICallBack: IDIYCallBack? = null,
             ICallBackClick: IDIYCallBackClick? = null,
-            isDisableBack: Boolean = true
-    ): Dialog {
+            isDisableBack: Boolean = true,
+            isCanceledOnTouchOutside:Boolean=false,
+            gravity: Int = Gravity.CENTER,
+            x: Int = 0,
+            y: Int = 0,
+            alpha: Float =1f,
+            itemEditBlock: (Dialog, View, IDIYCallBackClick?) -> Unit
+            ): Dialog {
         val dia = Dialog(mContext, mStyle)
         with(dia) {
             val view = LayoutInflater.from(mContext).inflate(layout, null)
-            setCanceledOnTouchOutside(false)
+            setCanceledOnTouchOutside(isCanceledOnTouchOutside)
             val params = window.attributes
-            window.setGravity(Gravity.CENTER)
-            params.alpha = 0.9f
+            params.alpha = alpha
+            params.x=x
+            params.y=y
+            window.setGravity(gravity)
             window.attributes = params
             if (isDisableBack)
                 setOnKeyListener { _, keyCode, _ ->
@@ -210,7 +217,7 @@ open class eDiaAlert internal constructor() {
                         else -> return@setOnKeyListener false
                     }
                 }
-            ICallBack?.DIY(this, view, ICallBackClick)
+            itemEditBlock(this,view,ICallBackClick)
             setContentView(view)
             show()
         }
@@ -244,38 +251,37 @@ open class eDiaAlert internal constructor() {
             adapterBlock: (ArrayList<eRvAdapter<T>>) -> Unit, //级别1  返回级别2 适配器
             itemClickBlock: ((itemView1: View, i1: Int, itemView2: View, T, i2: Int) -> Unit)? = null,//级别2  点击项
             orientation: Int = LinearLayoutManager.HORIZONTAL,  //方向
+            isCanceledOnTouchOutside: Boolean = true,
             returnBlock: (ArrayList<T?>) -> Unit  //返回结果组
     ) {
         val gradeReturnData = arrayListOf<T?>()
         val adapterList = arrayListOf<eRvAdapter<T>>()
 
-        eDIYShow(R.layout.dia_gradeselect, object : IDIYCallBack {
-            override fun DIY(dia: Dialog, view: View, onClick: IDIYCallBackClick?) {
-                dia.setCanceledOnTouchOutside(true)
-                //分级布局
-                eRvAdapter(mContext, view.gradedia_ll, R.layout.sample_gradeselect, gradeTitleArray.toMutableList() as ArrayList<String>, { itemview1: View, s: String, i1: Int ->
-                    itemview1.gradedia_tvTitle.text = s
-                    itemview1.gradedia_rvBody.backgroundColor = Color.parseColor("#525655")
-                    itemview1.gradedia_csLayout.onClick {
-                        itemview1.onDiaGradeSeClickUI(Pair(itemview1.gradedia_tvTitle, itemview1.gradedia_tvDynamic))
-                    }
-                    gradeReturnData.add(null)
-                    adapterList.add(eRvAdapter(mContext, itemview1.gradedia_rvBody, R.layout.adapter_default_item, itemDataList.getOrNull(i1)) { itemview2: View, t: T, i2: Int ->
-                        itemClickBlock?.let { it(itemview1, i1, itemview2, t, i2) }
-                        gradeReturnData[i1] = t
-                        with(gradeReturnData.filter {
-                            it != null
-                        }) {
-                            if (this.size == gradeReturnData.size) {
-                                returnBlock(gradeReturnData)
-                                dia.dismiss()
-                            }
+        eDIYShow(R.layout.dia_gradeselect){ dia: Dialog, view: View, idiyCallBackClick: IDIYCallBackClick? ->
+            dia.setCanceledOnTouchOutside(isCanceledOnTouchOutside)
+            //分级布局
+            eRvAdapter(mContext, view.gradedia_ll, R.layout.sample_gradeselect, gradeTitleArray.toMutableList() as ArrayList<String>, { itemview1: View, s: String, i1: Int ->
+                itemview1.gradedia_tvTitle.text = s
+                itemview1.gradedia_rvBody.backgroundColor = Color.parseColor("#525655")
+                itemview1.gradedia_csLayout.onClick {
+                    itemview1.onDiaGradeSeClickUI(Pair(itemview1.gradedia_tvTitle, itemview1.gradedia_tvDynamic))
+                }
+                gradeReturnData.add(null)
+                adapterList.add(eRvAdapter(mContext, itemview1.gradedia_rvBody, R.layout.adapter_default_item, itemDataList.getOrNull(i1)) { itemview2: View, t: T, i2: Int ->
+                    itemClickBlock?.let { it(itemview1, i1, itemview2, t, i2) }
+                    gradeReturnData[i1] = t
+                    with(gradeReturnData.filter {
+                        it != null
+                    }) {
+                        if (this.size == gradeReturnData.size) {
+                            returnBlock(gradeReturnData)
+                            dia.dismiss()
                         }
-                    })
-                }, orientation = orientation)
-                adapterBlock(adapterList)
-            }
-        })
+                    }
+                })
+            }, orientation = orientation)
+            adapterBlock(adapterList)
+        }
     }
 
 
