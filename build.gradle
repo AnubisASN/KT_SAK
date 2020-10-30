@@ -8,7 +8,9 @@ buildscript {
             name 'Google'
             google()
         }
+        maven {url 'https://developer.huawei.com/repo/'}
         dependencies {
+            classpath 'com.huawei.agconnect:agcp:1.4.1.300'
             classpath 'com.android.tools.build:gradle:3.2.1'
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
             classpath "com.alibaba:arouter-register:1.0.2"
@@ -24,6 +26,7 @@ allprojects {
     repositories {
 //        google()
         jcenter()
+        maven {url 'https://developer.huawei.com/repo/'}
         maven {
             url 'https://maven.google.com/'
             name 'Google'

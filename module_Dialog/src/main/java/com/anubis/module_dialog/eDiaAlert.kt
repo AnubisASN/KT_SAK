@@ -308,10 +308,6 @@ open class eDiaAlert internal constructor() {
         fun onEditInput(dia: Dialog, editText: EditText, iv: View? = null)
     }
 
-    interface IDIYCallBack {
-        fun DIY(dia: Dialog, view: View, onClick: IDIYCallBackClick?)
-    }
-
     interface IDIYCallBackClick {
         fun onClick(view: View, it: View?)
     }

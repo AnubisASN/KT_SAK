@@ -10,9 +10,9 @@ import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eJson
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -63,7 +63,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TF检测 GUI"
-        app:layout_constraintEnd_toStartOf="@+id/bt_landmark"
         app:layout_constraintStart_toEndOf="@+id/bt_net"
         app:layout_constraintTop_toBottomOf="@+id/bt_body" />
 
@@ -73,7 +72,16 @@
         android:layout_height="wrap_content"
         android:text="Face地标 GUI"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bt_TF"
+        app:layout_constraintTop_toBottomOf="@+id/bt_face" />
+
+    <Button
+        android:id="@+id/bt_hwLive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HW活体"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bt_landmark"
         app:layout_constraintTop_toBottomOf="@+id/bt_face" />
 
     <Button

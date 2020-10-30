@@ -24,7 +24,7 @@ dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
 
     //Android依赖包
-    api 'androidx.constraintlayout:constraintlayout:2.0.1'
+    api 'androidx.constraintlayout:constraintlayout:2.0.4'
     api 'androidx.appcompat:appcompat:1.2.0'
     api 'com.google.android.material:material:1.2.1'
     //            {

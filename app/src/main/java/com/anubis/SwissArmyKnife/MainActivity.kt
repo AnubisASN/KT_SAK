@@ -521,7 +521,7 @@ class MainActivity : AppCompatActivity() {
         val myAdapter = MyAdapter(this, datas!!, callback)
         rvList.adapter = myAdapter
         rvList.setItemViewCacheSize(datas!!.size)
-        eShell.eInit.eExecShell("mount -o remount,rw rootfs /system/ ")
+        eShell.eInit.eExecShell("mount -o remount,rw rootfs /system/")
 
 
     }

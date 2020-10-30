@@ -33,8 +33,11 @@ import com.anubis.module_camera.Camera.eMultiBoxTracker
 import com.anubis.module_detection.face_mask.eFaceMask
 import com.anubis.module_detection.face_mnn.eFaceSDK
 import com.anubis.module_facelandmark.Landmark.MainActivity
+import com.anubis.module_hwlive.eHWLive
 import com.anubis.module_tensorflow.detection.eDetector
 import com.anubis.module_tensorflow.detection.eDetectorGUI
+import com.huawei.hms.mlsdk.livenessdetection.MLLivenessCapture
+import com.huawei.hms.mlsdk.livenessdetection.MLLivenessCaptureResult
 import kotlinx.android.synthetic.main.test_gui.*
 import kotlinx.coroutines.*
 import org.jetbrains.anko.custom.async
@@ -71,6 +74,7 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
         bt_face.setOnClickListener(this)
         bt_net.setOnClickListener(this)
         bt_TF.setOnClickListener(this)
+        bt_hwLive.setOnClickListener(this)
         bt_landmark.setOnClickListener(this)
         test_container.setOnClickListener(this)
     }
@@ -104,6 +108,17 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
             bt_make.id -> {
                 tv_hint.text = "口罩检测:"
                 eReadyForNextImage(bitmapRotation = 90f)
+            }
+            bt_hwLive.id->{
+                eHWLive.eInit(object :MLLivenessCapture.Callback{
+                    override fun onFailure(p0: Int) {
+                    }
+
+                    override fun onSuccess(p0: MLLivenessCaptureResult?) {
+                        tv_hint.text =p0?.isLive.toString()
+                        iv_image.setImageBitmap(p0?.bitmap)
+                    }
+                }).eStart(this)
             }
             bt_body.id -> {
                 tv_hint.text = "物体检测:"
