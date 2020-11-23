@@ -23,6 +23,10 @@ import px_picker.Phoenix
  *说明：
  */
 class picekerAPP: Application() {
+    companion object{
+          var mPicekerActivity:Context?=null
+    }
+
     override fun onCreate() {
         super.onCreate()
         Phoenix.config()

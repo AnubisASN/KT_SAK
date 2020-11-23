@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.anubis.kt_extends.eLog
 import com.anubis.module_picker.R
 import px_picker.util.*
 import px_core.PhoenixOption
@@ -44,6 +45,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
 
     init {
         this.enableCamera = config.isEnableCamera
+        eLog("enableCamera"+this.enableCamera)
         this.maxSelectNum = config.maxPickNumber
         this.enablePreview = config.isEnablePreview
         this.is_checked_num = config.isPickNumberMode
@@ -98,7 +100,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getItemViewType(position) == PhoenixConstant.TYPE_CAMERA) {
             val headerHolder = holder as HeaderViewHolder
-            headerHolder.itemView.camera.setOnClickListener {
+            headerHolder.itemView.setOnClickListener {
                 if (onPicktChangedListener != null) {
                     onPicktChangedListener!!.onTakePhoto()
                 }
@@ -147,6 +149,7 @@ class PickerAdapter(private val context: Context, private val config: PhoenixOpt
 
             }
             contentHolder.itemView.setOnClickListener {
+                eLog("点击拍照")
                 if (enablePreview) {
                     val index = if (enableCamera) position - 1 else position
                     onPicktChangedListener!!.onPictureClick(image, index)

@@ -203,8 +203,14 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
                         status = true;
                         return true;
                     }
+                    if (event.getKeyCode()==KeyEvent.KEYCODE_0){
+                        Boolean st = findViewById(R.id.calling_view).getVisibility() == View.VISIBLE;
+                        if (st)
+                            findViewById(R.id.calling_hangup).callOnClick();
+                        else
+                            findViewById(R.id.talking_hangup).callOnClick();
+                    }
                     if (status) {
-
                         switch (event.getKeyCode()) {
                             case KeyEvent.KEYCODE_8:
                                 Boolean st = findViewById(R.id.calling_view).getVisibility() == View.VISIBLE;
@@ -520,7 +526,6 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
             starRTCAudioManager.setSpeakerphoneOn(false);
             findViewById(R.id.speaker_on_btn).setSelected(false);
             findViewById(R.id.speaker_off_btn).setSelected(true);
-
         }
     }
 

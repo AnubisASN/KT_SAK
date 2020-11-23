@@ -46,7 +46,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:gravity="bottom"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/head_img"
@@ -54,8 +54,8 @@
                 android:layout_height="60dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="100dp"
-                app:srcCompat="@drawable/starfox_500"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                app:srcCompat="@drawable/starfox_500" />
 
             <TextView
                 android:id="@+id/targetid_text"
@@ -124,7 +124,7 @@
             android:id="@+id/talking_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/mic_btn"

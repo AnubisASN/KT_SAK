@@ -48,7 +48,7 @@ open class ePicker internal constructor() {
                 .maxPickNumber(1)// 最大选择数量
                 .minPickNumber(0)// 最小选择数量
                 .spanCount(5)// 每行显示个数
-                .enablePreview(false)// 是否开启预览
+                .enablePreview(true)// 是否开启预览
                 .enableShowPreview(true)// 是否开启预览按钮显示
                 .previewEggs(true)
                 .enableCamera(true)// 是否开启拍照
@@ -58,7 +58,7 @@ open class ePicker internal constructor() {
                 .compressVideoFilterSize(2018)//多少kb以下的视频不压缩
                 .thumbnailHeight(160)// 选择界面图片高度
                 .thumbnailWidth(160)// 选择界面图片宽度
-                .enableClickSound(false)// 是否开启点击声音
+                .enableClickSound(true)// 是否开启点击声音
                 .videoFilterTime(0)//显示多少秒以内的视频
                 .mediaFilterSize(10000)//显示多少kb以下的图片/视频，默认为0，表示不限制
         editBlock(phoenix)

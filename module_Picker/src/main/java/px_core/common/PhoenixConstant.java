@@ -11,7 +11,6 @@ public final class PhoenixConstant {
     public static final int REQUEST_CODE_CAPTURE = 0x000002;
     public static final int REQUEST_CODE_CAMERA_PERMISSIONS = 0x000100;
     public static final int REQUEST_CODE_PREVIEW = 0x000101;
-
     public static final int TYPE_PREIVEW_FROM_PICK = 0x000100;
     public static final int TYPE_PREIVEW_FROM_PREVIEW = 0x000101;
     public static final int TYPE_PREIVEW_FROM_CAMERA = 0x000102;

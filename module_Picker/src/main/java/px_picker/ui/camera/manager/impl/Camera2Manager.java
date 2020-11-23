@@ -481,7 +481,11 @@ public final class Camera2Manager extends BaseCameraManager<String, TextureView.
             if (cameraConfigProvider.getMediaQuality() == CameraConfig.MEDIA_QUALITY_AUTO) {
                 mCamcorderProfile = CameraUtils.getCamcorderProfile(mCameraId, cameraConfigProvider.getVideoFileSize(), cameraConfigProvider.getMinimumVideoDuration());
             } else
-                mCamcorderProfile = CameraUtils.getCamcorderProfile(cameraConfigProvider.getMediaQuality(), mCameraId);
+                try {
+                    mCamcorderProfile = CameraUtils.getCamcorderProfile(cameraConfigProvider.getMediaQuality(), mCameraId);
+                } catch (Exception e) {
+                    mCamcorderProfile = CameraUtils.getCamcorderProfile(CameraConfig.MEDIA_QUALITY_AUTO, mCameraId);
+                }
 
             mVideoSize = CameraUtils.chooseOptimalSize(Size.fromArray2(map.getOutputSizes(MediaRecorder.class)),
                     mWindowSize.getWidth(), mWindowSize.getHeight(), new Size(mCamcorderProfile.videoFrameWidth, mCamcorderProfile.videoFrameHeight));

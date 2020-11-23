@@ -34,6 +34,16 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
+        android:id="@+id/picker_btTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:onClick="onClick"
+        android:text="Test图片选择器"
+        app:layout_constraintStart_toEndOf="@+id/picker_btPX"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
         android:id="@+id/picker_btFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

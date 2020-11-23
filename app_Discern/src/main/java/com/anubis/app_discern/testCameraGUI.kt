@@ -52,7 +52,6 @@ import java.util.*
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickListener {
-
     override val eScreenOrientation: Int = 90
     override var eUseCamera2API: Boolean = true
     override val eActivityLayout: Int = R.layout.test_gui
@@ -109,13 +108,12 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                 tv_hint.text = "口罩检测:"
                 eReadyForNextImage(bitmapRotation = 90f)
             }
-            bt_hwLive.id->{
-                eHWLive.eInit(object :MLLivenessCapture.Callback{
+            bt_hwLive.id -> {
+                eHWLive.eInit(object : MLLivenessCapture.Callback {
                     override fun onFailure(p0: Int) {
                     }
-
                     override fun onSuccess(p0: MLLivenessCaptureResult?) {
-                        tv_hint.text =p0?.isLive.toString()
+                        tv_hint.text = p0?.isLive.toString()
                         iv_image.setImageBitmap(p0?.bitmap)
                     }
                 }).eStart(this)
@@ -166,7 +164,6 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                         if (sw_continued.isChecked)
                             onClick(bt_body)
                     }
-
                 }
                 bt_face.id -> {
                     eLog("onclick：bt_face")
@@ -174,7 +171,7 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                     val results = eFaceSDK.eInit(this@testCameraGUI).eFaceDetect(bitmap!!)
                     results.size.eLogI("人脸检测数量")
                     iv_photo.post {
-                        iv_photo.imageBitmap = eBitmap.eInit.eBitmapRect(bitmap, results,Color.RED)
+                        iv_photo.imageBitmap = eBitmap.eInit.eBitmapRect(bitmap, results, Color.RED)
                         results.forEach {
                             tv_hint.append("\n$it\n")
                         }
@@ -183,7 +180,7 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                     }
                 }
                 test_container.id -> {
-//        跟踪器
+                //跟踪器
                     mTrackerE = eMultiBoxTracker.einit(this@testCameraGUI)
                     findViewById<eOverlayView>(R.id.frame_ov_tracking).addCallback {
                         mTrackerE!!.draw(it)

@@ -46,4 +46,6 @@ dependencies {
     api project(':module_Extends')
     api project(':module_Picker')
     api project(path: ':module_Dialog')
+    //gradle版本在3.0以上引入此行
+    implementation 'com.lcw.library:imagepicker:2.2.0'
 }

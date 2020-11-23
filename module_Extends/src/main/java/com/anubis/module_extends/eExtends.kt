@@ -18,39 +18,52 @@ import android.media.*
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.Environment
+import android.os.Vibrator
 import android.preference.*
+import android.provider.MediaStore
+import android.provider.MediaStore.EXTRA_OUTPUT
 import android.provider.Settings
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import android.text.TextUtils.indexOf
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Base64
 import android.util.Log
 import android.util.TypedValue
-import android.view.*
+import android.view.KeyEvent
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.inputMethodManager
 import org.json.JSONObject
 import java.io.*
-import java.lang.Process
-import java.net.*
+import java.net.Inet6Address
+import java.net.InetAddress
+import java.net.NetworkInterface
+import java.net.SocketException
 import java.nio.ByteBuffer
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
+import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.ParseException
@@ -58,11 +71,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import kotlin.Error
 import kotlin.collections.ArrayList
 import kotlin.experimental.and
-import org.jetbrains.anko.inputMethodManager
-import java.nio.charset.Charset
 
 /**
  * Author  ： AnubisASN   on 2018-07-23 9:12.
@@ -406,6 +416,24 @@ fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = Aud
     }
 }
 
+// 跳转相机拍照
+val REQUEST_CODE_CAMERA_TAKE = 103
+fun Activity.eSysTemCameraTake(fileDir: String = Environment.getExternalStorageDirectory().path + "/Pictures", fileName: String = "IMG_" + System.currentTimeMillis() + ".jpg", requestCode: Int = REQUEST_CODE_CAMERA_TAKE, authority: String = "com.anubis.module_extends", resultBlock: ((Intent, String) -> Unit)? = null) {
+    //拍照存放路径
+    if (  !eFile.eInit.eCheckFile(fileDir))
+        return eShowTip("File Create Error")
+    val mFilePath =  "$fileDir/${if (fileName.contains("."))fileName else "$fileName.jpg"}"
+    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+    val uri: Uri
+    uri = if (Build.VERSION.SDK_INT >= 24) {
+        FileProvider.getUriForFile(this, authority, File(mFilePath))
+    } else {
+        Uri.fromFile(File(mFilePath))
+    }
+    intent.putExtra(EXTRA_OUTPUT, uri)
+    resultBlock?.let { it(intent, mFilePath) }
+    startActivityForResult(intent, requestCode)
+}
 
 /**
  *  Json解析扩展--------------------------------------------------------------------------------
@@ -497,10 +525,6 @@ class eBReceiver private constructor() {
 class eApp private constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eApp() }
-    }
-
-    fun Context.es(et: EditText) {
-        inputMethodManager.hideSoftInputFromWindow(et.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
     //清除栈重启
@@ -931,6 +955,15 @@ open class eTime internal constructor() {
 
     //获取时间戳格式转时间
     open fun eGetCuoFormatTime(dateCuo: Long, format: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(format).format(Date(dateCuo))
+
+    //时间格式字符串转时间
+    fun eGetDataStrToDate(dateStr: String, format: String = "yyyy-MM-dd HH:mm:ss") = try {
+        val date = SimpleDateFormat(format).parse(dateStr)
+        date
+    } catch (e: ParseException) {
+        e.eLogE("eGetStringtoDate")
+        null
+    }
 
     //时间转时间戳
     open fun eGetCuoTime(date: String = eGetTime(), pattern: String = "yyyy-MM-dd HH:mm:ss", type: String = "s"): String {
@@ -2171,9 +2204,11 @@ open class eString internal constructor() {
     //base64加密
     open fun eBase64Encode(str: String, charset: Charset = Charsets.UTF_8, flags: Int = Base64.DEFAULT) = eBase64Encode(str.toByteArray(charset), flags)
     open fun eBase64Encode(bytes: ByteArray, flags: Int = Base64.DEFAULT) = Base64.encodeToString(bytes, flags)
+
     //base64解密
-    open  fun eBase64Decode(strBase64:String, charset: Charset = Charsets.UTF_8, flags: Int = Base64.DEFAULT)=eBase64Decode(strBase64.toByteArray(charset),flags)
-    open fun eBase64Decode(bytes: ByteArray, flags: Int = Base64.DEFAULT)=String(Base64.decode(bytes,flags))
+    open fun eBase64Decode(strBase64: String, charset: Charset = Charsets.UTF_8, flags: Int = Base64.DEFAULT) = eBase64Decode(strBase64.toByteArray(charset), flags)
+    open fun eBase64Decode(bytes: ByteArray, flags: Int = Base64.DEFAULT) = String(Base64.decode(bytes, flags))
+
     //字符串截取
     open fun eInterception(str: String, lenght: Int = 1024, symbol: String = ","): String {
         var j = 0
@@ -2310,6 +2345,7 @@ open class eShell internal constructor() {
     val remount = "mount -o remount,rw rootfs "
     val install = "pm install -r"
     val kill = "am force-stop"
+
     //判断是否有Root权限
     open fun eHaveRoot(): Boolean {
         try {
