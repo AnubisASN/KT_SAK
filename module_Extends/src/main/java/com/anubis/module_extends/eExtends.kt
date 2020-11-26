@@ -420,9 +420,9 @@ fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = Aud
 val REQUEST_CODE_CAMERA_TAKE = 103
 fun Activity.eSysTemCameraTake(fileDir: String = Environment.getExternalStorageDirectory().path + "/Pictures", fileName: String = "IMG_" + System.currentTimeMillis() + ".jpg", requestCode: Int = REQUEST_CODE_CAMERA_TAKE, authority: String = "com.anubis.module_extends", resultBlock: ((Intent, String) -> Unit)? = null) {
     //拍照存放路径
-    if (  !eFile.eInit.eCheckFile(fileDir))
+    if (!eFile.eInit.eCheckFile(fileDir))
         return eShowTip("File Create Error")
-    val mFilePath =  "$fileDir/${if (fileName.contains("."))fileName else "$fileName.jpg"}"
+    val mFilePath = "$fileDir/${if (fileName.contains(".")) fileName else "$fileName.jpg"}"
     val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
     val uri: Uri
     uri = if (Build.VERSION.SDK_INT >= 24) {
@@ -1516,23 +1516,25 @@ open class eBitmap internal constructor() {
 
     open fun eBitmapToZoom(bitmap: Bitmap, width: Int, height: Int, filter: Boolean = true): Bitmap {
         val tBitmap = Bitmap.createScaledBitmap(bitmap, width, height, filter)
-        if (tBitmap !== bitmap)
-            eGcBitmap(bitmap)
         return tBitmap
     }
 
 
     //Bitmap压缩 (设置压缩率或者 设置大小)
-    open fun eBitmapCompress(bitmap: Bitmap, quality: Int = 100, size: Int? = null): Bitmap? {
+    open fun eBitmapCompress(bitmap: Bitmap, quality: Int = 100, outSize: Int? = null): Bitmap? {
         var baos = ByteArrayOutputStream()
-        if (size == null) {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos)
-        } else {
+        bitmap.compress(Bitmap.CompressFormat.JPEG,if (outSize==null) quality else 100, baos)
+        if (outSize != null) {
             var options = 100
-            while (baos.toByteArray().size / 1024 > size) {
+            while ((baos.toByteArray().size / 1024).eLog("size") > outSize/10 && options != 5) {
                 baos.reset()//重置baos即清空baos
-                bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos)
-                options -= 10
+                bitmap.compress(Bitmap.CompressFormat.JPEG, if (options < 5) {
+                    options = 5
+                    5
+                } else options, baos)
+                eLog("options:$options")
+                if (options != 5)
+                    options -= 5
             }
         }
         val isBm = ByteArrayInputStream(baos.toByteArray())
@@ -1541,19 +1543,20 @@ open class eBitmap internal constructor() {
 
 
     //Bitmap转文件
-    open fun eBitmapToFile(bitmap: Bitmap, absPath: String, quality: Int = 80): Boolean {
+    open fun eBitmapToFile(bitmap: Bitmap?, absPath: String, quality: Int = 80): Boolean {
         return eBitmapToFile(bitmap, File(absPath), quality)
     }
 
     //Bitmap转文件
     open fun eBitmapToFile(bitmap: Bitmap?, file: File, quality: Int = 80): Boolean {
         if (bitmap == null) {
+            eLogE("eBitmapToFile:bitmap==null")
             return false
         } else {
             var fos: FileOutputStream? = null
             try {
-                if (!file.exists())
-                    file.createNewFile()
+                if (!eFile.eInit.eCheckFile(file))
+                    return false.apply { eLogE(file.path + "-不存在") }
                 fos = FileOutputStream(file)
                 bitmap.compress(Bitmap.CompressFormat.PNG, quality, fos)
                 fos.flush()

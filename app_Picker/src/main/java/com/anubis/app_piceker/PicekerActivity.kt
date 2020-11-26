@@ -2,12 +2,9 @@ package com.anubis.app_piceker
 
 import android.app.Dialog
 import android.content.Intent
-import android.content.UriMatcher
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -18,10 +15,6 @@ import com.anubis.module_extends.DataItemInfo
 import com.anubis.module_extends.eRvAdapter
 import com.anubis.module_picker.ePicker
 import com.anubis.module_picker.eTimePicker
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DecodeFormat
-import com.bumptech.glide.request.RequestOptions
-import com.lcw.library.imagepicker.ImagePicker
 import file_picker.filetype.FileType
 import file_picker.filetype.RasterImageFileType
 import kotlinx.android.synthetic.main.picker.*
@@ -29,6 +22,7 @@ import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.imageBitmap
 import org.jetbrains.anko.textColor
 import px_core.model.MediaEntity
+import java.io.File
 
 
 @Route(path = "/app/piceker")
@@ -46,14 +40,13 @@ class PicekerActivity : AppCompatActivity() {
     }
 
     private var mFilepath = ""
-    private var mEditFilepath = ""
     private var viewPair: Pair<TextView, Int>? = null
     private var adapterList = arrayListOf<eRvAdapter<DataItemInfo>>()
     fun onClick(v: View) {
         when (v.id) {
             picker_btPX.id -> ePicker.eInit.eImageStart(this@PicekerActivity)
             picker_btTest.id -> eSysTemCameraTake("/sdcard/IMG", "IMG_${eTime.eInit.eGetCuoTime()}.jpg") { intent: Intent, s: String ->
-                mFilepath=s
+                mFilepath = s
             }
             button.id -> {
                 val mDia = eDiaAlert.eInit(this)
@@ -84,7 +77,7 @@ class PicekerActivity : AppCompatActivity() {
                 ePicker.eInit.eFileStart(this@PicekerActivity, array)
             }
             picker_btTime.id -> timeSelector?.eShowTimeSelect("2000-01-01 00:00")
-            imageView.id -> eDiaAlert.eInit(this).eDefaultShow(ICallBackEdit = object : eDiaAlert.ICallBackEdit {
+            imageView1.id -> eDiaAlert.eInit(this).eDefaultShow(ICallBackEdit = object : eDiaAlert.ICallBackEdit {
                 override fun onEditInput(dia: Dialog, editText: EditText, iv: View?) {
                     eShowTip(editText.text)
                 }
@@ -102,7 +95,7 @@ class PicekerActivity : AppCompatActivity() {
                 datas?.forEach {
                     Hint("data :${(it as MediaEntity).localPath}")
                     val bitmap = BitmapFactory.decodeFile(it.localPath)
-                    imageView.imageBitmap = bitmap
+                    imageView1.imageBitmap = bitmap
                 }
             }
             ePicker.eInit.FILE_REQUEST_CODE -> {
@@ -114,7 +107,7 @@ class PicekerActivity : AppCompatActivity() {
             REQUEST_CODE_CAMERA_TAKE -> {
                 Hint("data :$mFilepath")
                 val bitmap = BitmapFactory.decodeFile(mFilepath)
-                imageView.imageBitmap = bitmap
+                imageView1.imageBitmap = bitmap
             }
         }
 
