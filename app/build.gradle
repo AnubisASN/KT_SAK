@@ -6,6 +6,14 @@ apply plugin: 'org.greenrobot.greendao'// apply plugin
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
+//    signingConfigs {
+//        debug {
+//            keyAlias 'face'
+//            keyPassword '123456'
+//            storeFile file('/super/WorkSpace/AndroidProject/Face.jks')
+//            storePassword '123456'
+//        }
+//    }
     defaultConfig {
         applicationId "com.anubis.SwissArmyKnife"
         minSdkVersion rootProject.ext.minSdkVersion

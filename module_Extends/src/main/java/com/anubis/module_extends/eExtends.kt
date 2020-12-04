@@ -692,7 +692,7 @@ class eApp private constructor() {
     }
 
     //获取当前显示的Activity
-    open fun eGetShowActivity(context: Context) = context.activityManager.getRunningTasks(1)[0].topActivity
+    open fun eGetShowActivity(application: Application) = application.activityManager.getRunningTasks(1)[0].topActivity.className
 
     //判断Activity是否存在任务栈里面
     open fun eIsExistMainActivity(context: Context, activity: Class<*>): Boolean {
@@ -855,6 +855,16 @@ open class eRegex internal constructor() {
     open fun eIsZh(zh: String): Boolean {
         val reZh = "^[\\u4e00-\\u9fa5]+$"
         return Pattern.compile(reZh).matcher(zh).matches()
+    }
+
+    //车牌验证
+    fun eIsLicensePlate(str: String): Boolean {
+        val PLATE_NO_REGEX = "([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼]" +
+                "{1}(([A-HJ-Z]{1}[A-HJ-NP-Z0-9]{5})|([A-HJ-Z]{1}(([DF]{1}[A-HJ-NP-Z0-9]{1}[0-9]{4})|([0-9]{5}[DF]" +
+                "{1})))|([A-HJ-Z]{1}[A-D0-9]{1}[0-9]{3}警)))|([0-9]{6}使)|((([沪粤川云桂鄂陕蒙藏黑辽渝]{1}A)|鲁B|闽D|蒙E|蒙H)[0-9]{4}领)" +
+                "|(WJ[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼]{1}[0-9]{4}[TDSHBXJ0-9]{1})" +
+                "|([VKHBSLJNGCE]{1}[A-DJ-PR-TVY]{1}[0-9]{5})"
+        return Pattern.compile(PLATE_NO_REGEX).matcher(str).matches()
     }
 }
 
@@ -2480,8 +2490,8 @@ open class eShell internal constructor() {
     }
 
     //Shell APP重启
-    open fun eAppReboot(activity: Activity) {
-        eExecShell("am force-stop ${activity.packageName} && am start -n ${activity.packageName}/${activity::class.java.name}")
+    open fun eAppReboot(application: Application,clazz: Class<*>) {
+       eExecShell("am force-stop ${application.packageName} && am start -n ${application.packageName}/${clazz.name}")
     }
 }
 

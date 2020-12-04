@@ -60,7 +60,7 @@ open class ePicker internal constructor() {
                 .thumbnailWidth(160)// 选择界面图片宽度
                 .enableClickSound(true)// 是否开启点击声音
                 .videoFilterTime(0)//显示多少秒以内的视频
-                .mediaFilterSize(10000)//显示多少kb以下的图片/视频，默认为0，表示不限制
+                .mediaFilterSize(1000)//显示多少kb以下的图片/视频，默认为0，表示不限制
         editBlock(phoenix)
         phoenix.start(activity, Type, REQUEST_CODE)
         IMAGE_REQUEST_CODE = REQUEST_CODE

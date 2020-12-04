@@ -21,35 +21,37 @@ import java.util.HashMap
  * Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  * Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  * Router :  /'Module'/'Function'
- * 说明：
+ * 说明： 不可改逻辑
  */
-private  class Test{
-    val mTCP=eTCP.eInit(Handler())
-    private val evTCPIP=""
-    private val evTCPPort=""
-    private var tcpJob:Job?=null
-    init {
+private class Demo {
+    val mTCP = eTCP.eInit(Handler())
+    private val evTCPIP = ""
+    private val evTCPPort = ""
+    private var tcpJob: Job? = null
+
+    /*开始连接*/
+    fun mainConnect(ip: String, port: Int) {
         if (mTCP.eIsExecuteConnect(
-                        "$evTCPIP:$evTCPPort",
+                        "$ip:$port",
                         mTCP.eClientHashMap
                 )
         )
             eLog("已有任务")
         else
-            tcpConnect()
+            tcpConnect(ip, port)
     }
 
-
-    private fun tcpConnect() {
+    /*连接封装*/
+    private fun tcpConnect(ip: String, port: Int) {
         tcpJob?.cancel()
         tcpJob = GlobalScope.launch {
             mTCP.eSocketConnect(
-                    evTCPIP,
-                    evTCPPort.toInt(),
+                    ip,
+                    port,
                     true,
                     null,
                     1,
-                    { tcpConnect() }
+                    { tcpConnect(ip, port) }
             ) { address: String, code: Int, msg: String, hashMap: HashMap<String, Socket?> ->
                 eLogI("TCP接收-address:$address  code:$code  msg:$msg")
                 when (code) {
@@ -58,8 +60,9 @@ private  class Test{
 
                     }
                     //接收到消息
-                    mTCP.HANDLER_MSG_CODE -> eLog("$msg-$address-$hashMap" )
-                    else ->{} // heartbeatJob?.cancel()  关闭心跳
+                    mTCP.HANDLER_MSG_CODE -> eLog("$msg-$address-$hashMap")
+                    else -> {
+                    } // heartbeatJob?.cancel()  关闭心跳
                 }
             }
         }

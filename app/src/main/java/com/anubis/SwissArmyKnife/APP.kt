@@ -48,15 +48,6 @@ class APP : Application() {
     }
 
 
-    //---------------------------------------分割线   FTP---------------------------------------------
-//    /*创建文件夹*/
-//    private fun createDir() {
-//        //联胜文件夹
-//        val fileLS = File(Environment.getExternalStorageDirectory().toString(), "联胜智能")
-//        if (!fileLS.exists()) {
-//            fileLS.mkdir()
-//        }
-//    }
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)

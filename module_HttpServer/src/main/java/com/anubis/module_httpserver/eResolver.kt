@@ -29,23 +29,27 @@ import java.io.File
  * Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  * Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  * Router :  /'Module'/'Function'
- * 说明：默认常用解析(接口定义)   可用Handler 回调参数
+ * 说明：默认常用解析(接口定义)   可用Handler 异步回调处理  eResultBlock 同步返回结果  选其一
  */
 @TargetApi(Build.VERSION_CODES.N)
-class eResolver(port: Int = 3335, handler: Handler? = null) : eHTTPD(port, handler) {
+open class eResolver(port: Int = 3335, handler: Handler? = null) : eHTTPD(port, handler) {
+    companion object {
+        var eResultBlock: ((String,IHTTPSession) -> Response)? = null
+    }
 
-    public override fun serve(session: IHTTPSession, handler: Handler?): Response {
+    open public override fun serve(session: IHTTPSession, handler: Handler?): Response {
         val uri = session.uri.replace("/", "")
-        return Response.newFixedLengthResponse(when (uri) {
-            "File" -> if (eManage.eInit.eFileParse(session, "file").apply {
-                        val msg = handler?.obtainMessage()
-                        msg?.what = FILE_PARSE
-                        msg?.obj = this
-                        handler?.sendMessage(msg)
-                    } != null)
-                "上传成功"
-            else "上传失败"
-//        RAW发送    upRequestBody(RequestBody.create(MediaType.parse("application/json; charset=utf-8"),"{\"type\":\"Response\"}"))
+        return eResultBlock?.let { it(uri,session) } ?:Response.newFixedLengthResponse(when (uri) {
+            "File" ->
+                    if (eManage.eInit.eFileParse(session, "file").apply {
+                                val msg = handler?.obtainMessage()
+                                msg?.what = FILE_PARSE
+                                msg?.obj = this
+                                handler?.sendMessage(msg)
+                            } != null)
+                        "上传成功"
+                    else "上传失败"
+
             "Raw" -> eManage.eInit.eRawParse(session).apply {
                 val msg = handler?.obtainMessage()
                 msg?.what = RAW_PARSE
@@ -58,10 +62,10 @@ class eResolver(port: Int = 3335, handler: Handler? = null) : eHTTPD(port, handl
                         msg?.obj = this
                         handler?.sendMessage(msg)
                     } != null) "成功" else "解析错误"
-            "" -> if (uri.contains(".zip")){
-                val fs= eManage.eInit.eFileDownload(File("/sdcard/Web/$uri"))
-               if (fs==null)"404" else return fs
-            }else
+            "" -> if (uri.contains(".zip")) {
+                val fs = eManage.eInit.eFileDownload(File("/sdcard/Web/$uri"))
+                if (fs == null) "404" else return fs
+            } else
                 eManage.eInit.httpResult.apply {
                     val msg = handler?.obtainMessage()
                     msg?.what = NULL_PARSE
