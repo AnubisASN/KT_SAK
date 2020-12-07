@@ -20,7 +20,7 @@
     <!-- end: baidu speech sdk  权限 -->
     <application
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="@string/module_name"
         android:theme="@style/AppTheme"
         > <!-- 不使用 UI 对话框时 ，删除 android:name -->
 

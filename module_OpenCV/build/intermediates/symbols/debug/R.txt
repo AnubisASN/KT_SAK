@@ -773,7 +773,7 @@ int string abc_searchview_description_voice 0x7f150024
 int string abc_shareactionprovider_share_with 0x7f150025
 int string abc_shareactionprovider_share_with_application 0x7f150026
 int string abc_toolbar_collapse_description 0x7f150027
-int string app_name 0x7f150028
+int string module_name 0x7f150028
 int string search_menu_title 0x7f150029
 int string status_bar_notification_info_overflow 0x7f15002a
 int style AlertDialog_AppCompat 0x7f160001

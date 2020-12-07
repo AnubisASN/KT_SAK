@@ -8,5 +8,5 @@
           <enum name="front" value="98"/>
        </attr>
     </declare-styleable>
-    <string name="app_name">SAK—</string>
+    <string name="module_name">Module_OpenCV</string>
 </resources>

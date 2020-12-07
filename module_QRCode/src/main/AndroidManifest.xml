@@ -1,2 +1,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.anubis.module_qrcode"/>
+          package="com.anubis.module_qrcode">
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:allowBackup="true"
+        >
+
+        <activity
+            android:configChanges="orientation|keyboardHidden"
+            android:name="com.anubis.uuzuche.lib_zxing.activity.eDefaultCaptureActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            ></activity>
+    </application>
+</manifest>

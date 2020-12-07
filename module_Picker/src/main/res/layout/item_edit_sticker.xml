@@ -11,7 +11,7 @@
         android:id="@+id/ivSimpleSticker"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:contentDescription="@string/app_name"
+        android:contentDescription="@string/module_name"
         android:padding="6dp"
         app:srcCompat="@drawable/phoenix_emoji_f77"/>
 </LinearLayout>

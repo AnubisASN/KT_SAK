@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StarRTC</string>
+    <string name="module_name">Module_WebRTC</string>
 
     <string-array name="head_images">
         <item>@drawable/head_icon_1</item>

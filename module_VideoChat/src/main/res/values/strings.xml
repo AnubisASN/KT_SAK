@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">module_VideoChat</string>
+    <string name="module_name">Module_VideoChat</string>
     <string name="agora_app_id">02fb80262bcc46dd95d075a88404b24b</string>
 </resources>

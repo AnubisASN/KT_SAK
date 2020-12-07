@@ -36,7 +36,7 @@ import com.anubis.module_ftp.GUI.eFTPUIs
 import com.anubis.module_greendao.eGreenDao
 import com.anubis.module_office.eOffice
 import com.anubis.module_portMSG.ePortMSG
-import com.anubis.module_qrcode.eQRCode
+import com.anubis.module_qrcode.eQRCodeCreate
 import com.anubis.module_tcp.eTCP
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
@@ -60,7 +60,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.custom.async
-import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.textColor
 import org.jetbrains.anko.uiThread
 import java.io.*
@@ -178,7 +177,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     getDigit("二维码") -> when (view?.id) {
                         R.id.bt_item1 -> {
-                            iv_Hint.setImageBitmap(eQRCode.eInit.eCreateQRCode(MSG ?: "请输入内容"))
+                            iv_Hint.setImageBitmap(eQRCodeCreate.eInit.eCreateQRCode(MSG ?: "请输入内容"))
                             iv_Hint.visibility = View.VISIBLE
                             Handler().postDelayed({ iv_Hint.visibility = View.GONE }, 5000)
                         }

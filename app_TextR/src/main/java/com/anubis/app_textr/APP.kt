@@ -1,9 +1,8 @@
 package com.anubis.app_textr
 
 import android.app.Application
-import android.content.Context
-import android.widget.ImageView
-import com.bumptech.glide.Glide
+import com.anubis.uuzuche.lib_zxing.activity.ZXingLibrary
+
 /**
  * Author  ： AnubisASN   on 19-6-29 下午3:14.
  * E-mail  ： anubisasn@gmail.com ( anubisasn@qq.com )
@@ -23,6 +22,5 @@ import com.bumptech.glide.Glide
 class picekerAPP: Application() {
     override fun onCreate() {
         super.onCreate()
-
     }
 }

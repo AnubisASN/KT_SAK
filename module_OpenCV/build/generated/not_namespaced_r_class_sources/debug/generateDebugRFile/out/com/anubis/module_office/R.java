@@ -823,7 +823,7 @@ public final class R {
         public static int abc_shareactionprovider_share_with = 0x7f150025;
         public static int abc_shareactionprovider_share_with_application = 0x7f150026;
         public static int abc_toolbar_collapse_description = 0x7f150027;
-        public static int app_name = 0x7f150028;
+        public static int module_name = 0x7f150028;
         public static int search_menu_title = 0x7f150029;
         public static int status_bar_notification_info_overflow = 0x7f15002a;
     }

@@ -34,7 +34,7 @@
         android:name=".APP"
         android:allowBackup="true"
         android:icon="@drawable/logo"
-        android:label="@string/app_name"
+        android:label="@string/module_name"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -62,6 +62,7 @@
             <intent-filter android:priority="1000">
                 <!--                 //开机自启 -->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </receiver>
         <receiver

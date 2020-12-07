@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:contentDescription="@string/app_name"
+            android:contentDescription="@string/module_name"
             android:padding="8dp"
             app:srcCompat="@drawable/phoenix_edit_revoke"/>
 

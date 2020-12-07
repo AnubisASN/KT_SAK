@@ -69,11 +69,11 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <string name="_model_default"/>
-    <string name="app_name">Module_ASR</string>
     <string name="cancel">取消</string>
     <string name="decoder_default"/>
     <string name="infile_default"/>
     <string name="language_default"/>
+    <string name="module_name">Module_ASRW</string>
     <string name="nlu_default"/>
     <string name="please_speak">请说话</string>
     <string name="prop_default"/>

@@ -13,20 +13,25 @@ package com.anubis.module_qrcode
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
+import com.anubis.kt_extends.eLog
 
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.WriterException
-import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 
 import java.util.Hashtable
 
-open class eQRCode internal  constructor(){
+open class eQRCodeCreate internal  constructor(){
     private var IMAGE_HALFWIDTH = 50
-    companion object{
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eQRCode() }
+    companion object{  //反色
+        val BLACK=-0x1000000
+        val  GREEN=-0xFF00CE
+        val YELLOW=-0x0000FF
+        val LIGHT_GREEN=-0xc84e62
+        val RED=-0x6d8ca
+        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eQRCodeCreate() }
     }
     /**
      * 生成二维码
@@ -36,7 +41,9 @@ open class eQRCode internal  constructor(){
      * @return bitmap
      */
     @JvmOverloads
-    open  fun eCreateQRCode(text: String, size: Int = 500): Bitmap? {
+    open  fun eCreateQRCode(text: String, size: Int = 500,colorID:Int=BLACK, mBitmap: Bitmap?=null): Bitmap? {
+        if (mBitmap!=null)
+          return  eCreateQRCodeWithLogo5(text, size, mBitmap, colorID)
         try {
             val hints = Hashtable<EncodeHintType, String>()
             hints[EncodeHintType.CHARACTER_SET] = "utf-8"
@@ -46,7 +53,8 @@ open class eQRCode internal  constructor(){
             for (y in 0 until size) {
                 for (x in 0 until size) {
                     if (bitMatrix.get(x, y)) {
-                        pixels[y * size + x] = -0x1000000
+                        pixels[y * size + x] =colorID
+                        eLog(  "color:"+ pixels[y * size + x])
                     } else {
                         pixels[y * size + x] = -0x1
                     }
@@ -64,7 +72,7 @@ open class eQRCode internal  constructor(){
     }
 
     /**
-     * bitmap的颜色代替黑色的二维码
+     * bitmap的颜色代替黑色的二维码色
      *
      * @param text
      * @param size
@@ -116,7 +124,7 @@ open class eQRCode internal  constructor(){
      * @param mBitmap
      * @return
      */
-    open  fun eCreateQRCodeWithLogo3(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    open  fun eCreateQRCodeWithLogo3(text: String, size: Int, mBitmap: Bitmap,colorID: Int= BLACK): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -131,11 +139,10 @@ open class eQRCode internal  constructor(){
             mBitmap = Bitmap.createScaledBitmap(mBitmap, size, size, false)
 
             val pixels = IntArray(size * size)
-            val color = -0x6d8ca
             for (y in 0 until size) {
                 for (x in 0 until size) {
                     if (bitMatrix.get(x, y)) {
-                        pixels[y * size + x] = color
+                        pixels[y * size + x] = colorID
                     } else {
                         pixels[y * size + x] = mBitmap.getPixel(x, y) and 0x66ffffff
                     }
@@ -153,14 +160,14 @@ open class eQRCode internal  constructor(){
     }
 
     /**
-     * 比方法2的颜色黑一些
+     *(bitmap的颜色代替黑色的二维码色)颜色黑一些
      *
      * @param text
      * @param size
      * @param mBitmap
      * @return
      */
-    open fun eCreateQRCodeWithLogo4(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    open fun eCreateQRCodeWithLogo4(text: String, size: Int, mBitmap: Bitmap,colorID: Int= BLACK): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -181,7 +188,7 @@ open class eQRCode internal  constructor(){
                     if (bitMatrix.get(x, y)) {
                         if (flag) {
                             flag = false
-                            pixels[y * size + x] = -0x1000000
+                            pixels[y * size + x] =colorID
                         } else {
                             pixels[y * size + x] = mBitmap.getPixel(x, y)
                             flag = true
@@ -209,7 +216,7 @@ open class eQRCode internal  constructor(){
      * @param mBitmap
      * @return
      */
-    open fun eCreateQRCodeWithLogo5(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    open fun eCreateQRCodeWithLogo5(text: String, size: Int, mBitmap: Bitmap,colorID: Int= BLACK): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -248,7 +255,7 @@ open class eQRCode internal  constructor(){
                         pixels[y * width + x] = mBitmap.getPixel(x - halfW + IMAGE_HALFWIDTH, y - halfH + IMAGE_HALFWIDTH)
                     } else {
                         if (bitMatrix.get(x, y)) {
-                            pixels[y * size + x] = -0xc84e62
+                            pixels[y * size + x] = colorID
                         } else {
                             pixels[y * size + x] = -0x1
                         }
@@ -273,7 +280,7 @@ open class eQRCode internal  constructor(){
      * @param mBitmap
      * @return
      */
-    open  fun eCreateQRCodeWithLogo6(text: String, size: Int, mBitmap: Bitmap): Bitmap? {
+    open  fun eCreateQRCodeWithLogo6(text: String, size: Int, mBitmap: Bitmap,colorID: Int= BLACK,angleColorID:Int= RED): Bitmap? {
         var mBitmap = mBitmap
         try {
             IMAGE_HALFWIDTH = size / 10
@@ -315,9 +322,9 @@ open class eQRCode internal  constructor(){
                         pixels[y * width + x] = mBitmap.getPixel(x - halfW + IMAGE_HALFWIDTH, y - halfH + IMAGE_HALFWIDTH)
                     } else {
                         if (bitMatrix.get(x, y)) {
-                            pixels[y * size + x] = -0xeeeeef
+                            pixels[y * size + x] = -angleColorID
                             if (x < 115 && (y < 115 || y >= size - 115) || y < 115 && x >= size - 115) {
-                                pixels[y * size + x] = -0x6d8ca
+                                pixels[y * size + x] = colorID
                             }
                         } else {
                             pixels[y * size + x] = -0x1

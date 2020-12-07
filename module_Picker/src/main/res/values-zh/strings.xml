@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">module_Picker</string>
+    <string name="module_name">Module_Picker</string>
     <string name="picture_camera_roll">相机胶卷</string>
     <string name="picture_cancel">取消</string>
     <string name="picture_take_picture">拍摄</string>

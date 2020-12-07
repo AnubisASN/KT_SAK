@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SAK_Landmark</string>
+    <string name="module_name">Module_Landmark</string>
     <string name="action_settings">Settings</string>
 
 </resources>

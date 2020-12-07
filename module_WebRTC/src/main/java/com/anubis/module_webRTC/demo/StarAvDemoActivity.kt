@@ -24,7 +24,7 @@ class StarAvDemoActivity : BaseActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.anubis.module_webRTC.R.layout.activity_star_rtc_main)
-        (findViewById<View>(com.anubis.module_webRTC.R.id.title_text) as TextView).setText(com.anubis.module_webRTC.R.string.app_name)
+        (findViewById<View>(com.anubis.module_webRTC.R.id.title_text) as TextView).setText(com.anubis.module_webRTC.R.string.module_name)
         MLOC.userId = MLOC.loadSharedData(applicationContext, "userId")
         (findViewById<View>(com.anubis.module_webRTC.R.id.userinfo_head) as ImageView).setImageResource(MLOC.getHeadImage(this, MLOC.userId!!))
         (findViewById<View>(com.anubis.module_webRTC.R.id.userinfo_id) as TextView).text = MLOC.userId
