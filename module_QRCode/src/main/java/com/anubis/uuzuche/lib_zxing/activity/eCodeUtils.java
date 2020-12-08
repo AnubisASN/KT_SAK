@@ -40,65 +40,6 @@ public class eCodeUtils {
     public static final String LAYOUT_ID = "layout_id";
 
 
-    /**
-     * 解析二维码图片工具类
-     * @param analyzeCallback
-     */
-    public static void analyzeBitmap(String path, eQRCodeScan.AnalyzeCallback analyzeCallback) {
-
-        /**
-         * 首先判断图片的大小,若图片过大,则执行图片的裁剪操作,防止OOM
-         */
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true; // 先获取原大小
-        Bitmap mBitmap = BitmapFactory.decodeFile(path, options);
-        options.inJustDecodeBounds = false; // 获取新的大小
-
-        int sampleSize = (int) (options.outHeight / (float) 400);
-
-        if (sampleSize <= 0)
-            sampleSize = 1;
-        options.inSampleSize = sampleSize;
-        mBitmap = BitmapFactory.decodeFile(path, options);
-
-        MultiFormatReader multiFormatReader = new MultiFormatReader();
-
-        // 解码的参数
-        Hashtable<DecodeHintType, Object> hints = new Hashtable<DecodeHintType, Object>(2);
-        // 可以解析的编码类型
-        Vector<BarcodeFormat> decodeFormats = new Vector<BarcodeFormat>();
-        if (decodeFormats == null || decodeFormats.isEmpty()) {
-            decodeFormats = new Vector<BarcodeFormat>();
-
-            // 这里设置可扫描的类型，我这里选择了都支持
-            decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS);
-            decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
-            decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
-        }
-        hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
-        // 设置继续的字符编码格式为UTF8
-        // hints.put(DecodeHintType.CHARACTER_SET, "UTF8");
-        // 设置解析配置参数
-        multiFormatReader.setHints(hints);
-
-        // 开始对图像资源解码
-        Result rawResult = null;
-        try {
-            rawResult = multiFormatReader.decodeWithState(new BinaryBitmap(new HybridBinarizer(new BitmapLuminanceSource(mBitmap))));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (rawResult != null) {
-            if (analyzeCallback != null) {
-                analyzeCallback.onAnalyzeSuccess(mBitmap, rawResult.getText());
-            }
-        } else {
-            if (analyzeCallback != null) {
-                analyzeCallback.onAnalyzeFailed();
-            }
-        }
-    }
 
 
     /**
