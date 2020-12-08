@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.launcher.ARouter
 import com.android.xhapimanager.XHApiManager
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
-import com.anubis.SwissArmyKnife.GreenDao.Data
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleMsg
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTTS
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleWeb
@@ -411,10 +410,10 @@ class MainActivity : AppCompatActivity() {
                     }
                     getDigit("Excel导出") -> when (view?.id) {
                         bt_item1.id -> {
-                            Hint("Excel导出测试数据库：${mOffice?.eExportExcel(arrayOf("Time", "Name"), mGreenDao?.eQueryAllUser(Data())!!)}")
+                            Hint("Excel导出测试数据库：${mOffice?.eExportExcel(arrayOf("Time", "Name"), mGreenDao?.eQueryAllUser(data())!!)}")
                         }
                         bt_item2.id -> {
-                            val tDatas = mGreenDao?.eQueryAllUser(Data())!!
+                            val tDatas = mGreenDao?.eQueryAllUser(data())!!
                             Hint("ExcelS导出测试数据库：${mOffice?.eExportExcel(arrayOf(arrayOf("Time1", "Name1"), arrayOf("Time2", "Name2")), arrayOf(tDatas, tDatas.asReversed()), mSheetNames = arrayOf("记录1", "记录2"))}")
                         }
                     }
@@ -439,15 +438,15 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     getDigit("数据库") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(Data(eTime.eInit.eGetTime(), MSG
+                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(data(eTime.eInit.eGetTime(), MSG
                                 ?: ""))}")
                         R.id.bt_item2 -> {
                             Hint("数据库查询:")
-                            mGreenDao?.eQueryAllUser(Data())?.forEach {
-                                Hint("${it.time}:${it.name}")
+                            mGreenDao?.eQueryAllUser(data())?.forEach {
+                                Hint("${it.s}:${it.ss}")
                             }
                         }
-                        R.id.bt_item3 -> Hint("数据库删除：${mGreenDao?.eDeleteAll(Data("", ""))}")
+                        R.id.bt_item3 -> Hint("数据库删除：${mGreenDao?.eDeleteAll(data("", ""))}")
                     }
                     getDigit("系统设置权限检测") -> when (view?.id) {
                         R.id.bt_item1 -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

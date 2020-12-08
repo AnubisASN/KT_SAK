@@ -51,6 +51,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -439,15 +441,15 @@ fun Activity.eSysTemCameraTake(fileDir: String = Environment.getExternalStorageD
     resultBlock?.let { it(intent, mFilePath) }
     startActivityForResult(intent, requestCode)
 }
+
 // 跳转相机选择
-val REQUEST_CODE_PHOTO_SELECT= 104
-fun Activity.eSystemSelectImg(requestCode: Int=REQUEST_CODE_PHOTO_SELECT){
+val REQUEST_CODE_PHOTO_SELECT = 104
+fun Activity.eSystemSelectImg(requestCode: Int = REQUEST_CODE_PHOTO_SELECT) {
     val intent = Intent()
     intent.action = Intent.ACTION_PICK
     intent.type = "image/*"
     startActivityForResult(intent, requestCode)
 }
-
 
 
 /**
@@ -457,6 +459,12 @@ class eJson private constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eJson() }
     }
+
+    //实例类解析
+    fun <T> eGetJsonFrom(jsonStr: String, clazz: Class<T>) = Gson().fromJson<T>(jsonStr, clazz)
+
+    //实例类生成Json
+    fun eGetToJson(any: Any) = GsonBuilder().disableHtmlEscaping().create().toJson(any).replace("\\n", "").replace(" ", "").trim()
 
     //Object Json解析扩展
     fun <T> eGetJson(json: String, resultKey: String, default: T): T {
@@ -535,23 +543,20 @@ class eBReceiver private constructor() {
 
 
 /**
- *  Json解析扩展--------------------------------------------------------------------------------
+ *  Uri扩展--------------------------------------------------------------------------------
  */
 class eUri private constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eUri() }
     }
 
-    fun eIsExternalStorageDocument(uri: Uri)= "com.android.externalstorage.documents" == uri.authority
+    fun eIsExternalStorageDocument(uri: Uri) = "com.android.externalstorage.documents" == uri.authority
 
+    fun eIsDownloadsDocument(uri: Uri) = "com.android.providers.downloads.documents" == uri.authority
 
-    fun eIsDownloadsDocument(uri: Uri)="com.android.providers.downloads.documents" == uri.authority
+    fun eIsMediaDocument(uri: Uri) = "com.android.providers.media.documents" == uri.authority
 
-
-    fun eIsMediaDocument(uri: Uri)="com.android.providers.media.documents" == uri.authority
-
-
-    fun eIsGooglePhotosUri(uri: Uri)="com.google.android.apps.photos.content" == uri.authority
+    fun eIsGooglePhotosUri(uri: Uri) = "com.google.android.apps.photos.content" == uri.authority
 
     fun eGetDataColumn(context: Context, uri: Uri?, selection: String?, selectionArgs: Array<String>?): String? {
         var cursor: Cursor? = null
@@ -569,53 +574,54 @@ class eUri private constructor() {
         return null
     }
 
-/**
- * 根据Uri获取图片绝对路径，解决Android4.4以上版本Uri转换
- *
- * @param context
- * @param imageUri
- */
-@TargetApi(19)
-fun eGetImageAbsolutePath(context: Context?, imageUri: Uri?): String? {
-    if (context == null || imageUri == null) return null
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, imageUri)) {
-        if (eIsExternalStorageDocument(imageUri)) {
-            val docId = DocumentsContract.getDocumentId(imageUri)
-            val split = docId.split(":").toTypedArray()
-            val type = split[0]
-            if ("primary".equals(type, ignoreCase = true)) {
-                return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+    /**
+     * 根据Uri获取图片绝对路径，解决Android4.4以上版本Uri转换
+     *
+     * @param context
+     * @param imageUri
+     */
+    @TargetApi(19)
+    fun eGetImageAbsolutePath(context: Context?, imageUri: Uri?): String? {
+        if (context == null || imageUri == null) return null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, imageUri)) {
+            if (eIsExternalStorageDocument(imageUri)) {
+                val docId = DocumentsContract.getDocumentId(imageUri)
+                val split = docId.split(":").toTypedArray()
+                val type = split[0]
+                if ("primary".equals(type, ignoreCase = true)) {
+                    return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+                }
+            } else if (eIsDownloadsDocument(imageUri)) {
+                val id = DocumentsContract.getDocumentId(imageUri)
+                val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
+                return eGetDataColumn(context, contentUri, null, null)
+            } else if (eIsMediaDocument(imageUri)) {
+                val docId = DocumentsContract.getDocumentId(imageUri)
+                val split = docId.split(":").toTypedArray()
+                val type = split[0]
+                var contentUri: Uri? = null
+                if ("image" == type) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                } else if ("video" == type) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                } else if ("audio" == type) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                }
+                val selection = MediaStore.Images.Media._ID + "=?"
+                val selectionArgs = arrayOf(split[1])
+                return eGetDataColumn(context, contentUri, selection, selectionArgs)
             }
-        } else if (eIsDownloadsDocument(imageUri)) {
-            val id = DocumentsContract.getDocumentId(imageUri)
-            val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
-            return eGetDataColumn(context, contentUri, null, null)
-        } else if (eIsMediaDocument(imageUri)) {
-            val docId = DocumentsContract.getDocumentId(imageUri)
-            val split = docId.split(":").toTypedArray()
-            val type = split[0]
-            var contentUri: Uri? = null
-            if ("image" == type) {
-                contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            } else if ("video" == type) {
-                contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-            } else if ("audio" == type) {
-                contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-            }
-            val selection = MediaStore.Images.Media._ID + "=?"
-            val selectionArgs = arrayOf(split[1])
-            return eGetDataColumn(context, contentUri, selection, selectionArgs)
+        } // MediaStore (and general)
+        else if ("content".equals(imageUri.scheme, ignoreCase = true)) {
+            // Return the remote address
+            return if (eIsGooglePhotosUri(imageUri)) imageUri.lastPathSegment else eGetDataColumn(context, imageUri, null, null)
+        } else if ("file".equals(imageUri.scheme, ignoreCase = true)) {
+            return imageUri.path
         }
-    } // MediaStore (and general)
-    else if ("content".equals(imageUri.scheme, ignoreCase = true)) {
-        // Return the remote address
-        return if (eIsGooglePhotosUri(imageUri)) imageUri.lastPathSegment else eGetDataColumn(context, imageUri, null, null)
-    } else if ("file".equals(imageUri.scheme, ignoreCase = true)) {
-        return imageUri.path
+        return null
     }
-    return null
 }
-}
+
 /**
  * App程序扩展类--------------------------------------------------------------------------------------
  */
@@ -811,8 +817,7 @@ class eApp private constructor() {
 
     //服务运行判断 com.anubis.iva.Service.IVAService
     open fun eIsServiceRunning(context: Context, className: String): Boolean {
-        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-
+        val am = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
         val info = am.getRunningServices(0x7FFFFFFF)
         if (info == null || info.size == 0) return false
         for (aInfo in info) {
@@ -1016,7 +1021,8 @@ open class eTime internal constructor() {
      * @param nowDate 当前时间
      * @return 天数
      */
-    open fun eGetTimeDifference(nowDate: Date, endDate: Date, type: String = "hour"): Long {
+    open fun eGetTimeDifference(nowDate: Date, endDate: Date, type: Int = Calendar.HOUR): Long {
+        Calendar.SECOND
         val nd = (1000 * 24 * 60 * 60).toLong()
         val nh = (1000 * 60 * 60).toLong()
         val nm = (1000 * 60).toLong()
@@ -1024,10 +1030,10 @@ open class eTime internal constructor() {
         // 获得两个时间的毫秒时间差异
         val diff = nowDate.time - endDate.time
         return when (type) {
-            "day" -> diff / nd
-            "hour" -> diff % nd / nh
-            "min" -> diff % nd % nh / nm
-            "second" -> diff % nd % nh % nm / ns
+            Calendar.DATE -> diff / nd
+            Calendar.HOUR -> diff % nd / nh
+            Calendar.MINUTE -> diff % nd % nh / nm
+            Calendar.SECOND -> diff % nd % nh % nm / ns
             else -> diff % nd / nh
         }
     }
@@ -1045,12 +1051,14 @@ open class eTime internal constructor() {
     }
 
     //获取当前时间   (yyyy-MM-dd HH:mm:ss)
-    fun eGetTime(format: String = "yyyy-MM-dd HH:mm:ss", distanceDay: Int = 0): String {
+    fun eGetTime(format: String = "yyyy-MM-dd HH:mm:ss", calendar: Int = Calendar.DATE, distance: Int = 0, extendBlock: ((Calendar) -> Unit)? = null): String {
+
         val dft = SimpleDateFormat(format)
         val beginDate = Date()
         val date = Calendar.getInstance()
         date.time = beginDate
-        date.set(Calendar.DATE, date.get(Calendar.DATE) + distanceDay)
+        date.add(calendar, distance)
+        extendBlock?.let { it(date) }
         var endDate: Date? = null
         try {
             endDate = dft.parse(dft.format(date.time))
@@ -1059,6 +1067,7 @@ open class eTime internal constructor() {
         }
         return dft.format(endDate)
     }
+
 
     //获取时间戳格式转时间
     open fun eGetCuoFormatTime(dateCuo: Long, format: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(format).format(Date(dateCuo))
@@ -1073,9 +1082,9 @@ open class eTime internal constructor() {
     }
 
     //时间转时间戳
-    open fun eGetCuoTime(date: String = eGetTime(), pattern: String = "yyyy-MM-dd HH:mm:ss", type: String = "s"): String {
+    open fun eGetCuoTime(date: String = eGetTime(), pattern: String = "yyyy-MM-dd HH:mm:ss", type: Int = Calendar.SECOND): String {
         val date = SimpleDateFormat(pattern).parse(date).time.toString()
-        return if (type == "s") date.substring(0, 10) else date
+        return if (type == Calendar.SECOND) date.substring(0, 10) else date
     }
 
     //将GMT格式的时间转换成yyyy-MM-dd HH:mm:ss格式
@@ -1630,10 +1639,10 @@ open class eBitmap internal constructor() {
     //Bitmap压缩 (设置压缩率或者 设置大小)
     open fun eBitmapCompress(bitmap: Bitmap, quality: Int = 100, outSize: Int? = null): Bitmap? {
         var baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG,if (outSize==null) quality else 100, baos)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, if (outSize == null) quality else 100, baos)
         if (outSize != null) {
             var options = 100
-            while ((baos.toByteArray().size / 1024).eLog("size") > outSize/10 && options != 5) {
+            while ((baos.toByteArray().size / 1024).eLog("size") > outSize / 10 && options != 5) {
                 baos.reset()//重置baos即清空baos
                 bitmap.compress(Bitmap.CompressFormat.JPEG, if (options < 5) {
                     options = 5
@@ -2451,7 +2460,6 @@ open class eShell internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eShell() }
     }
-
     val remount = "mount -o remount,rw rootfs "
     val install = "pm install -r"
     val kill = "am force-stop"
@@ -2587,8 +2595,8 @@ open class eShell internal constructor() {
     }
 
     //Shell APP重启
-    open fun eAppReboot(application: Application,clazz: Class<*>) {
-       eExecShell("am force-stop ${application.packageName} && am start -n ${application.packageName}/${clazz.name}")
+    open fun eAppReboot(application: Application, clazz: Class<*>) {
+        eExecShell("am force-stop ${application.packageName} && am start -n ${application.packageName}/${clazz.name}")
     }
 }
 

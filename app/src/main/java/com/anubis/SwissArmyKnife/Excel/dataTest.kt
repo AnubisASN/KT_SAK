@@ -17,4 +17,4 @@ package com.anubis.SwissArmyKnife
  *Router :  /'Module'/'Function'
  *说明：
  */
-data class  data(var s:String,var ss:String)
+data class  data(var s:String="",var ss:String="")
