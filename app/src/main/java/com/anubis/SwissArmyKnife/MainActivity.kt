@@ -101,7 +101,8 @@ class MainActivity : AppCompatActivity() {
     private var mPortMSG: ePortMSG? = null
     private var mOffice: eOffice? = null
     private var mTTS: eTTS? = null
-    private var mTCP: eTCP?=null
+    private var mTCP: eTCP? = null
+
     companion object {
         var mainActivity: MainActivity? = null
         lateinit var mHandler: Handler
@@ -116,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         ParameHandleMSG.mainActivity = mainActivity
         ePermissions.eInit.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗_bteAlert弹窗_btButton弹窗", "bt导出Excel_bt导出ExcelS", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "et_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗_bteAlert弹窗_btButton弹窗", "bt导出Excel_bt导出ExcelS", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "bt开启常亮_bt关闭常亮_bt保持唤醒", "et_bt关闭唤醒_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
         init()
         //业务测试模块
         LoadingData()
@@ -176,7 +177,8 @@ class MainActivity : AppCompatActivity() {
                     }
                     getDigit("二维码") -> when (view?.id) {
                         R.id.bt_item1 -> {
-                            iv_Hint.setImageBitmap(eQRCodeCreate.eInit.eCreateQRCode(MSG ?: "请输入内容"))
+                            iv_Hint.setImageBitmap(eQRCodeCreate.eInit.eCreateQRCode(MSG
+                                    ?: "请输入内容"))
                             iv_Hint.visibility = View.VISIBLE
                             Handler().postDelayed({ iv_Hint.visibility = View.GONE }, 5000)
                         }
@@ -216,19 +218,19 @@ class MainActivity : AppCompatActivity() {
                             GlobalScope.launch {
                                 mTCP?.eSocketConnect(MSG?.split("||")?.get(0)
                                         ?: "192.168.1.110", MSG?.split("||")?.get(1)?.toInt()
-                                        ?: 3335){ s: String, i: Int, s1: String, hashMap: HashMap<String, Socket?> ->
+                                        ?: 3335) { s: String, i: Int, s1: String, hashMap: HashMap<String, Socket?> ->
                                     eLog("$s-$i-$s1")
                                 }
                             }
                         }
-                        R.id.bt_item2 -> Hint("数据发送:${ mTCP?.eSocketSend(MSG?.split("||")?.get(0)
+                        R.id.bt_item2 -> Hint("数据发送:${mTCP?.eSocketSend(MSG?.split("||")?.get(0)
                                 ?: "123", MSG?.split("||")?.get(1)
-                                ?: "192.168.1.110",mTCP?.eClientHashMap)}")
+                                ?: "192.168.1.110", mTCP?.eClientHashMap)}")
                         R.id.bt_item3 -> {
                             GlobalScope.launch {
-                              mTCP?.eServerSocket{ s: String, i: Int, s1: String, hashMap: HashMap<String, Socket?> ->
-                                  eLog("$s-$i-$s1")
-                              }
+                                mTCP?.eServerSocket { s: String, i: Int, s1: String, hashMap: HashMap<String, Socket?> ->
+                                    eLog("$s-$i-$s1")
+                                }
                             }
                         }
                     }
@@ -306,12 +308,21 @@ class MainActivity : AppCompatActivity() {
                     getDigit("VNC") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("VNC二进制文件执行:${if (eVNC.eInit(this@MainActivity).eStartVNCs()) "成功：5901" else "失败"}")
                     }
-                    getDigit("音视频") -> {
-                        val intent = Intent(this@MainActivity, eVideoChatUI::class.java)
-                        intent.putExtra("appID", MSG?.split("||")?.get(0))
-                        intent.putExtra("channelName", MSG?.split("||")?.get(1))
-                        startActivity(intent)
+                    getDigit("开启常亮") -> when (view?.id) {
+                        R.id.bt_item1 ->   eApp.eInit.eLongScreen(this@MainActivity,true)
+                        R.id.bt_item2 ->   eApp.eInit.eLongScreen(this@MainActivity,false)
+                        R.id.bt_item3 ->   eApp.eInit.eCUPWakeLock(this@MainActivity,true)
                     }
+                    getDigit("音视频") ->
+                        when (view?.id) {
+                            R.id.bt_item1 -> eApp.eInit.eCUPWakeLock(this@MainActivity,false)
+                            R.id.bt_item2 -> {
+                                val intent = Intent(this@MainActivity, eVideoChatUI::class.java)
+                                intent.putExtra("appID", MSG?.split("||")?.get(0))
+                                intent.putExtra("channelName", MSG?.split("||")?.get(1))
+                                startActivity(intent)
+                            }
+                        }
                     getDigit("跨AP") -> when (view?.id) {
                         R.id.bt_item1 -> {
                             val intent = Intent()
@@ -372,27 +383,27 @@ class MainActivity : AppCompatActivity() {
                                 uiThread { progressDialog?.dismiss() }
                             }
                         }
-                        bt_item2.id -> eDiaAlert.eInit(this@MainActivity).eDefaultShow("动态弹窗测试",adbEditBlock = { dialog: Dialog, view: View, eArrowDownloadButton: eArrowDownloadButton ->
+                        bt_item2.id -> eDiaAlert.eInit(this@MainActivity).eDefaultShow("动态弹窗测试", adbEditBlock = { dialog: Dialog, view: View, eArrowDownloadButton: eArrowDownloadButton ->
                             eArrowDownloadButton.startAnimating()
-                            eArrowDownloadButton.textPaintColor=Color.BLUE
+                            eArrowDownloadButton.textPaintColor = Color.BLUE
                             GlobalScope.launch {
-                                for (i in 0..100){
-                                    this@MainActivity.runOnUiThread {   eArrowDownloadButton.progress=i.toFloat()}
+                                for (i in 0..100) {
+                                    this@MainActivity.runOnUiThread { eArrowDownloadButton.progress = i.toFloat() }
                                     delay(100)
                                 }
                                 this@MainActivity.runOnUiThread { dialog.dismiss() }
                             }
-                        },isCanceledOnTouchOutside=true)
-                        bt_item3.id->eDiaAlert.eInit(this@MainActivity).eDefaultShow("点击弹窗测试",btOK = "测试提交",btCancel = "测试关闭",onClickAnimation = { view: View?, l: Long ->
+                        }, isCanceledOnTouchOutside = true)
+                        bt_item3.id -> eDiaAlert.eInit(this@MainActivity).eDefaultShow("点击弹窗测试", btOK = "测试提交", btCancel = "测试关闭", onClickAnimation = { view: View?, l: Long ->
                             with(view as? Button) {
                                 this?.textColor = Color.parseColor("#ff0000")
-                                this?.backgroundColor =  Color.parseColor("#04FFE3")
+                                this?.backgroundColor = Color.parseColor("#04FFE3")
                                 Handler().postDelayed({
                                     this?.textColor = Color.parseColor("#25CEFB")
-                                    this?.backgroundColor =  Color.parseColor("#04FFE3")
+                                    this?.backgroundColor = Color.parseColor("#04FFE3")
                                 }, l)
                             }
-                        },ICallBackClick = object :eDiaAlert.ICallBackClick{
+                        }, ICallBackClick = object : eDiaAlert.ICallBackClick {
                             override fun onClickOK(dia: Dialog, it: View?) {
                                 eShowTip("确定")
                                 dia.dismiss()
@@ -569,7 +580,7 @@ class MainActivity : AppCompatActivity() {
 
         /*TTS语音合成*/
         mTTS = eTTS.eInit(mAPP, arrayOf("13612239", "yfXyxUQXxDO7Vcp6h7LtH3RC", "UdKuiwWqIeFlzr3aGUNEutCkA0avXE3o"), handleTTS, TTSMode.MIX, VoiceModel.MALE, listener = FileSaveListener(handleTTS, "/sdcard/img/info"))
-        mTCP= eTCP.eInit(Handler())
+        mTCP = eTCP.eInit(Handler())
     }
 
     /**

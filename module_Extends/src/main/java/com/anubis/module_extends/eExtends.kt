@@ -1,5 +1,6 @@
 package com.anubis.kt_extends
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.ActivityManager
@@ -8,6 +9,7 @@ import android.bluetooth.BluetoothAdapter
 import android.content.ContentUris
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
+import android.content.Context.POWER_SERVICE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageInfo
@@ -21,10 +23,7 @@ import android.media.*
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.Environment
-import android.os.Vibrator
+import android.os.*
 import android.preference.*
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -59,8 +58,10 @@ import kotlinx.coroutines.launch
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.inputMethodManager
+import org.jetbrains.anko.windowManager
 import org.json.JSONObject
 import java.io.*
+import java.lang.Process
 import java.net.Inet6Address
 import java.net.InetAddress
 import java.net.NetworkInterface
@@ -627,7 +628,26 @@ class eUri private constructor() {
  */
 class eApp private constructor() {
     companion object {
+        private var wakeLock: PowerManager.WakeLock? = null
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eApp() }
+    }
+
+    // CPU唤醒
+    fun eCUPWakeLock(context: Context, isLongWake: Boolean = true, timeOut: Long? = null) {
+        val pm = context.getSystemService(POWER_SERVICE) as PowerManager
+        if (wakeLock == null)
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakelockTag")
+        if (isLongWake) {
+            timeOut?.let { wakeLock?.acquire(it) } ?: wakeLock?.acquire()
+        } else {
+            wakeLock?.release()
+        }
+    }
+
+    //屏幕常亮
+    fun eLongScreen(activity: Activity, isLongScreen: Boolean = true) {
+        if (isLongScreen) activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) else
+            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     //清除栈重启
@@ -771,7 +791,7 @@ class eApp private constructor() {
 
     //App运行判断
     open fun eIsAppRunning(context: Context, packageName: String): Boolean {
-        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val activityManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
         val runningAppProcessInfoList = activityManager.runningAppProcesses ?: return false
         for (processInfo in runningAppProcessInfoList) {
             if (processInfo.processName == packageName && processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
@@ -783,7 +803,7 @@ class eApp private constructor() {
 
     //Activity运行判断
     open fun eActivityWhetherWorked(context: Context, className: String): Boolean {
-        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val am = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
         val list = am.getRunningTasks(1)
         if (list != null && list.size > 0) {
             val cpn = list[0].topActivity
@@ -2460,6 +2480,7 @@ open class eShell internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eShell() }
     }
+
     val remount = "mount -o remount,rw rootfs "
     val install = "pm install -r"
     val kill = "am force-stop"
