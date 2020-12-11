@@ -34,7 +34,6 @@ package com.anubis.module_httpserver.protocols.http;
  */
 
 import com.anubis.module_httpserver.protocols.http.tempfiles.ITempFileManager;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;

@@ -40,7 +40,6 @@ import com.anubis.module_httpserver.protocols.http.response.Response;
 import com.anubis.module_httpserver.protocols.http.response.Status;
 import com.anubis.module_httpserver.protocols.http.tempfiles.ITempFile;
 import com.anubis.module_httpserver.protocols.http.tempfiles.ITempFileManager;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -67,7 +66,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
-
 import javax.net.ssl.SSLException;
 
 

@@ -4,7 +4,6 @@ import com.anubis.module_asrw.control.ErrorTranslation;
 import com.anubis.module_asrw.util.Logger;
 import com.baidu.speech.EventListener;
 import com.baidu.speech.asr.SpeechConstant;
-
 /**
  * Created by fujiayi on 2017/6/20.
  */

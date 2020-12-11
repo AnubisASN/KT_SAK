@@ -7,7 +7,6 @@ import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.util.Log;
-
 import com.anubis.module_arcface.model.FaceRegisterInfo;
 import com.anubis.module_arcface.util.ImageUtil;
 import com.arcsoft.face.ErrorInfo;
@@ -15,7 +14,6 @@ import com.arcsoft.face.FaceEngine;
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.FaceInfo;
 import com.arcsoft.face.FaceSimilar;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

@@ -9,21 +9,9 @@ import com.anubis.kt_extends.eLog
 import kotlinx.android.synthetic.main.demo.*
 import org.jetbrains.anko.onClick
 import android.animation.ValueAnimator
-import android.os.Handler
-import androidx.core.content.ContextCompat.getSystemService
-import com.airbnb.lottie.model.layer.Layer
-import com.airbnb.lottie.value.LottieValueCallback
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.airbnb.lottie.value.LottieFrameInfo
-import com.airbnb.lottie.value.SimpleLottieValueCallback
-import android.text.AndroidCharacter.mirror
-import com.airbnb.lottie.utils.MiscUtils.resolveKeyPath
-import com.airbnb.lottie.LottieComposition
-import com.airbnb.lottie.LottieOnCompositionLoadedListener
-
-
 
 
 class Demo : AppCompatActivity() {

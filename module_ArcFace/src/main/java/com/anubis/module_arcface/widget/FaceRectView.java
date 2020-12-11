@@ -6,11 +6,8 @@ import android.graphics.Color;
 import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
-
-
 import com.anubis.module_arcface.model.DrawInfo;
 import com.anubis.module_arcface.util.DrawHelper;
-
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 

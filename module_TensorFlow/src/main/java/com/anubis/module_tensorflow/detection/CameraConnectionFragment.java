@@ -18,7 +18,6 @@ package com.anubis.module_tensorflow.detection;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -58,8 +57,6 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,7 +64,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-
 import com.anubis.module_tensorflow.R;
 import com.anubis.module_tensorflow.detection.customview.AutoFitTextureView;
 import com.anubis.module_tensorflow.detection.env.Logger;

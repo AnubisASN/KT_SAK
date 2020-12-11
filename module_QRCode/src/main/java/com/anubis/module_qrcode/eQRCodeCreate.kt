@@ -14,13 +14,11 @@ package com.anubis.module_qrcode
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import com.anubis.kt_extends.eLog
-
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
-
 import java.util.Hashtable
 
 open class eQRCodeCreate internal  constructor(){

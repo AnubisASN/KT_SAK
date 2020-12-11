@@ -1,11 +1,8 @@
 package px_video.utils;
 
 import android.media.MediaFormat;
-
-
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-
 import px_video.format.MediaFormatExtraConstants;
 
 public class AvcCsdUtils {

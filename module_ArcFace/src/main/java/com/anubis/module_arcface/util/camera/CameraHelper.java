@@ -10,7 +10,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;

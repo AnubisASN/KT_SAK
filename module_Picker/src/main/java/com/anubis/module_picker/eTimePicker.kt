@@ -14,8 +14,6 @@ import com.anubis.module_picker.Utils.DateUtil
 import com.anubis.module_picker.Utils.ScreenUtil
 import com.anubis.module_picker.Utils.TextUtil
 import com.anubis.module_picker.view.PickerView
-
-
 import java.util.ArrayList
 import java.util.Calendar
 

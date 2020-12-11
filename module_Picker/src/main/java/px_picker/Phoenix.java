@@ -4,17 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.text.TextUtils;
-
 import com.anubis.module_picker.R;
-
 import px_picker.rx.bus.ImagesObservable;
 import px_picker.ui.picker.PickerActivity;
 import px_picker.ui.picker.PreviewActivity;
 import px_picker.util.DoubleUtils;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import androidx.fragment.app.Fragment;
 import px_core.PhoenixConfig;
 import px_core.PhoenixOption;

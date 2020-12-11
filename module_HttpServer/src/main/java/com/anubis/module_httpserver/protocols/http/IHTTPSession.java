@@ -35,7 +35,6 @@ package com.anubis.module_httpserver.protocols.http;
 
 import com.anubis.module_httpserver.protocols.http.content.CookieHandler;
 import com.anubis.module_httpserver.protocols.http.request.Method;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;

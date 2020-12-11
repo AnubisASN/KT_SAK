@@ -6,7 +6,6 @@ package com.anubis.module_navi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
-
 import com.anubis.module_navi.activity.DemoNaviSettingActivity;
 
 public class NormalUtils {

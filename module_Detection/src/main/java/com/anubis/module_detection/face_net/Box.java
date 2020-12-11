@@ -2,7 +2,6 @@ package com.anubis.module_detection.face_net;
 
 import android.graphics.Point;
 import android.graphics.Rect;
-
 import static java.lang.Math.max;
 
 /**

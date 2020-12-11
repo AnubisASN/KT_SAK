@@ -1,7 +1,6 @@
 package com.anubis.module_ftp
 
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import android.app.Application
 import android.os.Handler
 

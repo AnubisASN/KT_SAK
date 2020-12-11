@@ -3,11 +3,8 @@ package px_video.engine;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
-
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
 import px_video.format.MediaFormatExtraConstants;
 
 // Refer: https://android.googlesource.com/platform/cts/+/lollipop-release/tests/tests/media/src/android/media/cts/ExtractDecodeEditEncodeMuxTest.java

@@ -2,7 +2,6 @@ package com.anubis.module_asrw.wakeup;
 
 import com.anubis.module_asrw.util.Logger;
 import com.baidu.speech.asr.SpeechConstant;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

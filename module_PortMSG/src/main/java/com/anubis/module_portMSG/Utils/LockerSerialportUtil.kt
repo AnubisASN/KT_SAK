@@ -10,7 +10,6 @@ import android.widget.Toast
 import android_serialport_api.SerialPort
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eShowTip
-import com.anubis.module_portMSG.ePortMSG
 import com.anubis.module_portmsg.R
 import java.io.File
 import java.io.IOException

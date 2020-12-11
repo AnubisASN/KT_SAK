@@ -1,9 +1,7 @@
 package com.anubis.module_arcface.util;
 
 import android.graphics.Rect;
-
 import com.arcsoft.face.FaceInfo;
-
 import java.util.List;
 
 public class TrackUtil {

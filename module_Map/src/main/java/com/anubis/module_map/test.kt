@@ -1,6 +1,5 @@
 package com.anubis.module_map
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 /**

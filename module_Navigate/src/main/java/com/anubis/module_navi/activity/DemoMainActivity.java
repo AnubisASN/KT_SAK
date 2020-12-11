@@ -5,7 +5,6 @@ package com.anubis.module_navi.activity;
 
 import android.Manifest;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,7 +16,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import android.text.TextUtils;
@@ -27,7 +25,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.anubis.module_navi.NormalUtils;
 import com.anubis.module_navi.R;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
@@ -36,7 +33,6 @@ import com.baidu.navisdk.adapter.BNaviCommonParams;
 import com.baidu.navisdk.adapter.BaiduNaviManagerFactory;
 import com.baidu.navisdk.adapter.IBNRoutePlanManager;
 import com.baidu.navisdk.adapter.IBaiduNaviManager;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

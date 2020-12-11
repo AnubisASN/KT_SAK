@@ -3,7 +3,6 @@ package com.anubis.module_ftp;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
 import com.anubis.module_ftp.GUI.eFTPUIs;
 
 

@@ -7,9 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
-
 import java.util.Vector;
-
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 

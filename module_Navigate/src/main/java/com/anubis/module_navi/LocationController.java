@@ -9,7 +9,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import android.util.Log;
-
 import com.baidu.navisdk.adapter.BaiduNaviManagerFactory;
 import com.baidu.navisdk.adapter.struct.BNLocationData;
 

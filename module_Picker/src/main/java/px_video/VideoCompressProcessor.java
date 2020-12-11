@@ -3,13 +3,11 @@ package px_video;
 import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
-
 import px_core.PhoenixOption;
 import px_core.listener.OnProcessorListener;
 import px_core.listener.Processor;
 import px_core.model.MediaEntity;
 import px_video.format.MediaFormatStrategyPresets;
-
 import java.io.File;
 import java.io.IOException;
 

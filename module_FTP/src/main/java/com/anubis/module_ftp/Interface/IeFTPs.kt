@@ -1,6 +1,5 @@
 package com.anubis.module_ftp.Interface
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Handler
 import com.anubis.module_ftp.GUI.eFTPUIs
 

@@ -3,15 +3,12 @@ package px_picture;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-
 import px_core.PhoenixOption;
 import px_core.listener.OnProcessorListener;
 import px_core.listener.Processor;
 import px_core.model.MediaEntity;
-
 import java.io.File;
 import java.io.IOException;
-
 import px_picture.internal.PictureCompressor;
 import px_picture.listener.OnCompressListener;
 

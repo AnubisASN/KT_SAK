@@ -5,11 +5,8 @@ import android.graphics.Color;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
 import androidx.fragment.app.Fragment;
 import px_core.listener.Starter;
 import px_core.model.MediaEntity;

@@ -2,7 +2,6 @@ package px_video.compat;
 
 import android.media.MediaCodec;
 import android.os.Build;
-
 import java.nio.ByteBuffer;
 
 /**

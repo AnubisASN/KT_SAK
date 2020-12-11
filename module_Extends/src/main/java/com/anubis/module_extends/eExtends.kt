@@ -1,6 +1,5 @@
 package com.anubis.kt_extends
 
-import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.ActivityManager
@@ -58,7 +57,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.inputMethodManager
-import org.jetbrains.anko.windowManager
 import org.json.JSONObject
 import java.io.*
 import java.lang.Process
@@ -2478,12 +2476,12 @@ open class ePermissions internal constructor() {
  */
 open class eShell internal constructor() {
     companion object {
+        val remount = "mount -o remount,rw rootfs "
+        val install = "pm install -r"
+        val kill = "am force-stop"
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eShell() }
     }
 
-    val remount = "mount -o remount,rw rootfs "
-    val install = "pm install -r"
-    val kill = "am force-stop"
 
     //判断是否有Root权限
     open fun eHaveRoot(): Boolean {

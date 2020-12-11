@@ -6,7 +6,6 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.provider.MediaStore;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 

@@ -7,15 +7,11 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.graphics.Rect
 import android.media.Image
-
-
 import com.anubis.module_detection.face_mask.Box
-
 import java.io.FileInputStream
 import java.io.IOException
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
-
 import java.lang.Math.max
 import java.lang.Math.min
 

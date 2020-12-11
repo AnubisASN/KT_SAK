@@ -158,9 +158,9 @@ class MainActivity : AppCompatActivity() {
                         }
                         when (view?.id) {
                             R.id.bt_item1 -> {
-                                mTTS!!.setParams(voiceModel[spID])
+                                mTTS!!.eSetParams(voiceModel[spID])
                                 Handler().postDelayed({
-                                    val state = mTTS!!.speak("发音人切换发音调用")
+                                    val state = mTTS!!.eSpeak("发音人切换发音调用")
                                     Hint("发音人切换发音调用:$state")
                                 }, 800)
 
@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     getDigit("语音合成") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("语音合成：${mTTS!!.synthesize(MSG ?: "语音合成", "0")}")
+                        R.id.bt_item1 -> Hint("语音合成：${mTTS!!.eSynthesize(MSG ?: "语音合成", "0")}")
                         R.id.bt_item2 -> Hint("语音播放：${ePlayPCM("/sdcard/img/info/output-${"0"}.pcm")}")
                     }
                     getDigit("读取身份证") ->

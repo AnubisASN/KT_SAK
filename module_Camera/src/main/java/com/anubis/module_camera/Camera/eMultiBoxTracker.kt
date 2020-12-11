@@ -9,10 +9,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import android.util.TypedValue
 import com.anubis.module_camera.Camera.customview.eBorderedText
-
 import com.anubis.module_camera.Camera.customview.eOverlayView
 import kotlinx.android.synthetic.main.fragment_camera.*
-
 import java.util.ArrayList
 import java.util.LinkedList
 

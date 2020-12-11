@@ -12,10 +12,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
-
 import com.anubis.module_picker.R;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;

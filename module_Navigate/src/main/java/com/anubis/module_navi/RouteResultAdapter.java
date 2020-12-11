@@ -6,9 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.baidu.navisdk.adapter.struct.BNRouteDetail;
-
 import java.util.ArrayList;
 
 public class RouteResultAdapter extends RecyclerView.Adapter<RouteResultAdapter.BNHolder> {

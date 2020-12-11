@@ -2,14 +2,11 @@ package px_video.engine;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
-
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 import java.util.ArrayDeque;
 import java.util.Queue;
-
 import px_video.compat.MediaCodecBufferCompatWrapper;
 
 /**

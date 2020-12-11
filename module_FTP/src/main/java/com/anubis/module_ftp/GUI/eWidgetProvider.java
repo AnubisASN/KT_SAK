@@ -28,7 +28,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.RemoteViews;
-
 import com.anubis.module_ftp.FsService;
 import com.anubis.module_ftp.R;
 

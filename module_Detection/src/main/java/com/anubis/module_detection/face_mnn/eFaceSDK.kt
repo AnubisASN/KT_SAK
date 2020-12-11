@@ -1,7 +1,6 @@
 package com.anubis.module_detection.face_mnn
 
 import android.content.Context
-import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.os.Environment

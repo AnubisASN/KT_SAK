@@ -34,7 +34,6 @@ package com.anubis.module_httpserver.protocols.http;
  */
 
 import android.os.Handler;
-
 import com.anubis.module_httpserver.protocols.http.response.Response;
 import com.anubis.module_httpserver.protocols.http.response.Status;
 import com.anubis.module_httpserver.protocols.http.sockets.DefaultServerSocketFactory;
@@ -46,8 +45,6 @@ import com.anubis.module_httpserver.protocols.http.threading.IAsyncRunner;
 import com.anubis.module_httpserver.util.IFactory;
 import com.anubis.module_httpserver.util.IFactoryThrowing;
 import com.anubis.module_httpserver.util.IHandler;
-
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,7 +64,6 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;

@@ -1,10 +1,7 @@
 package com.anubis.module_office.Excel
 
-import android.content.Context
 import com.anubis.kt_extends.eFile
-import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
-import com.anubis.kt_extends.eShowTip
 import jxl.Workbook
 import jxl.WorkbookSettings
 import jxl.write.*

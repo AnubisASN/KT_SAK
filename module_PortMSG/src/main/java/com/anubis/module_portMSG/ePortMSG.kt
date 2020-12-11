@@ -2,22 +2,10 @@ package com.anubis.module_portMSG
 
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
-import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Message
-import android.service.autofill.Validators.or
-import android.util.Log
-import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eString
 import com.anubis.module_portMSG.Utils.LockerPortInterface
 import com.anubis.module_portMSG.Utils.LockerSerialportUtil
-import kotlinx.coroutines.*
 import java.io.OutputStream
-import java.util.*
-import javax.security.auth.callback.Callback
-import kotlin.experimental.and
-import kotlin.experimental.or
-
 
 @SuppressLint("StaticFieldLeak")
 /**

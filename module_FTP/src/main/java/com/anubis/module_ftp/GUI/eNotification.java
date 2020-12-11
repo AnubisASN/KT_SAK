@@ -29,11 +29,9 @@ import android.content.Intent;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.Log;
-
 import com.anubis.module_ftp.FsService;
 import com.anubis.module_ftp.FsSettings;
 import com.anubis.module_ftp.R;
-
 import java.net.InetAddress;
 
 

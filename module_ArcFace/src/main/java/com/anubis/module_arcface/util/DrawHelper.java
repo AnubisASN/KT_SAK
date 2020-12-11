@@ -5,13 +5,11 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.hardware.Camera;
-
 import com.anubis.module_arcface.model.DrawInfo;
 import com.anubis.module_arcface.widget.FaceRectView;
 import com.arcsoft.face.AgeInfo;
 import com.arcsoft.face.GenderInfo;
 import com.arcsoft.face.LivenessInfo;
-
 import java.util.List;
 
 /**

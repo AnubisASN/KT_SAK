@@ -1,7 +1,6 @@
 package com.anubis.module_asrw.control;
 
 import android.content.Context;
-
 import com.anubis.module_asrw.util.Logger;
 import com.anubis.module_asrw.wakeup.IWakeupListener;
 import com.anubis.module_asrw.wakeup.WakeupEventAdapter;
@@ -9,11 +8,8 @@ import com.baidu.speech.EventListener;
 import com.baidu.speech.EventManager;
 import com.baidu.speech.EventManagerFactory;
 import com.baidu.speech.asr.SpeechConstant;
-
 import org.json.JSONObject;
-
 import java.util.Map;
-
 /**
  * Created by fujiayi on 2017/6/20.
  */

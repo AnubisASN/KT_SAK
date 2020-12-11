@@ -5,11 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.util.Log;
-
 import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
-
 import java.util.Vector;
-
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 

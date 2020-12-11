@@ -11,13 +11,10 @@ import px_core.listener.ImageLoader;
  * @since 2017/11/19 下午12:15
  */
 public class PhoenixConfig {
-
     private ImageLoader imageLoader;
-
     public ImageLoader getImageLoader() {
         return imageLoader;
     }
-
     public  PhoenixConfig imageLoader(ImageLoader imageLoader) {
         this.imageLoader = imageLoader;
         return this;

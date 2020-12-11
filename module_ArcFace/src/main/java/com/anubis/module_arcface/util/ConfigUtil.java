@@ -2,7 +2,6 @@ package com.anubis.module_arcface.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import com.arcsoft.face.FaceEngine;
 
 public class ConfigUtil {

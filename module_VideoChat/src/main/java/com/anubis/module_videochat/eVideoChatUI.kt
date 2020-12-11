@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.ImageView
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.ePermissions
-import io.agora.rtc.IRtcEngineEventHandler
 import kotlinx.android.synthetic.main.activity_videochat.*
 
 class eVideoChatUI : AppCompatActivity() {

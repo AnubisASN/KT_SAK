@@ -1,17 +1,10 @@
 package com.anubis.module_vncs
 
-import android.app.Service
 import android.content.Context
-import android.content.Intent
-import android.os.Handler
-import android.os.IBinder
-import com.anubis.kt_extends.eLog
-import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eShell
 import com.anubis.kt_extends.eShowTip
 import org.jetbrains.anko.custom.async
 import java.io.*
-import java.nio.file.Files.exists
 
 
 /**

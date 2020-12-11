@@ -11,15 +11,12 @@ import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
-import android.view.animation.Animation
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anubis.module_dialog.View.eArrowDownloadButton
 import com.anubis.module_extends.eRvAdapter
-import com.tencent.bugly.proguard.x
-import com.tencent.bugly.proguard.y
 import kotlinx.android.synthetic.main.dia_default.*
 import kotlinx.android.synthetic.main.dia_default.view.*
 import kotlinx.android.synthetic.main.dia_gradeselect.view.*

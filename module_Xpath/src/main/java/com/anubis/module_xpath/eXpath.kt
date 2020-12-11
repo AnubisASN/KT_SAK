@@ -1,7 +1,6 @@
 package com.anubis.module_xpath
 
 import android.os.Environment
-import com.anubis.kt_extends.eIsTagD
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.lzy.okgo.OkGo

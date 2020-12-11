@@ -1,7 +1,6 @@
 package com.anubis.module_asrw.control;
 
 import android.content.Context;
-
 import com.anubis.module_asrw.recognization.IRecogListener;
 import com.anubis.module_asrw.recognization.RecogEventAdapter;
 import com.anubis.module_asrw.util.Logger;
@@ -9,9 +8,7 @@ import com.baidu.speech.EventListener;
 import com.baidu.speech.EventManager;
 import com.baidu.speech.EventManagerFactory;
 import com.baidu.speech.asr.SpeechConstant;
-
 import org.json.JSONObject;
-
 import java.util.Map;
 
 /**

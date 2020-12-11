@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-
 import com.anubis.module_navi.EventHandler;
 import com.anubis.module_navi.R;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;

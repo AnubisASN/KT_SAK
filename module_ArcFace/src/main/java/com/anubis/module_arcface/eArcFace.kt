@@ -29,9 +29,7 @@ import com.arcsoft.face.FaceInfo
 import com.arcsoft.face.GenderInfo
 import com.arcsoft.face.LivenessInfo
 import com.arcsoft.face.VersionInfo
-
 import java.util.ArrayList
-
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Observer

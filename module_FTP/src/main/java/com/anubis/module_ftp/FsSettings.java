@@ -22,10 +22,8 @@ package com.anubis.module_ftp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
 import java.io.File;
 
 public class FsSettings {

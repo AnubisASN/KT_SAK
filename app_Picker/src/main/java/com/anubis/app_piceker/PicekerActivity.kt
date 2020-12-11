@@ -22,7 +22,6 @@ import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.imageBitmap
 import org.jetbrains.anko.textColor
 import px_core.model.MediaEntity
-import java.io.File
 
 
 @Route(path = "/app/piceker")

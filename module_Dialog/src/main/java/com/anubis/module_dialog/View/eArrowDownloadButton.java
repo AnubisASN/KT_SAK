@@ -11,9 +11,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
-
 import com.anubis.module_dialog.R;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -35,10 +35,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eLog
-
 import com.anubis.module_camera.Camera.customview.eAutoFitTextureView
 import com.anubis.module_camera.R
-
 import java.io.IOException
 
 @SuppressLint("ValidFragment")

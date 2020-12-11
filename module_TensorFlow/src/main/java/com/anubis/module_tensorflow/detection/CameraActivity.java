@@ -34,16 +34,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Trace;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-
 import android.util.Size;
 import android.view.Surface;
 import android.view.View;
@@ -54,11 +50,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.anubis.module_tensorflow.R;
 import com.anubis.module_tensorflow.detection.env.ImageUtils;
 import com.anubis.module_tensorflow.detection.env.Logger;
-
 import java.nio.ByteBuffer;
 
 

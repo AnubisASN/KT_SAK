@@ -3,8 +3,6 @@ package px_core.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-
-
 import java.io.Serializable;
 
 /**

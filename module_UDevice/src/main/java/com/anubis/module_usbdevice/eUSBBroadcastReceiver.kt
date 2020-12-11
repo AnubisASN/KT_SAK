@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.usb.UsbManager
 import android.os.Message
-import android.util.Log
 import com.anubis.module_usbdevice.eUDevice.Companion.mHandler
 
 /**

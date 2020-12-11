@@ -6,13 +6,8 @@ import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Environment
-import android.os.Handler
 import android.os.Message
 import android.util.Log
-import com.anubis.kt_extends.eLog
-import com.anubis.kt_extends.eShell
-import com.anubis.kt_extends.eShowTip
-import com.anubis.kt_extends.eString
 import net.iharder.Base64
 import java.io.File
 import java.util.*

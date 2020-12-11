@@ -1,7 +1,6 @@
 package com.anubis.module_videochat
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -14,7 +13,6 @@ import android.widget.ImageView
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.lzy.okgo.utils.HttpUtils.runOnUiThread
-
 import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
 import io.agora.rtc.video.VideoCanvas

@@ -18,8 +18,6 @@ package com.anubis.module_camera.Camera;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -58,10 +56,8 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.anubis.module_camera.Camera.customview.eAutoFitTextureView;
 import com.anubis.module_camera.R;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

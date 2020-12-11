@@ -13,13 +13,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.anubis.module_navi.DemoRouteResultFragment;
 import com.anubis.module_navi.R;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
 import com.baidu.navisdk.adapter.BaiduNaviManagerFactory;
 import com.baidu.navisdk.adapter.IBNRoutePlanManager;
-
 import java.util.ArrayList;
 import java.util.List;
 

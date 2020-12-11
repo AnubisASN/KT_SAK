@@ -74,20 +74,20 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
     var mIsState = true
     private var isShearFaceBitmap = false
     private var shearNum = 50
-    private var rotate=0f
+    private var rotate = 0f
     private var color: Int = Color.GREEN
     private var stroke: Int = 2
-    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, CameraState: Boolean = true, color: Int = Color.GREEN, stroke: Int = 2, isShearFaceBitmap: Boolean = false, shearNum: Int = 50, cameraId: Int = 1, CameraRotate:Int=0,getBitmapRotate:Float=0f,onClickCameraSwitch: View? = null): eArcFaceFT {
+    fun init(GLSurfaceView: CameraGLSurfaceView, SurfaceView: CameraSurfaceView, CameraState: Boolean = true, color: Int = Color.GREEN, stroke: Int = 2, isShearFaceBitmap: Boolean = false, shearNum: Int = 50, cameraId: Int = 1, CameraRotate: Int = 0, getBitmapRotate: Float = 0f, onClickCameraSwitch: View? = null): eArcFaceFT {
         mGLSurfaceView = GLSurfaceView
         mSurfaceView = SurfaceView
         mIsState = CameraState
-        rotate=getBitmapRotate
+        rotate = getBitmapRotate
         this.color = color
         this.stroke = stroke
         this.isShearFaceBitmap = isShearFaceBitmap
         this.shearNum = shearNum
         mCameraID = if (cameraId == 0) Camera.CameraInfo.CAMERA_FACING_BACK else Camera.CameraInfo.CAMERA_FACING_FRONT
-        mCameraRotate = CameraRotate+if (cameraId == 0) 90 else 270
+        mCameraRotate = CameraRotate + if (cameraId == 0) 90 else 270
         mCameraMirror = cameraId != 0
         mSurfaceView!!.setOnCameraListener(this)
         mSurfaceView!!.setupGLSurafceView(mGLSurfaceView, true, mCameraMirror, mCameraRotate)
@@ -102,14 +102,14 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
         return this
     }
 
-    fun setParameters (color: Int = this.color, stroke: Int = this.stroke, isShearFaceBitmap: Boolean =  this.isShearFaceBitmap, getBitmapRotate:Float= rotate, shearNum: Int = this.shearNum, cameraId: Int = mCameraID) {
+    fun setParameters(color: Int = this.color, stroke: Int = this.stroke, isShearFaceBitmap: Boolean = this.isShearFaceBitmap, getBitmapRotate: Float = rotate, shearNum: Int = this.shearNum, cameraId: Int = mCameraID) {
         this.color = color
         this.stroke = stroke
         this.isShearFaceBitmap = isShearFaceBitmap
         this.shearNum = shearNum
-        rotate=getBitmapRotate
-        if (cameraId!= mCameraID){
-            mCameraID=cameraId
+        rotate = getBitmapRotate
+        if (cameraId != mCameraID) {
+            mCameraID = cameraId
             onClickCameraSwitch()
         }
     }
@@ -149,7 +149,7 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
         if (mFaceNum != 0 && mImageNV21 != null && mIsState) {
             mIsState = false
             val size = mCamera!!.parameters.previewSize
-            if ( isShearFaceBitmap) {
+            if (isShearFaceBitmap) {
                 try {
                     val left = eArcFaceFT.mAFT_FSDKFace!!.rect.left - eArcFaceFT.shearNum
                     val top = eArcFaceFT.mAFT_FSDKFace!!.rect.top - eArcFaceFT.shearNum
@@ -159,14 +159,14 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
                             if (top < 0) 1 else top,
                             if (right > size.width) size.width - 1 else right,
                             if (bottom > size.height) size.height - 1 else bottom
-                    ),rotate=rotate)
+                    ), rotate = rotate)
                 } catch (e: Exception) {
-                    eArcFaceFT.mBitmap = eBitmap.eInit.eByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height,rotate=rotate)
+                    eArcFaceFT.mBitmap = eBitmap.eInit.eByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height, rotate = rotate)
                     e.eLogE("矩阵截取失败")
                 }
             } else {
-                eArcFaceFT.mBitmap = eBitmap.eInit.eByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height,rotate = rotate)
-                eLog("mBitmap:${eArcFaceFT.mBitmap ==null}")
+                eArcFaceFT.mBitmap = eBitmap.eInit.eByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height, rotate = rotate)
+                eLog("mBitmap:${eArcFaceFT.mBitmap == null}")
             }
         }
         if (mFaceNum == 0 || !mIsState) {

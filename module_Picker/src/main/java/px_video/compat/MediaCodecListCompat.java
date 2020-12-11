@@ -3,7 +3,6 @@ package px_video.compat;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaFormat;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;

@@ -5,25 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Environment;
 import android.util.Log;
-
 import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
-
 import java.io.File;
 import java.io.FileInputStream;
 
-/*
-import android.graphics.Bitmap;
-import android.os.Trace;
-import android.util.Log;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Vector;
-*/
 
 /**功能：人脸转换为512维特征向量
  */

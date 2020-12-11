@@ -13,7 +13,6 @@ import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.control.InitConfig
 import com.anubis.module_tts.control.MySyntherizer
 import com.anubis.module_tts.control.NonBlockSyntherizer
-import com.anubis.module_tts.listener.FileSaveListener
 import com.anubis.module_tts.listener.UiMessageListener
 import com.anubis.module_tts.util.OfflineResource
 import com.baidu.tts.chainofresponsibility.logger.LoggerProxy
@@ -148,10 +147,10 @@ class eTTS private constructor() {
 
     init {
         eLog("类初始化")
-        setParams()
+        eSetParams()
     }
 
-    fun setParams(voiceMode: VoiceModel = mVoiceModel, volume: Int = 9, speed: Int = 5, pitch: Int = 5) {
+    fun eSetParams(voiceMode: VoiceModel = mVoiceModel, volume: Int = 9, speed: Int = 5, pitch: Int = 5) {
         mVoiceModel=voiceMode
         val mode = when (mVoiceModel) {
             VoiceModel.FEMALE -> "F"
@@ -168,7 +167,7 @@ class eTTS private constructor() {
             init(mListener)
         } catch (e: Exception) {
             e.eLogE("initTTS错误")
-            ttsDestroy()
+            eTtsDestroy()
             init(mListener)
         }
     }
@@ -209,7 +208,7 @@ class eTTS private constructor() {
      * 获取音频流的方式见SaveFileActivity及FileSaveListener
      * 需要合成的文本text的长度不能超过1024个GBK字节。
      */
-    fun speak(text: String): Boolean {
+    fun eSpeak(text: String): Boolean {
         val result = synthesizer?.speak(text)
         if (result != null) {
             return checkResult(result, "speak")
@@ -222,7 +221,7 @@ class eTTS private constructor() {
     /**
      * 合成
      */
-    fun synthesize(text: String, id: String = "0"): Boolean {
+    fun eSynthesize(text: String, id: String = "0"): Boolean {
         val result = synthesizer?.synthesize(text, id)
         if (result != null) {
             return checkResult(result, "synthesize")
@@ -236,7 +235,7 @@ class eTTS private constructor() {
     /**
      * 批量播放
      */
-    fun batchSpeak(texts: ArrayList<Pair<String, String>>): Boolean {
+    fun eBbatchSpeak(texts: ArrayList<Pair<String, String>>): Boolean {
         val result = synthesizer!!.batchSpeak(texts)
         return checkResult(result, "batchSpeak")
     }
@@ -244,7 +243,7 @@ class eTTS private constructor() {
     /**
      * 暂停播放。仅调用speak后生效
      */
-    fun pause(): Boolean {
+    fun ePause(): Boolean {
         val result = synthesizer!!.pause()
         return checkResult(result, "pause")
     }
@@ -252,7 +251,7 @@ class eTTS private constructor() {
     /**
      * 继续播放。仅调用speak后生效，调用pause生效
      */
-    fun resume(): Boolean {
+    fun eResume(): Boolean {
         val result = synthesizer!!.resume()
         return checkResult(result, "resume")
     }
@@ -275,7 +274,7 @@ class eTTS private constructor() {
         return true
     }
 
-    fun ttsDestroy() {
+    fun eTtsDestroy() {
         synthesizer?.release()
         TTS = null
         eLog("TTS释放资源成功")

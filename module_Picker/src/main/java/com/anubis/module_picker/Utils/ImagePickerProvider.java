@@ -1,7 +1,6 @@
 package com.anubis.module_picker.Utils;
 
 import android.content.Context;
-
 import androidx.core.content.FileProvider;
 
 /**
