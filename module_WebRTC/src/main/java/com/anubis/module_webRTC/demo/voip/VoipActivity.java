@@ -3,6 +3,8 @@ package com.anubis.module_webRTC.demo.voip;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.anubis.module_webRTC.R;
@@ -32,10 +35,12 @@ import com.starrtc.starrtcsdk.api.XHSDKHelper;
 import com.starrtc.starrtcsdk.api.XHVoipManager;
 import com.starrtc.starrtcsdk.apiInterface.IXHResultCallback;
 import com.starrtc.starrtcsdk.core.audio.StarRTCAudioManager;
+import com.starrtc.starrtcsdk.core.im.message.XHIMMessage;
 import com.starrtc.starrtcsdk.core.player.StarPlayer;
 import com.starrtc.starrtcsdk.core.pusher.XHCameraRecorder;
 import com.starrtc.starrtcsdk.core.pusher.XHScreenRecorder;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Set;
 import java.util.Timer;
@@ -158,7 +163,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
             xhsdkHelper = new XHSDKHelper();
             xhsdkHelper.setDefaultCameraId(cameraId);
             xhsdkHelper.startPerview(this, ((StarPlayer) findViewById(R.id.voip_surface_target)));
-
+//            voipManager.addListener();
             voipManager.call(this, targetId, new IXHResultCallback() {
                 @Override
                 public void success(Object data) {
@@ -199,11 +204,11 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (event.getKeyCode()==KeyEvent.KEYCODE_SHIFT_LEFT) {
+                    if (event.getKeyCode() == KeyEvent.KEYCODE_SHIFT_LEFT) {
                         status = true;
                         return true;
                     }
-                    if (event.getKeyCode()==KeyEvent.KEYCODE_0){
+                    if (event.getKeyCode() == KeyEvent.KEYCODE_0) {
                         Boolean st = findViewById(R.id.calling_view).getVisibility() == View.VISIBLE;
                         if (st)
                             findViewById(R.id.calling_hangup).callOnClick();
@@ -228,7 +233,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                inputMethodManager.hideSoftInputFromWindow(     findViewById(R.id.editText).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                inputMethodManager.hideSoftInputFromWindow(findViewById(R.id.editText).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         }, 300);
     }
@@ -332,6 +337,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void dispatchEvent(String aEventID, boolean success, final Object eventObj) {
         super.dispatchEvent(aEventID, success, eventObj);
+        eLog(this, "dispatchEvent:" + aEventID + "--" + success + "--" + eventObj, "TAG");
         switch (aEventID) {
             case AEvent.AEVENT_VOIP_REV_BUSY:
                 eLog(this, "对方线路忙", "TAG");
@@ -363,7 +369,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
                 showTalkingView();
                 break;
             case AEvent.AEVENT_VOIP_REV_ERROR:
-                MLOC.INSTANCE.d("", (String) eventObj);
+                eLog(this, "AEVENT_VOIP_REV_ERROR", (String) eventObj);
                 if (xhsdkHelper != null) {
                     xhsdkHelper.stopPerview();
                     xhsdkHelper = null;
@@ -372,6 +378,27 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case AEvent.AEVENT_VOIP_TRANS_STATE_CHANGED:
                 findViewById(R.id.state).setBackgroundColor(((int) eventObj == 0) ? 0xFFFFFF00 : 0xFF299401);
+                break;
+            case AEvent.AEVENT_C2C_REV_MSG:
+             String[] strs=   ((XHIMMessage) eventObj).contentData.split("=");
+             if (strs[0].equals("targetPlayer")){
+                 if (strs[1].equals("true")){
+                     //隐藏广告
+                     findViewById(R.id.advertising).setVisibility(View.GONE);
+                     eLog(this, "隐藏广告","TAG");
+                 }else{
+                     File file=new File("/sdcard/SAK-RTC-AVD.png");
+                     findViewById(R.id.advertising).setVisibility(View.VISIBLE);
+                     if (file.exists()){
+                         ((ImageView ) findViewById(R.id.advertising)).setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                     }else{
+                         ((ImageView ) findViewById(R.id.advertising)).setBackgroundColor(Color.BLACK);
+                     }
+//                     targetPlayer.setBackground();
+                     eLog(this, "显示广告","TAG");
+                 }
+
+             }
                 break;
         }
     }
@@ -547,8 +574,6 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
         }
         VoipActivity.this.finish();
     }
-
-
 
 
 }

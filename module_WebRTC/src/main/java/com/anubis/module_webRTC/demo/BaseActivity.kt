@@ -85,11 +85,13 @@ open class BaseActivity : androidx.appcompat.app.AppCompatActivity(), IEventList
                 }
                 try {
                     val revMsg = eventObj as XHIMMessage
-                    val alertData = JSONObject()
-                    alertData.put("listType", 0)
-                    alertData.put("farId", revMsg.fromId)
-                    alertData.put("msg", "收到一条新消息")
-                    MLOC.showDialog(this@BaseActivity, alertData)
+                    if (!revMsg.contentData.contains("targetPlayer=")){
+                        val alertData = JSONObject()
+                        alertData.put("listType", 0)
+                        alertData.put("farId", revMsg.fromId)
+                        alertData.put("msg", "收到一条新消息")
+                        MLOC.showDialog(this@BaseActivity, alertData)
+                    }
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }

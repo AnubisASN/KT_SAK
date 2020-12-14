@@ -482,9 +482,9 @@ class eJson private constructor() {
     }
 
     //Array Json解析扩展
-    fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).optJSONArray(resultKey).getJSONObject(i).toString()
+    fun eGetJsonArray(json: String, resultKey: String, i: Int) = JSONObject(json).getJSONArray(resultKey).getJSONObject(i).toString()
 
-    fun eGetJsonArray(json: String, resultKey: String) = JSONObject(json).optJSONArray(resultKey)
+    fun eGetJsonArray(json: String, resultKey: String) = JSONObject(json).getJSONArray(resultKey)
 }
 
 /**

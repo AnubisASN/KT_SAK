@@ -10,7 +10,14 @@
     <com.starrtc.starrtcsdk.core.player.StarPlayer
         android:id="@+id/voip_surface_target"
         android:layout_width="match_parent"
+        android:background="#000000"
         android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/advertising"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
     <com.starrtc.starrtcsdk.core.player.StarPlayer
         android:id="@+id/voip_surface_self"
@@ -33,6 +40,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
