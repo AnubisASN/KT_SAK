@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
+        applicationId "com.anubis.app_hserver"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
@@ -30,4 +31,5 @@ dependencies {
     implementation project(':module_Extends')
     implementation project(':module_HttpServer')
     implementation project(path: ':module_CardOTG')
+    implementation project(path: ':module_TTS')
 }

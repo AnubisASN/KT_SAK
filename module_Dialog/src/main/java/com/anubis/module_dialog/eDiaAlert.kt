@@ -185,7 +185,17 @@ open class eDiaAlert internal constructor() {
         return dia
     }
 
-
+    /**
+     * @param layout: Int ,  布局
+     * @param ICallBackClick: IDIYCallBackClick? = null,
+     * @param isDisableBack: Boolean = true, 是否禁用返回
+     * @param isCanceledOnTouchOutside: Boolean = false, 是否外部取消
+     * @param gravity: Int = Gravity.CENTER, 弹窗位置
+     * @param x: Int = 0, 弹窗移动 X
+     * @param y: Int = 0, 弹窗移动 Y
+     * @param alpha: Float = 0.9f, 弹窗透明度
+     * @param itemEditBlock: (Dialog, View，IDIYCallBackClick) -> Unit = { _, _,_ -> }
+     * */
     open fun eDIYShow(
             layout: Int,
             ICallBackClick: IDIYCallBackClick? = null,

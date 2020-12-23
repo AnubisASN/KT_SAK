@@ -26,11 +26,5 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.github.AnubisASN.KT_SAK:module_TTS:3.0.7'
-    implementation 'com.github.AnubisASN.KT_SAK:module_Picker:3.0.7'
-    implementation 'com.github.AnubisASN.KT_SAK:module_Dialog:3.0.7'
-    implementation 'com.github.AnubisASN.KT_SAK:module_TCP:3.0.7'
-    implementation 'com.github.AnubisASN.KT_SAK:module_QRCode:3.0.7'
-    implementation 'com.github.AnubisASN.KT_SAK:module_HttpServer:3.0.7'
-//    implementation project(path: ':app_facesdk')
+    implementation project(':module_Extends')
 }

@@ -2477,8 +2477,8 @@ open class ePermissions internal constructor() {
 open class eShell internal constructor() {
     companion object {
         val remount = "mount -o remount,rw rootfs "
-        val install = "pm install -r"
-        val kill = "am force-stop"
+        val install = "pm install -r "
+        val kill = "am force-stop "
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eShell() }
     }
 

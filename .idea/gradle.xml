@@ -40,6 +40,7 @@
             <option value="$PROJECT_DIR$/module_QRCode" />
             <option value="$PROJECT_DIR$/module_TCP" />
             <option value="$PROJECT_DIR$/module_TTS" />
+            <option value="$PROJECT_DIR$/module_TTSE" />
             <option value="$PROJECT_DIR$/module_TensorFlow" />
             <option value="$PROJECT_DIR$/module_TextRecognition" />
             <option value="$PROJECT_DIR$/module_UDevice" />

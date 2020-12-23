@@ -1,28 +1,35 @@
 package com.anubis.app_hserver
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.view.View
-import com.anubis.module_httpserver.eResolver
-import com.anubis.module_httpserver.eHttpServer
-import com.anubis.module_httpserver.eResolverType
+import android.widget.ArrayAdapter
+import androidx.annotation.RequiresApi
 import com.anubis.module_httpserver.protocols.http.eHTTPD
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import kotlin.collections.HashMap
 import com.anubis.kt_extends.*
-import com.anubis.module_httpserver.eManage
+import com.anubis.module_httpserver.*
 import com.anubis.module_httpserver.protocols.http.IHTTPSession
 import com.anubis.module_httpserver.protocols.http.response.Response
+import com.anubis.module_tts.Bean.TTSMode
+import com.anubis.module_tts.Bean.VoiceModel
+import com.anubis.module_tts.eTTS
+import com.anubis.module_tts.ttsTest
+import com.anubis.module_ttse.eTTSE
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 @SuppressLint("SetTextI18n")
 class MainActivity : AppCompatActivity() {
     private var mHttpServer: eHTTPD? = null
-
+    private var mTTS: eTTS? = null
+    private var mTTSE:eTTSE?=null
     private var httpHandler = @SuppressLint("HandlerLeak")
     object : Handler() {
         override fun handleMessage(msg: Message) {
@@ -44,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -55,13 +63,13 @@ class MainActivity : AppCompatActivity() {
         eAssets.eInit.eAssetsToFile(this, "Web/Vysor5.5.5.crx", "/sdcard/Web/Vysor5.5.5.crx")
         eAssets.eInit.eAssetsToFile(this, "Web/Vysor.zip", "/sdcard/Web/Vysor.zip")
         eResolver.eResultBlock = { uri: String, session: IHTTPSession ->
-            Response.newFixedLengthResponse( when (uri) {
+            Response.newFixedLengthResponse(when (uri) {
                 "File" ->
-                    eManage.eInit.eFileParse(session, "file")!!.eLog("111"+uri)
+                    eManage.eInit.eFileParse(session, "file")!!.eLog("111" + uri)
 
 //        RAW发送    upRequestBody(RequestBody.create(MediaType.parse("application/json; charset=utf-8"),"{\"type\":\"Response\"}"))
-                "Raw" -> eManage.eInit.eRawParse(session)!!.eLog("111"+uri)
-                "Data" -> eManage.eInit.eSessionParse(session)!!.size.eLog("111"+uri).toString()
+                "Raw" -> eManage.eInit.eRawParse(session)!!.eLog("111" + uri)
+                "Data" -> eManage.eInit.eSessionParse(session)!!.size.eLog("111" + uri).toString()
                 else -> "a"
             })
         }
@@ -70,10 +78,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-//
         tvHint.eSpannableTextView(String.format(resources.getString(R.string.hint), "${eDevice.eInit.eGetHostIP()}:${mHttpServer?.myPort}"))
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun onClick(v: View) {
         when (v.id) {
             btTest1.id -> {
@@ -82,6 +91,9 @@ class MainActivity : AppCompatActivity() {
                 s.init()
                 s.s2.eLog()
                 Test.s1.eLog()
+            }
+            button8.id -> {
+               startActivity(Intent(this,ttsTest::class.java))
             }
         }
     }

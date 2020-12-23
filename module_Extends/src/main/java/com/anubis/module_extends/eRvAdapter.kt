@@ -46,7 +46,7 @@ import org.jetbrains.anko.*
 class eRvAdapter<T>(
         val mActivity: Context,
         val recyclerView: RecyclerView,
-        val layoutId: Int,
+        val itemLayoutId: Int,
         tDatas: ArrayList<T>? = null,
         val itemEditBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null,
         positionForBlock: ((recyclerView: RecyclerView, recyclerBottomCoordinate: Int, lastItemBottomCoordinate: Int, itemTotal: Int, lastItemCount: Int) -> Unit)? = null,
@@ -116,7 +116,7 @@ class eRvAdapter<T>(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-        val view = LayoutInflater.from(mActivity).inflate(layoutId, parent, false)
+        val view = LayoutInflater.from(mActivity).inflate(itemLayoutId, parent, false)
         return MyHolder(view)
     }
 
@@ -314,4 +314,4 @@ class eRvAdapter<T>(
 
     }
 }
-
+data class DataItemInfo(var id:Long?=null,var isCb:Boolean?=null, var str1:String?=null, var str2:String?=null, var ico: Any?=null, var str3:String?=null, var str4:String?=null, var isShowLine:Boolean=false,var color: Int?=null)

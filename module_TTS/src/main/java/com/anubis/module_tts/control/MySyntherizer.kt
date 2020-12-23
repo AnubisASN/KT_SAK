@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Message
 import android.util.Log
 import android.util.Pair
+import com.anubis.kt_extends.eLogE
 import com.baidu.tts.client.SpeechSynthesizeBag
 import com.baidu.tts.client.SpeechSynthesizer
 import com.baidu.tts.client.TtsMode
@@ -31,7 +32,8 @@ open class MySyntherizer protected constructor(protected var context: Context, p
     init {
         if (isInitied) {
 //           SpeechSynthesizer.getInstance() 不要连续调用
-            throw RuntimeException("MySynthesizer 类里面 SpeechSynthesizer还未释放，请勿新建一个新类")
+//            throw RuntimeException("MySynthesizer 类里面 SpeechSynthesizer还未释放，请勿新建一个新类")
+            eLogE("MySynthesizer 类里面 SpeechSynthesizer还未释放，请勿新建一个新类")
         }
         isInitied = true
     }
@@ -173,10 +175,13 @@ open class MySyntherizer protected constructor(protected var context: Context, p
     }
 
     open fun release() {
-        mSpeechSynthesizer?.stop()
-        mSpeechSynthesizer?.release()
-        mSpeechSynthesizer = null
-        isInitied = false
+        try {
+            mSpeechSynthesizer?.stop()
+            mSpeechSynthesizer?.release()
+            mSpeechSynthesizer = null
+            isInitied = false
+        } catch (e: Exception) {
+        }
     }
 
 

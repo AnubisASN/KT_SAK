@@ -3,9 +3,13 @@
  */
 package com.anubis.module_tts
 
+import android.annotation.TargetApi
 import android.app.Application
+import android.os.Build
 import android.os.Handler
+import android.speech.tts.TextToSpeech
 import android.util.Pair
+import androidx.annotation.RequiresApi
 import com.anubis.kt_extends.*
 import com.anubis.module_tts.Bean.ParamMixMode
 import com.anubis.module_tts.Bean.TTSMode
@@ -15,6 +19,7 @@ import com.anubis.module_tts.control.MySyntherizer
 import com.anubis.module_tts.control.NonBlockSyntherizer
 import com.anubis.module_tts.listener.UiMessageListener
 import com.anubis.module_tts.util.OfflineResource
+import com.anubis.module_ttse.eTTSE
 import com.baidu.tts.chainofresponsibility.logger.LoggerProxy
 import com.baidu.tts.client.SpeechSynthesizer
 import com.baidu.tts.client.SpeechSynthesizerListener
@@ -22,7 +27,7 @@ import com.baidu.tts.client.TtsMode
 import java.util.*
 
 /**
- * 说明：语音合成封装开发库
+ * 说明：百度离在线语音合成封装开发库（PS：智能硬件无Intent网接入网线有2.5s延迟，）
  * @初始化方法：initTTS()
  * @param activity: Application；应用程序
  * @param mHandler: Handler；语音合成消息回调
@@ -30,45 +35,40 @@ import java.util.*
  * @param voiceMode: VoiceModel;语音合成模型
  * @Param MixMode: ParamMixMode;语音合成流程
  * @Param AID_AKY_SKY: Array<Stirng>;百度语音秘钥（离在混合模式需要）
+ * @param extendEngineBlock: ((eTTSE?) -> eTTSE?)? = null ;第三方引擎扩展
  * @return: eTTS
- * @参数设置方法：setParams()
- * @param voiceMode: VoiceModel;语音合成模型
- * @param volume: Int;设置音量
- * @param speed: Int;设置速度
- * @param pitch: Int;设置语调
- * @return:eTTS
- * @语音合成：speak（）
- * @param text:String;合成内容
- */
+ * */
 
 /**
  * 合成demo。含在线和离线，没有纯离线功能。
  * 根据网络状况优先走在线，在线时访问服务器失败后转为离线。
  */
 //(val mActivity: Context, val mHandler: Handler)
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class eTTS private constructor() {
     // ================== 初始化参数设置开始 ==========================
-
-    private var TTS: Unit? = null
     // TtsMode.MIX; 离在线融合，在线优先； TtsMode.ONLINE 纯在线； 没有纯离线
     // 离线发音选择，VOICE_FEMALE即为离线女声发音。
     // assets目录下bd_etts_common_speech_m15_mand_eng_high_am-mix_v3.0.0_20170505.dat为离线男声模型；
     // assets目录下bd_etts_common_speech_f7_mand_eng_high_am-mix_v3.0.0_20170512.dat为离线女声模型
     private var offlineVoice = OfflineResource.VOICE_DUYY
-    var synthesizer: MySyntherizer? = null
+    private var synthesizer: MySyntherizer? = null
 
     companion object {
         private lateinit var mActivity: Application
         private lateinit var mHandler: Handler
         private lateinit var KEYS: Array<String>
+        private var mExtendEngineBlock: ((eTTSE?) -> eTTSE?)? = null
+        private var mTTSE: eTTSE? = null
         private var mTTSMode = TTSMode.MIX
-        private var mVoiceModel :VoiceModel = VoiceModel.CHILDREN
+        private var mVoiceModel: VoiceModel = VoiceModel.CHILDREN
         private lateinit var mListener: SpeechSynthesizerListener
-        fun eInit(mApplication: Application,AID_AKY_SKY: Array<String>, mHandler: Handler=Handler(), ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.FEMALE, ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK, listener: SpeechSynthesizerListener = UiMessageListener(mHandler) ): eTTS {
+        fun eInit(mApplication: Application, AID_AKY_SKY: Array<String>, mHandler: Handler = Handler(), ttsMode: TTSMode = TTSMode.MIX, voiceMode: VoiceModel = VoiceModel.FEMALE, ParamMixMode: ParamMixMode = com.anubis.module_tts.Bean.ParamMixMode.MIX_MODE_HIGH_SPEED_NETWORK, listener: SpeechSynthesizerListener = UiMessageListener(mHandler), extendEngineBlock: ((eTTSE?) -> eTTSE?)? = null): eTTS {
             this.mActivity = mApplication
             this.mHandler = mHandler
+            mExtendEngineBlock = extendEngineBlock
             KEYS = AID_AKY_SKY
-            mVoiceModel=voiceMode
+            mVoiceModel = voiceMode
 
             mApplication.eSetSystemSharedPreferences("set_tts_load_model", when (mVoiceModel) {
                 VoiceModel.FEMALE -> "F"
@@ -150,26 +150,48 @@ class eTTS private constructor() {
         eSetParams()
     }
 
-    fun eSetParams(voiceMode: VoiceModel = mVoiceModel, volume: Int = 9, speed: Int = 5, pitch: Int = 5) {
-        mVoiceModel=voiceMode
-        val mode = when (mVoiceModel) {
-            VoiceModel.FEMALE -> "F"
-            VoiceModel.MALE -> "M"
-            VoiceModel.EMOTIONAL_MALE -> "X"
-            VoiceModel.CHILDREN -> "Y"
+    /*
+        * @参数设置方法：setParams()
+        * @param voiceMode: VoiceModel;语音合成模型
+        * @param volume: Int;设置音量
+        * @param speed: Int;设置速度
+        * @param pitch: Int;设置语调
+        * @param extendEngineBlock: ((eTTSE?) -> eTTSE?)? = null ;第三方引擎扩展
+        * @return:eTTS
+        * @语音合成：speak（）
+        * @param text:String;合成内容
+        */
+    fun eSetParams(voiceMode: VoiceModel = mVoiceModel, volume: Int = 9, speed: Int = 5, pitch: Int = 5, extendEngineBlock: ((eTTSE?) -> eTTSE?)? = mExtendEngineBlock) {
+        if (extendEngineBlock == null) {
+            if (synthesizer != null)
+                return
+            mTTSE?.eClean()
+            mTTSE = null
+            mVoiceModel = voiceMode
+            val mode = when (mVoiceModel) {
+                VoiceModel.FEMALE -> "F"
+                VoiceModel.MALE -> "M"
+                VoiceModel.EMOTIONAL_MALE -> "X"
+                VoiceModel.CHILDREN -> "Y"
+            }
+            VoiceModel(mode)
+            mActivity.eSetSystemSharedPreferences("set_tts_load_model", mode)
+            mActivity.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
+            mActivity.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
+            mActivity.eSetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString())
+            try {
+                init(mListener)
+            } catch (e: Exception) {
+                e.eLogE("initTTS错误")
+                init(mListener)
+            }
+
+        } else {
+            synthesizer?.release()
+            synthesizer = null
+            mTTSE = extendEngineBlock(mTTSE)
         }
-        VoiceModel(mode)
-        mActivity.eSetSystemSharedPreferences("set_tts_load_model", mode)
-        mActivity.eSetSystemSharedPreferences("set_PARAM_VOLUME", volume.toString())
-        mActivity.eSetSystemSharedPreferences("set_PARAM_SPEED", speed.toString())
-        mActivity.eSetSystemSharedPreferences("set_PARAM_PITCH", pitch.toString())
-        try {
-            init(mListener)
-        } catch (e: Exception) {
-            e.eLogE("initTTS错误")
-            eTtsDestroy()
-            init(mListener)
-        }
+        mExtendEngineBlock = extendEngineBlock
     }
 
 
@@ -209,7 +231,7 @@ class eTTS private constructor() {
      * 需要合成的文本text的长度不能超过1024个GBK字节。
      */
     fun eSpeak(text: String): Boolean {
-        val result = synthesizer?.speak(text)
+        val result = synthesizer?.speak(text) ?: mTTSE?.eSpeak(text)
         if (result != null) {
             return checkResult(result, "speak")
         } else {
@@ -260,8 +282,13 @@ class eTTS private constructor() {
      * 停止合成引擎。即停止播放，合成，清空内部合成队列。
      */
     fun stop(): Boolean {
-        val result = synthesizer!!.stop()
-        return checkResult(result, "stop")
+        val result = synthesizer?.stop() ?: mTTSE?.eStop()
+        return if (result != null)
+            checkResult(result, "stop")
+        else {
+            eLog("result为空")
+            false
+        }
     }
 
     // ================== ============= ==========================
@@ -276,7 +303,7 @@ class eTTS private constructor() {
 
     fun eTtsDestroy() {
         synthesizer?.release()
-        TTS = null
+        mTTSE?.eClean()
         eLog("TTS释放资源成功")
     }
 }
