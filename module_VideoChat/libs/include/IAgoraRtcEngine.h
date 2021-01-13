@@ -864,11 +864,11 @@ enum AUDIO_REVERB_TYPE
     /** 1: dB, [-20,10], the level of the early reflection signal (wet signal) */
     AUDIO_REVERB_WET_LEVEL = 1, // (dB, [-20,10]), the level of the early reflection signal (wet signal)
     /** 2: [0,100], the room size of the reflection */
-    AUDIO_REVERB_ROOM_SIZE = 2, // ([0,100]), the room size of the reflection
+    AUDIO_REVERB_ROOM_SIZE = 2, // ([0,iv]), the room size of the reflection
     /** 3: ms, [0,200], the length of the initial delay of the wet signal in ms */
     AUDIO_REVERB_WET_DELAY = 3, // (ms, [0,200]), the length of the initial delay of the wet signal in ms
     /** 4: [0,100], the strength of the late reverberation */
-    AUDIO_REVERB_STRENGTH = 4, // ([0,100]), the strength of the late reverberation
+    AUDIO_REVERB_STRENGTH = 4, // ([0,iv]), the strength of the late reverberation
 };
 
 /** Remote video state. */
@@ -1090,7 +1090,7 @@ struct VideoCompositingLayout
          - If zOrder is beyond this range, the SDK reports #ERR_INVALID_ARGUMENT.
          - As of v2.3, the SDK supports zOrder = 0.
          */
-        int zOrder; //optional, [0, 100] //0 (default): bottom most, 100: top most
+        int zOrder; //optional, [0, iv] //0 (default): bottom most, iv: top most
 
     /** The transparency of the video region in CDN live. The value ranges between 0.0 and 1.0:
 
@@ -4245,7 +4245,7 @@ public:
      - 0: Success.
      - < 0: Failure.
      */
-    int adjustRecordingSignalVolume(int volume) {//[0, 400]: e.g. 50~0.5x 100~1x 400~4x
+    int adjustRecordingSignalVolume(int volume) {//[0, 400]: e.g. 50~0.5x iv~1x 400~4x
         if (volume < 0)
             volume = 0;
         else if (volume > 400)

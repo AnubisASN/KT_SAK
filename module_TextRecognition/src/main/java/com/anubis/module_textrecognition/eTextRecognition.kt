@@ -34,9 +34,6 @@ object eTextRecognition {
     private val tessdata = DATA_PATH + File.separator + "tessdata"
    private var language = "chi_sim"
 
-
-
-
       fun eInit(context: Context) {
         val dataDir = File(tessdata)
         if (!dataDir.exists()) {

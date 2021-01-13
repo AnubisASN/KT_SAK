@@ -70,6 +70,7 @@ open class eTCP internal constructor() {
             isReceove: Boolean = true,
             condition: ICallBack? = null,
             reconnectionTime: Int = 0,
+            bufferSize: Int = 2048,
             reconnectionBlock: (() -> Unit)? = null,
             msgBlock: (address: String, code: Int, msg: String, HashMap<String, Socket?>) -> Unit
     ) {
@@ -79,17 +80,18 @@ open class eTCP internal constructor() {
             msgBlock("$ip:$port", HANDLER_CONNECT_CODE, "TCP连接成功", eClientHashMap)
             if (isReceove && eClientHashMap["$ip:$port"] == null) {
                 eSocketReceive(
-                    ip,
-                    socket,
-                    eClientHashMap,
-                    condition,
-                    reconnectionTime,
-                    eReconnection(
-                        "$ip:$port",
+                        ip,
+                        socket,
                         eClientHashMap,
-                        reconnectionBlock
-                    ),
-                    msgBlock
+                        condition,
+                        reconnectionTime,
+                        bufferSize,
+                        eReconnection(
+                                "$ip:$port",
+                                eClientHashMap,
+                                reconnectionBlock
+                        ),
+                        msgBlock
                 )
             }
             return
@@ -108,14 +110,14 @@ open class eTCP internal constructor() {
         } finally {
             reconnectionBlock?.let {
                 eRestartConnect(
-                    "$ip:$port",
-                    eClientHashMap,
-                    reconnectionTime,
-                    eReconnection(
                         "$ip:$port",
                         eClientHashMap,
-                        it
-                    )
+                        reconnectionTime,
+                        eReconnection(
+                                "$ip:$port",
+                                eClientHashMap,
+                                it
+                        )
                 )
             }
         }
@@ -132,10 +134,12 @@ open class eTCP internal constructor() {
     val SHANDLER_SUCCEED_CODE = 33     //创建成功
     val SHANDLER_CONNECT_CODE = 11  //连接成功
     val SHANDLER_MSG_CODE = 22    //接收消息
+
     //    //    服务端多线程管理器
 //服务端多线程管理器
     val eServerHashMap: HashMap<String, Socket?> = HashMap()
     private var serverSocket: ServerSocket? = null
+
     /**
      * 说明：TCP服务端创建
      * @方法：eServerSocket()
@@ -145,6 +149,7 @@ open class eTCP internal constructor() {
      */
     open fun eServerSocket(
             port: Int = 3335,
+            bufferSize:Int=2048,
             condition: ICallBack? = null,
             returnBlock: (address: String, code: Int, msg: String, HashMap<String, Socket?>) -> Unit
     ) {
@@ -153,16 +158,16 @@ open class eTCP internal constructor() {
             try {
                 serverSocket = ServerSocket(port)
                 returnBlock(
-                    "${eDevice.eInit.eGetHostIP()}:$port",
-                    SHANDLER_SUCCEED_CODE,
-                    "TCP服务端创建成功", eServerHashMap
+                        "${eDevice.eInit.eGetHostIP()}:$port",
+                        SHANDLER_SUCCEED_CODE,
+                        "TCP服务端创建成功", eServerHashMap
                 )
             } catch (e: Exception) {
                 serverSocket = null
                 returnBlock(
-                    "${eDevice.eInit.eGetHostIP()}:$port",
-                    SHANDLER_FAILURE_CODE,
-                    "TCP服务端创建失败", eServerHashMap
+                        "${eDevice.eInit.eGetHostIP()}:$port",
+                        SHANDLER_FAILURE_CODE,
+                        "TCP服务端创建失败", eServerHashMap
                 )
                 return
             }
@@ -174,36 +179,37 @@ open class eTCP internal constructor() {
                     clienIP = sSocket!!.inetAddress.hostAddress
                     clienPort = sSocket.port
                     returnBlock(
-                        "$clienIP:$clienPort",
-                        SHANDLER_CONNECT_CODE,
-                        "客户端连接成功",
-                        eServerHashMap
+                            "$clienIP:$clienPort",
+                            SHANDLER_CONNECT_CODE,
+                            "客户端连接成功",
+                            eServerHashMap
                     )
                 } catch (e: SocketException) {
                     returnBlock(
-                        "${eDevice.eInit.eGetHostIP()}:$port",
-                        SHANDLER_CREATE_CLOSE_CODE,
-                        "TCP服务关闭", eServerHashMap
+                            "${eDevice.eInit.eGetHostIP()}:$port",
+                            SHANDLER_CREATE_CLOSE_CODE,
+                            "TCP服务关闭", eServerHashMap
                     )
                     continue
                 } catch (e: Exception) {
                     returnBlock(
-                        "$clienIP:$clienPort",
-                        SHANDLER_ERROR_CODE,
-                        "客户端连接失败",
-                        eServerHashMap
+                            "$clienIP:$clienPort",
+                            SHANDLER_ERROR_CODE,
+                            "客户端连接失败",
+                            eServerHashMap
                     )
                     continue
                 }
                 if (eServerHashMap["$clienIP:$clienPort"] == null) {
                     eSocketReceive(
-                        clienIP,
-                        sSocket,
-                        eServerHashMap,
-                        condition,
-                        0,
-                        null,
-                        returnBlock
+                            clienIP,
+                            sSocket,
+                            eServerHashMap,
+                            condition,
+                            0,
+                            bufferSize,
+                            null,
+                            returnBlock
                     )
                 }
             }
@@ -249,13 +255,14 @@ open class eTCP internal constructor() {
             hashMap: HashMap<String, Socket?>,
             condition: ICallBack? = null,
             reconnectionTime: Int = 0,
+            bufferSize: Int = 2048,
             reconnectionBlock: (() -> Unit)? = null,
             msgBlock: (address: String, code: Int, msg: String, HashMap<String, Socket?>) -> Unit
     ): Boolean {
         return try {
             eLog("启动接收协程")
             val `in` = socket.getInputStream()
-            val buffer = ByteArray(1024)
+            val buffer = ByteArray(bufferSize)
             val port = socket.port
             eLogI("Socket Port :$port")
             hashMap["$ip:$port"] = socket
@@ -267,19 +274,19 @@ open class eTCP internal constructor() {
                         val Json = if (condition == null) receiveData else
                             condition.callCondition(receiveData) ?: ""
                         msgBlock(
-                            "$ip:$port",
-                            if (hashMap == eClientHashMap) HANDLER_MSG_CODE else SHANDLER_MSG_CODE,
-                            Json,
-                            hashMap
+                                "$ip:$port",
+                                if (hashMap == eClientHashMap) HANDLER_MSG_CODE else SHANDLER_MSG_CODE,
+                                Json,
+                                hashMap
                         )
                     }
                 } catch (e: StringIndexOutOfBoundsException) {
                     hashMap["$ip:$port"] = null
                     msgBlock(
-                        "$ip:$port",
-                        if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE,
-                        "TCP服务关闭,连接不可达",
-                        hashMap
+                            "$ip:$port",
+                            if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE,
+                            "TCP服务关闭,连接不可达",
+                            hashMap
                     )
                 } catch (e: Exception) {
                     var msg = e.toString()
@@ -291,18 +298,18 @@ open class eTCP internal constructor() {
                         else -> hashMap["$ip:$port"] = null
                     }
                     msgBlock(
-                        "$ip:$port",
-                        if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE,
-                        msg,
-                        hashMap
+                            "$ip:$port",
+                            if (hashMap == eClientHashMap) HANDLER_CLOSE_CODE else SHANDLER_CLOSE_CODE,
+                            msg,
+                            hashMap
                     )
                 } finally {
                     reconnectionBlock?.let {
                         eRestartConnect(
-                            "$ip:$port",
-                            hashMap,
-                            reconnectionTime,
-                            it
+                                "$ip:$port",
+                                hashMap,
+                                reconnectionTime,
+                                it
                         )
                     }
 
@@ -325,12 +332,12 @@ open class eTCP internal constructor() {
      */
     @Throws
     open fun eSocketSend(
-        str: String,
-        address: String? = null,
-        hashMap: HashMap<String, Socket?>? = eServerHashMap,
-        symbol: String = "|"
+            str: String,
+            address: String? = null,
+            hashMap: HashMap<String, Socket?>? = eServerHashMap,
+            symbol: String = "|"
     ): Boolean {
-        hashMap?:return false
+        hashMap ?: return false
         //指定发送
         val type = if (hashMap == eInit.eServerHashMap) "服务端" else "客户端"
         try {
@@ -407,16 +414,16 @@ open class eTCP internal constructor() {
      * @param reconnectionBlock: Unit；重连调用
      */
     open fun eRestartConnect(
-        address: String,
-        hashMap: HashMap<String, Socket?>,
-        reconnectionTime: Int = 0,
-        reconnectionBlock: (() -> Unit)? = null
+            address: String,
+            hashMap: HashMap<String, Socket?>,
+            reconnectionTime: Int = 0,
+            reconnectionBlock: (() -> Unit)? = null
     ) {
         reconnectionBlock?.let {
             if (reconnectionTime in 1..10 && !eIsConnect(
-                    address,
-                    hashMap
-                )
+                            address,
+                            hashMap
+                    )
             ) {
                 mHandler.postDelayed({ it() }, reconnectionTime * 10000L)
                 restartHashMap[address] = 0
@@ -476,10 +483,10 @@ open class eTCP internal constructor() {
      */
     @Throws
     fun eIsExecuteConnect(
-        address: String,
-        hashMap: HashMap<String, Socket?>,
-        content: (() -> Unit)? = null,
-        delayTime: Long = 1000
+            address: String,
+            hashMap: HashMap<String, Socket?>,
+            content: (() -> Unit)? = null,
+            delayTime: Long = 1000
     ): Boolean {
         if (!address.contains(":"))
             throw Exception("地址必须包含\":\",格式: IP:Port")
@@ -505,9 +512,9 @@ open class eTCP internal constructor() {
      */
     @Throws
     private fun eReconnection(
-        address: String,
-        hashMap: HashMap<String, Socket?>,
-        reconnectionBlock: (() -> Unit)? = null
+            address: String,
+            hashMap: HashMap<String, Socket?>,
+            reconnectionBlock: (() -> Unit)? = null
     ): () -> Unit = {
         if (!address.contains(":"))
             throw Exception("地址必须包含\":\",格式: IP:Port")

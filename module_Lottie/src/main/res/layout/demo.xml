@@ -7,16 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".Demo"
     >
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationView"
-        android:tag="0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        android:onClick="onClick"
+        android:tag="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:lottie_rawRes="@raw/day_night"
-        android:scaleType="centerInside"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.54"
+        app:lottie_rawRes="@raw/day_night" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

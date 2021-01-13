@@ -1,0 +1,59 @@
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+apply plugin: 'com.huawei.agconnect'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=gnu++11"
+                // 注意！！！！       注意！！！！！！
+                //如果是用 Linux 开发的的用户下面这行代码不用动，如果是 Win 用户请把 下面这行代码注释了
+//                arguments "-DANDROID_TOOLCHAIN=gcc", "-DANDROID_ARM_NEON=TRUE", "-DANDROID_STL_FORCE_FEATURES=OFF"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // CameraX core library
+    api "androidx.camera:camera-core:1.0.0-beta04"
+    // CameraX Camera2 extensions
+    api "androidx.camera:camera-camera2:1.0.0-beta04"
+    // CameraX Lifecycle library
+    api "androidx.camera:camera-lifecycle:1.0.0-beta04"
+    // CameraX View class
+    api 'androidx.camera:camera-view:1.0.0-alpha11'
+    api project(path: ':module_OpenCV')
+    api project(':module_Extends')
+    implementation project(path: ':module_Picker')
+}

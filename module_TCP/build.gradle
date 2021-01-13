@@ -30,8 +30,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':module_Extends')
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':module_Extends')
 }
 kotlin {
     experimental {

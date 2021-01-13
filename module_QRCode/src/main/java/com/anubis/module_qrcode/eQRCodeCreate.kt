@@ -13,7 +13,6 @@ package com.anubis.module_qrcode
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import com.anubis.kt_extends.eLog
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.WriterException
@@ -52,7 +51,6 @@ open class eQRCodeCreate internal  constructor(){
                 for (x in 0 until size) {
                     if (bitMatrix.get(x, y)) {
                         pixels[y * size + x] =colorID
-                        eLog(  "color:"+ pixels[y * size + x])
                     } else {
                         pixels[y * size + x] = -0x1
                     }

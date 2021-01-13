@@ -31,6 +31,6 @@ dependencies {
     api project(path: ':module_Camera')
     api project(path: ':module_Detection')
     api project(path: ':module_FaceLandmark')
-    implementation project(path: ':module_HWLive')
+    api project(path: ':module_HWLive')
 
 }

@@ -22,9 +22,9 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':module_Extends')
-    implementation files('libs/zxingjar-1.1.jar')
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(':module_Extends')
+    api files('libs/zxingjar-1.1.jar')
 //    implementation files('libs/core.jar')
 }
 repositories {

@@ -1,13 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    defaultConfig {
-    }
+    compileSdkVersion 28
 
-    sourceSets.main {
-        jni.srcDirs = []
-        jniLibs.srcDir "libs"
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 28
     }
 
     buildTypes {
@@ -16,12 +14,4 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-    lintOptions {
-        abortOnError false
-    }
-}
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-
 }

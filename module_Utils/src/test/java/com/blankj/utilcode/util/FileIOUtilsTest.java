@@ -32,12 +32,12 @@ public class FileIOUtilsTest {
     public void writeFileFromBytes() {
 //        String p = path + "test.txt";
 //        String p1 = path + "copy.zip";
-//        byte[] data = new byte[(1 << 20) * 100];
+//        byte[] data = new byte[(1 << 20) * iv];
 //        long st, end;
 //        eFileUtils.deleteFile(p);
 //
 //        st = System.currentTimeMillis();
-//        for (int i = 0; i < 100; i++) {
+//        for (int i = 0; i < iv; i++) {
 //            eFileIOUtils.writeFileFromBytesByStream(p, data, true);
 //        }
 //        end = System.currentTimeMillis();
@@ -45,7 +45,7 @@ public class FileIOUtilsTest {
 //        eFileUtils.deleteFile(p);
 //
 //        st = System.currentTimeMillis();
-//        for (int i = 0; i < 100; i++) {
+//        for (int i = 0; i < iv; i++) {
 //            eFileIOUtils.writeFileFromBytesByChannel(p, data, true);
 //        }
 //        end = System.currentTimeMillis();
@@ -53,7 +53,7 @@ public class FileIOUtilsTest {
 //        eFileUtils.deleteFile(p);
 //
 //        st = System.currentTimeMillis();
-//        for (int i = 0; i < 100; i++) {
+//        for (int i = 0; i < iv; i++) {
 //            eFileIOUtils.writeFileFromBytesByMap(p, data, true, false);
 //        }
 //        end = System.currentTimeMillis();

@@ -98,6 +98,43 @@ import kotlin.experimental.and
  */
 
 
+/*获得根目录/data 内部存储路径*/
+val eGetDataDirectory = Environment.getDataDirectory().path
+
+/*获得缓存目录/cache*/
+val eGetDownloadCacheDirectory = Environment.getDownloadCacheDirectory().path
+
+/*获得SD卡目录/mnt/sdcard*/
+val eGetExternalStorageDirectory = Environment.getExternalStorageDirectory().path
+
+/*获得系统目录/system*/
+val eGetRootDirectory: String = Environment.getRootDirectory().path
+
+/*返回通过Context.openOrCreateDatabase创建的数据库文件*/
+fun eGetDataBasePath(context: Context, dataName: String) = context.getDatabasePath(dataName)
+
+/*用于获取APP的cache目录 /data/data/$$$/cache目录*/
+fun eGetCacheDir(context: Context) = context.cacheDir.path
+
+/*用于获取APP的在SD卡中的cache目录/mnt/sdcard/Android/data/$$$/cache*/
+fun eGetExternalCacheDir(context: Context):String? = context.externalCacheDir?.path
+
+/*用于获取APP的files目录 /data/data/$$$/files*/
+fun eGetFilesDir(context: Context) = context.filesDir.path
+
+/*用于获取APP SDK中的obb目录 /mnt/sdcard/Android/obb/$$$ */
+fun eGetObbDir(context: Context) = context.obbDir.path
+
+/*用于获取APP的所在包目录*/
+fun eGetPackageName(context: Context) = context.packageName
+
+/*来获得当前应用程序对应的 apk 文件的路径*/
+fun eGetPackageCodePath(context: Context) = context.packageCodePath
+
+/* 获取该程序的安装包路径*/
+fun eGetPackageResourcePath(context: Context) = context.packageResourcePath
+
+
 fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, str.toString(), i).show()
 }
@@ -463,7 +500,7 @@ class eJson private constructor() {
     fun <T> eGetJsonFrom(jsonStr: String, clazz: Class<T>) = Gson().fromJson<T>(jsonStr, clazz)
 
     //实例类生成Json
-    fun eGetToJson(any: Any) = GsonBuilder().disableHtmlEscaping().create().toJson(any).replace("\\n", "").replace(" ", "").trim()
+    fun eGetToJson(any: Any) = GsonBuilder().disableHtmlEscaping().create().toJson(any).trim()
 
     //Object Json解析扩展
     fun <T> eGetJson(json: String, resultKey: String, default: T): T {
@@ -2017,7 +2054,7 @@ open class eFile internal constructor() {
     /**
      * 复制单个文件
      * @param oldPathName String 原文件路径+文件名 如：data/user/0/com.test/files/abc.txt
-     * @param newPathName String 复制后路径+文件名 如：data/user/0/com.test/cache/abc.txt
+     * @param newPathName String 复制后路径  如：xx/abc.txt or xx/
      * @return <code>true</code> if and only if the file was copied;
      *         <code>false</code> otherwise
      */

@@ -42,7 +42,7 @@
 //        setContentView(R.layout.activity_camera)
 //        var camera: eArcFaceFT? = null
 //        try {
-//            camera = eArcFaceFT.init(findViewById(R.id.glsurfaceView), findViewById(R.id.surfaceView), false, Color.GREEN, 2, false, 100, 1, 0,mRotate , glsurfaceView)
+//            camera = eArcFaceFT.init(findViewById(R.id.glsurfaceView), findViewById(R.id.surfaceView), false, Color.GREEN, 2, false, iv, 1, 0,mRotate , glsurfaceView)
 //        } catch (e: Exception) {
 //            e.eLogE("ArcFace")
 //        }

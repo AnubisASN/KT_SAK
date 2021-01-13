@@ -46,8 +46,16 @@
         android:layout_height="wrap_content"
         android:text="人脸检测"
         app:layout_constraintBottom_toBottomOf="@+id/bt_body"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/bt_body"
+        app:layout_constraintTop_toTopOf="@+id/bt_body" />
+
+    <Button
+        android:id="@+id/bt_lpr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="车牌识别"
+        app:layout_constraintBottom_toBottomOf="@+id/bt_body"
+        app:layout_constraintStart_toEndOf="@+id/bt_face"
         app:layout_constraintTop_toTopOf="@+id/bt_body" />
 
     <Button
@@ -91,7 +99,6 @@
         android:text="口罩检测"
         app:layout_constraintBottom_toBottomOf="@+id/bt_body"
         app:layout_constraintEnd_toStartOf="@+id/bt_body"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/bt_body" />
 
     <ScrollView

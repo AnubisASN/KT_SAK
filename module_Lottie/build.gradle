@@ -25,4 +25,5 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api project(':module_Extends')
     api 'com.airbnb.android:lottie:3.4.2'
+    implementation project(path: ':module_PortMSG')
 }

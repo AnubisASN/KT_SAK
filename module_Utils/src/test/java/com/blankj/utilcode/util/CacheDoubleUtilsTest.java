@@ -45,7 +45,7 @@ public class CacheDoubleUtilsTest extends BaseTest {
     private static final JSONArray        JSON_ARRAY         = new JSONArray();
     private static final ParcelableTest   PARCELABLE_TEST    = new ParcelableTest("Blankj", "eCacheDoubleUtils");
     private static final SerializableTest SERIALIZABLE_TEST  = new SerializableTest("Blankj", "eCacheDoubleUtils");
-    private static final Bitmap           BITMAP             = Bitmap.createBitmap(100, 100, Bitmap.Config.RGB_565);
+    private static final Bitmap           BITMAP             = Bitmap.createBitmap(d100, d100, Bitmap.Config.RGB_565);
     private static final Drawable         DRAWABLE           = new BitmapDrawable(Utils.getApp().getResources(), BITMAP);
     private static final CacheMemoryUtils CACHE_MEMORY_UTILS = CacheMemoryUtils.getInstance();
     private static final CacheDiskUtils CACHE_DISK_UTILS   = CacheDiskUtils.getInstance(CACHE_FILE);
@@ -105,7 +105,7 @@ public class CacheDoubleUtilsTest extends BaseTest {
 
     @Test
     public void getBitmap() {
-        String bitmapString = "Bitmap (100 x 100) compressed as PNG with quality 100";
+        String bitmapString = "Bitmap (iv x iv) compressed as PNG with quality iv";
         assertEquals(BITMAP, CACHE_DOUBLE_UTILS.getBitmap("bitmap"));
         CACHE_MEMORY_UTILS.remove("bitmap");
         assertEquals(bitmapString, CACHE_DOUBLE_UTILS.getString("bitmap"));
@@ -115,7 +115,7 @@ public class CacheDoubleUtilsTest extends BaseTest {
 
     @Test
     public void getDrawable() {
-        String bitmapString = "Bitmap (100 x 100) compressed as PNG with quality 100";
+        String bitmapString = "Bitmap (iv x iv) compressed as PNG with quality iv";
         assertEquals(DRAWABLE, CACHE_DOUBLE_UTILS.getDrawable("drawable"));
         CACHE_MEMORY_UTILS.remove("drawable");
         assertEquals(bitmapString, CACHE_DOUBLE_UTILS.getString("drawable"));

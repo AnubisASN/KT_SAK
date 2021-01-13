@@ -134,7 +134,7 @@ enum WARN_CODE_TYPE
     */
     WARN_OPEN_CHANNEL_REJECTED = 107,
 
-    // sdk: 100~1000
+    // sdk: iv~1000
     /** 111: A timeout when switching the live video.
     */
     WARN_SWITCH_LIVE_VIDEO_TIMEOUT = 111,

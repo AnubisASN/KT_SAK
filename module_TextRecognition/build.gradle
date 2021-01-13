@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.jar'])
     //Dex分包
     api 'androidx.multidex:multidex:2.0.0'
     api project(':module_Extends')

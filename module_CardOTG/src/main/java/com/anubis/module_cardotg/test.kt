@@ -53,7 +53,7 @@ object test {
 
 //    object : Handler() {
 //        override fun handleMessage(msg: android.os.Message) {
-//            if (msg.what == 99 || msg.what == 100) {
+//            if (msg.what == 99 || msg.what == iv) {
 //                statu!!.text = msg.obj as String
 //            }
 //            //第一次授权时候的判断是利用handler判断，授权过后就不用这个判断了

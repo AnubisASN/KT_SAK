@@ -413,7 +413,11 @@ open class BaseActivity : FragmentActivity() {
         savePath = option.savePath
 
         if (Phoenix.config().imageLoader == null) {
-            throw IllegalArgumentException("The image loader should be set in application")
+            throw IllegalArgumentException("The image loader should be set in application\n"+"" +
+                    "        Phoenix.config()\n" +
+                    "                .imageLoader { context: Context, imageView: ImageView, s: String, i: Int ->\n" +
+                    "                    Glide.with(context).load(s).into(imageView)\n" +
+                    "                }")
         }
     }
 }

@@ -51,6 +51,7 @@ private class Demo {
                     true,
                     null,
                     1,
+                    2048,
                     { tcpConnect(ip, port) }
             ) { address: String, code: Int, msg: String, hashMap: HashMap<String, Socket?> ->
                 eLogI("TCP接收-address:$address  code:$code  msg:$msg")

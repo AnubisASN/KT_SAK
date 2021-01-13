@@ -21,7 +21,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    api fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/commons-net-3.0.1.jar')
-    implementation project(':module_Extends')
+    api project(':module_Extends')
 }

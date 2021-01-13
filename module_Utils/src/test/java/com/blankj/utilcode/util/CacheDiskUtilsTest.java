@@ -47,7 +47,7 @@ public class CacheDiskUtilsTest extends BaseTest {
     private static final JSONArray        JSON_ARRAY        = new JSONArray();
     private static final ParcelableTest   PARCELABLE_TEST   = new ParcelableTest("Blankj", "eCacheDiskUtils");
     private static final SerializableTest SERIALIZABLE_TEST = new SerializableTest("Blankj", "eCacheDiskUtils");
-    private static final Bitmap           BITMAP            = Bitmap.createBitmap(100, 100, Bitmap.Config.RGB_565);
+    private static final Bitmap           BITMAP            = Bitmap.createBitmap(d100, d100, Bitmap.Config.RGB_565);
     private static final Drawable         DRAWABLE          = new BitmapDrawable(Utils.getApp().getResources(), BITMAP);
 
     @Before
@@ -122,7 +122,7 @@ public class CacheDiskUtilsTest extends BaseTest {
 
     @Test
     public void getBitmap() {
-        String bitmapString = "Bitmap (100 x 100) compressed as PNG with quality 100";
+        String bitmapString = "Bitmap (iv x iv) compressed as PNG with quality iv";
         assertEquals(bitmapString, CACHE_DISK_UTILS1.getString("bitmap1"));
         assertEquals(bitmapString, CACHE_DISK_UTILS1.getString("bitmap1", null));
         assertNull(CACHE_DISK_UTILS1.getString("bitmap2", null));
@@ -134,7 +134,7 @@ public class CacheDiskUtilsTest extends BaseTest {
 
     @Test
     public void getDrawable() {
-        String bitmapString = "Bitmap (100 x 100) compressed as PNG with quality 100";
+        String bitmapString = "Bitmap (iv x iv) compressed as PNG with quality iv";
         assertEquals(bitmapString, CACHE_DISK_UTILS1.getString("drawable1"));
         assertEquals(bitmapString, CACHE_DISK_UTILS1.getString("drawable1", null));
         assertNull(CACHE_DISK_UTILS1.getString("drawable2", null));

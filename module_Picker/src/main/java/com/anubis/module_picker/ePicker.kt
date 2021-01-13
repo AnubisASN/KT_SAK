@@ -37,7 +37,7 @@ open class ePicker internal constructor() {
      *说明： 图片选择器框架
      * @调用方法：eImageStart()
      * @param activity: Application；应用程序
-     * @param REQUEST_CODE: Int=101；成功回调代码
+     * @param REQUEST_CODE: Int=d101；成功回调代码
      * @param Type: Int = PhoenixOption.TYPE_PICK_MEDIA；显示类型（TYPE_PICK_MEDIA or TYPE_TAKE_PICTURE or TYPE_BROWSER_PICTURE）
      * @param phoenix: PhoenixOption = Phoenix.with();默认初始化与主动初始化
      * @return: void
@@ -71,7 +71,7 @@ open class ePicker internal constructor() {
      *说明： 文件选择器
      * @调用方法：eFileStart()
      * @param activity: Activity；界面活动
-     * @param REQUEST_CODE: Int=101；成功回调代码
+     * @param REQUEST_CODE: Int=d101；成功回调代码
      * @param filePicker: FilePickerConfig = FilePickerManager.from(activity)；默认初始化与主动初始化
      * @return: void
      */

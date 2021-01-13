@@ -126,6 +126,7 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                 tv_hint.text = "人脸检测"
                 eReadyForNextImage(bitmapRotation = 90f)
             }
+//            bt_lpr.id->startActivity(Intent(this,LPRActivity::class.java))
             bt_net.id -> startActivity(Intent(this, DiscernActivity::class.java))
             bt_landmark.id -> startActivity(Intent(this, MainActivity::class.java))
             bt_TF.id -> startActivity(Intent(this, eDetectorGUI::class.java))
