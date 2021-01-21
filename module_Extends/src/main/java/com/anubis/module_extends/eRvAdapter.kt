@@ -9,8 +9,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
+import com.anubis.selfServicePayment.Utils.eDefaultItemAnimator
 import kotlinx.android.synthetic.main.adapter_default_item.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.*
 
 
@@ -49,6 +54,7 @@ class eRvAdapter<T>(
         val itemLayoutId: Int,
         tDatas: ArrayList<T>? = null,
         val itemEditBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null,
+        val itemAnim: eDefaultItemAnimator? = null,
         positionForBlock: ((recyclerView: RecyclerView, recyclerBottomCoordinate: Int, lastItemBottomCoordinate: Int, itemTotal: Int, lastItemCount: Int) -> Unit)? = null,
         val longClickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null,
         orientation: Int = LinearLayoutManager.VERTICAL,
@@ -62,6 +68,7 @@ class eRvAdapter<T>(
         layoutManager.orientation = orientation
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = this
+        recyclerView.itemAnimator = itemAnim
         //ViewPager滑动Pager监听
         positionForBlock?.let {
             recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -96,6 +103,10 @@ class eRvAdapter<T>(
         }
     }
 
+    private fun eMoveShow(i:Int,b:Boolean){
+        if (b && i in 0 until (mDatas?.size?:0))
+        recyclerView.scrollToPosition(i)
+    }
     /**
      * 说明：滑动底部监听方法
      * @param              recyclerBottomCoordinate: Int； 内容最底部的坐标
@@ -124,34 +135,81 @@ class eRvAdapter<T>(
         return mDatas?.size ?: 0
     }
 
-    fun eAddData(data: T, index: Int? = null) {
+
+    fun eAddData(datas: List<T>?, index: Int? = null, animExBlock: ((eRvAdapter<T>) -> Unit)? = null, changeStatus: ((Int, Boolean) -> Unit)?={ i: Int, b: Boolean -> eMoveShow(i-1,b)}) {
+        datas ?: return
+        itemAnim ?: index?.let {
+            mDatas?.addAll(it, datas)
+        } ?: mDatas?.addAll(datas)
+ itemAnim?.let { anim ->
+            GlobalScope.launch {
+                datas.forEachIndexed { i, t ->
+                    mActivity.runOnUiThread {
+                        index?.let { it ->
+                            eAddData(t, it + i,animExBlock,changeStatus)
+                        } ?: eAddData(t,index,animExBlock,changeStatus)
+                    }
+                    delay(itemAnim.time / 2)
+                }
+            }
+        } ?: eDefaultNotify()
+    }
+    fun eAddData(data: T, index: Int? = null, animExBlock: ((eRvAdapter<T>) -> Unit)? = null, changeStatus: ((Int, Boolean) -> Unit)?={ i: Int, b: Boolean -> eMoveShow(i-1,b)}) {
         if (index == null)
             mDatas?.add(data)
-        else
+        else {
+            if (index > mDatas?.size ?: 0)
+                return Unit.apply { eLogE("index越界：$index>${mDatas?.size ?: 0}")
+                    changeStatus?.invoke(index, false)}
             mDatas?.add(index, data)
-        eUpdateData()
+        }
+        animExBlock?.let { it(this) } ?: itemAnim?.let {
+            notifyItemInserted(index ?: mDatas?.size ?: 0)
+        } ?: eDefaultNotify()
+        changeStatus?.invoke(index ?: mDatas?.size ?: 0, true)
     }
 
-    fun eAddData(datas: List<T>?) {
-        datas ?: return
-        mDatas?.addAll(datas)
-        eUpdateData()
+    fun eDelData(indexs: List<T>, animExBlock: ((eRvAdapter<T>) -> Unit)? = null, changeStatus: ((Int, Boolean) -> Unit)?={ i: Int, b: Boolean -> eMoveShow(i,b)}) {
+        GlobalScope.launch {
+            indexs.forEach {
+                mActivity.runOnUiThread {
+                    eDelData(mDatas?.indexOf(it) ?: -1, animExBlock, changeStatus)
+                }
+                itemAnim?.let {
+                    delay(itemAnim.time / 3)
+                }
+
+            }
+        }
     }
 
-    fun eDelData(index: Int) {
+    fun eDelData(index: Int=0, animExBlock: ((eRvAdapter<T>) -> Unit)? = null, changeStatus: ((Int, Boolean) -> Unit)?={ i: Int, b: Boolean -> eMoveShow(i,b)}) {
+        if (index < 0 || index >= mDatas?.size ?: 0)
+            return Unit.apply { changeStatus?.invoke(index, false) }
         mDatas?.removeAt(index)
-        eUpdateData()
+        animExBlock?.invoke(this) ?: itemAnim?.let { notifyItemRemoved(index) } ?: eDefaultNotify()
+        changeStatus?.invoke(index, true)
     }
 
-    fun eSetData(data: ArrayList<T>?) {
-        mDatas?.clear()
-        mDatas = data?.clone() as ArrayList<T>
-        eUpdateData()
+
+    fun eSetData(datas: ArrayList<T>?, animExBlock: ((eRvAdapter<T>) -> Unit)? = null) {
+        animExBlock?.invoke(this) ?: itemAnim?.let {
+            val cleanSize=mDatas?.size?:0
+            mDatas?.clear()
+            notifyItemRangeRemoved(0,cleanSize)
+            eAddData(datas)
+        } ?:(mDatas?.clear().apply {
+            eDefaultNotify()
+            mDatas = datas?.clone() as ArrayList<T>
+            eDefaultNotify()
+        })
+
+
     }
 
-    fun eGetData(index: Int) = mDatas?.get(index)
+    fun eGetItemData(index: Int) = mDatas?.get(index)
 
-    fun eUpdateData() {
+    fun eDefaultNotify() {
         notifyDataSetChanged()
         recyclerView.setItemViewCacheSize(mDatas?.size ?: 0)
     }
@@ -314,4 +372,5 @@ class eRvAdapter<T>(
 
     }
 }
-data class DataItemInfo(var id:Long?=null,var isCb:Boolean?=null, var str1:String?=null, var str2:String?=null, var ico: Any?=null, var str3:String?=null, var str4:String?=null, var isShowLine:Boolean=false,var color: Int?=null)
+
+data class DataItemInfo(var id: Long? = null, var isCb: Boolean? = null, var str1: String? = null, var str2: String? = null, var ico: Any? = null, var str3: String? = null, var str4: String? = null, var isShowLine: Boolean = false, var color: Int? = null)
