@@ -58,5 +58,4 @@ dependencies {
     api 'androidx.camera:camera-view:1.0.0-alpha11'
     api project(path: ':module_OpenCV')
     api project(':module_Extends')
-    implementation project(path: ':module_Picker')
 }

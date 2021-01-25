@@ -23,7 +23,7 @@ open class eLPRActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lpr)
         try {
-            camreaId=  if (intent.getIntExtra(INTENT_CODE,1)==1) CameraSelector.DEFAULT_BACK_CAMERA else CameraSelector.DEFAULT_FRONT_CAMERA
+            camreaId=  if (intent.getIntExtra(CAMERAID_CODE,1)==1) CameraSelector.DEFAULT_BACK_CAMERA else CameraSelector.DEFAULT_FRONT_CAMERA
         } catch (e: Exception) {
         }
         scannerView = findViewById(R.id.scanner_view)
@@ -79,6 +79,6 @@ open class eLPRActivity : AppCompatActivity() {
 
     companion object {
         const val REQUEST_LPR_CODE = 1001
-        val INTENT_CODE="cameraId"
+        val CAMERAID_CODE="cameraId"
     }
 }

@@ -1,5 +1,6 @@
 package com.anubis.lpr
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -13,6 +14,9 @@ import com.anubis.lpr.utils.PlateRecognition
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.custom.onUiThread
+import org.opencv.android.BaseLoaderCallback
+import org.opencv.android.LoaderCallbackInterface
+import org.opencv.android.OpenCVLoader
 import org.opencv.android.Utils
 import org.opencv.core.CvType
 import org.opencv.core.Mat
@@ -39,8 +43,27 @@ open class eLPR internal constructor() {
     companion object {
         private lateinit var mContext: Context
         private var lprAddress: Long? = null
-        fun eInit(mContext: Context): eLPR {
-            this.mContext = mContext
+        private var mCallback: BaseLoaderCallback = object : BaseLoaderCallback(mContext) {
+            @SuppressLint("StaticFieldLeak")
+            override fun onManagerConnected(status: Int) {
+                if (status == LoaderCallbackInterface.SUCCESS) {
+                    System.loadLibrary("lpr")
+                } else {
+                    super.onManagerConnected(status)
+                }
+            }
+        }
+
+        fun eInit(context: Context, callback: BaseLoaderCallback? = null): eLPR {
+            mContext = context
+            callback?.let { mCallback = it }
+            if (!OpenCVLoader.initDebug()) {
+                eLogE("Internal OpenCV library not found. Using OpenCV Manager for initialization","OpenCV")
+                OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, context, mCallback)
+            } else {
+                eLogE("OpenCV library found inside package. Using it!","OpenCV")
+                mCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)
+            }
             lprAddress = DeepAssetUtil.getPRAddress(mContext)
             return eInit
         }
@@ -50,14 +73,14 @@ open class eLPR internal constructor() {
 
     /*识别*/
     fun eLPRIdentify(filePath: String, isCleanBitmap: Boolean = true, resultBlock: (String?) -> Unit) {
-          eLPRIdentify(BitmapFactory.decodeFile(filePath), isCleanBitmap,resultBlock)
+        eLPRIdentify(BitmapFactory.decodeFile(filePath), isCleanBitmap, resultBlock)
     }
 
     fun eLPRIdentify(bitmap: Bitmap, isCleanBitmap: Boolean = true, resultBlock: (String?) -> Unit) {
         var plateResult: String? = null
         GlobalScope.launch {
             val mat = Mat(bitmap.width, bitmap.height, CvType.CV_8UC4)
-            Utils.bitmapToMat(bitmap, mat,false)
+            Utils.bitmapToMat(bitmap, mat, false)
             lprAddress?.let {
                 plateResult = PlateRecognition.SimpleRecognization(mat.nativeObjAddr, it)
             } ?: eLogE("识别器初始化错误")
