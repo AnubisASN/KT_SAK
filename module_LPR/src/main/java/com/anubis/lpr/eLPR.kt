@@ -43,16 +43,20 @@ open class eLPR internal constructor() {
     companion object {
         private lateinit var mContext: Context
         private var lprAddress: Long? = null
-        private var mCallback: BaseLoaderCallback = object : BaseLoaderCallback(mContext) {
-            @SuppressLint("StaticFieldLeak")
-            override fun onManagerConnected(status: Int) {
-                if (status == LoaderCallbackInterface.SUCCESS) {
-                    System.loadLibrary("lpr")
-                } else {
-                    super.onManagerConnected(status)
-                }
-            }
+        private var mCallback: BaseLoaderCallback get() {
+            return  object : BaseLoaderCallback(mContext) {
+                @SuppressLint("StaticFieldLeak")
+                override fun onManagerConnected(status: Int) {
+                    if (status == LoaderCallbackInterface.SUCCESS) {
+                        System.loadLibrary("lpr")
+                    } else {
+                        super.onManagerConnected(status)
+                    }
+                }}
         }
+            set(value) {
+                mCallback=value
+            }
 
         fun eInit(context: Context, callback: BaseLoaderCallback? = null): eLPR {
             mContext = context
