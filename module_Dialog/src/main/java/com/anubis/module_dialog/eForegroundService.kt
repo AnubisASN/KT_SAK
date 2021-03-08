@@ -23,49 +23,60 @@ import kotlinx.coroutines.*
  *Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  *Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  *Router :  /'Module'/'Function'
- *说明：
+ *说明： 前台服务
  */
 
-/**
- *说明： 消息发送
- * @调用方法：eSendNotify()
- * @param： smallIcon: Int?，小图标
- * @param：title: String = "系统通知"， 通知标题
- * @param：text: String = "正在后台运行", 通知内容
- * @param: sound: String?="" null-无消息，""-默认 ”XX/X“-音频地址,
- * @param:isForeground:Boolean=false, 是否启是前景通知
- * @param：notifyId: Int = mNotifyId++，通知ID
- * @param：builderBlock: ((Notification.Builder) -> Unit)? = null, Notify 构造器扩展
- * @param：notifyBlock: ((Notification) -> Unit)? = null， Notify 扩展
- * @return: Int， 返回 notifyId  -1-失败
- */
+
 @RequiresApi(Build.VERSION_CODES.N)
 open class eForegroundService : Service() {
     companion object {
         val ACTION_STOP = "STOP"
         val ACTION_CLEAN = "CLEAN"
 
-       private var initMallIcon: Int? = null
-        var initRunJob: Job? = null
-        var initIsVocieWork = true
-        private  var initClazz: Class<*>? = null
+        private var initMallIcon: Int? = null
+        private var initRunJob: Job? = null
+        private var initIsVocieWork = true
+        private var initClazz: Class<*>? = null
         private var initIsForeground = true
-        private var  initTitle:String?=null
-        private var  initText:String?=null
-        private var  initSound:String?=null
-         var mNotification: eNotification? = null
-        private  var customizeNotify:(()->Unit)?=null
-        fun initParam(mallIcon:Int,title:String,text:String,sound:String?,customize:(()->Unit)?=null) {
-            initMallIcon=mallIcon
-            initTitle=title
-            initText=text
-            initSound=sound
-            customizeNotify=customize
-            customizeNotify=  customizeNotify?:{ mNotification?.eSendNotify(initMallIcon, initTitle!!, initText!!, initSound,initIsForeground)}
+        private var initTitle: String? = null
+        private var initText: String? = null
+        private var initSound: String? = null
+        var mNotification: eNotification? = null
+        private var customizeNotify: (() -> Unit)? = null
+
+        /**
+         *说明： 参数初始化，弹窗内容定义,可选调用，必须第一位
+         * @调用方法：initParam()
+         * @param： mallIcon: Int?，小图标
+         * @param：title: String = "系统通知"， 通知标题
+         * @param：text: String = "正在后台运行", 通知内容
+         * @param: sound: String?="" null-无消息，""-默认 ”XX/X“-音频地址,
+         * @param:customize:(()->Unit)?=null, 定制扩展
+         */
+        open fun initParam(mallIcon: Int, title: String, text: String, sound: String?, customize: (() -> Unit)? = null) {
+            initMallIcon = mallIcon
+            initTitle = title
+            initText = text
+            initSound = sound
+            customizeNotify = customize
+            customizeNotify = customizeNotify
+                    ?: { mNotification?.eSendNotify(initMallIcon, initTitle!!, initText!!, initSound, initIsForeground) }
         }
-        fun initStart(context: Context, tIntent: Intent, clazz: Class<*>, runJob:Job?,isForeground: Boolean = initIsForeground) {
-            initClazz= clazz
-            initRunJob=runJob
+
+        /**
+         *说明： 开始服务
+         * @调用方法：initStart()
+         * @param： context: Context,上下文
+         * @param：tIntent: Intent, 服务意图
+         * @param：clazz: Class<*>，点击服务打开界面
+         * @param: runJob: Job?=null,自定义前台服务运行Job
+         * @param:isForeground: Boolean = initIsForeground, 是否是前台服务
+         * @param：isVocieWork: Boolean = Build.VERSION_CODES.O >= Build.VERSION.SDK_INT，是否声音保活
+         */
+        open fun initStart(context: Context, tIntent: Intent, clazz: Class<*>, runJob: Job?=null, isForeground: Boolean = initIsForeground, isVocieWork: Boolean = Build.VERSION_CODES.O >= Build.VERSION.SDK_INT) {
+            initClazz = clazz
+            initRunJob = runJob
+            initIsVocieWork = isVocieWork
             initIsForeground = isForeground
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(tIntent)
@@ -79,7 +90,8 @@ open class eForegroundService : Service() {
         super.onCreate()
         eLog("onCreate")
         mNotification = eNotification(this, initClazz!!)
-        customizeNotify?.let { it() }?:mNotification?.eSendNotify(initMallIcon, isForeground = initIsForeground)
+        customizeNotify?.let { it() }
+                ?: mNotification?.eSendNotify(initMallIcon, isForeground = initIsForeground)
         if (initIsVocieWork)
             ePlayVoice(this, R.raw.n, isLoop = true)
         initRunJob?.start()
