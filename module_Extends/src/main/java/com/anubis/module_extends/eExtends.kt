@@ -1,5 +1,6 @@
 package com.anubis.kt_extends
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.ActivityManager
@@ -75,6 +76,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import javax.crypto.Cipher
+import javax.crypto.spec.SecretKeySpec
 import kotlin.collections.ArrayList
 import kotlin.experimental.and
 
@@ -98,40 +101,42 @@ import kotlin.experimental.and
  */
 
 
-/*获得根目录/data 内部存储路径*/
+/*获得根目录 内部存储路径:/data */
 val eGetDataDirectory = Environment.getDataDirectory().path
 
-/*获得缓存目录/cache*/
+/*获得缓存目录:/cache */
 val eGetDownloadCacheDirectory = Environment.getDownloadCacheDirectory().path
 
-/*获得SD卡目录/mnt/sdcard*/
+/*获得SD卡目录:/mnt/sdcard */
 val eGetExternalStorageDirectory = Environment.getExternalStorageDirectory().path
 
-/*获得系统目录/system*/
+/*获得系统目录:/system */
 val eGetRootDirectory: String = Environment.getRootDirectory().path
 
-/*返回通过Context.openOrCreateDatabase创建的数据库文件*/
-fun eGetDataBasePath(context: Context, dataName: String) = context.getDatabasePath(dataName)
+/*返回通过Context.openOrCreateDatabase创建的数据库文件:/data/data/XXX/databases */
+fun eGetDataBasePath(context: Context, dataName: String?=null) =  dataName?.let { context.getDatabasePath(it).path }?:"${eGetAppDir(context)}/databases"
+/*用于获取APP的根目录:/data/data/XXX */
+fun eGetAppDir(context: Context) = context.cacheDir.parent
 
-/*用于获取APP的cache目录 /data/data/$$$/cache目录*/
+/*用于获取APP的shared_prefs目录:/data/data/XXX/shared_prefs */
+fun eGetSharedPrefsDir(context: Context) = "${eGetAppDir(context)}/shared_prefs"
+
+/*用于获取APP的cache目录:/data/data/XXX/cache */
 fun eGetCacheDir(context: Context) = context.cacheDir.path
 
-/*用于获取APP的在SD卡中的cache目录/mnt/sdcard/Android/data/$$$/cache*/
-fun eGetExternalCacheDir(context: Context):String? = context.externalCacheDir?.path
+/*用于获取APP的在SD卡中的cache目录:/mnt/sdcard/Android/data/XXX/cache */
+fun eGetExternalCacheDir(context: Context): String? = context.externalCacheDir?.path
 
-/*用于获取APP的files目录 /data/data/$$$/files*/
+/*用于获取APP的files目录:/data/data/XXX/files */
 fun eGetFilesDir(context: Context) = context.filesDir.path
 
-/*用于获取APP SDK中的obb目录 /mnt/sdcard/Android/obb/$$$ */
+/*用于获取APP SDK中的obb目录:/mnt/sdcard/Android/obb/XXX */
 fun eGetObbDir(context: Context) = context.obbDir.path
 
-/*用于获取APP的所在包目录*/
-fun eGetPackageName(context: Context) = context.packageName
-
-/*来获得当前应用程序对应的 apk 文件的路径*/
+/*来获得当前应用程序对应的 apk 文件的路径:/data/app/XXX-2/base.apk */
 fun eGetPackageCodePath(context: Context) = context.packageCodePath
 
-/* 获取该程序的安装包路径*/
+/* 获取该程序的安装包路径:/data/app/XXX-2/base.apk */
 fun eGetPackageResourcePath(context: Context) = context.packageResourcePath
 
 
@@ -577,7 +582,6 @@ class eBReceiver private constructor() {
     }
 }
 
-
 /**
  *  Uri扩展--------------------------------------------------------------------------------
  */
@@ -792,6 +796,18 @@ class eApp private constructor() {
         android.os.Process.killProcess(android.os.Process.myPid())
     }
 
+    //APP清理缓存
+    open fun eAppCleanData(context: Context,cleanDirs: Array<String>?= arrayOf("cache","databases","shared_prefs")):Boolean{
+        var result=true
+        cleanDirs?:return false
+        File(eGetAppDir(context)).listFiles().forEach {
+            if (it.exists()&& cleanDirs.indexOf(it.name)!=-1){
+                if (!it.deleteRecursively())
+                    result=false
+            }
+        }
+        return result
+    }
     //Activity重启
     open fun eActivityRestart(activity: Activity, activityList: ArrayList<Activity>? = null): Boolean {
         try {
@@ -962,11 +978,11 @@ open class eRegex internal constructor() {
     }
 
     //获取数字
-    open fun eGetNumber(str: String): Int {
+    open fun eGetNumber(str: String): Long {
         val regEx = "[^0-9]"
         val p = Pattern.compile(regEx)
         val m = p.matcher(str)
-        return (m.replaceAll("").trim { it <= ' ' }).toInt()
+        return (m.replaceAll("").trim { it <= ' ' }).toLong()
     }
 
     //IP格式判断
@@ -1061,6 +1077,86 @@ open class eKeyEvent internal constructor() {
     }
 }
 
+/**
+ * 加密扩展类--------------------------------------------------------------------------
+ */
+open class eEncryption internal constructor() {
+    companion object {
+        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eEncryption() }
+    }
+
+    /*AES加密*/
+    fun eEncrypt(sSrc: String, sKey: String): String? {
+        var str = sSrc
+        var key=sKey
+        val re = if (sSrc.length % 16 == 0) {
+            str
+        } else {
+            println("1-1:" + str.length)
+            for (i in 1..16 - str.length % 16) {
+                str += " "
+            }
+            str
+        }
+        // 判断Key是否为16位
+        if (sKey.length != 16) {
+            print("Key长度不是16位")
+            return null
+        }
+        val raw = sKey.toByteArray(charset("utf-8"))
+        val skeySpec = SecretKeySpec(raw, "AES")
+        val cipher = Cipher.getInstance("AES/ECB/NoPadding")// "算法/模式/补码方式"
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec)
+        val encrypted = cipher.doFinal(re.toByteArray(charset("utf-8"))) //
+        var strHex = ""
+        val sb = StringBuilder("")
+        for (n in encrypted.indices) {
+            strHex = Integer.toHexString(encrypted[n].toInt() and 0xFF)
+            sb.append(if (strHex.length == 1) "0$strHex" else strHex) // 每个字节由两个字符表示，位数不够，高位补0
+        }
+        return sb.toString().trim { it <= ' ' }
+    }
+
+    /*MD5构建*/
+    fun eMD5Build(
+            map: Map<String, Any?>,
+            key: String
+    ): String {
+        val list =ArrayList<String>()
+        for ((key1, value) in map) {
+            if ("" != value && null != value) {
+                list.add("$key1=$value&")
+            }
+        }
+        val size = list.size
+        val arrayToSort = list.toTypedArray()
+        Arrays.sort(arrayToSort, java.lang.String.CASE_INSENSITIVE_ORDER)
+        val sb = StringBuilder()
+        for (i in 0 until size) {
+            sb.append(arrayToSort[i])
+        }
+        var result = sb.toString()
+        result += "key=$key"
+        return try {
+            eMD5Sign(result)
+        } catch (e: UnsupportedEncodingException) {
+            throw RuntimeException("签名过程中出现错误")
+        }
+    }
+    /*MD5加密*/
+    fun eMD5Sign(content: String): String {
+        val hash = MessageDigest.getInstance("MD5").digest(content.toByteArray())
+        val hex = StringBuilder(hash.size * 2)
+        for (b in hash) {
+            var str = Integer.toHexString(b.toInt())
+            if (b < 0x10) {
+                str = "0$str"
+            }
+            hex.append(str.substring(str.length -2))
+        }
+        return hex.toString()
+    }
+}
 
 /**
  * 时间扩展类-----------------------------------------------------------------------------------------
@@ -1875,7 +1971,7 @@ open class eBitmap internal constructor() {
 
 
 /**
- * Imagg图片处理辅助扩展类--------------------------------------------------------------------------------------
+ * Image图片处理辅助扩展类--------------------------------------------------------------------------------------
  */
 open class eImage internal constructor() {
     companion object {
@@ -2442,8 +2538,6 @@ open class ePermissions internal constructor() {
         }
         return str
     }
-
-
     //授权判断
     open fun eSetPermissions(
             activity: Activity,
@@ -2513,6 +2607,7 @@ open class ePermissions internal constructor() {
  */
 open class eShell internal constructor() {
     companion object {
+        var adb ="setprop service.adb.tcp.port 5555 stop adbd start adbd"
         val remount = "mount -o remount,rw rootfs "
         val install = "pm install -r "
         val kill = "am force-stop "

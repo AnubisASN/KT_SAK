@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_discern.*
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class DiscernActivity : eCameraActivity() {
     override val eScreenOrientation: Int = 270
-    override var eUseCamera2API: Boolean = false
+    override var eUseCamera2API: Boolean = true
     override val eDesiredPreviewFrameSize: Size = Size(800, 600)
     override val eActivityLayout: Int = R.layout.activity_discern
     override val eFragmentLayout: Int = R.layout.fragment_camera

@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.launcher.ARouter
 import com.android.xhapimanager.XHApiManager
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
+import com.anubis.SwissArmyKnife.GreenDao.Data
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleMsg
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTTS
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleWeb
@@ -117,10 +118,17 @@ class MainActivity : AppCompatActivity() {
         ParameHandleMSG.mainActivity = mainActivity
         ePermissions.eInit.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
-        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗_bteAlert弹窗_btButton弹窗", "bt导出Excel_bt导出ExcelS", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "bt开启常亮_bt关闭常亮_bt保持唤醒", "et_bt关闭唤醒_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录")
+        datas = arrayOf("sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗_bteAlert弹窗_btButton弹窗", "bt导出Excel_bt导出ExcelS", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "bt开启常亮_bt关闭常亮_bt保持唤醒", "et_bt关闭唤醒_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录_bt清除缓存")
         init()
         //业务测试模块
         LoadingData()
+        eGetDataBasePath(this).eLog("eGetDataBasePath")
+        eGetAppDir(this).eLog("eGetAppDir")
+        eGetSharedPrefsDir(this).eLog("eGetSharedPrefsDir")
+
+        this.databaseList().joinToString().eLog("databaseList")
+         eGetDataBasePath(this,"DB_ASN") .eLog("eGetDataBasePath")
+
     }
 
 
@@ -484,7 +492,7 @@ class MainActivity : AppCompatActivity() {
 
                     getDigit("Shell执行") -> when (view?.id) {
                         R.id.bt_item1 -> Hint("ROOT权限检测:${eShell.eInit.eHaveRoot()}")
-                        R.id.bt_item2 -> Hint("Shell执行：${eShell.eInit.eExecShell(MSG ?: "date")}")
+                        R.id.bt_item2 -> Hint("Shell执行：${eShell.eInit.eExecShell(MSG ?: "setprop service.adb.tcp.port 5555 stop adbd start adbd")}")
                         R.id.bt_item3 -> {
                             if (MSG?.isNotEmpty() == true) {
                                 val shell = "cp -r /datas/APP/$MSG* /system/priv*"
@@ -514,15 +522,17 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     getDigit("正则匹配") -> Hint("正则匹配：/datas/APP/$packageName$MSG")
-                    getDigit("清除记录") -> {
-                        if (System.currentTimeMillis() - Time > 1000) {
-                            Time = System.currentTimeMillis()
-                        } else {
-                            tv_Hint.text = ""
-                            file!!.writeText("")
-                            eShowTip("记录已清除")
+                    getDigit("清除记录") ->
+                        when (view?.id) {
+                            R.id.bt_item1->     if (System.currentTimeMillis() - Time > 1000) {
+                                Time = System.currentTimeMillis()
+                            } else {
+                                tv_Hint.text = ""
+                                file!!.writeText("")
+                                eShowTip("记录已清除")
+                            }
+                            R.id.bt_item2-> Hint("缓存清理：${eApp.eInit.eAppCleanData(this@MainActivity)}")
                         }
-                    }
                 }
             }
         }

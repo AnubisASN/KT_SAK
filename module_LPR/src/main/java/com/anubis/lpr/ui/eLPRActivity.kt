@@ -63,7 +63,7 @@ open class eLPRActivity : AppCompatActivity() {
     private fun finishValue(card: String?) {
         val intent = Intent()
         intent.putExtra("card", card)
-        setResult(Activity.RESULT_OK, intent)
+        setResult(REQUEST_LPR_CODE, intent)
     }
 
     private val mLoaderCallback: BaseLoaderCallback = object : BaseLoaderCallback(this) {

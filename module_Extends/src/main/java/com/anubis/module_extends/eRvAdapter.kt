@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anubis.kt_extends.eLog
@@ -38,7 +39,7 @@ import org.jetbrains.anko.*
 @SuppressLint("WrongConstant")
 /**
  *说明：RecyclerView 适配器
- * @param mActivity: Context; 上下文
+ * @param mContext: Context; 上下文
  * @param recyclerView: RecyclerView; 控件ID
  * @param layoutId: Int; item布局ID
  * @param tDatas: ArrayList<T>? = null; 数据组
@@ -48,8 +49,9 @@ import org.jetbrains.anko.*
  * @param orientation: Int = LinearLayoutManager.VERTICAL； RecyclerView方向
  * @param clickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null； item点击回调代码块
  */
+
 class eRvAdapter<T>(
-        val mActivity: Context,
+        val mContext: Context,
         val recyclerView: RecyclerView,
         val itemLayoutId: Int,
         tDatas: ArrayList<T>? = null,
@@ -57,15 +59,16 @@ class eRvAdapter<T>(
         val itemAnim: eDefaultItemAnimator? = null,
         positionForBlock: ((recyclerView: RecyclerView, recyclerBottomCoordinate: Int, lastItemBottomCoordinate: Int, itemTotal: Int, lastItemCount: Int) -> Unit)? = null,
         val longClickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null,
-        orientation: Int = LinearLayoutManager.VERTICAL,
+        layoutManagerBlock:((Context)->LinearLayoutManager)?=null,
+        orientation: Int = GridLayoutManager.VERTICAL,
         val clickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null
 ) : RecyclerView.Adapter<eRvAdapter<T>.MyHolder>() {
     //    companion object{
     var mDatas: ArrayList<T>? = arrayListOf()
-
     init {
-        val layoutManager = LinearLayoutManager(mActivity)
-        layoutManager.orientation = orientation
+        var layoutManager=LinearLayoutManager(mContext)
+        layoutManagerBlock?.let { layoutManager=it(mContext) }
+        layoutManager.orientation=orientation
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = this
         recyclerView.itemAnimator = itemAnim
@@ -127,7 +130,7 @@ class eRvAdapter<T>(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-        val view = LayoutInflater.from(mActivity).inflate(itemLayoutId, parent, false)
+        val view = LayoutInflater.from(mContext).inflate(itemLayoutId, parent, false)
         return MyHolder(view)
     }
 
@@ -144,7 +147,7 @@ class eRvAdapter<T>(
  itemAnim?.let { anim ->
             GlobalScope.launch {
                 datas.forEachIndexed { i, t ->
-                    mActivity.runOnUiThread {
+                    mContext.runOnUiThread {
                         index?.let { it ->
                             eAddData(t, it + i,animExBlock,changeStatus)
                         } ?: eAddData(t,index,animExBlock,changeStatus)
@@ -172,7 +175,7 @@ class eRvAdapter<T>(
     fun eDelData(indexs: List<T>, animExBlock: ((eRvAdapter<T>) -> Unit)? = null, changeStatus: ((Int, Boolean) -> Unit)?={ i: Int, b: Boolean -> eMoveShow(i,b)}) {
         GlobalScope.launch {
             indexs.forEach {
-                mActivity.runOnUiThread {
+                mContext.runOnUiThread {
                     eDelData(mDatas?.indexOf(it) ?: -1, animExBlock, changeStatus)
                 }
                 itemAnim?.let {

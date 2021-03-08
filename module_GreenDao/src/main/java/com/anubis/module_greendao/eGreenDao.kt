@@ -143,6 +143,7 @@ class eGreenDao private constructor(){
 
     /**
      * 使用native sql进行查询操作
+     * sql 例如：where NAME=?
      */
     fun <T>eQueryUserByNativeSql(user: T, sql: String, conditions: Array<String>): List<T> {
         return daoSession!!.queryRaw<Any, Any>((user as Any)::class.java as Class<Any>?, sql, *conditions) as List<T>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FF2DC77C">
+
+    <ImageView
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="8dp"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/musicIcon_imageView"
+            android:layout_marginLeft="8dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/musicName_textView"
+            android:textColor="@android:color/white"
+            android:maxLines="2"
+            android:maxLength="20"
+            android:textSize="18sp"
+            tools:text="暖暖-梁静茹"
+            android:layout_toEndOf="@+id/musicIcon_imageView"
+            android:layout_toRightOf="@+id/musicIcon_imageView"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_alignTop="@+id/musicIcon_imageView"
+            android:layout_toStartOf="@+id/imageButton2"
+            android:layout_toLeftOf="@+id/imageButton2"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:id="@+id/playTime_textView"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="0dp"
+            android:layout_below="@+id/musicName_textView"
+            android:textColor="#FFEEEEEE"
+            tools:text="5:26"
+            android:layout_alignLeft="@+id/musicName_textView"
+            android:layout_alignStart="@+id/musicName_textView"/>
+
+    <TextView
+            android:text="/"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView3"
+            android:layout_toEndOf="@+id/playTime_textView"
+            android:layout_toRightOf="@+id/playTime_textView"
+            android:layout_alignTop="@+id/playTime_textView"
+            android:textColor="#FFEEEEEE"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/musicTime_textView"
+            android:layout_toEndOf="@+id/textView3"
+            android:layout_toRightOf="@+id/textView3"
+            android:layout_alignTop="@+id/textView3"
+            android:layout_alignBottom="@+id/textView3"
+            android:textColor="#FFEEEEEE"
+            tools:text="6:12"/>
+
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_media_previous"
+            android:id="@+id/imageButton2"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_toStartOf="@+id/imageButton3"
+            android:layout_toLeftOf="@+id/imageButton3"
+            android:layout_alignTop="@+id/imageButton3"
+            android:layout_alignBottom="@+id/imageButton3"
+            android:background="@null"/>
+
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_media_play"
+            android:id="@+id/imageButton3"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_toStartOf="@+id/imageButton4"
+            android:layout_toLeftOf="@+id/imageButton4"
+            android:layout_alignTop="@+id/imageButton4"
+            android:layout_alignBottom="@+id/imageButton4"
+            android:background="@null"/>
+
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_media_next"
+            android:id="@+id/imageButton4"
+            android:layout_alignTop="@+id/musicIcon_imageView"
+            android:layout_alignBottom="@+id/musicIcon_imageView"
+            android:background="@null"
+            android:layout_toStartOf="@+id/imageButton5"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_toLeftOf="@+id/imageButton5"/>
+
+    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:id="@+id/imageButton5"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_centerVertical="true"/>
+
+</RelativeLayout>

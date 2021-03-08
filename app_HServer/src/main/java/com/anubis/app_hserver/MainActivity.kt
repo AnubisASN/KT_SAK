@@ -1,35 +1,45 @@
 package com.anubis.app_hserver
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
+import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.view.View
-import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.annotation.RequiresApi
-import com.anubis.module_httpserver.protocols.http.eHTTPD
-import java.io.File
-import kotlin.collections.HashMap
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.anubis.kt_extends.*
-import com.anubis.module_httpserver.*
+import com.anubis.module_dialog.eForegroundService
+import com.anubis.module_dialog.eNotification
+import com.anubis.module_extends.eRvAdapter
+import com.anubis.module_httpserver.eHttpServer
+import com.anubis.module_httpserver.eManage
+import com.anubis.module_httpserver.eResolver
+import com.anubis.module_httpserver.eResolverType
 import com.anubis.module_httpserver.protocols.http.IHTTPSession
+import com.anubis.module_httpserver.protocols.http.eHTTPD
 import com.anubis.module_httpserver.protocols.http.response.Response
-import com.anubis.module_tts.Bean.TTSMode
-import com.anubis.module_tts.Bean.VoiceModel
 import com.anubis.module_tts.eTTS
-import com.anubis.module_tts.ttsTest
 import com.anubis.module_ttse.eTTSE
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
+import org.w3c.dom.Text
+import java.io.File
 
 
 @SuppressLint("SetTextI18n")
 class MainActivity : AppCompatActivity() {
     private var mHttpServer: eHTTPD? = null
     private var mTTS: eTTS? = null
-    private var mTTSE:eTTSE?=null
+    private var mTTSE: eTTSE? = null
+    private var mNotify: eNotification? = null
     private var httpHandler = @SuppressLint("HandlerLeak")
     object : Handler() {
         override fun handleMessage(msg: Message) {
@@ -51,6 +61,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private var testjob:Job?=null
+    @TargetApi(Build.VERSION_CODES.N)
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,26 +86,56 @@ class MainActivity : AppCompatActivity() {
             })
         }
         mHttpServer = eHttpServer.eInit.eStart(eResolver::class.java, handler = httpHandler)
+
+
+
+        mNotify = eNotification(this, MainActivity::class.java)
+
+        eRvAdapter<String>(this,rv,android.R.layout.activity_list_item, arrayListOf("1","2","3","4","5"),{ view: View, s: String, i: Int->
+            view.findViewById<TextView>(android.R.id.text1).text=s
+        },layoutManagerBlock = {
+            GridLayoutManager(it,3)
+        },orientation = LinearLayoutManager.HORIZONTAL)
+
     }
 
     override fun onResume() {
         super.onResume()
         tvHint.eSpannableTextView(String.format(resources.getString(R.string.hint), "${eDevice.eInit.eGetHostIP()}:${mHttpServer?.myPort}"))
+        testjob=GlobalScope.launch(start = CoroutineStart.LAZY){
+            while (isActive){
+                eLog("i")
+                delay(1000L)
+            }
+        }
     }
 
+    var i: Int = 1
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(Build.VERSION_CODES.O)
+    @TargetApi(Build.VERSION_CODES.N)
     fun onClick(v: View) {
         when (v.id) {
             btTest1.id -> {
-                Test.s1.eLog()
-                val s = Test.eInit
-                s.init()
-                s.s2.eLog()
-                Test.s1.eLog()
+                val intent = Intent(this, eForegroundService::class.java)
+                eForegroundService.initParam(R.drawable.logo,"系统提示","正在后台运行","")
+                eForegroundService.initStart(this,intent,MainActivity::class.java, testjob)
+            }
+            btEnglish.id -> {
+                mNotify?.eSendNotify(R.drawable.dia_background,"非服务普通通知","又没钱啦",null,false).eLog("NotifyId")
+            }
+            btSendMsg.id -> {
+               eForegroundService.mNotification?.eSendNotify(R.drawable.dia_btbackground0,"开始打工啦","又没钱啦","",false,builderBlock = {
+                   it.setContentTitle("开始打工啦啦啦啦")
+               }).eLog("NotifyId")
+            }
+            btTest.id -> {
+                val intent = Intent(this@MainActivity, eForegroundService::class.java)
+                stopService(intent)
             }
             button8.id -> {
-               startActivity(Intent(this,ttsTest::class.java))
+                mNotify?.eCleanNotify()
+                eForegroundService.mNotification?.eCleanNotify()
             }
         }
     }
