@@ -72,7 +72,8 @@ class eTTSE private constructor() {
      * 说明： 引擎自定义信息
      * @初始化方法：DataEngineInfo
      * @param name:String ; 引擎名
-     * @param downLoadUrl: String；资源下载地址
+     * @param downLoadUrl: String；资源下载地址 http://119.23.77.41:8081/info/科大讯飞TTS引擎3.0.apk
+     * @param packName: String; 引擎包名 com.iflytek.speechcloud
      * @param clz: String；包名/设置类名
      */
     data class DataEngineInfo(var name: String, var downLoadUrl: String, var packName: String, var setClz: String? = null)
@@ -81,7 +82,7 @@ class eTTSE private constructor() {
     lateinit var eTtsEngine: TextToSpeech
 
     companion object {
-        /*主动检索*/
+        /*已安装引擎检索*/
         fun eSearchEngine(context: Context): ArrayList<String> {
             val arrayList = arrayListOf<String>()
             eDownListEngine?.forEach {
@@ -93,13 +94,22 @@ class eTTSE private constructor() {
             return arrayList
         }
 
-        val eDownListEngine: ArrayList<DataEngineInfo>? = arrayListOf(
+        var eDownListEngine: ArrayList<DataEngineInfo>? = arrayListOf(
                 DataEngineInfo("科大讯飞TTS引擎3.0  推荐", "http://119.23.77.41:8081/info/科大讯飞TTS引擎3.0.apk", "com.iflytek.speechcloud", ".activity.DownloadSpeaker"),
                 DataEngineInfo("GoogleTTS引擎", "http://119.23.77.41:8081/info/GoogleTTS引擎.apk", "com.google.android.tts", ".local.voicepack.ui.VoiceDataInstallActivity"),
                 DataEngineInfo("度秘TTS引擎", "http://119.23.77.41:8081/info/度秘TTS引擎.apk", "com.baidu.duersdk.opensdk"))
         private lateinit var mContext: Context
         private var mListener: TextToSpeech.OnInitListener? = null
         private var mEngine: String? = null
+
+        /**
+         * 说明： 引擎自定义信息
+         * @初始化方法：DataEngineInfo
+         * @param context: Context ; 上下文
+         * @param engine: String? = null；引擎包名
+         * @param listener: TextToSpeech.OnInitListener? = null; 监听器
+         * @return eTTSE
+         */
         fun eInit(context: Context, engine: String? = null, listener: TextToSpeech.OnInitListener? = null): eTTSE {
             mContext = context
             listener?.let { mListener = it }

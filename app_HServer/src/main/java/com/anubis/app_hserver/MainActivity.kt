@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
 
         mNotify = eNotification(this, MainActivity::class.java)
 
-        eRvAdapter<String>(this,rv,android.R.layout.activity_list_item, arrayListOf("1","2","3","4","5"),{ view: View, s: String, i: Int->
+        eRvAdapter(this,rv,android.R.layout.activity_list_item, arrayListOf("1","2","3","4","5"),{ view: View, s: String, i: Int->
             view.findViewById<TextView>(android.R.id.text1).text=s
         },layoutManagerBlock = {
             GridLayoutManager(it,3)

@@ -65,7 +65,6 @@ open class eNotification(val mContext: Context, val mClazz: Class<*>) {
             notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             mManager?.createNotificationChannel(notificationChannel)
         }
-
         val mBuild = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder(mContext.applicationContext, notifyId.toString()).setChannelId(notifyId.toString())
         } else {
@@ -86,7 +85,7 @@ open class eNotification(val mContext: Context, val mClazz: Class<*>) {
             notifyBlock?.let { it(this) }
             if (isForeground) {
                 return if (mContext is Service) {
-                    (mContext as Service).startForeground(notifyId, this)
+                    mContext.startForeground(notifyId, this)
                     notifyId
                 } else {
                     -1

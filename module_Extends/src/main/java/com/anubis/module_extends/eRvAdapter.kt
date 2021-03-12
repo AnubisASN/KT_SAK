@@ -41,11 +41,12 @@ import org.jetbrains.anko.*
  *说明：RecyclerView 适配器
  * @param mContext: Context; 上下文
  * @param recyclerView: RecyclerView; 控件ID
- * @param layoutId: Int; item布局ID
+ * @param itemLayoutId: Int; item布局ID
  * @param tDatas: ArrayList<T>? = null; 数据组
  * @param itemEditBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null; item编辑回调代码块
  * @param positionForBlock: ((recyclerView: RecyclerView, recyclerBottomCoordinate: Int, lastItemBottomCoordinate: Int, itemTotal: Int, lastItemCount: Int) -> Unit)? = null; 滑动位置监听回调代码块
  * @param longClickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null; item长按回调代码块
+ * @param  layoutManagerBlock:((Context)->LinearLayoutManager)?=null; 布局管理扩展模块
  * @param orientation: Int = LinearLayoutManager.VERTICAL； RecyclerView方向
  * @param clickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null； item点击回调代码块
  */

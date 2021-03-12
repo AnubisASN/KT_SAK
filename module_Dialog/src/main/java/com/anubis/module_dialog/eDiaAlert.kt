@@ -39,7 +39,7 @@ import kotlin.properties.Delegates
  *Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  *Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  *Router :  /'Module'/'Function'
- *说明：
+ *说明： 弹窗提示
  */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 open class eDiaAlert internal constructor() {
@@ -76,12 +76,13 @@ open class eDiaAlert internal constructor() {
      * @param x: Int = 0, 弹窗移动 X
      * @param y: Int = 0, 弹窗移动 Y
      * @param alpha: Float = 0.9f, 弹窗透明度
-     * @param buttonReplyTime: Long = 100L,
-     * @param onClickAnimation:Block=,
+     * @param buttonReplyTime: Long = 100L,按钮动画时间
+     * @param onClickAnimation:((View?,Long)->Unit)?=null,点击按钮动画
      * @param ICallBackEdit: ICallBackEdit? = null,
      * @param ICallBackClick: ICallBackClick? = null,
      * @param adbEditBlock:((Dialog, View, eArrowDownloadButton) -> Unit )?=null,
      * @param itemEditBlock: (Dialog, View) -> Unit = { _, _ -> }
+     * @param return Dialog
      * */
     open fun eDefaultShow(
             title: String? = null,
@@ -231,6 +232,11 @@ open class eDiaAlert internal constructor() {
         return dia
     }
 
+    /**
+     * 说明：点击动画
+     * @param it: View?, 点击的控件
+     * @param  dismissTime: Long = mDismissTime,点击动画时间
+     * */
     open fun onDefaultClickAnimation(it: View?, dismissTime: Long = mDismissTime) {
         with(it as? Button) {
             this?.textColor = Color.parseColor("#ffffff")
@@ -250,6 +256,7 @@ open class eDiaAlert internal constructor() {
      * @param adapterBlock: (ArrayList<eRvAdapter<T>>) -> Unit, //级别1  返回级别2 适配器
      * @param itemClickBlock: ((itemView1: View, i1: Int, itemView2: View, T, i2: Int) -> Unit)? = null,//级别2  点击项
      * @param orientation: Int = LinearLayoutManager.HORIZONTAL,  //方向
+     * @param isCanceledOnTouchOutside: Boolean = true,   //外部点击取消
      * @param returnBlock: (ArrayList<T?>) -> Unit  //返回结果组
      * */
     open fun <T> eDiaGradeSelect(
@@ -293,6 +300,11 @@ open class eDiaAlert internal constructor() {
 
 
     private var colorViewPair: Pair<TextView, TextView>? = null
+
+    /**
+     * 说明：默认分级点击动画
+     * @param viewPair: Pair<TextView, TextView>? = null, //级别1  标题
+     * */
     internal open fun View.onDiaGradeSeClickUI(viewPair: Pair<TextView, TextView>? = null) {
         colorViewPair?.first?.textColor = Color.parseColor("#ffffff")
         colorViewPair?.second?.backgroundColor = Color.parseColor("#ffffff")
