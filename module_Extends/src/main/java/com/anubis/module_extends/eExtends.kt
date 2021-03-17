@@ -114,7 +114,9 @@ val eGetExternalStorageDirectory = Environment.getExternalStorageDirectory().pat
 val eGetRootDirectory: String = Environment.getRootDirectory().path
 
 /*返回通过Context.openOrCreateDatabase创建的数据库文件:/data/data/XXX/databases */
-fun eGetDataBasePath(context: Context, dataName: String?=null) =  dataName?.let { context.getDatabasePath(it).path }?:"${eGetAppDir(context)}/databases"
+fun eGetDataBasePath(context: Context, dataName: String? = null) = dataName?.let { context.getDatabasePath(it).path }
+        ?: "${eGetAppDir(context)}/databases"
+
 /*用于获取APP的根目录:/data/data/XXX */
 fun eGetAppDir(context: Context) = context.cacheDir.parent
 
@@ -797,17 +799,18 @@ class eApp private constructor() {
     }
 
     //APP清理缓存
-    open fun eAppCleanData(context: Context,cleanDirs: Array<String>?= arrayOf("cache","databases","shared_prefs")):Boolean{
-        var result=true
-        cleanDirs?:return false
+    open fun eAppCleanData(context: Context, cleanDirs: Array<String>? = arrayOf("cache", "databases", "shared_prefs")): Boolean {
+        var result = true
+        cleanDirs ?: return false
         File(eGetAppDir(context)).listFiles().forEach {
-            if (it.exists()&& cleanDirs.indexOf(it.name)!=-1){
+            if (it.exists() && cleanDirs.indexOf(it.name) != -1) {
                 if (!it.deleteRecursively())
-                    result=false
+                    result = false
             }
         }
         return result
     }
+
     //Activity重启
     open fun eActivityRestart(activity: Activity, activityList: ArrayList<Activity>? = null): Boolean {
         try {
@@ -1088,7 +1091,7 @@ open class eEncryption internal constructor() {
     /*AES加密*/
     fun eEncrypt(sSrc: String, sKey: String): String? {
         var str = sSrc
-        var key=sKey
+        var key = sKey
         val re = if (sSrc.length % 16 == 0) {
             str
         } else {
@@ -1122,7 +1125,7 @@ open class eEncryption internal constructor() {
             map: Map<String, Any?>,
             key: String
     ): String {
-        val list =ArrayList<String>()
+        val list = ArrayList<String>()
         for ((key1, value) in map) {
             if ("" != value && null != value) {
                 list.add("$key1=$value&")
@@ -1143,6 +1146,7 @@ open class eEncryption internal constructor() {
             throw RuntimeException("签名过程中出现错误")
         }
     }
+
     /*MD5加密*/
     fun eMD5Sign(content: String): String {
         val hash = MessageDigest.getInstance("MD5").digest(content.toByteArray())
@@ -1152,7 +1156,7 @@ open class eEncryption internal constructor() {
             if (b < 0x10) {
                 str = "0$str"
             }
-            hex.append(str.substring(str.length -2))
+            hex.append(str.substring(str.length - 2))
         }
         return hex.toString()
     }
@@ -1632,7 +1636,7 @@ open class eBitmap internal constructor() {
     }
 
     //NV21 Bytes字节转Bitmap
-    open fun eByteArrayToBitmp(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect = Rect(0, 0, width, height), rotate: Float = 0f, quality: Int = 80, isFlip: Boolean = false): Bitmap? {
+    open fun eNV21ByteArrayToBitmp(mImageNV21: ByteArray, width: Int, height: Int, rect: Rect = Rect(0, 0, width, height), rotate: Float = 0f, quality: Int = 80, isFlip: Boolean = false): Bitmap? {
         var mBitmap: Bitmap? = null
         try {
             val image = YuvImage(mImageNV21, ImageFormat.NV21, width, height, null)
@@ -1641,11 +1645,29 @@ open class eBitmap internal constructor() {
             val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
             mBitmap = eBitmapRotateFlip(bmp, rotate, isFlip)
             stream.close()
-//            eGcBitmap(bmp)
         } catch (e: Exception) {
             e.printStackTrace()
         }
         return mBitmap
+    }
+
+    //标准ByteArray转Bitmap
+    fun eByteArrayToBitmap(byteArray: ByteArray, width: Int, height: Int, config: Bitmap.Config = Bitmap.Config.ARGB_8888): Bitmap {
+        val bitmap = Bitmap.createBitmap(width, height, config)
+        bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(byteArray))
+        return bitmap
+    }
+
+    //IntArray字节转Bitmap
+    open fun eIntArrayToBitmp(intArray: IntArray, width: Int, height: Int, config: Bitmap.Config = Bitmap.Config.ARGB_8888): Bitmap? {
+        try {
+            val bitmap = Bitmap.createBitmap(width, height, config)
+            bitmap!!.setPixels(intArray, 0, width, 0, 0, width, height)
+            return bitmap
+        } catch (e: Exception) {
+            e.eLogE("eIntArrayToBitmp")
+        }
+        return null
     }
 
     //YUV Bytes字节转文件
@@ -1752,7 +1774,7 @@ open class eBitmap internal constructor() {
             return yuvBytes
         } catch (e: Exception) {
             image?.close()
-            e.eLogE("")
+            e.eLogE("eGetImagetoByteArray")
         }
 
         return null
@@ -2538,6 +2560,7 @@ open class ePermissions internal constructor() {
         }
         return str
     }
+
     //授权判断
     open fun eSetPermissions(
             activity: Activity,
@@ -2607,7 +2630,7 @@ open class ePermissions internal constructor() {
  */
 open class eShell internal constructor() {
     companion object {
-        var adb ="setprop service.adb.tcp.port 5555 stop adbd start adbd"
+        var adb = "setprop service.adb.tcp.port 5555 stop adbd start adbd"
         val remount = "mount -o remount,rw rootfs "
         val install = "pm install -r "
         val kill = "am force-stop "

@@ -155,17 +155,17 @@ object eArcFaceFT : OnCameraListener, Camera.AutoFocusCallback {
                     val top = eArcFaceFT.mAFT_FSDKFace!!.rect.top - eArcFaceFT.shearNum
                     val right = eArcFaceFT.mAFT_FSDKFace!!.rect.right + eArcFaceFT.shearNum
                     val bottom = eArcFaceFT.mAFT_FSDKFace!!.rect.bottom + eArcFaceFT.shearNum
-                    eArcFaceFT.mBitmap = eBitmap.eInit.eByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height, Rect(if (left < 0) 1 else left,
+                    eArcFaceFT.mBitmap = eBitmap.eInit.eNV21ByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height, Rect(if (left < 0) 1 else left,
                             if (top < 0) 1 else top,
                             if (right > size.width) size.width - 1 else right,
                             if (bottom > size.height) size.height - 1 else bottom
                     ), rotate = rotate)
                 } catch (e: Exception) {
-                    eArcFaceFT.mBitmap = eBitmap.eInit.eByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height, rotate = rotate)
+                    eArcFaceFT.mBitmap = eBitmap.eInit.eNV21ByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height, rotate = rotate)
                     e.eLogE("矩阵截取失败")
                 }
             } else {
-                eArcFaceFT.mBitmap = eBitmap.eInit.eByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height, rotate = rotate)
+                eArcFaceFT.mBitmap = eBitmap.eInit.eNV21ByteArrayToBitmp(eArcFaceFT.mImageNV21!!, size.width, size.height, rotate = rotate)
                 eLog("mBitmap:${eArcFaceFT.mBitmap == null}")
             }
         }

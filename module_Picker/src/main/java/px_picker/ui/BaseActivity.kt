@@ -8,11 +8,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentActivity
 import com.anubis.module_picker.R
+import com.bumptech.glide.Glide
 import px_core.PhoenixOption
 import px_core.common.PhoenixConstant
 import px_core.listener.Starter
@@ -413,11 +415,15 @@ open class BaseActivity : FragmentActivity() {
         savePath = option.savePath
 
         if (Phoenix.config().imageLoader == null) {
-            throw IllegalArgumentException("The image loader should be set in application\n"+"" +
-                    "        Phoenix.config()\n" +
-                    "                .imageLoader { context: Context, imageView: ImageView, s: String, i: Int ->\n" +
-                    "                    Glide.with(context).load(s).into(imageView)\n" +
-                    "                }")
+            Phoenix.config()
+                    .imageLoader { context: Context, imageView: ImageView, s: String, i: Int ->
+                        Glide.with(context).load(s).into(imageView)
+                    }
+//            throw IllegalArgumentException("The image loader should be set in application\n"+"" +
+//                    "        Phoenix.config()\n" +
+//                    "                .imageLoader { context: Context, imageView: ImageView, s: String, i: Int ->\n" +
+//                    "                    Glide.with(context).load(s).into(imageView)\n" +
+//                    "                }")
         }
     }
 }

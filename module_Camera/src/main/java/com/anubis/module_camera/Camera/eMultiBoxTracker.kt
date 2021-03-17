@@ -8,11 +8,13 @@ import android.graphics.Paint.Style
 import android.os.Build
 import androidx.annotation.RequiresApi
 import android.util.TypedValue
+import com.anubis.kt_extends.eLog
+import com.anubis.kt_extends.eLogE
 import com.anubis.module_camera.Camera.customview.eBorderedText
 import com.anubis.module_camera.Camera.customview.eOverlayView
 import kotlinx.android.synthetic.main.fragment_camera.*
-import java.util.ArrayList
-import java.util.LinkedList
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * 类说明：跟踪器封装
@@ -30,7 +32,7 @@ object eMultiBoxTracker {
     private var verticalFlip = false //垂直翻转
     private var horizontalFlip = false //垂直翻转
     /**
-     * 方法说明：初始化
+     * 方法说明：初始化 ,请确保在 setFragment 后
      * @param activity: Activity；活动
      * @param eOverlayView = activity.frame_ov_tracking；叠加试图控件
      * @param paint: Paint? = null ；画笔
@@ -88,10 +90,10 @@ object eMultiBoxTracker {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Synchronized
-    open fun draw(canvas: Canvas) {
+    open fun draw(canvas: Canvas,block:((Canvas,eBorderedText?)->Unit)?=null) {
         val widthScale = if (width == 0) 1f else canvas.width / width.toFloat()
         val heightScale = if (height == 0) 1f else canvas.height / height.toFloat()
-        for (rect in trackedObjects) {
+        trackedObjects.forEach {rect->
             val tRect: Rect
             when {
                 //水平翻转
@@ -108,7 +110,8 @@ object eMultiBoxTracker {
                     tRect = Rect((rect.first.left * widthScale).toInt(), (rect.first.top * heightScale).toInt(), (rect.first.right * widthScale).toInt(), (rect.first.bottom * heightScale).toInt())
             }
             canvas.drawRect(tRect.left.toFloat(), tRect.top.toFloat(), tRect.right.toFloat(), tRect.bottom.toFloat(), boxPaint)
-            borderedText!!.drawText(canvas, tRect.left.toFloat(), tRect.top.toFloat(), rect.second, boxPaint)
+            borderedText?.drawText(canvas, tRect.left.toFloat(), tRect.top.toFloat(), rect.second, boxPaint)
+            block?.let { it(canvas,borderedText) }
         }
     }
 }

@@ -22,10 +22,11 @@ import android.view.View;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /** A simple View providing a render callback to other classes. */
 public class eOverlayView extends View {
-  private final List<DrawCallback> callbacks = new LinkedList<DrawCallback>();
+  private final CopyOnWriteArrayList<DrawCallback> callbacks = new CopyOnWriteArrayList<>();
 
   public eOverlayView(final Context context, final AttributeSet attrs) {
     super(context, attrs);

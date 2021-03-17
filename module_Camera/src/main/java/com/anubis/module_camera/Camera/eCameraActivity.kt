@@ -109,7 +109,7 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
                     eProcessImage(bytes,ePreviewWidth,ePreviewHeight)
                 }
                 else -> {
-                    eProcessImage(eBitmap.eInit.eByteArrayToBitmp(bytes, ePreviewWidth, ePreviewHeight, rotate = bitmapRotation, isFlip = isFlip))
+                    eProcessImage(eBitmap.eInit.eNV21ByteArrayToBitmp(bytes, ePreviewWidth, ePreviewHeight, rotate = bitmapRotation, isFlip = isFlip))
                 }
             }
         }
@@ -151,11 +151,10 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
                     uvPixelStride,
                     inArrays!!)
             image.close()
-            val bitmap = Bitmap.createBitmap(ePreviewWidth, ePreviewHeight, Bitmap.Config.ARGB_8888)
-            bitmap!!.setPixels(inArrays, 0, ePreviewWidth, 0, 0, ePreviewWidth, ePreviewHeight)
+            val bitmap=eBitmap.eInit.eIntArrayToBitmp(inArrays!!,ePreviewWidth,ePreviewHeight)
             when (returnType) {
                 TYPE.ByteArray -> {
-                    eProcessImage(eBitmap.eInit.eBitmapToByteArray(bitmap), ePreviewWidth, ePreviewHeight)
+                    eProcessImage(eBitmap.eInit.eBitmapToByteArray(bitmap!!), ePreviewWidth, ePreviewHeight)
                 }
                 else -> {
                     eProcessImage(eBitmap.eInit.eBitmapRotateFlip(bitmap, bitmapRotation, isFlip))

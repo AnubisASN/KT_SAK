@@ -117,8 +117,8 @@ open class ePicker internal constructor() {
      */
     fun eResult(activity: Activity, requestCode: Int, resultCode: Int, data: Intent?) = if (resultCode === Activity.RESULT_OK) {
         when (requestCode) {
-            IMAGE_REQUEST_CODE -> Phoenix.result(data)
-            FILE_REQUEST_CODE -> FilePickerManager.obtainData()
+            IMAGE_REQUEST_CODE -> Phoenix.result(data)  //MediaEntity
+            FILE_REQUEST_CODE -> FilePickerManager.obtainData() //String
             else -> null
         }
     } else {

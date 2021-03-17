@@ -18,6 +18,7 @@ package com.anubis.app_discern
 
 import android.content.Intent
 import android.graphics.*
+import android.hardware.Camera
 import android.media.ImageReader.OnImageAvailableListener
 import android.os.Build
 import android.os.Bundle
@@ -112,6 +113,7 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                 eHWLive.eInit(object : MLLivenessCapture.Callback {
                     override fun onFailure(p0: Int) {
                     }
+
                     override fun onSuccess(p0: MLLivenessCaptureResult?) {
                         tv_hint.text = p0?.isLive.toString()
                         iv_image.setImageBitmap(p0?.bitmap)
@@ -142,7 +144,6 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
         async {
             when (typeId) {
                 bt_make.id -> {
-                    iv_image.post { iv_image.imageBitmap = bitmap }
                     val box = faceMask?.eDetectFaceMasksData(bitmap!!)
                     val isMake = faceMask?.eMasksDispose(box)
                     uiThread {
@@ -181,7 +182,7 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                     }
                 }
                 test_container.id -> {
-                //跟踪器
+                    //跟踪器
                     mTrackerE = eMultiBoxTracker.einit(this@testCameraGUI)
                     findViewById<eOverlayView>(R.id.frame_ov_tracking).addCallback {
                         mTrackerE!!.draw(it)
