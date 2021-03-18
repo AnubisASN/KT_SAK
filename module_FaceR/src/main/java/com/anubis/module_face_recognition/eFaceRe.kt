@@ -49,13 +49,13 @@ open class eFaceRe internal constructor() {
      *@return  YMFaceTrack?，追踪器
      * */
     protected var eFaceTrack: YMFaceTrack? = null
-    open fun eStartTrack(mDistance: Int = YMFaceTrack.DISTANCE_TYPE_FARTHESTER, recognitionConfidence: Int = 85): YMFaceTrack? {
+    open fun eStartTrack(mDistance: Int = YMFaceTrack.DISTANCE_TYPE_FARTHESTER, recognitionConfidence: Int = 85,orientation:Int=YMFaceTrack.FACE_0,resizeScale:Int=YMFaceTrack.RESIZE_WIDTH_640): YMFaceTrack? {
         eFaceTrack?.let { return it }
         eFaceTrack = YMFaceTrack()
         trackingMap = SimpleArrayMap()
         eFaceTrack ?: return null.apply { eLogE("检测器构建失败") }
         eFaceTrack!!.setDistanceType(mDistance)
-        val result: Int = eFaceTrack!!.initTrack(mContext, YMFaceTrack.FACE_0, YMFaceTrack.RESIZE_WIDTH_640)
+        val result: Int = eFaceTrack!!.initTrack(mContext, orientation, resizeScale)
         return if ((result == 0)) {
             eFaceTrack!!.recognitionConfidence = recognitionConfidence
             eFaceTrack

@@ -113,7 +113,6 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                 eHWLive.eInit(object : MLLivenessCapture.Callback {
                     override fun onFailure(p0: Int) {
                     }
-
                     override fun onSuccess(p0: MLLivenessCaptureResult?) {
                         tv_hint.text = p0?.isLive.toString()
                         iv_image.setImageBitmap(p0?.bitmap)
