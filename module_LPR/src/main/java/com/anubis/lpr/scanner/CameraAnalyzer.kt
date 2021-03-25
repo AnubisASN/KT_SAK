@@ -140,7 +140,7 @@ class CameraAnalyzer internal constructor(private val scannerView: ScannerView) 
                 i += padding
             }
         }
-        var bitmap = eBitmap.eInit.eByteArrayToBitmp(buffer, image.width, image.height, rotate = 90f, quality = 100)
+        var bitmap = eBitmap.eInit.eNV21ByteArrayToBitmp(buffer, image.width, image.height, rotate = 90f, quality = 100)
         val rect =
                 scannerView.getFramingRectInPreview(image.width, image.height)
         bitmap = Bitmap.createBitmap(

@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.selfServicePayment.Utils.eDefaultItemAnimator
 import kotlinx.android.synthetic.main.adapter_default_item.view.*
@@ -60,7 +59,7 @@ class eRvAdapter<T>(
         val itemAnim: eDefaultItemAnimator? = null,
         positionForBlock: ((recyclerView: RecyclerView, recyclerBottomCoordinate: Int, lastItemBottomCoordinate: Int, itemTotal: Int, lastItemCount: Int) -> Unit)? = null,
         val longClickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null,
-        layoutManagerBlock:((Context)->LinearLayoutManager)?=null,
+        layoutManagerBlock: ((Context) -> LinearLayoutManager)? =null,
         orientation: Int = GridLayoutManager.VERTICAL,
         val clickBlock: ((itemView: View, data: T, position: Int) -> Unit)? = null
 ) : RecyclerView.Adapter<eRvAdapter<T>.MyHolder>() {
@@ -204,7 +203,7 @@ class eRvAdapter<T>(
             eAddData(datas)
         } ?:(mDatas?.clear().apply {
             eDefaultNotify()
-            mDatas = datas?.clone() as ArrayList<T>
+            mDatas = datas?.clone() as? ArrayList<T>
             eDefaultNotify()
         })
 

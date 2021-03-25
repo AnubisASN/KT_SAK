@@ -1,6 +1,5 @@
 package com.anubis.kt_extends
 
-import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.ActivityManager
@@ -48,6 +47,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.gson.Gson
@@ -582,6 +582,16 @@ class eBReceiver private constructor() {
         }
         return false
     }
+
+    //通知相册更新
+    fun eSendBroad(context: Context, file: File) {
+        //通知相册更新
+        MediaStore.Images.Media.insertImage(context.contentResolver, BitmapFactory.decodeFile(file.absolutePath), file.name, null)
+        val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        val uri = Uri.fromFile(file)
+        intent.data = uri
+        context.sendBroadcast(intent)
+    }
 }
 
 /**
@@ -671,6 +681,18 @@ class eApp private constructor() {
     companion object {
         private var wakeLock: PowerManager.WakeLock? = null
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eApp() }
+    }
+
+    /**
+     * 屏幕截图
+     * @param activity
+     * @return
+     */
+    open fun eActivityScreenShot(activity: Activity): Bitmap {
+        val dView = activity.window.decorView
+        dView.setDrawingCacheEnabled(true)
+        dView.buildDrawingCache()
+        return Bitmap.createBitmap(dView.drawingCache)
     }
 
     // CPU唤醒
@@ -2288,17 +2310,7 @@ open class eFile internal constructor() {
         return file
     }
 
-    /**
-     * 屏幕截图
-     * @param activity
-     * @return
-     */
-    open fun eActivityScreenShot(activity: Activity): Bitmap {
-        val dView = activity.window.decorView
-        dView.setDrawingCacheEnabled(true)
-        dView.buildDrawingCache()
-        return Bitmap.createBitmap(dView.drawingCache)
-    }
+
 }
 
 /**
@@ -2561,6 +2573,21 @@ open class ePermissions internal constructor() {
         return str
     }
 
+    //悬浮窗权限
+    fun eOverlayPermissions(activity: Activity,requestCode: Int = 1): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(activity)) {
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:${activity.packageName}"))
+                activity.startActivityForResult(intent, requestCode)
+                return false
+            }
+            return true
+        }
+        return true
+    }
+
+
     //授权判断
     open fun eSetPermissions(
             activity: Activity,
@@ -2585,9 +2612,8 @@ open class ePermissions internal constructor() {
             ActivityCompat.requestPermissions(
                     activity,
                     permissionsList.toArray(arrayOfNulls<String>(permissionsList.size)),
-                    1
+                    requestCode
             )
-            permissionsList.size.eLog("permissionsList.size")
             eLog("未授权")
             false
         }
@@ -2600,7 +2626,9 @@ open class ePermissions internal constructor() {
             permissions: Array<String>,
             grantResults: IntArray,
             isPermissionsOKHint: String = "授权完成",
-            isPermissionsNoHint: String = "授权未完成"
+            isPermissionsNoHint: String = "授权未完成",
+            noBlock: (() -> Unit)? = null,
+            okBlock: (() -> Unit)? = null
     ) {
         var statusPermissions = Pair<Boolean, ArrayList<String>>(true, arrayListOf())
         when (requestCode) {
@@ -2613,9 +2641,11 @@ open class ePermissions internal constructor() {
                     }
                 }
                 if (statusPermissions.first) {
+                    okBlock?.invoke()
                     if (isPermissionsOKHint.isNotEmpty())
                         activity.eShowTip(isPermissionsOKHint)
                 } else {
+                    noBlock?.invoke()
                     if (isPermissionsNoHint.isNotEmpty())
                         activity.eShowTip("$isPermissionsNoHint:${statusPermissions.second.toArray()!!.contentToString()}")
                 }
@@ -2746,8 +2776,8 @@ open class eShell internal constructor() {
             e.printStackTrace();
         } finally {
             if (logcatProc != null) {
-                logcatProc.destroy();
-                logcatProc = null;
+                logcatProc.destroy()
+                logcatProc = null
             }
             if (mReader != null) {
                 try {

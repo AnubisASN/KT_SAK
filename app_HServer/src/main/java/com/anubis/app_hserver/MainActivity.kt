@@ -2,7 +2,6 @@ package com.anubis.app_hserver
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -14,7 +13,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.anubis.kt_extends.*
 import com.anubis.module_dialog.eForegroundService
 import com.anubis.module_dialog.eNotification
@@ -30,7 +28,6 @@ import com.anubis.module_tts.eTTS
 import com.anubis.module_ttse.eTTSE
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
-import org.w3c.dom.Text
 import java.io.File
 
 
@@ -93,9 +90,9 @@ class MainActivity : AppCompatActivity() {
 
         eRvAdapter(this,rv,android.R.layout.activity_list_item, arrayListOf("1","2","3","4","5"),{ view: View, s: String, i: Int->
             view.findViewById<TextView>(android.R.id.text1).text=s
-        },layoutManagerBlock = {
+        }, layoutManagerBlock = {
             GridLayoutManager(it,3)
-        },orientation = LinearLayoutManager.HORIZONTAL)
+        }, orientation = LinearLayoutManager.HORIZONTAL)
 
     }
 
@@ -103,10 +100,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         tvHint.eSpannableTextView(String.format(resources.getString(R.string.hint), "${eDevice.eInit.eGetHostIP()}:${mHttpServer?.myPort}"))
         testjob=GlobalScope.launch(start = CoroutineStart.LAZY){
-            while (isActive){
-                eLog("i")
-                delay(1000L)
-            }
         }
     }
 
@@ -117,12 +110,20 @@ class MainActivity : AppCompatActivity() {
     fun onClick(v: View) {
         when (v.id) {
             btTest1.id -> {
+
                 val intent = Intent(this, eForegroundService::class.java)
                 eForegroundService.initParam(R.drawable.logo,"系统提示","正在后台运行","")
-                eForegroundService.initStart(this,intent,MainActivity::class.java, testjob)
+                eForegroundService.initStart(this,intent,MainActivity::class.java, testjob,true,notiLayoutId = R.layout.layout_notification){
+                    when(it){
+                        R.id.notif_ivClose.toString()->{
+                            val intent = Intent(this@MainActivity, eForegroundService::class.java)
+                            stopService(intent)
+                        }
+                    }
+                }
             }
             btEnglish.id -> {
-                mNotify?.eSendNotify(R.drawable.dia_background,"非服务普通通知","又没钱啦",null,false).eLog("NotifyId")
+                mNotify?.eSendNotify(R.drawable.dia_background,"非服务普通通知","又没钱啦",null,false)
             }
             btSendMsg.id -> {
                eForegroundService.mNotification?.eSendNotify(R.drawable.dia_btbackground0,"开始打工啦","又没钱啦","",false,builderBlock = {

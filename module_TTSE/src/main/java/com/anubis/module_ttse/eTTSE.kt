@@ -20,9 +20,7 @@ import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.FileCallback
 import com.lzy.okgo.model.Progress
 import com.lzy.okgo.model.Response
-import kotlinx.android.synthetic.main.dia_download.*
 import kotlinx.android.synthetic.main.dia_download.view.*
-import kotlinx.android.synthetic.main.item_dia.*
 import kotlinx.android.synthetic.main.item_dia.view.*
 import kotlinx.coroutines.*
 import org.jetbrains.anko.onClick

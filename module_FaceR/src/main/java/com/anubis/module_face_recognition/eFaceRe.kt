@@ -43,11 +43,11 @@ open class eFaceRe internal constructor() {
         private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eFaceRe() }
     }
 
-    /**初始化追踪器
+    /** 初始化追踪器
      *@param mDistance: Int = YMFaceTrack.DISTANCE_TYPE_FARTHESTER, 检测距离
      *@param recognitionConfidence: Int = 85，分析阀值
-     *@return  YMFaceTrack?，追踪器
-     * */
+     *@return YMFaceTrack?，追踪器
+     **/
     protected var eFaceTrack: YMFaceTrack? = null
     open fun eStartTrack(mDistance: Int = YMFaceTrack.DISTANCE_TYPE_FARTHESTER, recognitionConfidence: Int = 85,orientation:Int=YMFaceTrack.FACE_0,resizeScale:Int=YMFaceTrack.RESIZE_WIDTH_640): YMFaceTrack? {
         eFaceTrack?.let { return it }
@@ -63,7 +63,6 @@ open class eFaceRe internal constructor() {
             mContext.eShowTip("授权失败：$result")
             null
         }
-
     }
 
     /**默认识别解析器

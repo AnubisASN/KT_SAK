@@ -27,11 +27,11 @@
             android:maxLength="20"
             android:textSize="18sp"
             tools:text="暖暖-梁静茹"
-            android:layout_toEndOf="@+id/musicIcon_imageView"
-            android:layout_toRightOf="@+id/musicIcon_imageView"
+            android:layout_toEndOf="@+id/not_iv"
+            android:layout_toRightOf="@+id/not_iv"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_alignTop="@+id/musicIcon_imageView"
+            android:layout_alignTop="@+id/not_iv"
             android:layout_toStartOf="@+id/imageButton2"
             android:layout_toLeftOf="@+id/imageButton2"
             android:layout_marginEnd="8dp"
@@ -44,20 +44,20 @@
             android:id="@+id/playTime_textView"
             android:layout_marginTop="4dp"
             android:layout_marginLeft="0dp"
-            android:layout_below="@+id/musicName_textView"
+            android:layout_below="@+id/not_tvTitle"
             android:textColor="#FFEEEEEE"
             tools:text="5:26"
-            android:layout_alignLeft="@+id/musicName_textView"
-            android:layout_alignStart="@+id/musicName_textView"/>
+            android:layout_alignLeft="@+id/not_tvTitle"
+            android:layout_alignStart="@+id/not_tvTitle"/>
 
     <TextView
             android:text="/"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView3"
-            android:layout_toEndOf="@+id/playTime_textView"
-            android:layout_toRightOf="@+id/playTime_textView"
-            android:layout_alignTop="@+id/playTime_textView"
+            android:layout_toEndOf="@+id/not_tvTime"
+            android:layout_toRightOf="@+id/not_tvTime"
+            android:layout_alignTop="@+id/not_tvTime"
             android:textColor="#FFEEEEEE"/>
 
     <TextView
@@ -102,13 +102,13 @@
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_media_next"
             android:id="@+id/imageButton4"
-            android:layout_alignTop="@+id/musicIcon_imageView"
-            android:layout_alignBottom="@+id/musicIcon_imageView"
+            android:layout_alignTop="@+id/not_iv"
+            android:layout_alignBottom="@+id/not_iv"
             android:background="@null"
-            android:layout_toStartOf="@+id/imageButton5"
+            android:layout_toStartOf="@+id/not_ivClose"
             android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_toLeftOf="@+id/imageButton5"/>
+            android:layout_toLeftOf="@+id/not_ivClose"/>
 
     <ImageButton
             android:layout_width="wrap_content"

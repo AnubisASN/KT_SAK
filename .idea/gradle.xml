@@ -12,11 +12,11 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app_Coroutine" />
             <option value="$PROJECT_DIR$/app_Discern" />
+            <option value="$PROJECT_DIR$/app_FloatBall" />
             <option value="$PROJECT_DIR$/app_HServer" />
             <option value="$PROJECT_DIR$/app_Map" />
             <option value="$PROJECT_DIR$/app_Picker" />
             <option value="$PROJECT_DIR$/app_Skin" />
-            <option value="$PROJECT_DIR$/app_TextR" />
             <option value="$PROJECT_DIR$/app_WebRTC" />
             <option value="$PROJECT_DIR$/module_ASRW" />
             <option value="$PROJECT_DIR$/module_ArcFace" />

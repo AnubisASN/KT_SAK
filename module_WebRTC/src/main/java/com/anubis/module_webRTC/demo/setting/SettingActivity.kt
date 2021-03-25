@@ -15,6 +15,7 @@ import android.view.WindowManager
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import com.anubis.kt_extends.eLog
 
 import com.anubis.module_webRTC.demo.service.FloatWindowsService
 import com.anubis.module_webRTC.R

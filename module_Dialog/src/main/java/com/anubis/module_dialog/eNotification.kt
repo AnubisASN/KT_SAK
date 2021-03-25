@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import com.anubis.kt_extends.eLogE
 
@@ -35,9 +36,13 @@ import com.anubis.kt_extends.eLogE
 open class eNotification(val mContext: Context, val mClazz: Class<*>) {
     private var mNotification: Notification? = null
     private var mManager: NotificationManager? = null
-   companion object{
-       private var mNotifyId: Int = 1
-   }
+    private var mRemoteViews: RemoteViews? = null
+    private var mClickBlock: ((String) -> Unit)? = null
+    companion object {
+        val ACTION_NOTIFICATION = "ACTION_NOTIFICATION"
+        val ACTION_TYPE = "ACTION_TYPE"
+        private var mNotifyId: Int = 1
+    }
 
     /**
      *说明： 消息发送
@@ -52,7 +57,7 @@ open class eNotification(val mContext: Context, val mClazz: Class<*>) {
      * @param：notifyBlock: ((Notification) -> Unit)? = null， Notify 扩展
      * @return: Int， 返回 notifyId  -1-失败
      */
-    open fun eSendNotify(smallIcon: Int?, title: String = "系统通知", text: String = "正在后台运行", sound: String? = "", isForeground: Boolean = false, notifyId:Int = mNotifyId++, builderBlock: ((Notification.Builder) -> Unit)? = null, notifyBlock: ((Notification) -> Unit)? = null): Int {
+    open fun eSendNotify(smallIcon: Int?, title: String = "系统通知", text: String = "正在后台运行", sound: String? = "", isForeground: Boolean = false, notifyId: Int = mNotifyId++, builderBlock: ((Notification.Builder) -> Unit)? = null, notifyBlock: ((Notification) -> Unit)? = null): Int {
         mManager = mManager
                 ?: (mContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
         //进行8.0的判断
@@ -75,6 +80,9 @@ open class eNotification(val mContext: Context, val mClazz: Class<*>) {
                 .setContentTitle(title) // 设置下拉列表里的标题
                 .setContentText(text) // 设置上下文内容
                 .setAutoCancel(true)
+        mRemoteViews?.let { mBuild.setContent(mRemoteViews) }
+        if (!isForeground)
+            mBuild.setWhen(System.currentTimeMillis())
         smallIcon?.let { mBuild.setSmallIcon(it) }  // 设置状态栏内的小图标
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             mBuild.setChannelId(notifyId.toString())
@@ -132,5 +140,33 @@ open class eNotification(val mContext: Context, val mClazz: Class<*>) {
             e.eLogE("eCleanNotify")
             return false
         }
+    }
+
+
+    /**
+     * 初始化RemoteViews
+     */
+   open fun eInitRemoteViews(clazz: Class<*>, layoutId: Int = R.layout.layout_notification, block: ((RemoteViews, Intent) -> Unit)?=null) {
+          mRemoteViews = RemoteViews(mContext.packageName, layoutId)
+        mRemoteViews?:return
+        val intent = Intent(mContext, clazz)
+        intent.action = ACTION_NOTIFICATION
+        block?.invoke(mRemoteViews!!,intent)
+    }
+
+    /*设置点击*/
+    open fun eSetClick(mRemoteViews: RemoteViews, intent: Intent, viewId: Int, clickBlock: ((String) -> Unit)? = null) {
+        intent.putExtra(ACTION_TYPE,viewId.toString())
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            PendingIntent.getForegroundService(mContext, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        } else {
+            PendingIntent.getService(mContext, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+        mRemoteViews.setOnClickPendingIntent(viewId, pendingIntent)
+    }
+
+    /*修改控件内容*/
+    open   fun eSetTextView(viewId: Int, text: String) {
+        mNotification?.contentView?.setTextViewText(viewId, text)
     }
 }

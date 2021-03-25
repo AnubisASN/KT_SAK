@@ -31,6 +31,6 @@ dependencies {
     implementation project(':module_Extends')
     implementation project(':module_HttpServer')
 //    implementation project(path: ':module_CardOTG')
-    implementation project(path: ':module_Dialog')
+    api project(path: ':module_Dialog')
     implementation project(path: ':module_TTS')
 }

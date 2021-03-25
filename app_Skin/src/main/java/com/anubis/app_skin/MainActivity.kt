@@ -7,9 +7,6 @@ import com.anubis.module_extends.eRvAdapter
 import com.anubis.selfServicePayment.Utils.eDefaultItemAnimator
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item.view.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import org.jetbrains.anko.onClick
 
 class MainActivity : AppCompatActivity() {
