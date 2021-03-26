@@ -1704,15 +1704,13 @@ open class eBitmap internal constructor() {
             val dataBmp = out.toByteArray()
             // 生成Bitmap
             val bitmap = BitmapFactory.decodeByteArray(dataBmp, 0, out.size())
-
             // 旋转
             val matrix = Matrix()
             matrix.setRotate(rotate.toFloat())
             val bmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
             bitmap.recycle()
             val fos = FileOutputStream(tmpFile)
-            bmp.compress(Bitmap.CompressFormat.JPEG, quality, fos)
-            return true
+            return bmp.compress(Bitmap.CompressFormat.JPEG, quality, fos)
         } catch (e: Exception) {
             e.eLogE("保存失败")
             return false
@@ -1869,9 +1867,9 @@ open class eBitmap internal constructor() {
                 if (!eFile.eInit.eCheckFile(file))
                     return false.apply { eLogE(file.path + "-不存在") }
                 fos = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.PNG, quality, fos)
+               val status= bitmap.compress(Bitmap.CompressFormat.PNG, quality, fos)
                 fos.flush()
-                return true
+                return status
             } catch (var13: Exception) {
                 var13.printStackTrace()
             } finally {
