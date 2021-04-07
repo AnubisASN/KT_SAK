@@ -42,12 +42,9 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.gson.Gson
@@ -55,6 +52,8 @@ import com.google.gson.GsonBuilder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import net.lingala.zip4j.core.ZipFile
+import net.lingala.zip4j.model.FileHeader
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.inputMethodManager
@@ -76,6 +75,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import java.util.zip.ZipEntry
+import java.util.zip.ZipException
+import java.util.zip.ZipOutputStream
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 import kotlin.collections.ArrayList
@@ -465,6 +467,7 @@ fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = Aud
         }
     }
 }
+
 
 // 跳转相机拍照
 val REQUEST_CODE_CAMERA_TAKE = 103
@@ -1066,6 +1069,7 @@ open class eRegex internal constructor() {
     }
 }
 
+
 /**
  * KeyDownExit事件监听扩展类--------------------------------------------------------------------------
  */
@@ -1198,19 +1202,21 @@ open class eTime internal constructor() {
      * @param nowDate 当前时间
      * @return 天数
      */
-    open fun eGetTimeDifference(nowDate: Date, endDate: Date, type: Int = Calendar.HOUR): Long {
-        Calendar.SECOND
-        val nd = (1000 * 24 * 60 * 60).toLong()
-        val nh = (1000 * 60 * 60).toLong()
-        val nm = (1000 * 60).toLong()
-        val ns = 1000
+    open fun eGetTimeDifference(endDate: Date?, nowDate: Date? = eGetDataStrToDate(), type: Int = Calendar.HOUR): Double? {
+        nowDate ?: return null
+        endDate ?: return null
+        val nd = (1000 * 24 * 60 * 60).toDouble()
+        val nh = (1000 * 60 * 60).toDouble()
+        val nm = (1000 * 60).toDouble()
+        val ns = 1000.0
         // 获得两个时间的毫秒时间差异
-        val diff = nowDate.time - endDate.time
+        val diff = (nowDate.time - endDate.time).toDouble()
         return when (type) {
             Calendar.DATE -> diff / nd
             Calendar.HOUR -> diff % nd / nh
             Calendar.MINUTE -> diff % nd % nh / nm
             Calendar.SECOND -> diff % nd % nh % nm / ns
+            Calendar.MILLISECOND -> diff
             else -> diff % nd / nh
         }
     }
@@ -1250,9 +1256,8 @@ open class eTime internal constructor() {
     open fun eGetCuoFormatTime(dateCuo: Long, format: String = "yyyy-MM-dd HH:mm:ss") = SimpleDateFormat(format).format(Date(dateCuo))
 
     //时间格式字符串转时间
-    fun eGetDataStrToDate(dateStr: String, format: String = "yyyy-MM-dd HH:mm:ss") = try {
-        val date = SimpleDateFormat(format).parse(dateStr)
-        date
+    fun eGetDataStrToDate(dateStr: String = eGetTime(), format: String = "yyyy-MM-dd HH:mm:ss") = try {
+        SimpleDateFormat(format).parse(dateStr)
     } catch (e: ParseException) {
         e.eLogE("eGetStringtoDate")
         null
@@ -1344,7 +1349,6 @@ open class eNetWork internal constructor() {
         return delay
     }
 }
-
 
 /**
  * 设备信息扩展类--------------------------------------------------------------------------------------
@@ -1867,7 +1871,7 @@ open class eBitmap internal constructor() {
                 if (!eFile.eInit.eCheckFile(file))
                     return false.apply { eLogE(file.path + "-不存在") }
                 fos = FileOutputStream(file)
-               val status= bitmap.compress(Bitmap.CompressFormat.PNG, quality, fos)
+                val status = bitmap.compress(Bitmap.CompressFormat.PNG, quality, fos)
                 fos.flush()
                 return status
             } catch (var13: Exception) {
@@ -2011,6 +2015,59 @@ open class eBitmap internal constructor() {
 
 }
 
+/**
+ * Color扩展类--------------------------------------------------------------------------------------
+ */
+open class eColor internal constructor() {
+    companion object {
+        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eColor() }
+    }
+
+    /*获取Alpha百分比*/
+    fun eGetAlphaPercent(argb: Int): Float {
+        return Color.alpha(argb) / 255f
+    }
+    /*Alpha设为整数*/
+    fun eGetAlphaValueAsInt(alpha: Float): Int {
+        return Math.round(alpha * 255)
+    }
+    /*调整Alpha*/
+    fun eGetAdjustAlpha(alpha: Float, color: Int): Int {
+        return eGetAlphaValueAsInt(alpha) shl 24 or (0x00ffffff and color)
+    }
+
+    /*获取浅色*/
+    fun eGetColorAtLightness(color: Int, lightness: Float): Int {
+        val hsv = FloatArray(3)
+        Color.colorToHSV(color, hsv)
+        hsv[2] = lightness
+        return Color.HSVToColor(hsv)
+    }
+
+    /*颜色转十六进制字符串*/
+    fun eGetColorToHexString(color: Int, showAlpha: Boolean=true): String {
+        val base = if (showAlpha) -0x1 else 0xFFFFFF
+        val format = if (showAlpha) "#%08X" else "#%06X"
+        return String.format(format, base and color).toUpperCase(Locale.ROOT)
+    }
+
+    /*获取亮色*/
+    fun eGetLightnessOfColor(color: Int): Float {
+        val hsv = FloatArray(3)
+        Color.colorToHSV(color, hsv)
+        return hsv[2]
+    }
+
+    /**
+     * 获取修改后颜色透明度
+     */
+    fun eGetChangeColorAlpha(color: Int, alpha: Int): Int {
+        val red = Color.red(color)
+        val green = Color.green(color)
+        val blue = Color.blue(color)
+        return Color.argb(alpha, red, green, blue)
+    }
+}
 
 /**
  * Image图片处理辅助扩展类--------------------------------------------------------------------------------------
@@ -2188,6 +2245,221 @@ open class eFile internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eFile() }
     }
+    /*压缩文件--------------*/
+    /**
+     * 批量压缩文件
+     *
+     * @param resFiles 待压缩文件集合
+     * @param zipFile  压缩文件
+     * @return `true`: 压缩成功<br></br>`false`: 压缩失败
+     * @throws IOException IO错误时抛出
+     */
+    @JvmOverloads
+    @Throws(IOException::class)
+    fun eZipFiles(resFiles: Collection<File>?, zipFile: File?, comment: String? = null): Boolean {
+        if (resFiles == null || zipFile == null) {
+            return false
+        }
+        var zos: ZipOutputStream? = null
+        return try {
+            zos = ZipOutputStream(FileOutputStream(zipFile))
+            for (resFile in resFiles) {
+                if (!eZipFile(resFile, zos, "", comment)) {
+                    return false
+                }
+            }
+            true
+        } finally {
+            if (zos != null) {
+                zos.finish()
+                eCloseIO(zos)
+            }
+        }
+    }
+
+    fun eZipFile(resFilePath: String, zipFilePath: String, comment: String? = null): Boolean {
+        return eZipFile(File(resFilePath), File(zipFilePath), comment)
+    }
+
+    /**
+     * 压缩文件
+     * @param resFile 待压缩文件
+     * @param zipFile 压缩文件
+     * @return `true`: 压缩成功<br></br>`false`: 压缩失败
+     * @throws IOException IO错误时抛出
+     */
+    @Throws(IOException::class)
+    fun eZipFile(resFile: File, zipFile: File, comment: String? = null): Boolean {
+        eCheckFile(zipFile)
+        var zos: ZipOutputStream? = null
+        return try {
+            zos = ZipOutputStream(FileOutputStream(zipFile))
+            eZipFile(resFile, zos, "", comment)
+        } finally {
+            if (zos != null) {
+                zos.finish()
+                eCloseIO(zos)
+            }
+        }
+    }
+
+    /**
+     * 压缩文件
+     * @param resFile  待压缩文件
+     * @param zos      压缩文件输出流
+     * @param rootPath 相对于压缩文件的路径
+     * @param comment  压缩文件的注释
+     * @return `true`: 压缩成功  `false`: 压缩失败
+     * @throws IOException IO错误时抛出
+     */
+    @Throws(IOException::class)
+    fun eZipFile(resFile: File, zos: ZipOutputStream, rootPath: String?, comment: String?): Boolean {
+        var rootPath = rootPath
+        rootPath = rootPath + (if (rootPath == null) "" else File.separator) + resFile.name
+        if (resFile.isDirectory) {
+            val fileList = resFile.listFiles()
+            // 如果是空文件夹那么创建它，我把'/'换为File.separator测试就不成功，eggPain
+            if (fileList.isEmpty()) {
+                val entry = ZipEntry("$rootPath/")
+                comment?.let { entry.comment = it }
+                zos.putNextEntry(entry)
+                zos.closeEntry()
+            } else {
+                fileList.forEach {
+                    // 如果递归返回false则返回false
+                    if (!eZipFile(it, zos, rootPath, comment)) {
+                        return false
+                    }
+                }
+            }
+        } else {
+            var `is`: InputStream? = null
+            try {
+                `is` = BufferedInputStream(FileInputStream(resFile))
+                val entry = ZipEntry(rootPath)
+                comment?.let { entry.comment = it }
+                zos.putNextEntry(entry)
+                val buffer = ByteArray(1024) //KB
+                var len: Int
+                while (`is`.read(buffer, 0, 1024).also { len = it } != -1) {
+                    zos.write(buffer, 0, len)
+                }
+                zos.closeEntry()
+            } finally {
+                eCloseIO(`is`)
+            }
+        }
+        return true
+    }
+
+    /*解压文件---------------*/
+    /**
+     * 批量解压文件
+     *
+     * @param zipFiles 压缩文件集合
+     * @param destDir  目标目录
+     * @return `true`: 解压成功<br></br>`false`: 解压失败
+     * @throws IOException IO错误时抛出
+     */
+    fun eUZipFiles(zipFiles: Collection<File?>, destDir: File): Boolean {
+        for (zipFile in zipFiles) {
+            zipFile ?: return false
+            if (!eUZipFile(zipFile, destDir)) {
+                return false
+            }
+        }
+        return true
+    }
+
+    /**
+     * 解压文件
+     *
+     * @param zipFilePath 待解压文件路径
+     * @param destDirPath 目标目录路径
+     * @return `true`: 解压成功<br></br>`false`: 解压失败
+     * @throws IOException IO错误时抛出
+     */
+    fun eUZipFile(zipFilePath: String, destDirPath: String): Boolean {
+        return eUZipFile(File(zipFilePath), File(destDirPath))
+    }
+
+    fun eUZipFile(zipFile: File, destDir: File): Boolean {
+        return eUZipFileByKeyword(zipFile, destDir, null) != null
+    }
+
+    /**
+     * 解压带有关键字的文件
+     *
+     * @param zipFilePath 待解压文件路径
+     * @param destDirPath 目标目录路径
+     * @param keyword     关键字
+     * @return 返回带有关键字的文件链表
+     * @throws IOException IO错误时抛出
+     */
+    fun eUZipFileByKeyword(zipFilePath: String, destDirPath: String, keyword: String?): List<File>? {
+        return eUZipFileByKeyword(File(zipFilePath), File(destDirPath), keyword)
+    }
+
+    /**
+     * 根据所给密码解压zip压缩包到指定目录
+     * @param passwd  密码(可为空)
+     * */
+    fun eUZipFileByKeyword(zipFile: File, destDir: File, passwd: String?): List<File>? {
+        return try {
+            eCheckFile(destDir)
+            //2.初始化zip工具
+            val zFile = ZipFile(zipFile)
+            zFile.setFileNameCharset("UTF-8")
+            if (!zFile.isValidZipFile) {
+                throw ZipException("压缩文件不合法,可能被损坏.")
+            }
+            //3.判断是否已加密
+            if (zFile.isEncrypted) {
+                zFile.setPassword(passwd!!.toCharArray())
+            }
+            //4.解压所有文件
+            zFile.extractAll(destDir.absolutePath)
+            val headerList: MutableList<FileHeader?> = zFile.fileHeaders as MutableList<FileHeader?>
+            val extractedFileList: MutableList<File> = java.util.ArrayList()
+            for (fileHeader in headerList) {
+                if (!fileHeader!!.isDirectory) {
+                    extractedFileList.add(File(destDir, fileHeader.fileName))
+                }
+            }
+            extractedFileList
+        } catch (e: ZipException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    /*---------------*/
+    @Throws(IOException::class)
+    fun eGetFilesPath(zipFilePath: String): List<String>? {
+        return eGetFilesPath(File(zipFilePath))
+    }
+
+    /*获取压缩文件中的文件路径链表*/
+    @Throws(IOException::class)
+    fun eGetFilesPath(zipFile: File): List<String>? {
+        val paths: MutableList<String> = java.util.ArrayList()
+        val entries = java.util.zip.ZipFile(zipFile).entries()
+        while (entries!!.hasMoreElements()) {
+            paths.add((entries.nextElement() as ZipEntry).name)
+        }
+        return paths
+    }
+
+    /*IO关闭*/
+    fun eCloseIO(vararg closeables: Closeable?) {
+        try {
+            for (closeable in closeables) {
+                closeable?.close()
+            }
+        } catch (e: IOException) {
+            e.eLogE("eCloseIO")
+        }
+    }
 
     /**
      * 复制单个文件
@@ -2196,7 +2468,6 @@ open class eFile internal constructor() {
      * @return <code>true</code> if and only if the file was copied;
      *         <code>false</code> otherwise
      */
-
     open fun eCopyFile(oldFilePath: String, newFilePath: String): Boolean {
         try {
             val oldFile = File(oldFilePath)
@@ -2372,7 +2643,6 @@ open class eString internal constructor() {
         else -> "0 K"
     }
 
-
     //数值段获取
     open fun eGetNumberPeriod(str: String, start: Any, end: Any): String {
         val Str = str.trim()
@@ -2475,7 +2745,6 @@ open class eString internal constructor() {
             or (src[offset + 9].toInt() and 0xff shl 61)
             or (src[offset + 10].toInt() and 0x03 shl 64))
 
-
     //MD5加密
     open fun eGetEncodeMD5(str: String, digits: Int = 32): String? {
         try {
@@ -2572,7 +2841,7 @@ open class ePermissions internal constructor() {
     }
 
     //悬浮窗权限
-    fun eOverlayPermissions(activity: Activity,requestCode: Int = 1): Boolean {
+    fun eOverlayPermissions(activity: Activity, requestCode: Int = 1): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(activity)) {
                 val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -2651,7 +2920,6 @@ open class ePermissions internal constructor() {
         }
     }
 }
-
 
 /**
  * linux命令扩展类------------------------------------------------------------------------------------
@@ -2801,7 +3069,6 @@ open class eShell internal constructor() {
         eExecShell("am force-stop ${application.packageName} && am start -n ${application.packageName}/${clazz.name}")
     }
 }
-
 
 /**
  * 反射机制动态加载扩展---------------------------------------------------------------------------------

@@ -68,6 +68,8 @@ kapt {
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     kapt 'com.alibaba:arouter-compiler:1.1.4'
     implementation files('libs/XHApi.jar')
 //
@@ -78,14 +80,14 @@ dependencies {
     api project(':module_GreenDao')
     implementation project(':module_WiFi')
     implementation project(':module_VNC')
-     implementation project(':module_Utils')
-     implementation project(':module_ASRW')
-     implementation project(':module_FTP')
-       implementation project(':module_ArcFace')
-     implementation project(':module_CardOTG')
-       implementation project(':module_UDevice')
-      implementation project(':module_QRCode')
-       implementation project(':module_ArcFaceFT')
+    implementation project(':module_Utils')
+    implementation project(':module_ASRW')
+    implementation project(':module_FTP')
+    implementation project(':module_ArcFace')
+    implementation project(':module_CardOTG')
+    implementation project(':module_UDevice')
+    implementation project(':module_QRCode')
+    implementation project(':module_ArcFaceFT')
     implementation project(':module_TCP')
     implementation project(':module_VideoChat')
     implementation project(':module_Detection')

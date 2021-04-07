@@ -1,6 +1,6 @@
 package com.anubis.module_dialog
 
-import android .annotation.SuppressLint
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Dialog
 import android.content.Context
@@ -62,6 +62,11 @@ open class eDiaAlert internal constructor() {
         private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eDiaAlert() }
     }
 
+    fun eGetAVIIndicatorName(i: Int=0): String {
+        val indicatorNames = arrayOf( "LineScalePartyIndicator","BallPulseIndicator", "BallGridPulseIndicator", "BallClipRotateIndicator", "BallClipRotatePulseIndicator", "SquareSpinIndicator", "BallClipRotateMultipleIndicator", "BallPulseRiseIndicator", "BallRotateIndicator", "BallZigZagIndicator", "BallZigZagDeflectIndicator", "BallTrianglePathIndicator", "BallScaleIndicator", "LineScaleIndicator", "BallScaleMultipleIndicator", "BallPulseSyncIndicator", "BallBeatIndicator", "LineScalePulseOutIndicator", "LineScalePulseOutRapidIndicator", "BallScaleRippleIndicator", "BallScaleRippleMultipleIndicator", "BallSpinFadeLoaderIndicator", "LineSpinFadeLoaderIndicator", "TriangleSkewSpinIndicator", "PacmanIndicator", "BallGridBeatIndicator", "SemiCircleSpinIndicator")
+        return  indicatorNames[i]
+    }
+
     /**
      * @param title: String? = null,
      * @param body: String? = null,
@@ -91,7 +96,7 @@ open class eDiaAlert internal constructor() {
             btOK: String? = null,
             btCancel: String? = null,
             isShowClose: Boolean = false,
-            isShowAVI: Boolean = false,
+            AVIID: Int ?= null,
             isDisableBack: Boolean = true,
             isCanceledOnTouchOutside: Boolean = false,
             gravity: Int = Gravity.CENTER,
@@ -99,7 +104,7 @@ open class eDiaAlert internal constructor() {
             y: Int = 0,
             alpha: Float = 1f,
             buttonReplyTime: Long = 100L,
-            onClickAnimation:((View?,Long)->Unit)?=null,
+            onClickAnimation: ((View?, Long) -> Unit)? = null,
             ICallBackEdit: ICallBackEdit? = null,
             ICallBackClick: ICallBackClick? = null,
             adbEditBlock: ((Dialog, View, eArrowDownloadButton) -> Unit)? = null,
@@ -131,8 +136,9 @@ open class eDiaAlert internal constructor() {
             else {
                 view.dia_btOk.text = btOK
                 view.dia_btOk.onClick {
-                    if (buttonReplyTime>0L)
-                        onClickAnimation?.invoke(it, buttonReplyTime)?:onDefaultClickAnimation(it, buttonReplyTime)
+                    if (buttonReplyTime > 0L)
+                        onClickAnimation?.invoke(it, buttonReplyTime)
+                                ?: onDefaultClickAnimation(it, buttonReplyTime)
                     ICallBackEdit?.let { ic ->
                         ic.onEditInput(dia, dia_etInput, it)
                         return@onClick
@@ -147,8 +153,9 @@ open class eDiaAlert internal constructor() {
             else {
                 view.dia_btCancel.text = btCancel
                 view.dia_btCancel.onClick {
-                    if (buttonReplyTime>0L)
-                        onClickAnimation?.invoke(it, buttonReplyTime)?:onDefaultClickAnimation(it, buttonReplyTime)
+                    if (buttonReplyTime > 0L)
+                        onClickAnimation?.invoke(it, buttonReplyTime)
+                                ?: onDefaultClickAnimation(it, buttonReplyTime)
                     ICallBackEdit?.let { ic ->
                         ic.onEditInput(dia, dia_etInput, it)
                         return@onClick
@@ -164,8 +171,9 @@ open class eDiaAlert internal constructor() {
                     ICallBackClick?.onClickClose(this, it) ?: dismiss()
                 } else
                 view.dia_ivClose.visibility = View.GONE
-            if (isShowAVI)
-                view.dia_avi.visibility = View.VISIBLE
+           AVIID?.let {
+               view.dia_avi.visibility = View.VISIBLE
+               view.dia_avi.setIndicator(eGetAVIIndicatorName(it)) }
             adbEditBlock?.let { it(dia, view, view.dia_adb) }
             itemEditBlock(dia, view)
             if (isDisableBack)
@@ -201,21 +209,21 @@ open class eDiaAlert internal constructor() {
             layout: Int,
             ICallBackClick: IDIYCallBackClick? = null,
             isDisableBack: Boolean = true,
-            isCanceledOnTouchOutside:Boolean=false,
+            isCanceledOnTouchOutside: Boolean = false,
             gravity: Int = Gravity.CENTER,
             x: Int = 0,
             y: Int = 0,
-            alpha: Float =1f,
+            alpha: Float = 1f,
             itemEditBlock: (Dialog, View, IDIYCallBackClick?) -> Unit
-            ): Dialog {
+    ): Dialog {
         val dia = Dialog(mContext, mStyle)
         with(dia) {
             val view = LayoutInflater.from(mContext).inflate(layout, null)
             setCanceledOnTouchOutside(isCanceledOnTouchOutside)
             val params = window.attributes
             params.alpha = alpha
-            params.x=x
-            params.y=y
+            params.x = x
+            params.y = y
             window.setGravity(gravity)
             window.attributes = params
             if (isDisableBack)
@@ -225,7 +233,7 @@ open class eDiaAlert internal constructor() {
                         else -> return@setOnKeyListener false
                     }
                 }
-            itemEditBlock(this,view,ICallBackClick)
+            itemEditBlock(this, view, ICallBackClick)
             setContentView(view)
             show()
         }
@@ -271,7 +279,7 @@ open class eDiaAlert internal constructor() {
         val gradeReturnData = arrayListOf<T?>()
         val adapterList = arrayListOf<eRvAdapter<T>>()
 
-        eDIYShow(R.layout.dia_gradeselect){ dia: Dialog, view: View, idiyCallBackClick: IDIYCallBackClick? ->
+        eDIYShow(R.layout.dia_gradeselect) { dia: Dialog, view: View, idiyCallBackClick: IDIYCallBackClick? ->
             dia.setCanceledOnTouchOutside(isCanceledOnTouchOutside)
             //分级布局
             eRvAdapter(mContext, view.gradedia_ll, R.layout.sample_gradeselect, gradeTitleArray.toMutableList() as ArrayList<String>, { itemview1: View, s: String, i1: Int ->

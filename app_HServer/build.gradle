@@ -33,4 +33,5 @@ dependencies {
 //    implementation project(path: ':module_CardOTG')
     api project(path: ':module_Dialog')
     implementation project(path: ':module_TTS')
+    api project(path: ':module_Picker')
 }

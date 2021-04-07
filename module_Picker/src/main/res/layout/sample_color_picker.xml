@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eeffffff"
+    android:padding="@dimen/dp_15"
+    app:layout_constraintCircleRadius="@dimen/dp_20">
+
+    <color_picker.slider.eLightnessSlider
+        android:id="@+id/v_lightness_slider"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_10"
+        app:layout_constraintBottom_toTopOf="@+id/v_alpha_slider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/cl" />
+
+    <color_picker.slider.eAlphaSlider
+        android:id="@+id/v_alpha_slider"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_15"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/v_lightness_slider"
+        app:layout_constraintStart_toStartOf="@+id/v_lightness_slider"
+        app:layout_constraintTop_toBottomOf="@+id/v_lightness_slider" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lightness："
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/v_lightness_slider"
+        app:layout_constraintEnd_toStartOf="@+id/v_lightness_slider"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/v_lightness_slider" />
+
+    <LinearLayout
+        android:id="@+id/cl"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/v_lightness_slider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <color_picker.eColorPickerView
+            android:id="@+id/color_picker_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:alphaSlider="true"
+            app:alphaSliderView="@+id/v_alpha_slider"
+            app:density="12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lightnessSlider="true"
+            app:lightnessSliderView="@+id/v_lightness_slider"
+            app:wheelType="FLOWER" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alpha："
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/v_alpha_slider"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintEnd_toStartOf="@+id/v_lightness_slider"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/v_alpha_slider" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

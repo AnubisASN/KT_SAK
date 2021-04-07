@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_5"
             android:textColor="#282e33"
-            android:textSize="@dimen/sp_16" />
+            android:textSize="@dimen/sp_15" />
 
         <TextView
             android:id="@+id/notif_tvText"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_2"
             android:textColor="#66737f"
-            android:textSize="@dimen/sp_15" />
+            android:textSize="@dimen/sp_12" />
 
     </LinearLayout>
 
@@ -59,6 +59,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|right"
         android:scaleType="center"
-        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+        android:src="@drawable/delete" />
 
 </FrameLayout>

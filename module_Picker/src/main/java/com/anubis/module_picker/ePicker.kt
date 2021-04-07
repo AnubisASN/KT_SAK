@@ -1,12 +1,21 @@
 package com.anubis.module_picker
 
 import android.app.Activity
+import android.app.Dialog
+import android.content.Context
 import android.content.Intent
+import android.view.Gravity
+import android.view.Window
+import color_picker.eColorPickerView
+import color_picker.OnColorChangedListener
+import com.anubis.kt_extends.eColor
 import com.anubis.kt_extends.eShowTip
+import com.anubis.module_picker.Utils.ScreenUtil
 import px_core.model.MimeType
 import file_picker.bean.FileItemBeanImpl
 import file_picker.config.*
 import file_picker.filetype.*
+import kotlinx.android.synthetic.main.sample_color_picker.*
 import px_core.PhoenixOption
 import px_picker.Phoenix
 
@@ -31,6 +40,36 @@ open class ePicker internal constructor() {
 
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { ePicker() }
+    }
+
+    /**
+     *说明： 颜色选择器框架
+     * @调用方法：eColorStart()
+     * @param colorPickerView: ColorPickerView, 选择控件
+     * @param isAlpha:Boolean=true,是否显示Alpha
+     * @param exBlock:((Dialog)->Unit)?=null,扩展
+     * @param  resultBlock:(String)->Unit，结果回调
+     */
+    fun eColorStart(mContext: Context, isAlpha: Boolean = true,exBlock:((Dialog)->Unit)?=null, resultBlock: (String) -> Unit) {
+        val colorDialog = Dialog(mContext, R.style.style_dialog)
+        colorDialog.setCancelable(false)
+        colorDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        colorDialog.setContentView(R.layout.sample_color_picker)
+        colorDialog.setCanceledOnTouchOutside(true)
+        val window = colorDialog.window
+        window!!.setGravity(Gravity.BOTTOM)
+        val lp = window.attributes
+        val width = ScreenUtil.getInstance(mContext).screenWidth
+        lp.width = width
+        lp.height = width*2 /3
+        window.attributes = lp
+        colorDialog.color_picker_view.addOnColorChangedListener(object : OnColorChangedListener {
+            override fun onColorChanged(selectedColor: Int) {
+                resultBlock(eColor.eInit.eGetColorToHexString(selectedColor, isAlpha))
+            }
+        })
+        exBlock?.let { it(colorDialog) }
+        colorDialog.show()
     }
 
     /**
@@ -77,23 +116,24 @@ open class ePicker internal constructor() {
      */
     fun eFileStart(activity: Activity, allDefaultFileType: ArrayList<FileType>? = null, REQUEST_CODE: Int = FILE_REQUEST_CODE, filePicker: FilePickerConfig = FilePickerManager.from(activity), editBlock: (FilePickerConfig) -> Unit = {}) {
         allDefaultFileType?.let {
-        filePicker.customDetector(object :AbstractFileDetector() {
-            override fun fillFileType(itemBeanImpl: FileItemBeanImpl): FileItemBeanImpl {
-                for (type in allDefaultFileType) {
-                    if (type.verify(itemBeanImpl.fileName)) {
-                        itemBeanImpl.fileType = type
-                        break
+            filePicker.customDetector(object : AbstractFileDetector() {
+                override fun fillFileType(itemBeanImpl: FileItemBeanImpl): FileItemBeanImpl {
+                    for (type in allDefaultFileType) {
+                        if (type.verify(itemBeanImpl.fileName)) {
+                            itemBeanImpl.fileType = type
+                            break
+                        }
                     }
+                    return itemBeanImpl
                 }
-                return itemBeanImpl
-            }
-        }) }
-        filePicker.filter(object :AbstractFileFilter(){
-            val tDataList= arrayListOf<FileItemBeanImpl>()
+            })
+        }
+        filePicker.filter(object : AbstractFileFilter() {
+            val tDataList = arrayListOf<FileItemBeanImpl>()
             override fun doFilter(listData: ArrayList<FileItemBeanImpl>): ArrayList<FileItemBeanImpl> {
                 tDataList.clear()
                 listData.forEach {
-                    if (it.isDir || it.fileType!=null)
+                    if (it.isDir || it.fileType != null)
                         tDataList.add(it)
                 }
                 return tDataList

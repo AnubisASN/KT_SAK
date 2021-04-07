@@ -24,6 +24,7 @@ import com.anubis.module_httpserver.eResolverType
 import com.anubis.module_httpserver.protocols.http.IHTTPSession
 import com.anubis.module_httpserver.protocols.http.eHTTPD
 import com.anubis.module_httpserver.protocols.http.response.Response
+import com.anubis.module_picker.ePicker
 import com.anubis.module_tts.eTTS
 import com.anubis.module_ttse.eTTSE
 import kotlinx.android.synthetic.main.activity_main.*
@@ -58,7 +59,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var testjob:Job?=null
+    private var testjob: Job? = null
+
     @TargetApi(Build.VERSION_CODES.N)
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +77,6 @@ class MainActivity : AppCompatActivity() {
             Response.newFixedLengthResponse(when (uri) {
                 "File" ->
                     eManage.eInit.eFileParse(session, "file")!!.eLog("111" + uri)
-
 //        RAW发送    upRequestBody(RequestBody.create(MediaType.parse("application/json; charset=utf-8"),"{\"type\":\"Response\"}"))
                 "Raw" -> eManage.eInit.eRawParse(session)!!.eLog("111" + uri)
                 "Data" -> eManage.eInit.eSessionParse(session)!!.size.eLog("111" + uri).toString()
@@ -88,18 +89,18 @@ class MainActivity : AppCompatActivity() {
 
         mNotify = eNotification(this, MainActivity::class.java)
 
-        eRvAdapter(this,rv,android.R.layout.activity_list_item, arrayListOf("1","2","3","4","5"),{ view: View, s: String, i: Int->
-            view.findViewById<TextView>(android.R.id.text1).text=s
+        eRvAdapter(this, rv, android.R.layout.activity_list_item, arrayListOf("1", "2", "3", "4", "5"), { view: View, s: String, i: Int ->
+            view.findViewById<TextView>(android.R.id.text1).text = s
         }, layoutManagerBlock = {
-            GridLayoutManager(it,3)
+            GridLayoutManager(it, 3)
         }, orientation = LinearLayoutManager.HORIZONTAL)
-
+//        eVerification.eInit.eSetSwipeCaptcha(this, R.drawable.logo, findViewById(R.id.sample_card_scv), findViewById(R.id.sample_card_bar))
     }
 
     override fun onResume() {
         super.onResume()
         tvHint.eSpannableTextView(String.format(resources.getString(R.string.hint), "${eDevice.eInit.eGetHostIP()}:${mHttpServer?.myPort}"))
-        testjob=GlobalScope.launch(start = CoroutineStart.LAZY){
+        testjob = GlobalScope.launch(start = CoroutineStart.LAZY) {
         }
     }
 
@@ -110,25 +111,29 @@ class MainActivity : AppCompatActivity() {
     fun onClick(v: View) {
         when (v.id) {
             btTest1.id -> {
-
                 val intent = Intent(this, eForegroundService::class.java)
-                eForegroundService.initParam(R.drawable.logo,"系统提示","正在后台运行","")
-                eForegroundService.initStart(this,intent,MainActivity::class.java, testjob,true,notiLayoutId = R.layout.layout_notification){
-                    when(it){
-                        R.id.notif_ivClose.toString()->{
+                eForegroundService.initParam(R.drawable.logo, "系统提示", "正在后台运行", "")
+                eForegroundService.initStart(this, intent, MainActivity::class.java, testjob, true, notiLayoutId = R.layout.layout_notification) {
+                    when (it) {
+                        R.id.notif_ivClose.toString() -> {
                             val intent = Intent(this@MainActivity, eForegroundService::class.java)
                             stopService(intent)
                         }
                     }
                 }
             }
+            btTest2.id -> {
+                    ePicker.eInit.eColorStart(this) {
+                        eLog("color:$it")
+                    }
+            }
             btEnglish.id -> {
-                mNotify?.eSendNotify(R.drawable.dia_background,"非服务普通通知","又没钱啦",null,false)
+                mNotify?.eSendNotify(R.drawable.dia_background, "非服务普通通知", "又没钱啦", null, false)
             }
             btSendMsg.id -> {
-               eForegroundService.mNotification?.eSendNotify(R.drawable.dia_btbackground0,"开始打工啦","又没钱啦","",false,builderBlock = {
-                   it.setContentTitle("开始打工啦啦啦啦")
-               }).eLog("NotifyId")
+                eForegroundService.mNotification?.eSendNotify(R.drawable.dia_btbackground0, "开始打工啦", "又没钱啦", "", false, builderBlock = {
+                    it.setContentTitle("开始打工啦啦啦啦")
+                }).eLog("NotifyId")
             }
             btTest.id -> {
                 val intent = Intent(this@MainActivity, eForegroundService::class.java)
@@ -138,6 +143,14 @@ class MainActivity : AppCompatActivity() {
                 mNotify?.eCleanNotify()
                 eForegroundService.mNotification?.eCleanNotify()
             }
+            imageView.id -> {
+//                eShowTip(eVerification.eInit.eGetCaptchaCode(imageView))
+            }
+//            sample_swipe_code_view.id-> {
+//                dragBar.isEnabled = false
+//                swipeCaptchaView.eResetCaptcha()
+//
+//            }
         }
     }
 
