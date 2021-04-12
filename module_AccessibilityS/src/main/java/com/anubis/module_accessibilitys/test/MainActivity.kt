@@ -15,7 +15,6 @@ import com.anubis.module_extends.DataItemInfo
 import com.anubis.module_extends.eRvAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
-
 class MainActivity : AppCompatActivity() {
     val tData = arrayListOf<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,8 +57,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             button5->{
-                eShell.eInit.eExecShell(eTools.s0)
-                eShell.eInit.eExecShell(eTools.s1)
+//                eShell.eInit.eExecShell(eTools.s0)
+//                eShell.eInit.eExecShell(eTools.s1)
             }
         }
     }
