@@ -2027,10 +2027,12 @@ open class eColor internal constructor() {
     fun eGetAlphaPercent(argb: Int): Float {
         return Color.alpha(argb) / 255f
     }
+
     /*Alpha设为整数*/
     fun eGetAlphaValueAsInt(alpha: Float): Int {
         return Math.round(alpha * 255)
     }
+
     /*调整Alpha*/
     fun eGetAdjustAlpha(alpha: Float, color: Int): Int {
         return eGetAlphaValueAsInt(alpha) shl 24 or (0x00ffffff and color)
@@ -2045,7 +2047,7 @@ open class eColor internal constructor() {
     }
 
     /*颜色转十六进制字符串*/
-    fun eGetColorToHexString(color: Int, showAlpha: Boolean=true): String {
+    fun eGetColorToHexString(color: Int, showAlpha: Boolean = true): String {
         val base = if (showAlpha) -0x1 else 0xFFFFFF
         val format = if (showAlpha) "#%08X" else "#%06X"
         return String.format(format, base and color).toUpperCase(Locale.ROOT)
@@ -2854,6 +2856,11 @@ open class ePermissions internal constructor() {
         return true
     }
 
+    //前往设置界面开启服务
+    fun eAccessibilityPermissions(activity: Activity) {
+        activity.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+    }
+
 
     //授权判断
     open fun eSetPermissions(
@@ -2926,6 +2933,8 @@ open class ePermissions internal constructor() {
  */
 open class eShell internal constructor() {
     companion object {
+        var clean = "pm clear " //pm clear $packageName
+        var restart = "am start -n " // am start -n $packageName/${SelectActivity::class.java.name}
         var adb = "setprop service.adb.tcp.port 5555 stop adbd start adbd"
         val remount = "mount -o remount,rw rootfs "
         val install = "pm install -r "
