@@ -58,8 +58,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             button5->{
-                eShell.eInit.eExecShell(eTools.s0)
-                eShell.eInit.eExecShell(eTools.s1)
+  //              eShell.eInit.eExecShell(eTools.s0)
+  //              eShell.eInit.eExecShell(eTools.s1)
             }
         }
     }
