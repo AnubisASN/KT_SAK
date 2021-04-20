@@ -157,7 +157,7 @@ abstract class eCameraActivity : AppCompatActivity(), OnImageAvailableListener, 
                     eProcessImage(eBitmap.eInit.eBitmapToByteArray(bitmap!!), ePreviewWidth, ePreviewHeight)
                 }
                 else -> {
-                    eProcessImage(eBitmap.eInit.eBitmapRotateFlip(bitmap, bitmapRotation, isFlip))
+                    eProcessImage(eBitmap.eInit.eBitmapRotateFlipRect(bitmap, bitmapRotation, isFlip))
                 }
             }
         } catch (e: Exception) {

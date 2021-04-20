@@ -53,7 +53,7 @@ import java.util.*
  */
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickListener {
-    override val eScreenOrientation: Int = 90
+    override val eScreenOrientation: Int = 270
     override var eUseCamera2API: Boolean = true
     override val eActivityLayout: Int = R.layout.test_gui
     override val eFrameLayoutId: Int = R.id.test_container
@@ -172,7 +172,7 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                     val results = eFaceSDK.eInit(this@testCameraGUI).eFaceDetect(bitmap!!)
                     results.size.eLogI("人脸检测数量")
                     iv_photo.post {
-                        iv_photo.imageBitmap = eBitmap.eInit.eBitmapRect(bitmap, results, Color.RED)
+                        iv_photo.imageBitmap = eBitmap.eInit.eBitmapRectPaint(bitmap, results, Color.RED)
                         results.forEach {
                             tv_hint.append("\n$it\n")
                         }

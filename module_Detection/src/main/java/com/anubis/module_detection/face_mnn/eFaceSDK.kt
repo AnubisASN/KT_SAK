@@ -20,7 +20,7 @@ import com.anubis.kt_extends.*
  *Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  *Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  *Router :  /'Module'/'Function'
- *说明：
+ *说明：人脸检测器
  */
 open class eFaceSDK internal  constructor(){
     companion object{
@@ -35,11 +35,11 @@ open class eFaceSDK internal  constructor(){
         eLog("FaceSDK准备初始化")
         val sdDir = Environment.getExternalStorageDirectory()//get model store dir
         val sdPath = "$sdDir/facesdk/"
-        eAssets.eInit.eAssetsToFile(mContext, "RFB-320.mnn", sdPath+"RFB-320.mnn").eLog("RFB-320")
-        eAssets.eInit.eAssetsToFile(mContext, "RFB-320-quant-ADMM-32.mnn",sdPath+"RFB-320-quant-ADMM-32.mnn").eLog("RFB-320-quant-ADMM-32.mnn")
-        eAssets.eInit.eAssetsToFile(mContext, "RFB-320-quant-KL-5792.mnn",sdPath+"RFB-320-quant-KL-5792.mnn").eLog("RFB-320-quant-KL-5792")
-        eAssets.eInit.eAssetsToFile(mContext, "slim-320.mnn",sdPath+"slim-320.mnn").eLog("slim-320")
-        eAssets.eInit.eAssetsToFile(mContext, "slim-320-quant-ADMM-50.mnn",sdPath+"slim-320-quant-ADMM-50.mnn").eLog("slim-320-quant-ADMM-50")
+        eAssets.eInit.eAssetsToFile(mContext, "RFB-320.mnn", sdPath+"RFB-320.mnn")
+        eAssets.eInit.eAssetsToFile(mContext, "RFB-320-quant-ADMM-32.mnn",sdPath+"RFB-320-quant-ADMM-32.mnn")
+        eAssets.eInit.eAssetsToFile(mContext, "RFB-320-quant-KL-5792.mnn",sdPath+"RFB-320-quant-KL-5792.mnn")
+        eAssets.eInit.eAssetsToFile(mContext, "slim-320.mnn",sdPath+"slim-320.mnn")
+        eAssets.eInit.eAssetsToFile(mContext, "slim-320-quant-ADMM-50.mnn",sdPath+"slim-320-quant-ADMM-50.mnn")
         eLog("文件复制完成")
         FaceSDKNative.eInit.FaceDetectionModelInit(sdPath).eLogI("faceSDK初始化")
     }

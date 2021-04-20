@@ -5,6 +5,7 @@
 #include <vector>
 #include "UltraFace.hpp"
 
+
 #define TAG "FaceSDKNative"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__)
 

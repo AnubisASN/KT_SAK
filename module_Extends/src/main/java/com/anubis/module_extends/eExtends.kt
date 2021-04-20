@@ -18,6 +18,7 @@ import android.content.res.AssetManager
 import android.database.Cursor
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.hardware.Camera
 import android.media.*
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -36,11 +37,9 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Base64
 import android.util.Log
+import android.util.Size
 import android.util.TypedValue
-import android.view.KeyEvent
-import android.view.View
-import android.view.Window
-import android.view.WindowManager
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.RequiresApi
@@ -49,6 +48,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.tencent.bugly.proguard.r
+import com.tencent.bugly.proguard.v
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -57,6 +58,7 @@ import net.lingala.zip4j.model.FileHeader
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.inputMethodManager
+import org.jetbrains.anko.runOnUiThread
 import org.json.JSONObject
 import java.io.*
 import java.lang.Process
@@ -82,6 +84,7 @@ import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 import kotlin.collections.ArrayList
 import kotlin.experimental.and
+import kotlin.math.abs
 
 /**
  * Author  ： AnubisASN   on 2018-07-23 9:12.
@@ -145,7 +148,7 @@ fun eGetPackageResourcePath(context: Context) = context.packageResourcePath
 
 
 fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(this, str.toString(), i).show()
+    runOnUiThread { Toast.makeText(this, str.toString(), i).show() }
 }
 
 /**
@@ -756,7 +759,7 @@ class eApp private constructor() {
     }
 
     //输入法隐藏
-    fun Context.eInputHide(editText: EditText) = inputMethodManager.hideSoftInputFromWindow(editText.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+    fun eInputHide(contenx: Context, editText: EditText) = contenx.inputMethodManager.hideSoftInputFromWindow(editText.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
     //通过APK地址获取此APP的包名和版本等信息
     open fun eGetApkInfo(context: Context, apkPath: String): Array<String?> {
@@ -1073,11 +1076,12 @@ open class eRegex internal constructor() {
 /**
  * KeyDownExit事件监听扩展类--------------------------------------------------------------------------
  */
-open class eKeyEvent internal constructor() {
+open class eEvent internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eKeyEvent() }
+        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eEvent() }
     }
 
+    /*返回连按退出*/
     private var Time: Long = 0
     open fun eSetKeyDownExit(activity: Activity, keyCode: Int, activityList: ArrayList<Activity>? = null, systemExit: Boolean = true, hint: String = "再按一次退出", exitHint: String = "APP已退出", ClickTime: Long = 2000, isExecute: Boolean = true, block: () -> Unit = {}): Boolean {
         return if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -1103,6 +1107,37 @@ open class eKeyEvent internal constructor() {
             }
         } else
             false
+    }
+
+    /*键盘触摸关闭*/
+    fun eDispatchTouchEvent(activity: Activity, ev: MotionEvent): Boolean {
+        with(activity) {
+            if (ev.action === MotionEvent.ACTION_DOWN) {
+                val v = currentFocus
+                if (eIsShouldHideInput(v, ev)) {
+                    eApp.eInit.eInputHide(activity, v as EditText)
+                }
+                return activity.dispatchTouchEvent(ev)
+            }
+            // 必不可少，否则所有的组件都不会有TouchEvent了
+            return if (window.superDispatchTouchEvent(ev)) {
+                true
+            } else onTouchEvent(ev)
+        }
+    }
+
+    fun eIsShouldHideInput(v: View?, event: MotionEvent): Boolean {
+        if (v != null && v is EditText) {
+            val leftTop = intArrayOf(0, 0)
+            //获取输入框当前的location位置
+            v.getLocationInWindow(leftTop)
+            val left = leftTop[0]
+            val top = leftTop[1]
+            val bottom = top + v.height
+            val right = left + v.width
+            return !(event.x > left && event.x < right && event.y > top && event.y < bottom)
+        }
+        return false
     }
 }
 
@@ -1553,10 +1588,45 @@ open class eAssets internal constructor() {
 open class eMatrix internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eMatrix() }
-
-        open fun eRectFtoRect(rectF: RectF) = Rect(rectF.left.toInt(), rectF.top.toInt(), rectF.right.toInt(), rectF.bottom.toInt())
-
     }
+
+    /*RectF 转 Rect*/
+    open fun eRectFtoRect(rectF: RectF): Rect {
+        var rect = Rect()
+        rectF.roundOut(rect)
+        return rect
+    }
+
+    /*矩阵镜像转换*/
+    open fun eRectMirror(size: Size, rectF: RectF, verticalFlip: Boolean, horizontalFlip: Boolean) = eRectMirror(size, eRectFtoRect(rectF), verticalFlip, horizontalFlip)
+    open fun eRectMirror(size: Size, rect: Rect, verticalFlip: Boolean, horizontalFlip: Boolean): Rect {
+        return when {
+            //水平翻转
+            !verticalFlip && horizontalFlip ->
+                Rect(size.width - rect.right, rect.top, size.width - rect.left, rect.bottom)
+            // 垂直翻转
+            verticalFlip && !horizontalFlip ->
+                Rect(rect.left, size.height - rect.bottom, rect.right, size.height - rect.top)
+            // 水平垂直翻转
+            verticalFlip && horizontalFlip ->
+                Rect(size.width - rect.right, size.height - rect.bottom, size.width - rect.left, size.height - rect.top)
+            //不翻转
+            else ->
+                Rect(rect.left, rect.top, rect.right, rect.bottom)
+        }
+    }
+
+    /*矩阵转X Y Width Height */
+    open fun eRectToXYWH(rect: Rect?): IntArray? {
+        rect?:return null.eLogE("rect==null")
+        val intArray: IntArray
+        with(rect) {
+            intArray = intArrayOf(left, top, abs(right - left), abs(bottom - top))
+        }
+        return intArray
+    }
+
+
 }
 
 /**
@@ -1583,23 +1653,23 @@ open class eBitmap internal constructor() {
     }
 
     //Bitmap矩形绘制
-    open fun eBitmapRect(bitmap: Bitmap, rect: Rect, paint: Paint? = null): Bitmap {
-        return eBitmapRect(bitmap, arrayListOf(rect), paint)
+    open fun eBitmapRectPaint(bitmap: Bitmap, rect: Rect, paint: Paint? = null): Bitmap {
+        return eBitmapRectPaint(bitmap, arrayListOf(rect), paint)
     }
 
-    open fun eBitmapRect(bitmap: Bitmap, rect: ArrayList<Rect>): Bitmap {
-        return eBitmapRect(bitmap, rect, null)
+    open fun eBitmapRectPaint(bitmap: Bitmap, rect: ArrayList<Rect>): Bitmap {
+        return eBitmapRectPaint(bitmap, rect, null)
     }
 
-    open fun eBitmapRect(bitmap: Bitmap, rect: ArrayList<Rect>, color: Int = Color.GREEN): Bitmap {
+    open fun eBitmapRectPaint(bitmap: Bitmap, rect: ArrayList<Rect>, color: Int = Color.GREEN): Bitmap {
         val mPaint = Paint()
         mPaint.color = color
         mPaint.style = Paint.Style.STROKE
         mPaint.strokeWidth = 5f
-        return eBitmapRect(bitmap, rect, mPaint)
+        return eBitmapRectPaint(bitmap, rect, mPaint)
     }
 
-    open fun eBitmapRect(bitmap: Bitmap, rect: ArrayList<Rect>, paint: Paint? = null): Bitmap {
+    open fun eBitmapRectPaint(bitmap: Bitmap, rect: ArrayList<Rect>, paint: Paint? = null): Bitmap {
         val drawBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
         val mPaint = if (paint == null) {
             val mPaint = Paint()
@@ -1669,7 +1739,7 @@ open class eBitmap internal constructor() {
             val stream = ByteArrayOutputStream()
             image.compressToJpeg(rect, quality, stream)
             val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
-            mBitmap = eBitmapRotateFlip(bmp, rotate, isFlip)
+            mBitmap = eBitmapRotateFlipRect(bmp, rotate, isFlip )
             stream.close()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -1721,108 +1791,37 @@ open class eBitmap internal constructor() {
         }
     }
 
-    //Image获取字节
-    open fun eGetImagetoByteArray(image: Image?): ByteArray? {
-        try {
-            //获取源数据，如果是YUV格式的数据planes.length = 3
-            //plane[i]里面的实际数据可能存在byte[].length <= capacity (缓冲区总大小)
-            val planes = image!!.planes
-            //数据有效宽度，一般的，图片width <= rowStride，这也是导致byte[].length <= capacity的原因
-            // 所以我们只取width部分
-            val width = image.width
-            val height = image.height
-            //此处用来装填最终的YUV数据，需要1.5倍的图片大小，因为Y U V 比例为 4:1:1
-            val yuvBytes = ByteArray(width * height * ImageFormat.getBitsPerPixel(ImageFormat.YUV_420_888) / 8)
-            //目标数组的装填到的位置
-            var dstIndex = 0
-            //临时存储uv数据的
-            val uBytes = ByteArray(width * height / 4)
-            val vBytes = ByteArray(width * height / 4)
-            var uIndex = 0
-            var vIndex = 0
-
-            var pixelsStride: Int
-            var rowStride: Int
-            for (i in planes.indices) {
-                pixelsStride = planes[i].pixelStride
-                rowStride = planes[i].rowStride
-
-                val buffer = planes[i].buffer
-
-                //如果pixelsStride==2，一般的Y的buffer长度=800x600，UV的长度=800x600/2-1
-                //源数据的索引，y的数据是byte中连续的，u的数据是v向左移以为生成的，两者都是偶数位为有效数据
-                val bytes = ByteArray(buffer.capacity())
-                buffer.get(bytes)
-
-                var srcIndex = 0
-                if (i == 0) {
-                    //直接取出来所有Y的有效区域，也可以存储成一个临时的bytes，到下一步再copy
-                    for (j in 0 until height) {
-                        System.arraycopy(bytes, srcIndex, yuvBytes, dstIndex, width)
-                        srcIndex += rowStride
-                        dstIndex += width
-                    }
-                } else if (i == 1) {
-                    //根据pixelsStride取相应的数据
-                    for (j in 0 until height / 2) {
-                        for (k in 0 until width / 2) {
-                            uBytes[uIndex++] = bytes[srcIndex]
-                            srcIndex += pixelsStride
-                        }
-                        if (pixelsStride == 2) {
-                            srcIndex += rowStride - width
-                        } else if (pixelsStride == 1) {
-                            srcIndex += rowStride - width / 2
-                        }
-                    }
-                } else if (i == 2) {
-                    //根据pixelsStride取相应的数据
-                    for (j in 0 until height / 2) {
-                        for (k in 0 until width / 2) {
-                            vBytes[vIndex++] = bytes[srcIndex]
-                            srcIndex += pixelsStride
-                        }
-                        if (pixelsStride == 2) {
-                            srcIndex += rowStride - width
-                        } else if (pixelsStride == 1) {
-                            srcIndex += rowStride - width / 2
-                        }
-                    }
-                }
-            }
-            //根据要求的结果类型进行填充
-            for (i in vBytes.indices) {
-                yuvBytes[dstIndex++] = uBytes[i]
-                yuvBytes[dstIndex++] = vBytes[i]
-            }
-            return yuvBytes
-        } catch (e: Exception) {
-            image?.close()
-            e.eLogE("eGetImagetoByteArray")
-        }
-
-        return null
-    }
-
-    //图片旋转翻转
-    open fun eBitmapRotateFlip(bitmap: Bitmap?, rotate: Float = 0f, isFlip: Boolean = false): Bitmap? {
+    //图像处理
+    fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f,isFlipX: Boolean = false)=eBitmapRotateFlipRect(bitmap,rotate,isFlipX,array = null)
+    fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f, isFlipX: Boolean = false, isFlipY: Boolean = false, rect: Rect? = null, scaleX: Int = 1, scaleY: Int = 1)= eBitmapRotateFlipRect(bitmap,rotate, isFlipX, isFlipY,  eMatrix.eInit.eRectToXYWH(rect), scaleX, scaleY)
+    fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f, isFlipX: Boolean = false, isFlipY: Boolean = false, array: IntArray? = null, scaleX: Int = 1, scaleY: Int = 1): Bitmap? {
         if (bitmap == null) {
-            return null
+            return null.eLogE("bitmap==null")
         }
         val width = bitmap.width
         val height = bitmap.height
         val matrix = Matrix()
         matrix.setRotate(rotate)
-        if (isFlip)
-            matrix.postScale(-1f, 1f)
-        // 围绕原地进行旋转
-        val newBM = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false)
+        matrix.postScale(if (isFlipX) -1f else 1f, if (isFlipY) -1f else 1f)
+        var newBM = try {
+            array?.let {
+                val x = (it[0] / scaleX).takeIf { it >= 0 } ?: 0
+                val y = (it[1] / scaleY).takeIf { it >= 0 } ?: 0
+                val width = (it[2] / scaleX).takeIf { (it + x) <= bitmap.width } ?: bitmap.width - x
+                val height = (it[3] / scaleY).takeIf { (it + y) <= bitmap.height } ?: bitmap.height - y
+                Bitmap.createBitmap(bitmap, x, y, width.eLog("width"), height.eLog("height"), matrix, false)
+            } ?: Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false)
+        } catch (e: Exception) {
+            e.eLogE("eBitmapRotateFlipRect 错误")
+            return null
+        }
         if (newBM == bitmap) {
             return newBM
         }
         bitmap.recycle()
         return newBM
     }
+
 
     //bitmap 宽高压缩
     open fun eBitmapToZoom(bitmap: Bitmap, zoomFactor: Int = 1, filter: Boolean = true) = eBitmapToZoom(bitmap, bitmap.width / zoomFactor, bitmap.height / zoomFactor, filter)
@@ -1898,7 +1897,7 @@ open class eBitmap internal constructor() {
         else
             Bitmap.Config.RGB_565
         val bitmap = Bitmap.createBitmap(w, h, config)
-        //注意，下面三行代码要用到，否则在View或者SurfaceView里的canvas.drawBitmap会看不到图
+        //注意，下面三行代码要用到，否则在View或者SurfaceView里的.drawBitmap会看不到图
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, w, h)
         drawable.draw(canvas)
@@ -2001,7 +2000,6 @@ open class eBitmap internal constructor() {
         b = if (b > kMaxChannelValue) kMaxChannelValue else if (b < 0) 0 else b
         return -0x1000000 or (r shl 6 and 0xff0000) or (g shr 2 and 0xff00) or (b shr 10 and 0xff)
     }
-
     open fun eGetYUVByteSize(width: Int, height: Int): Int {
         // The luminance plane requires 1 byte per pixel.
         val ySize = width * height
@@ -2011,7 +2009,6 @@ open class eBitmap internal constructor() {
 
         return ySize + uvSize
     }
-
 
 }
 
@@ -2079,6 +2076,115 @@ open class eImage internal constructor() {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eImage() }
     }
 
+    //Image获取YuvBytes
+    open fun eGetImagetoYuvBytes(image: Image?): ByteArray? {
+        try {
+            //获取源数据，如果是YUV格式的数据planes.length = 3
+            //plane[i]里面的实际数据可能存在byte[].length <= capacity (缓冲区总大小)
+            val planes = image!!.planes
+            //数据有效宽度，一般的，图片width <= rowStride，这也是导致byte[].length <= capacity的原因
+            // 所以我们只取width部分
+            val width = image.width
+            val height = image.height
+            //此处用来装填最终的YUV数据，需要1.5倍的图片大小，因为Y U V 比例为 4:1:1
+            val yuvBytes = ByteArray(width * height * ImageFormat.getBitsPerPixel(ImageFormat.YUV_420_888) / 8)
+            //目标数组的装填到的位置
+            var dstIndex = 0
+            //临时存储uv数据的
+            val uBytes = ByteArray(width * height / 4)
+            val vBytes = ByteArray(width * height / 4)
+            var uIndex = 0
+            var vIndex = 0
+
+            var pixelsStride: Int
+            var rowStride: Int
+            for (i in planes.indices) {
+                pixelsStride = planes[i].pixelStride
+                rowStride = planes[i].rowStride
+
+                val buffer = planes[i].buffer
+
+                //如果pixelsStride==2，一般的Y的buffer长度=800x600，UV的长度=800x600/2-1
+                //源数据的索引，y的数据是byte中连续的，u的数据是v向左移以为生成的，两者都是偶数位为有效数据
+                val bytes = ByteArray(buffer.capacity())
+                buffer.get(bytes)
+
+                var srcIndex = 0
+                if (i == 0) {
+                    //直接取出来所有Y的有效区域，也可以存储成一个临时的bytes，到下一步再copy
+                    for (j in 0 until height) {
+                        System.arraycopy(bytes, srcIndex, yuvBytes, dstIndex, width)
+                        srcIndex += rowStride
+                        dstIndex += width
+                    }
+                } else if (i == 1) {
+                    //根据pixelsStride取相应的数据
+                    for (j in 0 until height / 2) {
+                        for (k in 0 until width / 2) {
+                            uBytes[uIndex++] = bytes[srcIndex]
+                            srcIndex += pixelsStride
+                        }
+                        if (pixelsStride == 2) {
+                            srcIndex += rowStride - width
+                        } else if (pixelsStride == 1) {
+                            srcIndex += rowStride - width / 2
+                        }
+                    }
+                } else if (i == 2) {
+                    //根据pixelsStride取相应的数据
+                    for (j in 0 until height / 2) {
+                        for (k in 0 until width / 2) {
+                            vBytes[vIndex++] = bytes[srcIndex]
+                            srcIndex += pixelsStride
+                        }
+                        if (pixelsStride == 2) {
+                            srcIndex += rowStride - width
+                        } else if (pixelsStride == 1) {
+                            srcIndex += rowStride - width / 2
+                        }
+                    }
+                }
+            }
+            //根据要求的结果类型进行填充
+            for (i in vBytes.indices) {
+                yuvBytes[dstIndex++] = uBytes[i]
+                yuvBytes[dstIndex++] = vBytes[i]
+            }
+            return yuvBytes
+        } catch (e: Exception) {
+            image?.close()
+            e.eLogE("eGetImagetoByteArray")
+        }
+
+        return null
+    }
+
+    /* Image 转文件*/
+    open fun eImageToFile(image: Image, file: File): String? {
+        eFile.eInit.eCheckFile(file)
+        val buffer: ByteBuffer = image.planes[0].buffer
+        val bytes = ByteArray(buffer.remaining())
+        buffer.get(bytes)
+        var output: FileOutputStream? = null
+        try {
+            output = FileOutputStream(file)
+            output.write(bytes)
+            return file.path
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            image.close()
+            if (null != output) {
+                try {
+                    output.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        return null
+    }
+
     /**
      * 利用 rgba 来修改图片
      * @param bm            所需修改的图片
@@ -2089,7 +2195,7 @@ open class eImage internal constructor() {
      */
     open fun eGetHandleImageForARGB(bm: Bitmap, hue: Float, saturation: Float, lum: Float): Bitmap {
         val bmp = Bitmap.createBitmap(bm.width, bm.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bmp)
+        val canvas= Canvas(bmp)
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
         //色调 0-R 1-G 2-B
@@ -2592,13 +2698,13 @@ open class eString internal constructor() {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eString() }
     }
 
-    fun TextView.eSpannableTextView(str: String, startAndEndIndexArray: Array<Pair<Int, Int>>? = arrayOf(Pair(0, 0)), colorArray: Array<Int>? = arrayOf(Color.RED), clickBlockArray: Array<() -> Unit>? = null) {
+    fun eSpannableTextView(tv: TextView, str: String, startAndEndIndexArray: Array<Pair<Int, Int>>? = arrayOf(Pair(0, 0)), colorArray: Array<Int>? = arrayOf(Color.RED), clickBlockArray: Array<() -> Unit>? = null) {
         if (str.isEmpty())
             return
-        text = ""
+        tv.text = ""
         var startIndex = 0
         //这个一定要记得设置，不然点击不生效
-        movementMethod = LinkMovementMethod.getInstance()
+        tv.movementMethod = LinkMovementMethod.getInstance()
         startAndEndIndexArray?.forEachIndexed { index, pair ->
             var subStr = ""
             try {
@@ -2625,10 +2731,10 @@ open class eString internal constructor() {
                         }
                     }
                 }, pair.first - startIndex, pair.second - startIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                append(spb)
+                tv.append(spb)
                 startIndex = pair.second
             } catch (e: IndexOutOfBoundsException) {
-                append(subStr)
+                tv.append(subStr)
                 return@forEachIndexed
             } catch (e: Exception) {
                 e.eLogE("eSpannableTextView")
