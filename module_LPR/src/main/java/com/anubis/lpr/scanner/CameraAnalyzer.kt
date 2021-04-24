@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.anubis.kt_extends.eBitmap
+import com.anubis.lpr.ui.eLPRActivity
 import com.anubis.lpr.utils.PlateRecognition
 import org.opencv.android.Utils
 import org.opencv.core.CvType
@@ -14,11 +15,9 @@ import org.opencv.core.Mat
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
-/**
- * @auther : Aleyn
- * time   : 2020/05/27
- */
+
 class CameraAnalyzer internal constructor(private val scannerView: ScannerView) : ImageAnalysis.Analyzer {
+    private var tBitmap:Bitmap?=null
     private var prAddress: Long = 0
     private var previewHandler: Handler? = null
     fun setHandle(previewHandler: Handler?) {
@@ -38,6 +37,7 @@ class CameraAnalyzer internal constructor(private val scannerView: ScannerView) 
                 val message: Message
                 if ("" != res) {
                     message = Message.obtain(previewHandler, Scanner.OCR_SUCCEEDED, res)
+                    eLPRActivity.eInit.ePutBitmap(tBitmap)
                     previewHandler = null
                 } else {
                     message = Message.obtain(previewHandler, Scanner.OCR_FAILED)
@@ -65,7 +65,6 @@ class CameraAnalyzer internal constructor(private val scannerView: ScannerView) 
         val uSize = uBuffer.remaining()
         val vSize = vBuffer.remaining()
         val nv21 = ByteArray(ySize + uSize + vSize)
-
         //U and V are swapped
         yBuffer[nv21, 0, ySize]
         vBuffer[nv21, ySize, vSize]
@@ -74,20 +73,21 @@ class CameraAnalyzer internal constructor(private val scannerView: ScannerView) 
             val yuvImage = YuvImage(nv21, ImageFormat.NV21, imageProxy.width, imageProxy.height, null)
             val stream = ByteArrayOutputStream(nv21.size)
             yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 90, stream)
-            var bitmap = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
+              tBitmap = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
             val matrix = Matrix()
             matrix.postRotate(90f)
-            val rect = scannerView.getFramingRectInPreview(bitmap.width, bitmap.height)
-            bitmap = Bitmap.createBitmap(bitmap, rect.top, rect.left, rect.height(), rect.width(), matrix, true)
+            val rect = scannerView.getFramingRectInPreview(tBitmap!!.width, tBitmap!!.height)
+           val reBitmap = Bitmap.createBitmap(tBitmap, rect.top, rect.left, rect.height(), rect.width(), matrix, true)
             stream.close()
-            val mat = Mat(bitmap.width, bitmap.height, CvType.CV_8UC4)
-            Utils.bitmapToMat(bitmap, mat)
+            val mat = Mat(reBitmap.width, tBitmap!!.height, CvType.CV_8UC4)
+            Utils.bitmapToMat(reBitmap, mat)
             return mat
         } catch (e: IOException) {
             e.printStackTrace()
         }
         return null
     }
+
     /*出现绿线转换*/
    private fun imageToBitmap(image: ImageProxy): Bitmap? {
         val yBuffer = image.planes[0].buffer
@@ -111,30 +111,23 @@ class CameraAnalyzer internal constructor(private val scannerView: ScannerView) 
                 pos += image.width
             }
         }
-
         var i = 0
-
         val uRemaining = uBuffer.remaining()
         while (i < uRemaining) {
             buffer[pos++] = uBuffer[i]
             i += uStride
-
             if (padding == 0) continue
-
             val rowLen = i % rowStride
             if (rowLen >= image.width) {
                 i += padding
             }
         }
-
         i = 0
         val vRemaining = vBuffer.remaining()
         while (i < vRemaining) {
             buffer[pos++] = vBuffer[i]
             i += vStride
-
             if (padding == 0) continue
-
             val rowLen = i % rowStride
             if (rowLen >= image.width) {
                 i += padding

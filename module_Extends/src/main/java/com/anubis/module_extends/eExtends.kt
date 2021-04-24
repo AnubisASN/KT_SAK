@@ -48,8 +48,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.tencent.bugly.proguard.r
-import com.tencent.bugly.proguard.v
+import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -146,7 +145,6 @@ fun eGetPackageCodePath(context: Context) = context.packageCodePath
 /* 获取该程序的安装包路径:/data/app/XXX-2/base.apk */
 fun eGetPackageResourcePath(context: Context) = context.packageResourcePath
 
-
 fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
     runOnUiThread { Toast.makeText(this, str.toString(), i).show() }
 }
@@ -159,20 +157,17 @@ var eIsTagI: Boolean = true
 
 fun Any?.eIsBaseType() = this is String || this is Int || this is Int || this is Log || this is Double || this is Float || this is Char || this is Short || this is Boolean || this is Byte
 
-
 fun <T> T.eLog(hint: Any? = "", TAG: String = "TAGd"): T {
     if (eIsTagD)
         Log.d(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
 
-
 fun <T> T.eLogI(hint: Any? = "", TAG: String = "TAGi"): T {
     if (eIsTagI)
         Log.i(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint ${if (this.eIsBaseType()) "：$this" else ""}\n")
     return this
 }
-
 
 fun <T> T?.eLogE(hint: Any? = "", TAG: String = "TAGe"): T? {
     Log.e(TAG, "${if (this == null) "" else (this as Any).javaClass.name}-$hint\n${eErrorOut(this)} ")
@@ -195,7 +190,6 @@ fun eErrorOut(e: Any?): String? {
     }
     return os.toString()
 }
-
 
 fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "${eTime.eInit.eGetTime("yyyy-MM-dd")}.log", parame: String = "-v long AndroidRuntime:E *:S TAG:E TAG:I *E") = async {
     if (!File(savePath).exists()) {
@@ -236,7 +230,6 @@ fun Application.eCrash(saveFile: File = File("${Environment.getExternalStorageDi
         val pw = PrintWriter(sw)
         throwable.printStackTrace(pw)
         stringBuilder.append(sw.toString())
-
         //这就是完整的错误信息了，你可以拿来上传服务器，或者做成本地文件保存等等等等
         val errorLog = stringBuilder.toString()
         saveFile.appendText(errorLog)
@@ -245,6 +238,12 @@ fun Application.eCrash(saveFile: File = File("${Environment.getExternalStorageDi
     }
 }
 
+fun Application.eCrashReport(appId:String,appChannel:String?=null,block:((CrashReport.UserStrategy)->Unit)?=null){
+    val strategy = CrashReport.UserStrategy(this)
+    appChannel?.let { strategy.appChannel = it }
+    block?.invoke(strategy)
+    CrashReport.initCrashReport(this, appId, true, strategy)
+}
 /*String字符标识*/
 fun TextView.eSpannableTextView(str: String, startAndEndIndexArray: Array<Pair<Int, Int>>? = arrayOf(Pair(0, 0)), colorArray: Array<Int>? = arrayOf(Color.RED), clickBlockArray: Array<() -> Unit>? = null) {
     if (str.isEmpty())
@@ -502,7 +501,7 @@ fun Activity.eSystemSelectImg(requestCode: Int = REQUEST_CODE_PHOTO_SELECT) {
 
 
 /**
- *  Json解析扩展--------------------------------------------------------------------------------
+ *  Json解析扩展---------------------------------------------------------------------------------------
  */
 class eJson private constructor() {
     companion object {
@@ -538,7 +537,7 @@ class eJson private constructor() {
 }
 
 /**
- *广播接收器辅助扩展类--------------------------------------------------------------------------------------
+ *广播接收器辅助扩展类-----------------------------------------------------------------------------------
  */
 class eBReceiver private constructor() {
     companion object {
@@ -601,7 +600,7 @@ class eBReceiver private constructor() {
 }
 
 /**
- *  Uri扩展--------------------------------------------------------------------------------
+ *  Uri扩展-------------------------------------------------------------------------------------------
  */
 class eUri private constructor() {
     companion object {
@@ -1074,7 +1073,7 @@ open class eRegex internal constructor() {
 
 
 /**
- * KeyDownExit事件监听扩展类--------------------------------------------------------------------------
+ * KeyDownExit事件监听扩展类---------------------------------------------------------------------------
  */
 open class eEvent internal constructor() {
     companion object {
@@ -1142,7 +1141,7 @@ open class eEvent internal constructor() {
 }
 
 /**
- * 加密扩展类--------------------------------------------------------------------------
+ * 加密扩展类------------------------------------------------------------------------------------------
  */
 open class eEncryption internal constructor() {
     companion object {
@@ -1519,7 +1518,7 @@ open class eBluetooth internal constructor() {
 }
 
 /**
- * eAssets文件扩展类--------------------------------------------------------------------------------------
+ * eAssets文件扩展类-----------------------------------------------------------------------------------
  */
 open class eAssets internal constructor() {
     companion object {
@@ -1583,7 +1582,7 @@ open class eAssets internal constructor() {
 }
 
 /**
- * 矩阵扩展类--------------------------------------------------------------------------------------
+ * 矩阵扩展类------------------------------------------------------------------------------------------
  */
 open class eMatrix internal constructor() {
     companion object {
@@ -1618,7 +1617,7 @@ open class eMatrix internal constructor() {
 
     /*矩阵转X Y Width Height */
     open fun eRectToXYWH(rect: Rect?): IntArray? {
-        rect?:return null.eLogE("rect==null")
+        rect ?: return null.eLogE("rect==null")
         val intArray: IntArray
         with(rect) {
             intArray = intArrayOf(left, top, abs(right - left), abs(bottom - top))
@@ -1630,7 +1629,7 @@ open class eMatrix internal constructor() {
 }
 
 /**
- * Bitmap扩展类--------------------------------------------------------------------------------------
+ * Bitmap扩展类---------------------------------------------------------------------------------------
  */
 open class eBitmap internal constructor() {
     companion object {
@@ -1643,13 +1642,6 @@ open class eBitmap internal constructor() {
             bitmap.recycle() // 回收图片所占的内存
             System.gc() // 提醒系统及时回收
         }
-    }
-
-    //Bitmap镜像水平翻转
-    open fun eBitmapHorizontalFlip(bitmap: Bitmap): Bitmap {
-        val matrix = Matrix()
-        matrix.postScale(-1f, 1f)
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
     //Bitmap矩形绘制
@@ -1739,7 +1731,7 @@ open class eBitmap internal constructor() {
             val stream = ByteArrayOutputStream()
             image.compressToJpeg(rect, quality, stream)
             val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
-            mBitmap = eBitmapRotateFlipRect(bmp, rotate, isFlip )
+            mBitmap = eBitmapRotateFlipRect(bmp, rotate, isFlip)
             stream.close()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -1792,8 +1784,8 @@ open class eBitmap internal constructor() {
     }
 
     //图像处理
-    fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f,isFlipX: Boolean = false)=eBitmapRotateFlipRect(bitmap,rotate,isFlipX,array = null)
-    fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f, isFlipX: Boolean = false, isFlipY: Boolean = false, rect: Rect? = null, scaleX: Int = 1, scaleY: Int = 1)= eBitmapRotateFlipRect(bitmap,rotate, isFlipX, isFlipY,  eMatrix.eInit.eRectToXYWH(rect), scaleX, scaleY)
+    fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f, isFlipX: Boolean = false) = eBitmapRotateFlipRect(bitmap, rotate, isFlipX, array = null)
+    fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f, isFlipX: Boolean = false, isFlipY: Boolean = false, rect: Rect? = null, scaleX: Int = 1, scaleY: Int = 1) = eBitmapRotateFlipRect(bitmap, rotate, isFlipX, isFlipY, eMatrix.eInit.eRectToXYWH(rect), scaleX, scaleY)
     fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f, isFlipX: Boolean = false, isFlipY: Boolean = false, array: IntArray? = null, scaleX: Int = 1, scaleY: Int = 1): Bitmap? {
         if (bitmap == null) {
             return null.eLogE("bitmap==null")
@@ -1808,7 +1800,8 @@ open class eBitmap internal constructor() {
                 val x = (it[0] / scaleX).takeIf { it >= 0 } ?: 0
                 val y = (it[1] / scaleY).takeIf { it >= 0 } ?: 0
                 val width = (it[2] / scaleX).takeIf { (it + x) <= bitmap.width } ?: bitmap.width - x
-                val height = (it[3] / scaleY).takeIf { (it + y) <= bitmap.height } ?: bitmap.height - y
+                val height = (it[3] / scaleY).takeIf { (it + y) <= bitmap.height }
+                        ?: bitmap.height - y
                 Bitmap.createBitmap(bitmap, x, y, width.eLog("width"), height.eLog("height"), matrix, false)
             } ?: Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false)
         } catch (e: Exception) {
@@ -1831,7 +1824,6 @@ open class eBitmap internal constructor() {
         return tBitmap
     }
 
-
     //Bitmap压缩 (设置压缩率或者 设置大小)
     open fun eBitmapCompress(bitmap: Bitmap, quality: Int = 100, outSize: Int? = null): Bitmap? {
         var baos = ByteArrayOutputStream()
@@ -1852,7 +1844,6 @@ open class eBitmap internal constructor() {
         val isBm = ByteArrayInputStream(baos.toByteArray())
         return BitmapFactory.decodeStream(isBm, null, null)
     }
-
 
     //Bitmap转文件
     open fun eBitmapToFile(bitmap: Bitmap?, absPath: String, quality: Int = 80): Boolean {
@@ -2000,6 +1991,7 @@ open class eBitmap internal constructor() {
         b = if (b > kMaxChannelValue) kMaxChannelValue else if (b < 0) 0 else b
         return -0x1000000 or (r shl 6 and 0xff0000) or (g shr 2 and 0xff00) or (b shr 10 and 0xff)
     }
+
     open fun eGetYUVByteSize(width: Int, height: Int): Int {
         // The luminance plane requires 1 byte per pixel.
         val ySize = width * height
@@ -2013,7 +2005,7 @@ open class eBitmap internal constructor() {
 }
 
 /**
- * Color扩展类--------------------------------------------------------------------------------------
+ * Color扩展类----------------------------------------------------------------------------------------
  */
 open class eColor internal constructor() {
     companion object {
@@ -2069,7 +2061,7 @@ open class eColor internal constructor() {
 }
 
 /**
- * Image图片处理辅助扩展类--------------------------------------------------------------------------------------
+ * Image图片处理辅助扩展类------------------------------------------------------------------------------
  */
 open class eImage internal constructor() {
     companion object {
@@ -2095,7 +2087,6 @@ open class eImage internal constructor() {
             val vBytes = ByteArray(width * height / 4)
             var uIndex = 0
             var vIndex = 0
-
             var pixelsStride: Int
             var rowStride: Int
             for (i in planes.indices) {
@@ -2155,7 +2146,6 @@ open class eImage internal constructor() {
             image?.close()
             e.eLogE("eGetImagetoByteArray")
         }
-
         return null
     }
 
@@ -2195,7 +2185,7 @@ open class eImage internal constructor() {
      */
     open fun eGetHandleImageForARGB(bm: Bitmap, hue: Float, saturation: Float, lum: Float): Bitmap {
         val bmp = Bitmap.createBitmap(bm.width, bm.height, Bitmap.Config.ARGB_8888)
-        val canvas= Canvas(bmp)
+        val canvas = Canvas(bmp)
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
         //色调 0-R 1-G 2-B
@@ -2652,7 +2642,6 @@ open class eFile internal constructor() {
             return null
         }
     }
-
 
     //    base64字符保存文本文件
     open fun eBase64StrToFile(base64Code: String, targetPath: String) {

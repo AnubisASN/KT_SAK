@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
@@ -12,6 +13,7 @@ import androidx.camera.core.CameraSelector
 import com.anubis.lpr.R
 import com.anubis.lpr.scanner.ScannerOptions
 import com.anubis.lpr.scanner.ScannerView
+import kotlinx.android.synthetic.main.activity_lpr.*
 import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.LoaderCallbackInterface
 import org.opencv.android.OpenCVLoader
@@ -22,6 +24,7 @@ open class eLPRActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lpr)
+        init=this
         try {
             camreaId=  if (intent.getIntExtra(CAMERAID_CODE,1)==1) CameraSelector.DEFAULT_BACK_CAMERA else CameraSelector.DEFAULT_FRONT_CAMERA
         } catch (e: Exception) {
@@ -77,7 +80,13 @@ open class eLPRActivity : AppCompatActivity() {
         }
     }
 
+    open fun ePutBitmap(bitmap: Bitmap?) {
+        imageView.post { imageView.setImageBitmap(bitmap) }
+    }
+
     companion object {
+        private lateinit var init: eLPRActivity
+        val eInit get() = init
         const val REQUEST_LPR_CODE = 1001
         val CAMERAID_CODE="cameraId"
     }
