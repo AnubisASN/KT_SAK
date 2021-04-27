@@ -18,7 +18,6 @@ import android.content.res.AssetManager
 import android.database.Cursor
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.hardware.Camera
 import android.media.*
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -751,10 +750,17 @@ class eApp private constructor() {
 
     //窗口全屏
     fun eSetWindowFullScreen(activity: Activity) {
-        activity.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        activity.window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            //需要设置这个flag contentView才能延伸到状态栏
+            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+            //状态栏覆盖在contentView上面，设置透明使contentView的背景透出来
+            activity.window.statusBarColor = Color.TRANSPARENT
+        } else {
+            //让contentView延伸到状态栏并且设置状态栏颜色透明
+            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        }
     }
 
     //输入法隐藏
