@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.anubis.module_Talkback.CallActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tv_countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="30"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_roomnumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="呼叫1-1-101..."
+        android:layout_marginTop="30dp"
+        />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="挂机"
+        android:layout_marginTop="100dp"
+        />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="抓拍"
+        android:layout_marginTop="100dp"
+        />
+
+</LinearLayout>

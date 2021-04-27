@@ -1,0 +1,117 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:2:1-46:12
+INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:2:1-46:12
+INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:2:1-46:12
+INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:2:1-46:12
+INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:2:1-46:12
+INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:2:1-46:12
+INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:2:1-46:12
+	package
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:4:5-41
+		INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+		INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:2:1-46:12
+		INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+	xmlns:tools
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:3:5-51
+	android:versionCode
+		INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:2:1-46:12
+		INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:2:11-69
+uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:6:5-80
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:6:22-77
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:7:5-71
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:7:22-68
+uses-permission#android.permission.VIBRATE
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:8:5-66
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:8:22-63
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:9:5-81
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:9:22-78
+uses-permission#android.permission.WRITE_MEDIA_STORAGE
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:10:5-78
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:10:22-75
+uses-permission#android.permission.READ_MEDIA_STORAGE
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:11:5-77
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:11:22-74
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:12:5-79
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:12:22-76
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:13:5-75
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:13:22-72
+uses-permission#android.permission.INTERNET
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:14:5-67
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:14:22-64
+uses-permission#android.permission.CALL_PHONE
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:15:5-69
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:15:22-66
+uses-permission#android.permission.WAKE_LOCK
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:16:5-68
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:16:22-65
+uses-permission#android.permission.DISABLE_KEYGUARD
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:17:5-75
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:17:22-72
+uses-permission#android.permission.WRITE_SETTINGS
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:18:5-73
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:18:22-70
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:19:5-76
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:19:22-73
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:20:5-81
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:20:22-78
+uses-permission#android.permission.CAMERA
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:21:5-65
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:21:22-62
+uses-permission#android.permission.FLASHLIGHT
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:22:5-69
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:22:22-66
+uses-permission#android.permission.MOUNT_UNMOUNT_FILESYSTEMS
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:23:5-84
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:23:22-81
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:24:5-80
+	android:name
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:24:22-77
+application
+ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml:35:1-44:19
+uses-sdk
+INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+		INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+		ADDED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
+		INJECTED from /super/WorkSpace/AndroidProject0/KT_SAK/module_Talkback/src/main/AndroidManifest.xml
