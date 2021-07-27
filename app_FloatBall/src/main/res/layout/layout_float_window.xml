@@ -9,11 +9,12 @@
 
     <ImageView
         android:id="@+id/ivHome"
-        android:layout_width="@dimen/dp_30"
-        android:layout_height="@dimen/dp_30"
+        android:layout_width="@dimen/dp_15"
+        android:layout_height="@dimen/dp_15"
         android:src="@drawable/logo"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl"
@@ -24,7 +25,8 @@
         android:layout_toStartOf="@+id/ivHome"
         android:background="#aa9A9A9A"
         android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/ivHome">
+        app:layout_constraintEnd_toStartOf="@+id/ivHome"
+        tools:ignore="MissingConstraints">
 
         <EditText
             android:id="@+id/etInput"

@@ -83,8 +83,8 @@
         android:id="@+id/button8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="清理通知"
         android:onClick="onClick"
+        android:text="清理通知"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvHint" />
 
@@ -106,5 +106,13 @@
         app:layout_constraintEnd_toEndOf="@+id/tvHint"
         app:layout_constraintStart_toStartOf="@+id/tvHint"
         android:src="@drawable/logo" />
+
+    <Button
+        android:id="@+id/button9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="消息总线发送"
+        app:layout_constraintBottom_toBottomOf="@+id/button8"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

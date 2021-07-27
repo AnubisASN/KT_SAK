@@ -27,9 +27,9 @@ dependencies {
     api 'androidx.constraintlayout:constraintlayout:2.0.4'
     api 'androidx.appcompat:appcompat:1.2.0'
     api 'com.google.android.material:material:1.2.1'
-    //            {
+    // {
     //        exclude group: 'com.android.support'
-    //    }
+    // }
 
     //Kotlin版本
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -41,8 +41,7 @@ dependencies {
     api 'org.jetbrains.anko:anko-recyclerview-v7:0.9.1'
 
     //    协程依赖
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
-
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1'
     //Junit测试
     api 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -72,7 +71,7 @@ dependencies {
     //以下三个选择添加，okrx和okrx2不能同时使用
     api 'com.lzy.net:okrx2:2.0.2'
     api 'com.lzy.net:okserver:2.0.5'
-    implementation files('libs/base64-2.3.7.jar')
+    api files('libs/base64-2.3.7.jar')
 }
 repositories {
     mavenCentral()

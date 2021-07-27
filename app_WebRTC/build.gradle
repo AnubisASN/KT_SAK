@@ -10,7 +10,6 @@ android {
         versionName rootProject.ext.versionName
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {

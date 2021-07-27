@@ -1,16 +1,14 @@
 package com.anubis.kt_extends
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
 import android.bluetooth.BluetoothAdapter
-import android.content.ContentUris
-import android.content.Context
+import android.content.*
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Context.POWER_SERVICE
-import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.AssetFileDescriptor
@@ -49,6 +47,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import net.lingala.zip4j.core.ZipFile
@@ -440,7 +439,6 @@ fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = Aud
     val bufferSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat)
     var audioTrack: AudioTrack? = AudioTrack(AudioManager.STREAM_MUSIC, sampleRateInHz, channelConfig, audioFormat, bufferSize, AudioTrack.MODE_STREAM)
     var fis: FileInputStream? = null
-    var isPlaying = true
     var isStop = false
     try {
         audioTrack!!.play()
@@ -453,7 +451,6 @@ fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = Aud
     } catch (e: Exception) {
         e.eLogE("playPCMRecord")
     } finally {
-        isPlaying = false
         isStop = false
         if (audioTrack != null) {
             audioTrack.stop()
@@ -588,13 +585,29 @@ class eBReceiver private constructor() {
     }
 
     //通知相册更新
-    fun eSendBroad(context: Context, file: File) {
+    fun eSendPhotoBroad(context: Context, file: File) {
         //通知相册更新
         MediaStore.Images.Media.insertImage(context.contentResolver, BitmapFactory.decodeFile(file.absolutePath), file.name, null)
         val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
         val uri = Uri.fromFile(file)
         intent.data = uri
         context.sendBroadcast(intent)
+    }
+
+    //广播接收器
+    fun eSetRegisterReceiver(context: Context, filter:IntentFilter = IntentFilter(""),block: (context: Context, intent: Intent,BroadcastReceiver) -> Unit):BroadcastReceiver {
+//        filter.addAction("com.xbh.action.NET_INFO")
+        var mReceiver: BroadcastReceiver?=null
+        mReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                block(context,intent,mReceiver!!)
+            }
+        }
+        context.registerReceiver(mReceiver, filter)
+        return  mReceiver
+    }
+    fun eUnReceiver(context: Context,rev:BroadcastReceiver){
+        context.unregisterReceiver(rev)
     }
 }
 
@@ -1117,7 +1130,7 @@ open class eEvent internal constructor() {
     /*键盘触摸关闭*/
     fun eDispatchTouchEvent(activity: Activity, ev: MotionEvent): Boolean {
         with(activity) {
-            if (ev.action === MotionEvent.ACTION_DOWN) {
+            if (ev.action == MotionEvent.ACTION_DOWN) {
                 val v = currentFocus
                 if (eIsShouldHideInput(v, ev)) {
                     eApp.eInit.eInputHide(activity, v as EditText)
@@ -1153,11 +1166,9 @@ open class eEncryption internal constructor() {
     companion object {
         val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eEncryption() }
     }
-
     /*AES加密*/
-    fun eEncrypt(sSrc: String, sKey: String): String? {
+    fun eEncrypt(sSrc: String, sKey: String,transformation:String="AES/ECB/nopadding",isHex:Boolean=true): String? {
         var str = sSrc
-        var key = sKey
         val re = if (sSrc.length % 16 == 0) {
             str
         } else {
@@ -1170,13 +1181,15 @@ open class eEncryption internal constructor() {
         // 判断Key是否为16位
         if (sKey.length != 16) {
             print("Key长度不是16位")
-            return null
+            return "Key长度不是16位"
         }
         val raw = sKey.toByteArray(charset("utf-8"))
         val skeySpec = SecretKeySpec(raw, "AES")
-        val cipher = Cipher.getInstance("AES/ECB/NoPadding")// "算法/模式/补码方式"
+        val cipher = Cipher.getInstance(transformation)// "算法/模式/补码方式"
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec)
         val encrypted = cipher.doFinal(re.toByteArray(charset("utf-8"))) //
+        if (!isHex)
+            return  eString.eInit.eBase64Encode(encrypted)
         var strHex = ""
         val sb = StringBuilder("")
         for (n in encrypted.indices) {
@@ -2849,10 +2862,10 @@ open class eString internal constructor() {
             or (src[offset + 10].toInt() and 0x03 shl 64))
 
     //MD5加密
-    open fun eGetEncodeMD5(str: String, digits: Int = 32): String? {
+    open fun eGetEncodeMD5(str: String, digits: Int = 32,algorithm:String="MD5" ): String? {
         try {
             //获取md5加密对象
-            val instance: MessageDigest = MessageDigest.getInstance("MD5")
+            val instance: MessageDigest = MessageDigest.getInstance(algorithm)
             //对字符串加密，返回字节数组
             val digest: ByteArray = instance.digest(str.toByteArray())
             val sb: StringBuffer = StringBuffer()

@@ -11,7 +11,6 @@ android {
         versionName rootProject.ext.versionName
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -21,10 +20,12 @@ android {
 
         }
     }
-
+    packagingOptions {
+        exclude 'META-INF/proguard/coroutines.pro'
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':module_Extends')
+    api project(':module_EventBus')
 }

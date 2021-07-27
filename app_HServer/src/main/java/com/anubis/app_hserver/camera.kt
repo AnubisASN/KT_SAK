@@ -1,7 +1,11 @@
 package com.anubis.app_hserver
 
+import android.app.Activity
+import android.graphics.Color
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.anubis.kt_extends.eBitmap
 import com.anubis.kt_extends.eCrashReport

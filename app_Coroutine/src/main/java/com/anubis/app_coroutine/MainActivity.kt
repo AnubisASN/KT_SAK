@@ -1,14 +1,19 @@
 package com.anubis.app_coroutine
 
 import android.annotation.TargetApi
-import android.graphics.ColorSpace
+import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.speech.tts.TextToSpeechService
+import androidx.appcompat.app.AppCompatActivity
 import com.anubis.kt_extends.eLog
+import com.anubis.module_eventbus.eEventBus
+import com.anubis.module_eventbus.observe.eObserveEvent
+import com.anubis.module_eventbus.post.ePostEvent
+import com.anubis.module_eventbus.post.ePostSpan
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.jetbrains.anko.onClick
 import java.util.*
 
@@ -17,9 +22,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val tts = TextToSpeech(this, TextToSpeech.OnInitListener {
+        eEventBus.eInit(application)
+        startService(Intent(this@MainActivity, MyService::class.java))
+        val tts = TextToSpeech(this, {
             it.eLog("TextToSpeech Listener")
-        },"com.iflytek.speechcloud")
+        }, "com.iflytek.speechcloud")
         tts.language = Locale.CHINESE
 
         button.onClick {
@@ -35,5 +42,29 @@ class MainActivity : AppCompatActivity() {
                 it.label.eLog("engine label")
             }
         }
+        button2.onClick {
+            ePostEvent("service")
+        }
+        button3.onClick {
+ePostSpan("123456654")
+        }
+        button4.onClick {
+            ePostEvent("跳转成功")
+            startActivity(Intent(this,MainActivity1::class.java))
+        }
+        EvenTest()
     }
+
+    fun EvenTest() {
+        eObserveEvent<String> {
+            it.eLog("observeEvent1")
+        }
+        eObserveEvent<String>(CoroutineScope(Dispatchers.Main)) {
+            it.eLog("observeEvent2")
+        }
+        eObserveEvent<String>(CoroutineScope(Dispatchers.IO)) {
+            it.eLog("observeEvent3")
+        }
+    }
+
 }

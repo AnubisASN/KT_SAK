@@ -2,12 +2,15 @@ package com.anubis.app_hserver
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.view.View
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -65,6 +68,7 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        eEncryption.eInit.eEncrypt("1111111111111110", "1234567891234567",isHex = false).eLog("加密")
         setContentView(R.layout.activity_main)
         File("/sdcard/Web").apply { if (!this.exists()) this.mkdirs() }
         eAssets.eInit.eAssetsToFile(this, "Web/index.html", "/sdcard/Web/index.html")
@@ -95,6 +99,8 @@ class MainActivity : AppCompatActivity() {
             GridLayoutManager(it, 3)
         }, orientation = LinearLayoutManager.HORIZONTAL)
 //        eVerification.eInit.eSetSwipeCaptcha(this, R.drawable.logo, findViewById(R.id.sample_card_scv), findViewById(R.id.sample_card_bar))
+        transparentStatusBar(this)
+
     }
 
     override fun onResume() {
@@ -143,6 +149,9 @@ class MainActivity : AppCompatActivity() {
                 mNotify?.eCleanNotify()
                 eForegroundService.mNotification?.eCleanNotify()
             }
+            button9.id -> {
+
+            }
             imageView.id -> {
 //                eShowTip(eVerification.eInit.eGetCaptchaCode(imageView))
             }
@@ -151,6 +160,20 @@ class MainActivity : AppCompatActivity() {
 //                swipeCaptchaView.eResetCaptcha()
 //
 //            }
+        }
+    }
+
+    fun transparentStatusBar(activity: Activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            //需要设置这个flag contentView才能延伸到状态栏
+            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+            //状态栏覆盖在contentView上面，设置透明使contentView的背景透出来
+            activity.window.statusBarColor = Color.TRANSPARENT
+        } else {
+            //让contentView延伸到状态栏并且设置状态栏颜色透明
+            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
     }
 

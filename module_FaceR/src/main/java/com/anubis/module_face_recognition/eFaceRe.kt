@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
 import androidx.collection.SimpleArrayMap
+import com.anubis.kt_extends.eDevice
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eShowTip
@@ -35,8 +36,8 @@ open class eFaceRe internal constructor() {
 
     companion object {
         private lateinit var mContext: Context
-        fun eInit(mContext: Context): eFaceRe {
-            this.mContext = mContext
+        fun eInit(mContext: Context ): eFaceRe {
+              this.mContext = mContext
             return eInit
         }
 
@@ -49,7 +50,7 @@ open class eFaceRe internal constructor() {
      *@return YMFaceTrack?，追踪器
      **/
     protected var eFaceTrack: YMFaceTrack? = null
-    open fun eStartTrack(mDistance: Int = YMFaceTrack.DISTANCE_TYPE_FARTHESTER, recognitionConfidence: Int = 85,orientation:Int=YMFaceTrack.FACE_0,resizeScale:Int=YMFaceTrack.RESIZE_WIDTH_640): YMFaceTrack? {
+    open fun eStartTrack(mDistance: Int = YMFaceTrack.DISTANCE_TYPE_FARTHESTER, recognitionConfidence: Int = 85, orientation: Int = YMFaceTrack.FACE_0, resizeScale: Int = YMFaceTrack.RESIZE_WIDTH_640): YMFaceTrack? {
         eFaceTrack?.let { return it }
         eFaceTrack = YMFaceTrack()
         trackingMap = SimpleArrayMap()
@@ -66,7 +67,7 @@ open class eFaceRe internal constructor() {
     }
 
     /**默认识别解析器
-     * @param  i: Int, 连指针
+     * @param  i: Int, 指针
      * @param ymFace：YMFace， 分析信息
      * */
     open val eDefaultBlock: (Int, YMFace) -> Unit = { i: Int, ymFace: YMFace ->
