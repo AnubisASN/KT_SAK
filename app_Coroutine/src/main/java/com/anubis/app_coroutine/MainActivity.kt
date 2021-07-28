@@ -56,7 +56,7 @@ ePostSpan("123456654")
     }
 
     fun EvenTest() {
-        eObserveEvent<String> {
+        eObserveEvent<String>(this) {
             it.eLog("observeEvent1")
         }
         eObserveEvent<String>(CoroutineScope(Dispatchers.Main)) {

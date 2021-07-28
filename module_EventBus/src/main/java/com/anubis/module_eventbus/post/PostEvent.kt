@@ -19,7 +19,11 @@ import java.io.Serializable
 //          post event
 //_______________________________________
 
-/*消息总线*/
+/**消息总线
+ * @param event: T,消息内容
+ * @param scope:Any?=null,协程范围
+ * @param timeMillis: Long = 0L，延时时间
+ * */
 inline fun <reified T> ePostEvent(event: T, scope: Any? = null, timeMillis: Long = 0L) =
     when (scope) {
         //Activity范围的事件
@@ -33,6 +37,9 @@ inline fun <reified T> ePostEvent(event: T, scope: Any? = null, timeMillis: Long
             ?.postEvent(T::class.java.name, event!!, timeMillis)
     }
 
+/**跨进程发送
+ * @param  value: Any，消息内容
+* */
 fun  ePostSpan( value: Any) {
     val intent = Intent("eEventBus")
     when (value) {
@@ -49,8 +56,18 @@ fun  ePostSpan( value: Any) {
     eEventBus.application.sendBroadcast(intent)
 }
 
-
-
+/**移除粘性事件
+* @param scope: Any?=null,协程范围
+ * @param event: Class<T> 消息内容类型
+* */
+inline fun <reified T> eRemoveStickyEvent(scope: Any?=null, event: Class<T>) =when(scope){
+    is ComponentActivity-> ViewModelProvider(scope).get(EventBusCore::class.java)
+        .removeStickEvent(event.name)
+    is Fragment-> ViewModelProvider(scope).get(EventBusCore::class.java)
+        .removeStickEvent(event.name)
+    else->ApplicationScopeViewModelProvider.getApplicationScopeViewModel(EventBusCore::class.java)
+        ?.removeStickEvent(event.name)
+}
 
 
 

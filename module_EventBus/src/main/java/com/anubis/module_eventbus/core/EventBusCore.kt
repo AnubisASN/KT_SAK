@@ -4,6 +4,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.anubis.kt_extends.eLogE
 import com.anubis.module_eventbus.eEventBus
 import com.anubis.module_eventbus.util.launchWhenStateAtLeast
 import kotlinx.coroutines.CoroutineDispatcher
@@ -50,7 +51,6 @@ class EventBusCore : ViewModel() {
         isSticky: Boolean,
         onReceived: (T) -> Unit
     ) {
-        eEventBus.logger?.log(Level.WARNING, "observe Event:$eventName")
         lifecycleOwner.launchWhenStateAtLeast(minState) {
             getEventFlow(eventName, isSticky).collect { value ->
                 this.launch(dispatcher) {
@@ -72,7 +72,6 @@ class EventBusCore : ViewModel() {
 
 
     fun postEvent(eventName: String, value: Any, timeMillis: Long) {
-        eEventBus.logger?.log(Level.WARNING, "post Event:$eventName")
         listOfNotNull(
             getEventFlow(eventName, false),
             getEventFlow(eventName, true)
@@ -94,17 +93,9 @@ class EventBusCore : ViewModel() {
         try {
             onReceived.invoke(value as T)
         } catch (e: ClassCastException) {
-            eEventBus.logger?.log(
-                Level.WARNING,
-                "class cast error on message received: $value",
-                e
-            )
+            e.eLogE("logger: ILogger? = null")
         } catch (e: Exception) {
-            eEventBus.logger?.log(
-                Level.WARNING,
-                "error on message received: $value",
-                e
-            )
+            e.eLogE("error on message received: $value")
         }
     }
 
