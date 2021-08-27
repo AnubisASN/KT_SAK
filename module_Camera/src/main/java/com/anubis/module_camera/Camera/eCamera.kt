@@ -22,6 +22,7 @@ import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eImage.Companion.eIImage
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -51,7 +52,7 @@ class eCamera private constructor() {
     private var mCameraDevice: CameraDevice? = null
 
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eCamera() }
+        val eICamera by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eCamera() }
     }
     /*开始相机预览*/
     fun eInitCamera(context: Context, textureView: TextureView, cameraId: Int? = null, rotation: Float = 0f, isFlip: Boolean = false, takePicBlock: ((ImageReader) -> Unit)? = null) {
@@ -163,7 +164,7 @@ class eCamera private constructor() {
     /* Image 转文件 与拍照关联*/
     fun eImageToFile(image: Image, file: File?=saveFile): String? {
         file?:return null.apply { eLogE("file==null") }
-        eImage.eInit.eImageToFile(image,file)
+        eIImage.eImageToFile(image,file)
         saveFile=null
         return null
     }

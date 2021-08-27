@@ -22,6 +22,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.anubis.kt_extends.EExtendsKt;
+import com.anubis.module_eventbus.post.PostEventKt;
 import com.anubis.module_webRTC.R;
 import com.anubis.module_webRTC.database.CoreDB;
 import com.anubis.module_webRTC.database.HistoryBean;
@@ -46,6 +48,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.anubis.kt_extends.EExtendsKt.eClean;
 import static com.anubis.kt_extends.EExtendsKt.eLog;
 
 public class VoipActivity extends BaseActivity implements View.OnClickListener {
@@ -77,6 +80,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         starRTCAudioManager = StarRTCAudioManager.create(this.getApplicationContext());
         starRTCAudioManager.start(new StarRTCAudioManager.AudioManagerEvents() {
             @Override
@@ -99,7 +103,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
         targetId = getIntent().getStringExtra("targetId");
         cameraId = getIntent().getIntExtra("cameraId", 0);
         isRemoteVideo = getIntent().getBooleanExtra("isisRemoteVideo", false);
-        outTime = getIntent().getLongExtra("outTime", 60);
+        outTime =  getIntent().getLongExtra("outTime", 30L);
         final Long[] time = {outTime};
         mTimerTask = new TimerTask() {
             @Override
@@ -110,9 +114,15 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
                     public void run() {
                         tvOutTime.setText("等待倒计时:" + time[0]);
                         if (time[0] == 0) {
+                            PostEventKt.ePostSpan(targetId,null,new Intent("CALL"));
                             eLog(this, "倒计时关闭", "TAG");
                             //接听等待
-                            onClick(findViewById(R.id.calling_hangup));
+                           mHandler.postDelayed(new Runnable() {
+                               @Override
+                               public void run() {
+                                   onClick(findViewById(R.id.calling_hangup));
+                               }
+                           },500);
                         }
                     }
                 });
@@ -137,9 +147,13 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
 //        voipManager.setRecorder(recorder);
 //        pushUVCTest = new PushUVCTest(recorder);
 //        pushUVCTest.startRecoder();
-
-
-        ((TextView) findViewById(R.id.targetid_text)).setText(targetId);
+        String str;
+        if(targetId.length()==11){
+            str =targetId.substring(0,7).toString()+"XXXX" ;
+        }
+        else
+        str= targetId;
+        ((TextView) findViewById(R.id.targetid_text)).setText(str);
 //        ((ImageView)findViewById(R.id.head_img)).setImageResource(MLOC.getHeadImage(VoipActivity.this,targetId));
         findViewById(R.id.calling_hangup).setOnClickListener(this);
         findViewById(R.id.talking_hangup).setOnClickListener(this);
@@ -174,8 +188,15 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
 
                 @Override
                 public void failed(String errMsg) {
-                    eLog(this, "newVoip", "TAG");
-                    stopAndFinish();
+                    PostEventKt.ePostSpan(targetId,null,new Intent("CALL"));
+                    eLog(this, "failed", "TAG");
+                  mHandler.postDelayed(new Runnable() {
+                      @Override
+                      public void run() {
+                          onClick(findViewById(R.id.calling_hangup));
+//                          stopAndFinish();
+                      }
+                  },500);
                 }
             });
         } else {
@@ -299,6 +320,7 @@ public class VoipActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onDestroy() {
+        mTimerTask.cancel();
         removeListener();
         super.onDestroy();
     }

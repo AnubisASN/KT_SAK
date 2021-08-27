@@ -1,0 +1,5 @@
+# ninja log v5
+1	1292	0	CMakeFiles/facedetect.dir/src/main/cpp/net.cpp.o	fc860a5dd166746e
+1	1400	0	CMakeFiles/facedetect.dir/src/main/cpp/Ultra_jni.cpp.o	f018fa83f74a3bd2
+1	1599	0	CMakeFiles/facedetect.dir/src/main/cpp/UltraFace.cpp.o	45882baf23497560
+1599	1845	0	../../../../build/intermediates/cmake/release/obj/armeabi-v7a/libfacedetect.so	772a9f9574407090

@@ -1,6 +1,7 @@
 package com.anubis.module_httpserver
 
 import com.anubis.kt_extends.eFile
+import com.anubis.kt_extends.eFile.Companion.eIFile
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_httpserver.protocols.http.IHTTPSession
@@ -29,7 +30,7 @@ class eManage private  constructor(){
   var httpResult: String = "HTTP Server 创建成功"
   var eHttpPath = "/sdcard/Web/"
     companion object{
-        val eInit by lazy (LazyThreadSafetyMode.SYNCHRONIZED){ eManage() }
+        val eIManage by lazy (LazyThreadSafetyMode.SYNCHRONIZED){ eManage() }
     }
 
 
@@ -48,7 +49,7 @@ class eManage private  constructor(){
         eLog("tmpFilePath:$tmpFilePath--${session.parms[fileParms]}")
         val tmpFile = File(tmpFilePath)
         val targetFile = File("$savePath${session.parms[fileParms]}")
-        return if (eFile.eInit.eCopyFile(tmpFile.path, targetFile.path)) targetFile.path else null
+        return if (eIFile.eCopyFile(tmpFile.path, targetFile.path)) targetFile.path else null
     }
 
     /**

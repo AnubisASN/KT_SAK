@@ -21,10 +21,14 @@ android {
     lintOptions {
         abortOnError false
     }
+    packagingOptions {
+        exclude 'META-INF/proguard/coroutines.pro'
+    }
 }
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     api project(':module_Extends')
     api project(':module_WebRTC')
+    api project(path: ':module_Voip')
 }

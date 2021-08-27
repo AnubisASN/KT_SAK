@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import androidx.appcompat.app.AppCompatActivity
 import com.anubis.kt_extends.eLog
-import com.anubis.module_eventbus.eEventBus
 import com.anubis.module_eventbus.observe.eObserveEvent
 import com.anubis.module_eventbus.post.ePostEvent
 import com.anubis.module_eventbus.post.ePostSpan
@@ -22,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        eEventBus.eInit(application)
         startService(Intent(this@MainActivity, MyService::class.java))
         val tts = TextToSpeech(this, {
             it.eLog("TextToSpeech Listener")
@@ -42,10 +40,10 @@ class MainActivity : AppCompatActivity() {
                 it.label.eLog("engine label")
             }
         }
-        button2.onClick {
+        start.onClick {
             ePostEvent("service")
         }
-        button3.onClick {
+        stop.onClick {
 ePostSpan("123456654")
         }
         button4.onClick {

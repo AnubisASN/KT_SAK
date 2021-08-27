@@ -4,6 +4,7 @@ import android.os.Handler
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eReflection
+import com.anubis.kt_extends.eReflection.Companion.eIReflection
 import com.anubis.module_httpserver.protocols.http.eHTTPD
 import java.lang.Exception
 
@@ -26,7 +27,7 @@ import java.lang.Exception
 class eHttpServer private constructor() {
     private var server: eHTTPD? = null
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+        val eIHttpServer by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             eHttpServer()
         }
     }
@@ -34,11 +35,11 @@ class eHttpServer private constructor() {
     fun eStart(`class`: Class<*>? = eResolver::class.java, port: Int = 3334, handler: Handler? = null): eHTTPD? {
         if (server == null) {
             try {
-                val con = eReflection.eInit.eGetClass(`class`!!.name).getConstructor(Int::class.java, Handler::class.java)
+                val con =eIReflection.eGetClass(`class`!!.name).getConstructor(Int::class.java, Handler::class.java)
                 server = con.newInstance(port, handler) as eHTTPD
                 eLog("定义开启HTTP服务成功")
             } catch (e: NoSuchMethodException) {
-                val con = eReflection.eInit.eGetClass(`class`!!.name).getConstructor()
+                val con =eIReflection.eGetClass(`class`!!.name).getConstructor()
                 server = con.newInstance() as eHTTPD
                 eLog("定义开启失败,默认配置：3334")
             } catch (e: Exception) {

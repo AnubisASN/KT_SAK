@@ -1,6 +1,7 @@
 package com.anubis.app_discern
 
 import com.anubis.kt_extends.eEncryption
+import com.anubis.kt_extends.eEncryption.Companion.eIEncryption
 import org.junit.Test
 import java.util.*
 
@@ -15,8 +16,7 @@ class ExampleUnitTest {
         val hash = HashMap<String, String>()
         hash["appId"] = "123"
 
-//        println(eEncryption.eInit.eMD5Sign("123",hash))
-        println(eEncryption.eInit.eEncrypt("123","111111111111111"))
+        println(eIEncryption.eEncrypt("123","111111111111111"))
     }
 
     @Test

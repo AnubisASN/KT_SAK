@@ -3,6 +3,7 @@ package com.anubis.module_portMSG
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import com.anubis.kt_extends.eString
+import com.anubis.kt_extends.eString.Companion.eIString
 import com.anubis.module_portMSG.Utils.LockerPortInterface
 import com.anubis.module_portMSG.Utils.LockerSerialportUtil
 import java.io.OutputStream
@@ -111,7 +112,7 @@ class ePortMSG private constructor() : LockerPortInterface {
      */
     fun eSendMSG(msg: String)= msg.let {
             try {
-                outputStream!!.write(eString.eInit.eGetHexStringToBytes(msg))
+                outputStream!!.write(eIString.eGetHexStringToBytes(msg))
                 true
             } catch (e: Exception) {
                 return@let false

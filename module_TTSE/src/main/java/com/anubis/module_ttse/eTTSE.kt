@@ -14,6 +14,8 @@ import android.speech.tts.Voice
 import android.view.View
 import androidx.annotation.RequiresApi
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eApp.Companion.eIApp
+import com.anubis.kt_extends.eShell.Companion.eIShell
 import com.anubis.module_dialog.eDiaAlert
 import com.anubis.module_extends.eRvAdapter
 import com.lzy.okgo.OkGo
@@ -85,7 +87,7 @@ class eTTSE private constructor() {
             val arrayList = arrayListOf<String>()
             eDownListEngine?.forEach {
                 with(it.packName) {
-                    if (eApp.eInit.eIsAppInstall(context, this))
+                    if (eIApp.eIsAppInstall(context, this))
                         arrayList.add(this)
                 }
             }
@@ -136,7 +138,7 @@ class eTTSE private constructor() {
             view.eTTSE_rv.adapter = eRvAdapter(context, view.eTTSE_rv, R.layout.item_dia, eDownListEngine, { itemView: View, data: DataEngineInfo?, i: Int ->
                 data?.let {
                     with(itemView) {
-                        if (eApp.eInit.eIsAppInstall(context, data.packName)) {
+                        if (eIApp.eIsAppInstall(context, data.packName)) {
                             //已安装
                             eTTSE_item_bt.text = "已安装"
                             eTTSE_item_pb.visibility = View.INVISIBLE
@@ -152,17 +154,17 @@ class eTTSE private constructor() {
                                     .tag(it?.id)
                                     .execute(object : FileCallback(filePath, name) {
                                         override fun onSuccess(response: Response<File>?) {
-                                            with(eShell.eInit) {
+                                            with(eIShell) {
                                                 if (eHaveRoot())
                                                     eExecShell(eShell.install + filePath + name)
                                                 else
-                                                    eApp.eInit.eInstallApkFile(context, filePath + name)
+                                                    eIApp.eInstallApkFile(context, filePath + name)
                                             }
                                             eTTSE_item_bt.text = "安装中"
                                             GlobalScope.launch {
                                                 delay(5000)
                                                 val result = withTimeoutOrNull(10000) {
-                                                    while (!eApp.eInit.eIsAppInstall(context, data.packName)) {
+                                                    while (!eIApp.eIsAppInstall(context, data.packName)) {
                                                         delay(1000)
                                                     }
                                                     eTTSE_item_pb.post { eTTSE_item_pb.visibility = View.INVISIBLE }

@@ -1,6 +1,7 @@
 package com.anubis.app_hserver
 
 import com.anubis.kt_extends.eEncryption
+import com.anubis.kt_extends.eEncryption.Companion.eIEncryption
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -12,6 +13,6 @@ import org.junit.runner.RunWith
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
-        print(eEncryption.eInit.eEncrypt("1111111111111111", "1234567891234567"))
+        print(eIEncryption.eEncrypt("1111111111111111", "1234567891234567"))
     }
 }

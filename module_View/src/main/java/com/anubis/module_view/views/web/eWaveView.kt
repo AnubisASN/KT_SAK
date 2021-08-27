@@ -12,6 +12,7 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import com.anubis.kt_extends.eColor
+import com.anubis.kt_extends.eColor.Companion.eIColor
 import com.anubis.module_view.R
 import java.util.*
 
@@ -129,8 +130,8 @@ class eWaveView : View {
 
             //标题颜色
             frontWaveColor = a.getColor(R.styleable.eWaveView_eWaveColor, Color.parseColor("#89CFF0"))
-            behindWaveColor = eColor.eInit.eGetChangeColorAlpha(frontWaveColor, 40)
-            borderColor = eColor.eInit.eGetChangeColorAlpha(frontWaveColor, 68)
+            behindWaveColor = eIColor.eGetChangeColorAlpha(frontWaveColor, 40)
+            borderColor = eIColor.eGetChangeColorAlpha(frontWaveColor, 68)
             borderWidth = a.getDimension(R.styleable.eWaveView_eWaveBorder, borderWidth * 1f).toInt()
             val type = a.getInt(R.styleable.eWaveView_eWaveShapeType, 0)
             when (type) {

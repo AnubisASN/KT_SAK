@@ -37,7 +37,7 @@ import java.util.TimerTask
 object MLOC {
     //    lateinit var mAPP!!: Context
     var userId: String? = "0"
-    var maxTime = "60"
+    var maxTime = "30"
     var SERVER_HOST: String? = "119.23.77.41"
     var VOIP_SERVER_URL: String? = "$SERVER_HOST:10086"
     var IM_SERVER_URL: String? = "$SERVER_HOST:19903"

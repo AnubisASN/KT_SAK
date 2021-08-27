@@ -3,9 +3,11 @@ package com.anubis.module_webRTC
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import com.anubis.kt_extends.eApp
+import com.anubis.kt_extends.eApp.Companion.eIApp
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eSetSystemSharedPreferences
 import com.anubis.kt_extends.eShowTip
+import com.anubis.module_eventbus.post.ePostSpan
 import com.anubis.module_webRTC.demo.MLOC
 import com.anubis.module_webRTC.demo.MLOC.saveMaxTima
 import com.anubis.module_webRTC.demo.MLOC.saveServerUrl
@@ -21,7 +23,7 @@ import com.starrtc.starrtcsdk.api.XHClient
 class eWebRtc private constructor() {
     val eIsOnline get() = XHClient.getInstance().isOnline
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eWebRtc() }
+        val eIWebRtc by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eWebRtc() }
     }
 
     init {
@@ -74,7 +76,7 @@ class eWebRtc private constructor() {
 
     fun initRTC() {
         eLog("初始化initRTC")
-        if (!eApp.eInit.eIsServiceRunning(mAPP!!, KeepLiveService::class.java.name)) {
+        if (!eIApp.eIsServiceRunning(mAPP!!, KeepLiveService::class.java.name)) {
             val intent = Intent(mAPP, KeepLiveService::class.java)
             mAPP?.startService(intent)
         }
@@ -86,7 +88,6 @@ class eWebRtc private constructor() {
         AEvent.notifyListener(AEvent.AEVENT_LOGOUT, true, null)
         MLOC.hasLogout = true
     }
-
 
 
 }

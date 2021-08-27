@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eBReceiver.Companion.eIBReceiver
 
 /**
  * Author  ： AnubisASN   on 2018-07-23 9:12.
@@ -24,7 +25,7 @@ import com.anubis.kt_extends.*
 class MyBootBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         eLog("接收到自启广播")
-        eBReceiver.eInit.eSetPowerBoot(context,intent,MainActivity::class.java)
+        eIBReceiver.eSetPowerBoot(context,intent,MainActivity::class.java)
 //        APP.mAPP.log("\n接收到自启广播\n")
     }
 }

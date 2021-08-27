@@ -11,7 +11,9 @@ import android.view.View
 import com.anubis.app_discern.R
 import com.anubis.app_discern.testCameraGUI
 import com.anubis.kt_extends.eAssets
+import com.anubis.kt_extends.eAssets.Companion.eIAssets
 import com.anubis.kt_extends.eBitmap
+import com.anubis.kt_extends.eBitmap.Companion.eIBitmap
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
 import com.anubis.module_camera.Camera.eCameraActivity
@@ -33,7 +35,7 @@ class DiscernActivity : eCameraActivity() {
     private val minHeight = 350
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        eAssets.eInit.eAssetsToFile(this,"20180402-114759.pb","/sdcard/20180402-114759.pb")
+        eIAssets.eAssetsToFile(this,"20180402-114759.pb","/sdcard/20180402-114759.pb")
     }
 
     private  var facenet:Facenet?=null
@@ -54,7 +56,7 @@ class DiscernActivity : eCameraActivity() {
     override fun eProcessImage(bitmap: Bitmap?) {
         if (bitmap != null) {
             //            预览
-            tBitmap = eBitmap.eInit.eBitmapToZoom(bitmap, minWidth, minHeight)
+            tBitmap = eIBitmap.eBitmapToZoom(bitmap, minWidth, minHeight)
             val re = eFaceSDK.eInit(this).eFaceDetect(tBitmap!!)
             eMultiBoxTracker.eTrackResults(re)
             if (feature!=null && re.size>0){

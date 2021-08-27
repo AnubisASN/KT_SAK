@@ -31,6 +31,7 @@ import android.net.wifi.WifiManager.WifiLock
 import android.os.*
 import android.util.Log
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eNetWork.Companion.eINetWork
 
 import com.anubis.module_ftp.server.SessionThread
 import com.anubis.module_ftp.server.TcpListener
@@ -124,7 +125,7 @@ class FsService : Service(), Runnable {
 
     override fun run() {
         Log.d(TAG, "Server thread running")
-        eLog("网络是否在线：" + eNetWork.eInit.eIsNetworkOnline()+"-----"+getIP(this))
+        eLog("网络是否在线：" + eINetWork.eIsNetworkOnline()+"-----"+getIP(this))
         if (getIP(this)==null) {
             Log.w(TAG, "run: There is no local network, bailing out")
             stopSelf()

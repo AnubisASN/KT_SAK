@@ -1,6 +1,7 @@
 package com.anubis.SwissArmyKnife
 
 import com.anubis.kt_extends.eEncryption
+import com.anubis.kt_extends.eEncryption.Companion.eIEncryption
 import com.anubis.kt_extends.eString
 import org.junit.Test
 import java.security.interfaces.RSAPublicKey
@@ -36,7 +37,7 @@ public class Test {
     @Test
     fun testMSG() {
 
-      print(  eEncryption.eInit.eEncrypt("111","1234567891234567"))
+      print(  eIEncryption.eEncrypt("111","1234567891234567"))
     }
 
     @Test

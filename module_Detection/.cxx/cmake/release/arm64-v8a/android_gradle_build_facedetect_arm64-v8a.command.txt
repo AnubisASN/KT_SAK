@@ -1,0 +1,8 @@
+Executable : /home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake
+arguments : 
+--build
+/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a
+--target
+facedetect
+jvmArgs : 
+

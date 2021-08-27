@@ -29,7 +29,7 @@
         android:gravity="center"
         android:layout_marginTop="20dp">
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="设置本机编号（1-1-6）"/>
@@ -41,7 +41,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button3"
+            android:id="@+id/stop"
             android:text="呼叫管理机"/>
     </LinearLayout>
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.anubis.module_vncs
 
 import android.content.Context
 import com.anubis.kt_extends.eShell
+import com.anubis.kt_extends.eShell.Companion.eIShell
 import com.anubis.kt_extends.eShowTip
 import org.jetbrains.anko.custom.async
 import java.io.*
@@ -36,12 +37,12 @@ open  class eVNC internal  constructor(){
         val inputStream: InputStream
         var result = false
         try {
-            if (!eShell.eInit.eHaveRoot()) {
+            if (!eIShell.eHaveRoot()) {
                 mContext.eShowTip("无ROOT权限，无法执行")
                 return false
             }
             if (File("/data/local/vncs").exists()) {
-                async { eShell.eInit.eExecShellSilent("/data/local/vncs") }
+                async { eIShell.eExecShellSilent("/data/local/vncs") }
             } else {
                 inputStream = mContext.getResources().getAssets().open("vncs")// assets文件夹下的文件
                 val file = File(mContext.externalCacheDir.path)
@@ -57,7 +58,7 @@ open  class eVNC internal  constructor(){
                 fileOutputStream.flush()
                 fileOutputStream.close()
                 inputStream.close()
-                async {eShell.eInit.eExecShellSilent("cp  ${mContext.externalCacheDir.path}/vncs /data/local && chmod 777 /data/local/vncs && rm -rf ${mContext.externalCacheDir.path}/vncs && /data/local/vncs") }
+                async {eIShell.eExecShellSilent("cp  ${mContext.externalCacheDir.path}/vncs /data/local && chmod 777 /data/local/vncs && rm -rf ${mContext.externalCacheDir.path}/vncs && /data/local/vncs") }
             }
             result = true
         } catch (e: IOException) {

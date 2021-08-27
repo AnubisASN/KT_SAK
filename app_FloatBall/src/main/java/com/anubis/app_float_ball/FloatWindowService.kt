@@ -13,6 +13,10 @@ import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eBReceiver.Companion.eIBReceiver
+import com.anubis.kt_extends.eFile.Companion.eIFile
+import com.anubis.kt_extends.eJson.Companion.eIJson
+import com.anubis.kt_extends.eTime.Companion.eITime
 import com.anubis.module_dialog.eFloatWindow
 import com.anubis.module_dialog.eForegroundService
 import com.anubis.module_extends.eRvAdapter
@@ -42,7 +46,7 @@ class FloatWindowService : eForegroundService() {
 
     override fun onCreate() {
         super.onCreate()
-        eFile.eInit.eCheckFile(imgPath)
+        eIFile.eCheckFile(imgPath)
         eFloatWindow.eShowView(application, R.layout.layout_float_window, R.id.ivHome) { view: View, params: WindowManager.LayoutParams ->
             with(view) {
                 ivHome.onClick {
@@ -64,10 +68,10 @@ class FloatWindowService : eForegroundService() {
                     GridLayoutManager(it, 3)
                 }) { view: View, resultDataItem: resultDataItem, i: Int ->
                     OkGo.get<File>("https://image.dbbqb.com/${resultDataItem.path}")
-                            .execute(object : FileCallback(imgPath, eTime.eInit.eGetCuoTime() + ".jpg") {
+                            .execute(object : FileCallback(imgPath, eITime.eGetCuoTime() + ".jpg") {
                                 override fun onSuccess(response: Response<File>?) {
                                     response?.let {
-                                        eBReceiver.eInit.eSendBroad(context,it.body())
+                                        eIBReceiver.eSendPhotoBroad(context,it.body())
                                         eShowTip("下载完成")
                                         etInput.setText("")
                                         cl.visibility = View.GONE
@@ -84,7 +88,7 @@ class FloatWindowService : eForegroundService() {
                 ivSearch.onClick {
                     rv.visibility=View.VISIBLE
                     GlobalScope.launch {
-                        val dataBean = eJson.eInit.eGetJsonFrom(eGetUrl(etInput.text.toString()), resultData::class.java)
+                        val dataBean = eIJson.eGetJsonFrom(eGetUrl(etInput.text.toString()), resultData::class.java)
                         runOnUiThread {
                             mAdapter?.eSetData(dataBean)
                         }

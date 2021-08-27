@@ -17,17 +17,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eAssets.Companion.eIAssets
+import com.anubis.kt_extends.eDevice.Companion.eIDevice
+import com.anubis.kt_extends.eEncryption.Companion.eIEncryption
 import com.anubis.module_dialog.eForegroundService
 import com.anubis.module_dialog.eNotification
 import com.anubis.module_extends.eRvAdapter
 import com.anubis.module_httpserver.eHttpServer
+import com.anubis.module_httpserver.eHttpServer.Companion.eIHttpServer
 import com.anubis.module_httpserver.eManage
+import com.anubis.module_httpserver.eManage.Companion.eIManage
 import com.anubis.module_httpserver.eResolver
 import com.anubis.module_httpserver.eResolverType
 import com.anubis.module_httpserver.protocols.http.IHTTPSession
 import com.anubis.module_httpserver.protocols.http.eHTTPD
 import com.anubis.module_httpserver.protocols.http.response.Response
 import com.anubis.module_picker.ePicker
+import com.anubis.module_picker.ePicker.Companion.eIPicker
 import com.anubis.module_tts.eTTS
 import com.anubis.module_ttse.eTTSE
 import kotlinx.android.synthetic.main.activity_main.*
@@ -68,26 +74,26 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        eEncryption.eInit.eEncrypt("1111111111111110", "1234567891234567",isHex = false).eLog("加密")
+        eIEncryption.eEncrypt("1111111111111110", "1234567891234567",isHex = false).eLog("加密")
         setContentView(R.layout.activity_main)
         File("/sdcard/Web").apply { if (!this.exists()) this.mkdirs() }
-        eAssets.eInit.eAssetsToFile(this, "Web/index.html", "/sdcard/Web/index.html")
-        eAssets.eInit.eAssetsToFile(this, "Web/base64.js", "/sdcard/Web/base64.js")
-        eAssets.eInit.eAssetsToFile(this, "Web/index.js", "/sdcard/Web/index.js")
-        eAssets.eInit.eAssetsToFile(this, "Web/jquery.js", "/sdcard/Web/jquery.js")
-        eAssets.eInit.eAssetsToFile(this, "Web/Vysor5.5.5.crx", "/sdcard/Web/Vysor5.5.5.crx")
-        eAssets.eInit.eAssetsToFile(this, "Web/Vysor.zip", "/sdcard/Web/Vysor.zip")
+        eIAssets.eAssetsToFile(this, "Web/index.html", "/sdcard/Web/index.html")
+        eIAssets.eAssetsToFile(this, "Web/base64.js", "/sdcard/Web/base64.js")
+        eIAssets.eAssetsToFile(this, "Web/index.js", "/sdcard/Web/index.js")
+        eIAssets.eAssetsToFile(this, "Web/jquery.js", "/sdcard/Web/jquery.js")
+        eIAssets.eAssetsToFile(this, "Web/Vysor5.5.5.crx", "/sdcard/Web/Vysor5.5.5.crx")
+        eIAssets.eAssetsToFile(this, "Web/Vysor.zip", "/sdcard/Web/Vysor.zip")
         eResolver.eResultBlock = { uri: String, session: IHTTPSession ->
             Response.newFixedLengthResponse(when (uri) {
                 "File" ->
-                    eManage.eInit.eFileParse(session, "file")!!.eLog("111" + uri)
+                    eIManage.eFileParse(session, "file")!!.eLog("111" + uri)
 //        RAW发送    upRequestBody(RequestBody.create(MediaType.parse("application/json; charset=utf-8"),"{\"type\":\"Response\"}"))
-                "Raw" -> eManage.eInit.eRawParse(session)!!.eLog("111" + uri)
-                "Data" -> eManage.eInit.eSessionParse(session)!!.size.eLog("111" + uri).toString()
+                "Raw" -> eIManage.eRawParse(session)!!.eLog("111" + uri)
+                "Data" -> eIManage.eSessionParse(session)!!.size.eLog("111" + uri).toString()
                 else -> "a"
             })
         }
-        mHttpServer = eHttpServer.eInit.eStart(eResolver::class.java, handler = httpHandler)
+        mHttpServer = eIHttpServer.eStart(eResolver::class.java, handler = httpHandler)
 
 
 
@@ -105,7 +111,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        tvHint.eSpannableTextView(String.format(resources.getString(R.string.hint), "${eDevice.eInit.eGetHostIP()}:${mHttpServer?.myPort}"))
+        tvHint.eSpannableTextView(String.format(resources.getString(R.string.hint), "${eIDevice.eGetHostIP()}:${mHttpServer?.myPort}"))
         testjob = GlobalScope.launch(start = CoroutineStart.LAZY) {
         }
     }
@@ -129,7 +135,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             btTest2.id -> {
-                    ePicker.eInit.eColorStart(this) {
+                    eIPicker.eColorStart(this) {
                         eLog("color:$it")
                     }
             }

@@ -15,6 +15,7 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        tools:replace="label"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".WebRtcActivity">
             <intent-filter>

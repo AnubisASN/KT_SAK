@@ -20,6 +20,7 @@ import color_picker.builder.ColorWheelRendererBuilder.getRenderer
 import color_picker.slider.eAlphaSlider
 import color_picker.slider.eLightnessSlider
 import com.anubis.kt_extends.eColor
+import com.anubis.kt_extends.eColor.Companion.eIColor
 import com.anubis.module_picker.R
 
 /**
@@ -194,7 +195,7 @@ class ColorPickerDialogBuilder private constructor(context: Context, theme: Int 
             val maxLength = if (isAlphaSliderEnabled) 9 else 7
             colorEdit!!.filters = arrayOf<InputFilter>(LengthFilter(maxLength))
             pickerContainer.addView(colorEdit, layoutParamsForColorEdit)
-            colorEdit!!.setText(eColor.eInit.eGetColorToHexString(getStartColor(initialColor), isAlphaSliderEnabled))
+            colorEdit!!.setText(eIColor.eGetColorToHexString(getStartColor(initialColor), isAlphaSliderEnabled))
             colorPickerView.setColorEdit(colorEdit)
         }
         if (isPreviewEnabled) {

@@ -10,6 +10,7 @@ import android.view.Window
 import android.widget.TextView
 import android.widget.Toast
 import com.anubis.kt_extends.eTime
+import com.anubis.kt_extends.eTime.Companion.eITime
 import com.anubis.module_picker.Utils.DateUtil
 import com.anubis.module_picker.Utils.ScreenUtil
 import com.anubis.module_picker.Utils.TextUtil
@@ -103,7 +104,7 @@ class eTimePicker private constructor() {
         initView()
     }
 
-    fun eShowTimeSelect(startDate: String, endDate: String = eTime.eInit.eGetTime()) {
+    fun eShowTimeSelect(startDate: String, endDate: String = eITime.eGetTime()) {
         startCalendar.time = DateUtil.parse(startDate, FORMAT_STR)
         endCalendar.time = DateUtil.parse(endDate, FORMAT_STR)
         if (startCalendar.time.time >= endCalendar.time.time) {

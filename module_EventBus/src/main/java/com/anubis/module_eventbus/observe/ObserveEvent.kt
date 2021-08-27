@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.anubis.kt_extends.eBReceiver
+import com.anubis.kt_extends.eBReceiver.Companion.eIBReceiver
 import com.anubis.kt_extends.eEvent
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
@@ -95,10 +96,10 @@ inline fun <reified T> eObserveEvent(
  * @param defValue: T,默认值
  * @param  block: (T) -> Unit，结果回调
  * */
-inline fun <T> eObserveEvent(context: Context, defValue: T, noinline block: (T) -> Unit) {
-    eBReceiver.eInit.eSetRegisterReceiver(
+inline fun <T> eObserveEvent(context: Context, defValue: T, filter: IntentFilter= IntentFilter("eEventBus"),noinline block: (T,Intent) -> Unit) {
+    eIBReceiver.eSetRegisterReceiver(
         context,
-        IntentFilter("eEventBus")
+        filter
     ) { context: Context, intent: Intent, mReceiver: BroadcastReceiver ->
         val value = try {
             when (defValue) {
@@ -116,6 +117,6 @@ inline fun <T> eObserveEvent(context: Context, defValue: T, noinline block: (T) 
             e.eLogE("app进程跨越解析异常")
             defValue
         }
-        block(value as T)
+        block(value as T,intent)
     }
 }

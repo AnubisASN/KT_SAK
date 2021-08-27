@@ -7,7 +7,11 @@ import android.os.Environment
 import android.os.StatFs
 import androidx.appcompat.app.AppCompatActivity
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eApp.Companion.eIApp
+import com.anubis.kt_extends.ePermissions.Companion.eIPermissions
+import com.anubis.kt_extends.eShell.Companion.eIShell
 import com.anubis.kt_extends.eShell.Companion.restart
+import com.anubis.kt_extends.eTime.Companion.eITime
 import com.anubis.module_dialog.eForegroundService
 import com.anubis.module_dialog.eForegroundService.Companion.initStart
 import kotlinx.coroutines.GlobalScope
@@ -25,9 +29,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init(){
-        if (! ePermissions.eInit.eOverlayPermissions(this))
+        if (! eIPermissions.eOverlayPermissions(this))
             return eShowTip("请开启悬浮窗权限")
-        if (!ePermissions.eInit.eSetPermissions(
+        if (!eIPermissions.eSetPermissions(
                         this, arrayOf(
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                 )
@@ -37,13 +41,13 @@ class MainActivity : AppCompatActivity() {
         initStart(this,intent,FloatWindowService::class.java,GlobalScope.launch {
             while (isActive){
                 delay(10000)
-              if (  !eApp.eInit.eIsServiceRunning(applicationContext,"com.anubis.sxk_facedetection.MyService")){
-               eShell.eInit.eExecShell(restart+" com.sxk_huibo_community/readsense.face.view.MainActivity")
+              if (  !eIApp.eIsServiceRunning(applicationContext,"com.anubis.sxk_facedetection.MyService")){
+               eIShell.eExecShell(restart+" com.sxk_huibo_community/readsense.face.view.MainActivity")
               }
-                if (eTime.eInit.eGetTime("HHmmss").toInt().eLog("eGetTime")in 33000..33009){
+                if (eITime.eGetTime("HHmmss").toInt().eLog("eGetTime")in 33000..33009){
                     val romSize =getAvailSpace(Environment.getDataDirectory().absolutePath);//手机内部存储大小
                 if (romSize <1041102976){
-                    eShell.eInit.eExecShell("rm -rf /sdcard/img/output")
+                    eIShell.eExecShell("rm -rf /sdcard/img/output")
                 }
                 }
             }
@@ -65,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             permissions: Array<String>,
             grantResults: IntArray
     ) {
-        ePermissions.eInit.eSetOnRequestPermissionsResult(
+        eIPermissions.eSetOnRequestPermissionsResult(
                 this,
                 requestCode,
                 permissions,

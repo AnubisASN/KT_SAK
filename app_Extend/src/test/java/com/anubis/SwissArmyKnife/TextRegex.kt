@@ -2,6 +2,7 @@ package com.anubis.SwissArmyKnife
 
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eRegex
+import com.anubis.kt_extends.eRegex.Companion.eIRegex
 import com.anubis.kt_extends.eString
 import org.junit.Test
 
@@ -24,23 +25,23 @@ import org.junit.Test
 class TextRegex {
     @Test
     fun isEmail() {
-        println(eRegex.eInit.eIsEmail("1951536@qq.com"))
-        println(eRegex.eInit.eIsEmail("1951536@gmail.com"))
-        println(eRegex.eInit.eIsEmail("1951536@qqcom"))
+        println(eIRegex.eIsEmail("1951536@qq.com"))
+        println(eIRegex.eIsEmail("1951536@gmail.com"))
+        println(eIRegex.eIsEmail("1951536@qqcom"))
     }
 
     @Test
     fun isIDcard() {
-        println(eRegex.eInit.eIsIDCard("43100219960501101X"))
-        println(eRegex.eInit.eIsIDCard("431002200005012010"))
-        println(eRegex.eInit.eIsIDCard("43100219900001001X"))
+        println(eIRegex.eIsIDCard("43100219960501101X"))
+        println(eIRegex.eIsIDCard("431002200005012010"))
+        println(eIRegex.eIsIDCard("43100219900001001X"))
     }
 
     @Test
     fun isZh() {
-        println(eRegex.eInit.eIsZh("43100219960501101X"))
-        println(eRegex.eInit.eIsZh("ss"))
-        println(eRegex.eInit.eIsZh("是"))
+        println(eIRegex.eIsZh("43100219960501101X"))
+        println(eIRegex.eIsZh("ss"))
+        println(eIRegex.eIsZh("是"))
     }
 
 }

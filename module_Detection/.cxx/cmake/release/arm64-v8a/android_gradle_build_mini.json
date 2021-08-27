@@ -1,26 +1,26 @@
 {
   "buildFiles": [
-    "/super/WorkSpace/KT_SAK/module_Detection/CMakeLists.txt"
+    "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/CMakeLists.txt"
   ],
   "cleanCommands": [
-    "/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a --target clean"
+    "/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a --target clean"
   ],
   "libraries": {
     "facedetect-Release-arm64-v8a": {
       "artifactName": "facedetect",
-      "buildCommand": "/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a --target facedetect",
+      "buildCommand": "/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/release/arm64-v8a --target facedetect",
       "abi": "arm64-v8a",
-      "output": "/super/WorkSpace/KT_SAK/module_Detection/build/intermediates/cmake/release/obj/arm64-v8a/libfacedetect.so"
+      "output": "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/build/intermediates/cmake/release/obj/arm64-v8a/libfacedetect.so"
     },
     "MNN-Release-arm64-v8a": {
       "artifactName": "MNN",
       "abi": "arm64-v8a",
-      "output": "/super/WorkSpace/KT_SAK/module_Detection/src/main/jniLibs/arm64-v8a/libMNN.so"
+      "output": "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/src/main/jniLibs/arm64-v8a/libMNN.so"
     },
     "MNN_CL-Release-arm64-v8a": {
       "artifactName": "MNN_CL",
       "abi": "arm64-v8a",
-      "output": "/super/WorkSpace/KT_SAK/module_Detection/src/main/jniLibs/arm64-v8a/libMNN_CL.so"
+      "output": "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/src/main/jniLibs/arm64-v8a/libMNN_CL.so"
     }
   }
 }

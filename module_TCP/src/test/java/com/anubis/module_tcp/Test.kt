@@ -1,9 +1,6 @@
 package com.anubis.module_tcp
 
-import android.os.Handler
-import com.anubis.module_tcp.eTCP.eSocketConnect
 import kotlinx.coroutines.*
-import org.jetbrains.anko.custom.async
 import org.junit.Test
 import java.io.PrintStream
 import java.net.Socket
@@ -26,12 +23,16 @@ import java.net.Socket
  */
 class Test {
     @Test
-    fun C(){
+    fun C() {
 //        eSocketConnect("192.168.1.124",3335,Handler{})
+        val s = "420c0000"
     }
+
+
+
     @Test
     fun main() = runBlocking<Unit> {
-        launch (){
+        launch() {
             sA()
         }
         launch {
@@ -40,11 +41,11 @@ class Test {
 
     }
 
-    suspend  fun sA() = coroutineScope() {
+    suspend fun sA() = coroutineScope() {
         launch { A() }
     }
 
-    suspend  fun sB() = coroutineScope {
+    suspend fun sB() = coroutineScope {
         launch { B() }
     }
 
@@ -61,11 +62,12 @@ class Test {
             delay(1000L)
         }
     }
+
     @Test
-    fun s(){
+    fun s() {
         val ha: HashMap<String, String?> = HashMap()
-        ha["1"]="01"
-        ha["2"]=null
+        ha["1"] = "01"
+        ha["2"] = null
         ha.clear()
         println(ha["1"])
         println(ha["2"])
@@ -80,8 +82,7 @@ class Test {
     }
 
 
-
-    fun connect(ip:String,port:Int):Socket{
+    fun connect(ip: String, port: Int): Socket {
         println("$ip 开始连接")
         val socket = Socket(ip, port)
         val os = PrintStream(socket.getOutputStream(), true, "utf-8")

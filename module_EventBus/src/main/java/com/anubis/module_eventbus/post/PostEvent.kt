@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.anubis.kt_extends.eBReceiver
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
+import com.anubis.kt_extends.eRegex
 import com.anubis.module_eventbus.core.EventBusCore
 import com.anubis.module_eventbus.eEventBus
 import com.anubis.module_eventbus.store.ApplicationScopeViewModelProvider
@@ -40,8 +41,8 @@ inline fun <reified T> ePostEvent(event: T, scope: Any? = null, timeMillis: Long
 /**跨进程发送
  * @param  value: Any，消息内容
 * */
-fun  ePostSpan( value: Any) {
-    val intent = Intent("eEventBus")
+fun  ePostSpan( value: Any,tIntent:Intent?=null,intent:Intent=Intent("eEventBus")) {
+    tIntent?.let { intent.putExtras(it) }
     when (value) {
         is String -> intent.putExtra("eEventBus", value)
         is Boolean -> intent.putExtra("eEventBus", value)
@@ -60,13 +61,13 @@ fun  ePostSpan( value: Any) {
 * @param scope: Any?=null,协程范围
  * @param event: Class<T> 消息内容类型
 * */
-inline fun <reified T> eRemoveStickyEvent(scope: Any?=null, event: Class<T>) =when(scope){
+inline fun <reified T> eRemoveStickyEvent( event: T ,scope: Any?=null) =when(scope){
     is ComponentActivity-> ViewModelProvider(scope).get(EventBusCore::class.java)
-        .removeStickEvent(event.name)
+        .removeStickEvent(T::class.java.name)
     is Fragment-> ViewModelProvider(scope).get(EventBusCore::class.java)
-        .removeStickEvent(event.name)
+        .removeStickEvent(T::class.java.name)
     else->ApplicationScopeViewModelProvider.getApplicationScopeViewModel(EventBusCore::class.java)
-        ?.removeStickEvent(event.name)
+        ?.removeStickEvent(T::class.java.name)
 }
 
 

@@ -1,5 +1,5 @@
 # ninja log v5
-0	640	0	CMakeFiles/facedetect.dir/src/main/cpp/Ultra_jni.cpp.o	25a3b82b79e26a21
-0	680	0	CMakeFiles/facedetect.dir/src/main/cpp/net.cpp.o	7da80081a53a6eb1
-0	894	0	CMakeFiles/facedetect.dir/src/main/cpp/UltraFace.cpp.o	5709c0decd90dbcf
-894	988	0	../../../../build/intermediates/cmake/debug/obj/arm64-v8a/libfacedetect.so	f48bddefc4720bec
+38	1624	0	CMakeFiles/facedetect.dir/src/main/cpp/net.cpp.o	a0ed8fe66f17de
+20	2118	0	CMakeFiles/facedetect.dir/src/main/cpp/Ultra_jni.cpp.o	37dc0ea6f7bc3f44
+37	2164	0	CMakeFiles/facedetect.dir/src/main/cpp/UltraFace.cpp.o	bcac7618dbd410b1
+2167	2664	0	../../../../build/intermediates/cmake/debug/obj/arm64-v8a/libfacedetect.so	2e20434b0cab7c99

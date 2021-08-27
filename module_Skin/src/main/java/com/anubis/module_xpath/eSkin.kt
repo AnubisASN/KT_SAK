@@ -2,6 +2,7 @@ package com.anubis.module_xpath
 
 import android.content.Context
 import com.anubis.kt_extends.eFile
+import com.anubis.kt_extends.eFile.Companion.eIFile
 import com.anubis.kt_extends.eGetExternalCacheDir
 import com.anubis.kt_extends.eLogE
 import com.anubis.module_xpath.support.SkinCompatManager
@@ -25,7 +26,7 @@ import java.io.File
  */
 class eSkin private constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eSkin() }
+        val eISkin by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eSkin() }
     }
 
     /**
@@ -45,7 +46,7 @@ class eSkin private constructor() {
         if (filePath.toLowerCase().indexOf(".skin") == -1)
             return Unit.apply { eLogE("非皮肤包") }
           eGetExternalCacheDir(context)?.let {
-              eFile.eInit.eCopyFile(filePath,it+"/skins")
+              eIFile.eCopyFile(filePath,it+"/skins")
           }
         eLoadSkin(filePath.split("/").last(),listener)
     }

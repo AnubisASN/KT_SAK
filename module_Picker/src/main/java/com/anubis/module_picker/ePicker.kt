@@ -9,6 +9,7 @@ import android.view.Window
 import color_picker.eColorPickerView
 import color_picker.OnColorChangedListener
 import com.anubis.kt_extends.eColor
+import com.anubis.kt_extends.eColor.Companion.eIColor
 import com.anubis.kt_extends.eShowTip
 import com.anubis.module_picker.Utils.ScreenUtil
 import px_core.model.MimeType
@@ -39,7 +40,7 @@ open class ePicker internal constructor() {
     var FILE_REQUEST_CODE = 102
 
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { ePicker() }
+        val eIPicker by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { ePicker() }
     }
 
     /**
@@ -65,7 +66,7 @@ open class ePicker internal constructor() {
         window.attributes = lp
         colorDialog.color_picker_view.addOnColorChangedListener(object : OnColorChangedListener {
             override fun onColorChanged(selectedColor: Int) {
-                resultBlock(eColor.eInit.eGetColorToHexString(selectedColor, isAlpha))
+                resultBlock(eIColor.eGetColorToHexString(selectedColor, isAlpha))
             }
         })
         exBlock?.let { it(colorDialog) }

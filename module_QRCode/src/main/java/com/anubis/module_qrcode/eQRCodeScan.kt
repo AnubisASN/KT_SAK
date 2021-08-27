@@ -21,6 +21,7 @@ import android.net.Uri
 import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eSystemSelectImg
 import com.anubis.kt_extends.eUri
+import com.anubis.kt_extends.eUri.Companion.eIUri
 import com.anubis.uuzuche.lib_zxing.activity.ZXingLibrary
 import com.anubis.uuzuche.lib_zxing.activity.eCodeUtils
 import com.anubis.uuzuche.lib_zxing.activity.eDefaultCaptureActivity
@@ -95,7 +96,7 @@ open class eQRCodeScan internal constructor() {
     }
 
     fun eResourceAnalyze(activity: Activity?, uri: Uri?, callback: AnalyzeCallback? = null, successBlock:( (String) -> Unit)?=null): String? {
-        val path = eUri.eInit.eGetImageAbsolutePath(activity, uri) ?: return null
+        val path = eIUri.eGetImageAbsolutePath(activity, uri) ?: return null
         return eResourceAnalyze(path, callback, successBlock)
     }
 

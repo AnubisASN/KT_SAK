@@ -28,7 +28,7 @@ open class eQRCodeCreate internal  constructor(){
         val YELLOW=-0x0000FF
         val LIGHT_GREEN=-0xc84e62
         val RED=-0x6d8ca
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eQRCodeCreate() }
+        val eIQRCodeCreate by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eQRCodeCreate() }
     }
     /**
      * 生成二维码

@@ -57,7 +57,7 @@ class ttsTest : AppCompatActivity() {
 fun onClick(v:View){
     when(v.id){
         button.id->mTTS.eSpeak(editText.text.toString())
-        button2.id->eShowTip(mTTSE.eEngines?.joinToString().toString())
+        start.id->eShowTip(mTTSE.eEngines?.joinToString().toString())
         button5.id->mTTSE.eToTtsData(this)
         button6.id->mTTSE.eToTtsSet(this)
         button7.id->mTTSE.eDiaDownload(this)

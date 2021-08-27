@@ -9,6 +9,7 @@ import android.content.Context
 import android.os.Environment
 import android.os.Handler
 import com.anubis.kt_extends.eAssets
+import com.anubis.kt_extends.eAssets.Companion.eIAssets
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogE
 import kotlinx.coroutines.*
@@ -56,8 +57,8 @@ open class eCardOTG internal constructor() {
         private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eCardOTG() }
     }
     init {
-        eAssets.eInit.eAssetsToFile(mContext, "base.dat", "$filepath/base.dat")
-        eAssets.eInit.eAssetsToFile(mContext, "license.lic", "$filepath/license.lic")
+        eIAssets.eAssetsToFile(mContext, "base.dat", "$filepath/base.dat")
+        eIAssets.eAssetsToFile(mContext, "license.lic", "$filepath/license.lic")
         eOTGConn().eLog("eOTGConn")
     }
 

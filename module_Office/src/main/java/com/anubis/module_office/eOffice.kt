@@ -26,6 +26,7 @@ package com.anubis.module_office
 import android.content.Context
 import android.os.Environment
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eTime.Companion.eITime
 import com.anubis.module_office.Excel.ExcelUtils
 import java.lang.Exception
 import java.util.*
@@ -51,7 +52,7 @@ open class eOffice internal constructor() {
      * @param mSheetName: String = "记录"; 单页标题
      * @return Boolean
      */
-    open  fun eExportExcel(mTitle: Array<String>, mData: List<Any>, mSavePath: String = Environment.getExternalStorageDirectory().path, mFileName: String = eTime.eInit.eGetTime("yyyy-MM-dd HHmmss"), mSheetName: String = "记录"): Boolean {
+    open  fun eExportExcel(mTitle: Array<String>, mData: List<Any>, mSavePath: String = Environment.getExternalStorageDirectory().path, mFileName: String = eITime.eGetTime("yyyy-MM-dd HHmmss"), mSheetName: String = "记录"): Boolean {
         eExportExcel(arrayOf(mTitle), arrayOf(mData), mSavePath, mFileName, arrayOf(mSheetName))
         return true
     }
@@ -65,7 +66,7 @@ open class eOffice internal constructor() {
      * @param mSheetName: Array<String> = "记录"; 多页标题
      * @return Boolean
      */
-    open  fun eExportExcel(mTitles: Array<Array<String>>, mDatas: Array<List<Any>>, mSavePath: String = Environment.getExternalStorageDirectory().path, mFileName: String = eTime.eInit.eGetTime("yyyy-MM-dd HHmmss"), mSheetNames: Array<String>): Boolean {
+    open  fun eExportExcel(mTitles: Array<Array<String>>, mDatas: Array<List<Any>>, mSavePath: String = Environment.getExternalStorageDirectory().path, mFileName: String = eITime.eGetTime("yyyy-MM-dd HHmmss"), mSheetNames: Array<String>): Boolean {
         ExcelUtils.initExcel("$mSavePath/$mFileName.xls", mTitles, mSheetNames)
         try {
             mSheetNames.forEachIndexed { i, s ->

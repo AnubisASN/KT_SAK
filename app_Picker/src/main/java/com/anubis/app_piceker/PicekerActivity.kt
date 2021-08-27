@@ -10,10 +10,12 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eTime.Companion.eITime
 import com.anubis.module_dialog.eDiaAlert
 import com.anubis.module_extends.DataItemInfo
 import com.anubis.module_extends.eRvAdapter
 import com.anubis.module_picker.ePicker
+import com.anubis.module_picker.ePicker.Companion.eIPicker
 import com.anubis.module_picker.eTimePicker
 import file_picker.filetype.FileType
 import file_picker.filetype.RasterImageFileType
@@ -43,8 +45,8 @@ class PicekerActivity : AppCompatActivity() {
     private var adapterList = arrayListOf<eRvAdapter<DataItemInfo>>()
     fun onClick(v: View) {
         when (v.id) {
-            picker_btPX.id -> ePicker.eInit.eImageStart(this@PicekerActivity)
-            picker_btTest.id -> eSysTemCameraTake("/sdcard/IMG", "IMG_${eTime.eInit.eGetCuoTime()}.jpg") { intent: Intent, s: String ->
+            picker_btPX.id ->eIPicker.eImageStart(this@PicekerActivity)
+            picker_btTest.id -> eSysTemCameraTake("/sdcard/IMG", "IMG_${eITime.eGetCuoTime()}.jpg") { intent: Intent, s: String ->
                 mFilepath = s
             }
             button.id -> {
@@ -73,7 +75,7 @@ class PicekerActivity : AppCompatActivity() {
             picker_btFile.id -> {
                 val array: ArrayList<FileType>? = arrayListOf()
                 array?.add(RasterImageFileType())
-                ePicker.eInit.eFileStart(this@PicekerActivity, array)
+               eIPicker.eFileStart(this@PicekerActivity, array)
             }
             picker_btTime.id -> timeSelector?.eShowTimeSelect("2000-01-01 00:00")
             imageView1.id -> eDiaAlert.eInit(this).eDefaultShow(ICallBackEdit = object : eDiaAlert.ICallBackEdit {
@@ -89,16 +91,16 @@ class PicekerActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         eLog("requestCode:$requestCode")
         when (requestCode) {
-            ePicker.eInit.IMAGE_REQUEST_CODE -> {
-                val datas = ePicker.eInit.eResult(this@PicekerActivity, requestCode, resultCode, data)
+           eIPicker.IMAGE_REQUEST_CODE -> {
+                val datas =eIPicker.eResult(this@PicekerActivity, requestCode, resultCode, data)
                 datas?.forEach {
                     Hint("data :${(it as MediaEntity).localPath}")
                     val bitmap = BitmapFactory.decodeFile(it.localPath)
                     imageView1.imageBitmap = bitmap
                 }
             }
-            ePicker.eInit.FILE_REQUEST_CODE -> {
-                val datas = ePicker.eInit.eResult(this@PicekerActivity, requestCode, resultCode, data)
+           eIPicker.FILE_REQUEST_CODE -> {
+                val datas =eIPicker.eResult(this@PicekerActivity, requestCode, resultCode, data)
                 datas?.forEach {
                     Hint("batch :$it")
                 }
@@ -113,7 +115,7 @@ class PicekerActivity : AppCompatActivity() {
     }
 
     private fun Hint(str: String) {
-        val Str = "${eTime.eInit.eGetTime("MM-dd HH:mm:ss")}： $str\n\n\n"
+        val Str = "${eITime.eGetTime("MM-dd HH:mm:ss")}： $str\n\n\n"
         eLog(Str, "SAK")
         tv_Hint.append(Str)
         sv_Hint.fullScroll(ScrollView.FOCUS_DOWN)

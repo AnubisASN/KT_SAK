@@ -1,21 +1,11 @@
 package com.anubis.app_coroutine
 
-import android.provider.Contacts
-import com.anubis.kt_extends.eJson
-import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eTime
-import com.tencent.bugly.proguard.w
+import com.anubis.kt_extends.eTime.Companion.eITime
 import kotlinx.coroutines.*
-import kotlinx.coroutines.NonCancellable.isActive
 import org.junit.Test
-
-import org.junit.Assert.*
-import java.lang.ArithmeticException
-import java.lang.Exception
-import java.lang.Thread.sleep
 import java.util.*
 import kotlin.system.measureTimeMillis
-import kotlin.text.Typography.times
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -43,17 +33,16 @@ class CoroutineTest {
 
     @Test
     fun 隐式协程延时() = runBlocking {
-        println(eTime.eInit.eGetTime("HH:mm:ss"))
+        println(eITime.eGetTime("HH:mm:ss"))
         println("开始")
         launch {
             //            delay(1000L)
-            for (i in 0..10000) {
-
+            for (i in 0..10) {
             }
-            println("协成完成" + eTime.eInit.eGetTime("HH:mm:ss"))
+            println("协成完成" + eITime.eGetTime("HH:mm:ss"))
         }
 //        delay(2000L)
-        println("主线程执行" + eTime.eInit.eGetTime("HH:mm:ss"))
+        println("主线程执行" + eITime.eGetTime("HH:mm:ss"))
         delay(2000L)
         println("结束")
     }
@@ -83,24 +72,24 @@ class CoroutineTest {
 
     @Test
     fun 作用域构建器1() = runBlocking {
-        println(eTime.eInit.eGetTime("HH:mm:ss"))
+        println(eITime.eGetTime("HH:mm:ss"))
         launch {
             delay(200L)
-            println("新协程2" + eTime.eInit.eGetTime("HH:mm:ss"))
+            println("新协程2" + eITime.eGetTime("HH:mm:ss"))
         }
-        println("runBlocking作用域0" + eTime.eInit.eGetTime("HH:mm:ss"))
+        println("runBlocking作用域0" + eITime.eGetTime("HH:mm:ss"))
         coroutineScope {
             //子协程
             //会阻塞主协程runBlocking
             launch {
                 delay(500L)
-                println("嵌套协程3" + eTime.eInit.eGetTime("HH:mm:ss"))
+                println("嵌套协程3" + eITime.eGetTime("HH:mm:ss"))
             }
             delay(100L)
-            println("协程作用域1" + eTime.eInit.eGetTime("HH:mm:ss"))
+            println("协程作用域1" + eITime.eGetTime("HH:mm:ss"))
         }
 //        delay(3000L)
-        println("runBlocking作用域4" + eTime.eInit.eGetTime("HH:mm:ss"))
+        println("runBlocking作用域4" + eITime.eGetTime("HH:mm:ss"))
     }
 
     @Test
@@ -111,7 +100,7 @@ class CoroutineTest {
 //            job1?.cancelAndJoin()
             job?.cancel()
 
-            println(eTime.eInit.eGetTime("HH:mm:ss") + "cancel")
+            println(eITime.eGetTime("HH:mm:ss") + "cancel")
         }
 
         job = launch {
@@ -120,7 +109,7 @@ class CoroutineTest {
                     launch {
                         try {
                             while (isActive) {
-                                println(eTime.eInit.eGetTime("HH:mm:ss") + "等待关闭")
+                                println(eITime.eGetTime("HH:mm:ss") + "等待关闭")
                                 delay(1000L)
                             }
                         } catch (e: Exception) {
@@ -130,19 +119,19 @@ class CoroutineTest {
                     }
 
                     while (isActive) {
-                        println(eTime.eInit.eGetTime("HH:mm:ss") + "开始接收-----")
+                        println(eITime.eGetTime("HH:mm:ss") + "开始接收-----")
                         delay(6000L)
-                        println(eTime.eInit.eGetTime("HH:mm:ss") + "接收完成------")
+                        println(eITime.eGetTime("HH:mm:ss") + "接收完成------")
                     }
                 } catch (e: Exception) {
-                    println(eTime.eInit.eGetTime("HH:mm:ss") + "job关闭")
+                    println(eITime.eGetTime("HH:mm:ss") + "job关闭")
                 }
 
             }
         }
 
         delay(20000L)
-        println(eTime.eInit.eGetTime("HH:mm:ss") + "结束")
+        println(eITime.eGetTime("HH:mm:ss") + "结束")
     }
 
     @Test
@@ -252,13 +241,12 @@ class CoroutineTest {
 
     @Test  //超时协程 return Exception
     fun 超时协程0() = runBlocking {
-        val result = withTimeout(2000L) {
+        val result = withTimeout(3000L) {
             repeat(10) { i ->
                 println("协程$i")
-                delay(200L)
+                delay(100L)
             }
             "执行完成"
-
         }
         println("Result:$result")
     }
@@ -275,17 +263,6 @@ class CoroutineTest {
         println("Result:$result")
     }
 
-    @Test
-    fun test() = runBlocking {
-        var tempStatus: Boolean? = null
-        tempStatus = withTimeout(500L) {
-            while (tempStatus == null) {
-                delay(10)
-            }
-            true
-        }
-        println(tempStatus)
-    }
 
     @Test //并发计算 惰性协程
     fun 组合挂起函数() = runBlocking {

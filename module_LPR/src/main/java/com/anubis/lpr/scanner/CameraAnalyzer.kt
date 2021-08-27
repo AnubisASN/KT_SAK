@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.anubis.kt_extends.eBitmap
+import com.anubis.kt_extends.eBitmap.Companion.eIBitmap
 import com.anubis.lpr.ui.eLPRActivity
 import com.anubis.lpr.utils.PlateRecognition
 import org.opencv.android.Utils
@@ -133,7 +134,7 @@ class CameraAnalyzer internal constructor(private val scannerView: ScannerView) 
                 i += padding
             }
         }
-        var bitmap = eBitmap.eInit.eNV21ByteArrayToBitmp(buffer, image.width, image.height, rotate = 90f, quality = 100)
+        var bitmap = eIBitmap.eNV21ByteArrayToBitmp(buffer, image.width, image.height, rotate = 90f, quality = 100)
         val rect =
                 scannerView.getFramingRectInPreview(image.width, image.height)
         bitmap = Bitmap.createBitmap(

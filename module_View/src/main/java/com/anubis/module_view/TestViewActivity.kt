@@ -8,6 +8,7 @@ import android.webkit.WebView
 import android.widget.ProgressBar
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
+import com.anubis.module_view.eView.Companion.eIView
 import com.tamsiree.rxkit.eWeb
 import kotlinx.android.synthetic.main.activity_test_view.*
 import kotlinx.android.synthetic.main.sample_web_view.*
@@ -22,8 +23,8 @@ class TestViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test_view)
 
 
-        eView.eInit.eInitDrawer(this, R.layout.sample_web_view) {
-            eView.eInit.eInitWeb(this,sample_wvBase!!, object : eWeb.OnWebViewLoad {
+        eIView.eInitDrawer(this, R.layout.sample_web_view) {
+            eIView.eInitWeb(this,sample_wvBase!!, object : eWeb.OnWebViewLoad {
                 override fun onPageStarted() {
                     sample_pbBase.visibility = View.VISIBLE
                 }
@@ -44,9 +45,9 @@ class TestViewActivity : AppCompatActivity() {
                 }
             },"https://github.com/AnubisASN/KT_SAK")
         }
-        eView.eInit.eInitWave(wave, 0.3f, 1f)
-        eView.eInit.eInitShineButtonView(this, sbt)
-        eView.eInit.eInitBubble(imageView2, bubble_layout)
+        eIView.eInitWave(wave, 0.3f, 1f)
+        eIView.eInitShineButtonView(this, sbt)
+        eIView.eInitBubble(imageView2, bubble_layout)
     }
 
     fun onClick(v: View) {
@@ -61,7 +62,7 @@ class TestViewActivity : AppCompatActivity() {
                 }
             }
             button9-> eShowTip(bt.textNum)
-            imageView -> eView.eInit.eInitCaptchaCode(imageView)
+            imageView -> eIView.eInitCaptchaCode(imageView)
         }
     }
 

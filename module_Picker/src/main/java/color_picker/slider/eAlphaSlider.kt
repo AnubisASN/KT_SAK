@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import color_picker.eColorPickerView
 import color_picker.builder.PaintBuilder
 import com.anubis.kt_extends.eColor
+import com.anubis.kt_extends.eColor.Companion.eIColor
 
 /**
  * @author tamsiree
@@ -65,7 +66,7 @@ class eAlphaSlider : AbsCustomSlider {
 
     fun setColor(color: Int) {
         this.colorS = color
-        value =eColor.eInit.eGetAlphaPercent(color)
+        value =eIColor.eGetAlphaPercent(color)
         if (bar != null) {
             updateBar()
             invalidate()

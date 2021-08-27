@@ -38,7 +38,7 @@ class eWebSocket internal constructor() {
         private var session: Session? = null
         private var reconJob: Job? = null
         private var client: eWebSocket? = null
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eWebSocket() }
+        val eIWebSocket by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eWebSocket() }
     }
 
     fun eConnect(url: String, handler: Handler? = null, reconnect: Boolean = true, reconnectTime: Long = mReconnectTime) {

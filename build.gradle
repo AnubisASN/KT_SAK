@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.huawei.agconnect:agcp:1.4.1.300'
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.5.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.alibaba:arouter-register:1.0.2"
         classpath 'com.tencent.bugly:symtabfileuploader:2.1.2'
@@ -20,6 +20,12 @@ allprojects {
         google()
         maven { url 'https://www.jitpack.io' }
         maven {url 'https://developer.huawei.com/repo/'}
+//        flatDir {
+//            // 由于Library module中引用了 gif 库的 aar，在多 module 的情况下，
+//            // 其他的module编译会报错，所以需要在所有工程的repositories
+//            // 下把Library module中的libs目录添加到依赖关系中
+//            dirs project(':module_Voip').file('libs')
+//        }
     }
 }
 
@@ -42,5 +48,5 @@ ext {
     minSdkVersion = 21
     targetSdkVersion = 28
     versionCode = 2
-    versionName = "1.0"
+    versionName = "1.2"
 }

@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eTime.Companion.eITime
 import com.anubis.module_picker.R
 import com.anubis.module_picker.Utils.ImagePickerProvider
 import px_core.common.PhoenixConstant
@@ -61,7 +62,7 @@ class CameraActivity : BaseActivity(), View.OnClickListener {
             setupCameraFragment()
         } catch (e: Exception) {
             //拍照存放路径
-            eSysTemCameraTake("/sdcard/IMG", "IMG_${eTime.eInit.eGetCuoTime()}.jpg"){ intent: Intent, path: String  ->
+            eSysTemCameraTake("/sdcard/IMG", "IMG_${eITime.eGetCuoTime()}.jpg"){ intent: Intent, path: String  ->
                 mFilePath=path
             }
         }
@@ -301,6 +302,7 @@ class CameraActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intent)
         if (Activity.RESULT_OK != resultCode) return Unit.apply { eLog("RESULT_OK!=resultCode") }
         when (requestCode) {
             REQUEST_CODE_PREVIEW ->{

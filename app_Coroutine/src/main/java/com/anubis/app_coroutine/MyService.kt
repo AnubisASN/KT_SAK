@@ -19,7 +19,7 @@ class MyService : Service() {
     override fun onCreate() {
         super.onCreate()
         try {
-          eObserveEvent(this,"0"){
+          eObserveEvent(this,"0"){ it: String, intent: Intent ->
               it.eLog("MyService-eObserveEvent0 ")
           }
             GlobalScope.launch {

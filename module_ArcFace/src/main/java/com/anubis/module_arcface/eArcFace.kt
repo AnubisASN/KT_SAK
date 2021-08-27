@@ -13,6 +13,7 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewTreeObserver
 import com.anubis.kt_extends.eBitmap
+import com.anubis.kt_extends.eBitmap.Companion.eIBitmap
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
 import com.anubis.module_arcface.model.DrawInfo
@@ -238,7 +239,7 @@ object eArcFace : ViewTreeObserver.OnGlobalLayoutListener {
                 eLog("livenessCode:$livenessCode")
                 if (mIsState) {
                     mIsState=false
-                    mBitmap = eBitmap.eInit.eNV21ByteArrayToBitmp(nv21, previewSize!!.width, previewSize!!.height)
+                    mBitmap = eIBitmap.eNV21ByteArrayToBitmp(nv21, previewSize!!.width, previewSize!!.height)
                 }
 
 

@@ -4,6 +4,7 @@ package com.anubis.module_httpserver
 import android.annotation.TargetApi
 import android.os.Build
 import android.os.Handler
+import com.anubis.module_httpserver.eManage.Companion.eIManage
 import com.anubis.module_httpserver.protocols.http.IHTTPSession
 import com.anubis.module_httpserver.protocols.http.eHTTPD
 import com.anubis.module_httpserver.protocols.http.response.Response
@@ -41,7 +42,7 @@ open class eResolver(port: Int = 3335, handler: Handler? = null) : eHTTPD(port, 
         val uri = session.uri.replace("/", "")
         return eResultBlock?.let { it(uri,session) } ?:Response.newFixedLengthResponse(when (uri) {
             "File" ->
-                    if (eManage.eInit.eFileParse(session, "file").apply {
+                    if (eIManage.eFileParse(session, "file").apply {
                                 val msg = handler?.obtainMessage()
                                 msg?.what = FILE_PARSE
                                 msg?.obj = this
@@ -50,30 +51,30 @@ open class eResolver(port: Int = 3335, handler: Handler? = null) : eHTTPD(port, 
                         "上传成功"
                     else "上传失败"
 
-            "Raw" -> eManage.eInit.eRawParse(session).apply {
+            "Raw" -> eIManage.eRawParse(session).apply {
                 val msg = handler?.obtainMessage()
                 msg?.what = RAW_PARSE
                 msg?.obj = this
                 handler?.sendMessage(msg)
             }
-            "Data" -> if (eManage.eInit.eSessionParse(session).apply {
+            "Data" -> if (eIManage.eSessionParse(session).apply {
                         val msg = handler?.obtainMessage()
                         msg?.what = SESSION_PARSE
                         msg?.obj = this
                         handler?.sendMessage(msg)
                     } != null) "成功" else "解析错误"
             "" -> if (uri.contains(".zip")) {
-                val fs = eManage.eInit.eFileDownload(File("/sdcard/Web/$uri"))
+                val fs = eIManage.eFileDownload(File("/sdcard/Web/$uri"))
                 if (fs == null) "404" else return fs
             } else
-                eManage.eInit.httpResult.apply {
+                eIManage.httpResult.apply {
                     val msg = handler?.obtainMessage()
                     msg?.what = NULL_PARSE
                     msg?.obj = this
                     handler?.sendMessage(msg)
                 }
 
-            else -> return eManage.eInit.eFilePush(session, (eManage.eInit.eHttpPath + uri).apply {
+            else -> return eIManage.eFilePush(session, (eIManage.eHttpPath + uri).apply {
                 val msg = handler?.obtainMessage()
                 msg?.what = FILE_PUSH
                 msg?.obj = this

@@ -1,9 +1,12 @@
 
 {
-	"buildFiles" : [ "/super/WorkSpace/KT_SAK/module_Detection/CMakeLists.txt" ],
+	"buildFiles" : 
+	[
+		"/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/CMakeLists.txt"
+	],
 	"cleanCommands" : 
 	[
-		"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/armeabi-v7a --target clean"
+		"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/release/armeabi-v7a --target clean"
 	],
 	"cppFileExtensions" : [ "cpp" ],
 	"libraries" : 
@@ -13,54 +16,54 @@
 			"abi" : "armeabi-v7a",
 			"artifactName" : "MNN",
 			"buildType" : "release",
-			"output" : "/super/WorkSpace/KT_SAK/module_Detection/src/main/jniLibs/armeabi-v7a/libMNN.so",
-			"toolchain" : "6990751234414376785"
+			"output" : "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/src/main/jniLibs/armeabi-v7a/libMNN.so",
+			"toolchain" : "1040945932744497260"
 		},
 		"MNN_CL-Release-armeabi-v7a" : 
 		{
 			"abi" : "armeabi-v7a",
 			"artifactName" : "MNN_CL",
 			"buildType" : "release",
-			"output" : "/super/WorkSpace/KT_SAK/module_Detection/src/main/jniLibs/armeabi-v7a/libMNN_CL.so",
-			"toolchain" : "6990751234414376785"
+			"output" : "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/src/main/jniLibs/armeabi-v7a/libMNN_CL.so",
+			"toolchain" : "1040945932744497260"
 		},
 		"facedetect-Release-armeabi-v7a" : 
 		{
 			"abi" : "armeabi-v7a",
 			"artifactName" : "facedetect",
-			"buildCommand" : "/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/armeabi-v7a --target facedetect",
+			"buildCommand" : "/home/anubis/extend/SDK/cmake/3.6.4111459/bin/cmake --build /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/release/armeabi-v7a --target facedetect",
 			"buildType" : "release",
 			"files" : 
 			[
 				
 				{
-					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -DMNN_USE_LOGCAT -Dfacedetect_EXPORTS -I../../../../src/main/cpp/include -I../../../../src/main/cpp  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security   -std=c++11 -Oz -DNDEBUG  -fPIC    -c ",
-					"src" : "/super/WorkSpace/KT_SAK/module_Detection/src/main/cpp/Ultra_jni.cpp",
-					"workingDirectory" : "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/armeabi-v7a"
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64 --sysroot=/super/NDK-r14b/platforms/android-21/arch-arm  -DMNN_USE_LOGCAT -Dfacedetect_EXPORTS -I../../../../src/main/cpp/include -I../../../../src/main/cpp -isystem /super/NDK-r14b/sources/cxx-stl/llvm-libc++/include -isystem /super/NDK-r14b/sources/android/support/include -isystem /super/NDK-r14b/sources/cxx-stl/llvm-libc++abi/include  -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -mfpu=neon -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -mfpu=neon -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11  -std=c++11 -Os -DNDEBUG -Os -DNDEBUG  -fPIC    -c ",
+					"src" : "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/src/main/cpp/Ultra_jni.cpp",
+					"workingDirectory" : "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/release/armeabi-v7a"
 				},
 				
 				{
-					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -DMNN_USE_LOGCAT -Dfacedetect_EXPORTS -I../../../../src/main/cpp/include -I../../../../src/main/cpp  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security   -std=c++11 -Oz -DNDEBUG  -fPIC    -c ",
-					"src" : "/super/WorkSpace/KT_SAK/module_Detection/src/main/cpp/UltraFace.cpp",
-					"workingDirectory" : "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/armeabi-v7a"
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64 --sysroot=/super/NDK-r14b/platforms/android-21/arch-arm  -DMNN_USE_LOGCAT -Dfacedetect_EXPORTS -I../../../../src/main/cpp/include -I../../../../src/main/cpp -isystem /super/NDK-r14b/sources/cxx-stl/llvm-libc++/include -isystem /super/NDK-r14b/sources/android/support/include -isystem /super/NDK-r14b/sources/cxx-stl/llvm-libc++abi/include  -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -mfpu=neon -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -mfpu=neon -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11  -std=c++11 -Os -DNDEBUG -Os -DNDEBUG  -fPIC    -c ",
+					"src" : "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/src/main/cpp/UltraFace.cpp",
+					"workingDirectory" : "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/release/armeabi-v7a"
 				},
 				
 				{
-					"flags" : "  --target=armv7-none-linux-androideabi21 --gcc-toolchain=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -DMNN_USE_LOGCAT -Dfacedetect_EXPORTS -I../../../../src/main/cpp/include -I../../../../src/main/cpp  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security   -std=c++11 -Oz -DNDEBUG  -fPIC    -c ",
-					"src" : "/super/WorkSpace/KT_SAK/module_Detection/src/main/cpp/net.cpp",
-					"workingDirectory" : "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/release/armeabi-v7a"
+					"flags" : "  --target=armv7-none-linux-androideabi --gcc-toolchain=/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64 --sysroot=/super/NDK-r14b/platforms/android-21/arch-arm  -DMNN_USE_LOGCAT -Dfacedetect_EXPORTS -I../../../../src/main/cpp/include -I../../../../src/main/cpp -isystem /super/NDK-r14b/sources/cxx-stl/llvm-libc++/include -isystem /super/NDK-r14b/sources/android/support/include -isystem /super/NDK-r14b/sources/cxx-stl/llvm-libc++abi/include  -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -mfpu=neon -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fno-integrated-as -mthumb -mfpu=neon -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11  -std=c++11 -Os -DNDEBUG -Os -DNDEBUG  -fPIC    -c ",
+					"src" : "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/src/main/cpp/net.cpp",
+					"workingDirectory" : "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/release/armeabi-v7a"
 				}
 			],
-			"output" : "/super/WorkSpace/KT_SAK/module_Detection/build/intermediates/cmake/release/obj/armeabi-v7a/libfacedetect.so",
-			"toolchain" : "6990751234414376785"
+			"output" : "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/build/intermediates/cmake/release/obj/armeabi-v7a/libfacedetect.so",
+			"toolchain" : "1040945932744497260"
 		}
 	},
 	"toolchains" : 
 	{
-		"6990751234414376785" : 
+		"1040945932744497260" : 
 		{
-			"cCompilerExecutable" : "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang",
-			"cppCompilerExecutable" : "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
+			"cCompilerExecutable" : "/super/NDK-r14b/toolchains/llvm/prebuilt/linux-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/super/NDK-r14b/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
 		}
 	}
 }

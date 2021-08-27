@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.ePermissions
+import com.anubis.kt_extends.ePermissions.Companion.eIPermissions
 import kotlinx.android.synthetic.main.activity_videochat.*
 
 class eVideoChatUI : AppCompatActivity() {
@@ -24,7 +25,7 @@ class eVideoChatUI : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_videochat)
-        if (ePermissions.eInit.eSetPermissions(this, REQUESTED_PERMISSIONS)) {
+        if (eIPermissions.eSetPermissions(this, REQUESTED_PERMISSIONS)) {
             eVideoChat.init(this, local_video_view_container, remote_video_view_container,handler = mHandler,appID = intent.getStringExtra("appID"),channelName =intent.getStringExtra("channelName") )
         }
     }
@@ -41,7 +42,7 @@ class eVideoChatUI : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
-        ePermissions.eInit.eSetOnRequestPermissionsResult(this, requestCode, permissions, grantResults)
+        eIPermissions.eSetOnRequestPermissionsResult(this, requestCode, permissions, grantResults)
         if (requestCode != 1) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }

@@ -1,5 +1,5 @@
 {
-  "ndkFolder": "/home/anubis/extend/SDK/ndk-bundle",
+  "ndkFolder": "/super/NDK-r14b",
   "messages": [
     {
       "level": "INFO",
@@ -7,7 +7,7 @@
     },
     {
       "level": "INFO",
-      "message": "ndk.dir in local.properties is /home/anubis/extend/SDK/ndk-bundle"
+      "message": "ndk.dir in local.properties is /super/NDK-r14b"
     },
     {
       "level": "INFO",
@@ -19,7 +19,7 @@
     },
     {
       "level": "INFO",
-      "message": "Considering /home/anubis/extend/SDK/ndk-bundle by ndk.dir"
+      "message": "Considering /super/NDK-r14b by ndk.dir"
     },
     {
       "level": "INFO",
@@ -31,7 +31,7 @@
     },
     {
       "level": "INFO",
-      "message": "Found requested ndk.dir (/home/anubis/extend/SDK/ndk-bundle) which has version 21.1.6352462"
+      "message": "Found requested ndk.dir (/super/NDK-r14b) which has version 14.1.3816874"
     }
   ]
 }

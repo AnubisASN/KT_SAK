@@ -1,6 +1,7 @@
 package com.anubis.module_office.Excel
 
 import com.anubis.kt_extends.eFile
+import com.anubis.kt_extends.eFile.Companion.eIFile
 import com.anubis.kt_extends.eLogE
 import jxl.Workbook
 import jxl.WorkbookSettings
@@ -71,7 +72,7 @@ internal object ExcelUtils {
         format()
         var workbook: WritableWorkbook? = null
         try {
-            if (eFile.eInit.eCheckFile(fileName)) {
+            if (eIFile.eCheckFile(fileName)) {
                 workbook = Workbook.createWorkbook(File(fileName))
                 sheetNames.forEachIndexed { index, c ->
                     val sheet = workbook!!.createSheet(c, index)

@@ -11,6 +11,7 @@ import android.widget.SlidingDrawer
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eShowTip
 import com.anubis.kt_extends.eTime
+import com.anubis.kt_extends.eTime.Companion.eITime
 import com.anubis.module_view.views.bubble.eBubbleLayout
 import com.anubis.module_view.views.eCaptchaView
 import com.anubis.module_view.views.eSwipeCaptcha
@@ -40,7 +41,7 @@ import java.util.*
  */
 class eView {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eView() }
+        val eIView by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eView() }
     }
 
     /**随机生成验证码图片
@@ -79,7 +80,7 @@ class eView {
             swipeCaptchaView.onCaptchaMatchCallback = object : eSwipeCaptcha.OnCaptchaMatchCallback {
                 override fun matchSuccess(swipeCaptcha: eSwipeCaptcha) {
                     okBlock?.let {
-                        it("${eTime.eInit.eGetTimeDifference(time, type = Calendar.SECOND)}s")
+                        it("${eITime.eGetTimeDifference(time, type = Calendar.SECOND)}s")
                         return
                     }
                     activity.eShowTip("验证通过")
@@ -102,7 +103,7 @@ class eView {
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar) {
-                    time = eTime.eInit.eGetDataStrToDate()
+                    time = eITime.eGetDataStrToDate()
                     //随便放这里是因为控件
                     seekBar.max = swipeCaptchaView.eMaxSwipeValue
                 }

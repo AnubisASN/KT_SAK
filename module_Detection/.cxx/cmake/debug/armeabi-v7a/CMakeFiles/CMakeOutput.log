@@ -1,128 +1,129 @@
-The target system is: Android - 1 - armv7-a
+The target system is: Android - 21 - armv7-a
 The host system is: Linux - 4.9.0-8-amd64 - x86_64
 Determining if the C compiler works passed with the following output:
-Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
+Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_72acf"
-[1/2] Building C object CMakeFiles/cmTC_72acf.dir/testCCompiler.c.o
-[2/2] Linking C executable cmTC_72acf
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_d95fe"
+[1/2] Building C object CMakeFiles/cmTC_d95fe.dir/testCCompiler.c.o
+[2/2] Linking C executable cmTC_d95fe
 
 
 Detecting C compiler ABI info compiled with the following output:
-Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
+Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_fd022"
-[1/2] Building C object CMakeFiles/cmTC_fd022.dir/CMakeCCompilerABI.c.o
-[2/2] Linking C executable cmTC_fd022
-Android (6317467 based on r365631c1) clang version 9.0.8 (https://android.googlesource.com/toolchain/llvm-project e0caee08e5f09b374a27a676d04978c81fcb1928) (based on LLVM 9.0.8svn)
-Target: armv7-none-linux-android21
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_a165a"
+[1/2] Building C object CMakeFiles/cmTC_a165a.dir/CMakeCCompilerABI.c.o
+[2/2] Linking C executable cmTC_a165a
+Android clang version 3.8.275480  (based on LLVM 3.8.275480)
+Target: armv7-none-linux-android
 Thread model: posix
-InstalledDir: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin
-Found candidate GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x
-Selected GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x
-Candidate multilib: thumb;@mthumb
-Candidate multilib: armv7-a;@march=armv7-a
-Candidate multilib: armv7-a/thumb;@march=armv7-a@mthumb
+InstalledDir: /super/NDK-r14b/toolchains/llvm/prebuilt/linux-x86_64/bin
+Found candidate GCC installation: /super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x
+Selected GCC installation: /super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x
+Candidate multilib: thumb;@thumb
+Candidate multilib: armv7-a;@armv7
+Candidate multilib: armv7-a/thumb;@armv7@thumb
 Candidate multilib: .;
-Selected multilib: armv7-a/thumb;@march=armv7-a@mthumb
- "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --warn-shared-textrel -z now -z relro -X --hash-style=both --enable-new-dtags --eh-frame-hdr -m armelf_linux_eabi -dynamic-linker /system/bin/linker -o cmTC_fd022 /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/../lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/../../lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --exclude-libs libunwind.a --no-undefined --gc-sections CMakeFiles/cmTC_fd022.dir/CMakeCCompilerABI.c.o -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtend_android.o
+Selected multilib: armv7-a/thumb;@armv7@thumb
+ "/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld" --sysroot=/super/NDK-r14b/platforms/android-21/arch-arm -pie -X --eh-frame-hdr -m armelf_linux_eabi -dynamic-linker /system/bin/linker -o cmTC_a165a /super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtbegin_dynamic.o -L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a -L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb -L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb -L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib --build-id --warn-shared-textrel --fatal-warnings --fix-cortex-a8 --exclude-libs libunwind.a --no-undefined -z noexecstack -z relro -z now --gc-sections -z nocopyreloc --build-id --warn-shared-textrel --fatal-warnings --fix-cortex-a8 --exclude-libs libunwind.a --no-undefined -z noexecstack -z relro -z now --gc-sections -z nocopyreloc CMakeFiles/cmTC_a165a.dir/CMakeCCompilerABI.c.o -lgcc -ldl -lc -lgcc -ldl /super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtend_android.o
 
 
 Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(arm-linux-androideabi-ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
-  ignore line: [Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp]
+  ignore line: [Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_fd022"]
-  ignore line: [[1/2] Building C object CMakeFiles/cmTC_fd022.dir/CMakeCCompilerABI.c.o]
-  ignore line: [[2/2] Linking C executable cmTC_fd022]
-  ignore line: [Android (6317467 based on r365631c1) clang version 9.0.8 (https://android.googlesource.com/toolchain/llvm-project e0caee08e5f09b374a27a676d04978c81fcb1928) (based on LLVM 9.0.8svn)]
-  ignore line: [Target: armv7-none-linux-android21]
+  ignore line: [Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_a165a"]
+  ignore line: [[1/2] Building C object CMakeFiles/cmTC_a165a.dir/CMakeCCompilerABI.c.o]
+  ignore line: [[2/2] Linking C executable cmTC_a165a]
+  ignore line: [Android clang version 3.8.275480  (based on LLVM 3.8.275480)]
+  ignore line: [Target: armv7-none-linux-android]
   ignore line: [Thread model: posix]
-  ignore line: [InstalledDir: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin]
-  ignore line: [Found candidate GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x]
-  ignore line: [Selected GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x]
+  ignore line: [InstalledDir: /super/NDK-r14b/toolchains/llvm/prebuilt/linux-x86_64/bin]
+  ignore line: [Found candidate GCC installation: /super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x]
+  ignore line: [Selected GCC installation: /super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x]
   ignore line: [Candidate multilib: thumb]
-  ignore line: [@mthumb]
+  ignore line: [@thumb]
   ignore line: [Candidate multilib: armv7-a]
-  ignore line: [@march=armv7-a]
+  ignore line: [@armv7]
   ignore line: [Candidate multilib: armv7-a/thumb]
-  ignore line: [@march=armv7-a@mthumb]
+  ignore line: [@armv7@thumb]
   ignore line: [Candidate multilib: .]
   ignore line: []
   ignore line: [Selected multilib: armv7-a/thumb]
-  ignore line: [@march=armv7-a@mthumb]
-  link line: [ "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --warn-shared-textrel -z now -z relro -X --hash-style=both --enable-new-dtags --eh-frame-hdr -m armelf_linux_eabi -dynamic-linker /system/bin/linker -o cmTC_fd022 /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/../lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/../../lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --exclude-libs libunwind.a --no-undefined --gc-sections CMakeFiles/cmTC_fd022.dir/CMakeCCompilerABI.c.o -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtend_android.o]
-    arg [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld] ==> ignore
-    arg [--sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot] ==> ignore
+  ignore line: [@armv7@thumb]
+  link line: [ "/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld" --sysroot=/super/NDK-r14b/platforms/android-21/arch-arm -pie -X --eh-frame-hdr -m armelf_linux_eabi -dynamic-linker /system/bin/linker -o cmTC_a165a /super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtbegin_dynamic.o -L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a -L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb -L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb -L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib --build-id --warn-shared-textrel --fatal-warnings --fix-cortex-a8 --exclude-libs libunwind.a --no-undefined -z noexecstack -z relro -z now --gc-sections -z nocopyreloc --build-id --warn-shared-textrel --fatal-warnings --fix-cortex-a8 --exclude-libs libunwind.a --no-undefined -z noexecstack -z relro -z now --gc-sections -z nocopyreloc CMakeFiles/cmTC_a165a.dir/CMakeCCompilerABI.c.o -lgcc -ldl -lc -lgcc -ldl /super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtend_android.o]
+    arg [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld] ==> ignore
+    arg [--sysroot=/super/NDK-r14b/platforms/android-21/arch-arm] ==> ignore
     arg [-pie] ==> ignore
-    arg [-znoexecstack] ==> ignore
-    arg [-EL] ==> ignore
-    arg [--warn-shared-textrel] ==> ignore
-    arg [-znow] ==> ignore
-    arg [-zrelro] ==> ignore
     arg [-X] ==> ignore
-    arg [--hash-style=both] ==> ignore
-    arg [--enable-new-dtags] ==> ignore
     arg [--eh-frame-hdr] ==> ignore
     arg [-m] ==> ignore
     arg [armelf_linux_eabi] ==> ignore
     arg [-dynamic-linker] ==> ignore
     arg [/system/bin/linker] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_fd022] ==> ignore
-    arg [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtbegin_dynamic.o] ==> ignore
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/../lib] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/../lib]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/../../lib] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/../../lib]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib]
-    arg [--exclude-libs] ==> ignore
-    arg [libgcc.a] ==> ignore
-    arg [--exclude-libs] ==> ignore
-    arg [libgcc_real.a] ==> ignore
-    arg [--exclude-libs] ==> ignore
-    arg [libatomic.a] ==> ignore
+    arg [cmTC_a165a] ==> ignore
+    arg [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtbegin_dynamic.o] ==> ignore
+    arg [-L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a] ==> dir [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a]
+    arg [-L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a] ==> dir [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a]
+    arg [-L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb] ==> dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb]
+    arg [-L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb] ==> dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb]
+    arg [-L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib] ==> dir [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib]
+    arg [-L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb] ==> dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb]
+    arg [-L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib] ==> dir [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib]
     arg [--build-id] ==> ignore
+    arg [--warn-shared-textrel] ==> ignore
     arg [--fatal-warnings] ==> ignore
+    arg [--fix-cortex-a8] ==> ignore
     arg [--exclude-libs] ==> ignore
     arg [libunwind.a] ==> ignore
     arg [--no-undefined] ==> ignore
+    arg [-znoexecstack] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-znow] ==> ignore
     arg [--gc-sections] ==> ignore
-    arg [CMakeFiles/cmTC_fd022.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-znocopyreloc] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--warn-shared-textrel] ==> ignore
+    arg [--fatal-warnings] ==> ignore
+    arg [--fix-cortex-a8] ==> ignore
+    arg [--exclude-libs] ==> ignore
+    arg [libunwind.a] ==> ignore
+    arg [--no-undefined] ==> ignore
+    arg [-znoexecstack] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-znow] ==> ignore
+    arg [--gc-sections] ==> ignore
+    arg [-znocopyreloc] ==> ignore
+    arg [CMakeFiles/cmTC_a165a.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [-lgcc] ==> lib [gcc]
     arg [-ldl] ==> lib [dl]
     arg [-lc] ==> lib [c]
     arg [-lgcc] ==> lib [gcc]
     arg [-ldl] ==> lib [dl]
-    arg [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtend_android.o] ==> ignore
+    arg [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtend_android.o] ==> ignore
   remove lib [gcc]
   remove lib [gcc]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/../lib] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/../../lib] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib]
+  collapse library dir [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a] ==> [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a]
+  collapse library dir [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a] ==> [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a]
+  collapse library dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb] ==> [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb]
+  collapse library dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb] ==> [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb]
+  collapse library dir [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib] ==> [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib]
+  collapse library dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb] ==> [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb]
+  collapse library dir [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib] ==> [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib]
   implicit libs: [dl;c;dl]
-  implicit dirs: [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm;/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb;/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb;/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21;/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi;/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib]
+  implicit dirs: [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a;/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb;/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb;/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib]
   implicit fwks: []
 
 
 
 
 Detecting C [-std=c11] compiler features compiled with the following output:
-Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
+Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_1f9e6"
-[1/2] Building C object CMakeFiles/cmTC_1f9e6.dir/feature_tests.c.o
-[2/2] Linking C executable cmTC_1f9e6
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_57d93"
+[1/2] Building C object CMakeFiles/cmTC_57d93.dir/feature_tests.c.o
+[2/2] Linking C executable cmTC_57d93
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -132,11 +133,11 @@ Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_1f
 
 
 Detecting C [-std=c99] compiler features compiled with the following output:
-Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
+Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_c530d"
-[1/2] Building C object CMakeFiles/cmTC_c530d.dir/feature_tests.c.o
-[2/2] Linking C executable cmTC_c530d
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_f8d38"
+[1/2] Building C object CMakeFiles/cmTC_f8d38.dir/feature_tests.c.o
+[2/2] Linking C executable cmTC_f8d38
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -146,11 +147,11 @@ Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_c5
 
 
 Detecting C [-std=c90] compiler features compiled with the following output:
-Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
+Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_171e3"
-[1/2] Building C object CMakeFiles/cmTC_171e3.dir/feature_tests.c.o
-[2/2] Linking C executable cmTC_171e3
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_14882"
+[1/2] Building C object CMakeFiles/cmTC_14882.dir/feature_tests.c.o
+[2/2] Linking C executable cmTC_14882
 
 
     Feature record: C_FEATURE:1c_function_prototypes
@@ -158,130 +159,135 @@ Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_17
     Feature record: C_FEATURE:0c_static_assert
     Feature record: C_FEATURE:0c_variadic_macros
 Determining if the CXX compiler works passed with the following output:
-Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
+Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_b2b87"
-[1/2] Building CXX object CMakeFiles/cmTC_b2b87.dir/testCXXCompiler.cxx.o
-[2/2] Linking CXX executable cmTC_b2b87
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_b496a"
+[1/2] Building CXX object CMakeFiles/cmTC_b496a.dir/testCXXCompiler.cxx.o
+[2/2] Linking CXX executable cmTC_b496a
 
 
 Detecting CXX compiler ABI info compiled with the following output:
-Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
+Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_e7855"
-[1/2] Building CXX object CMakeFiles/cmTC_e7855.dir/CMakeCXXCompilerABI.cpp.o
-[2/2] Linking CXX executable cmTC_e7855
-Android (6317467 based on r365631c1) clang version 9.0.8 (https://android.googlesource.com/toolchain/llvm-project e0caee08e5f09b374a27a676d04978c81fcb1928) (based on LLVM 9.0.8svn)
-Target: armv7-none-linux-android21
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_bad39"
+[1/2] Building CXX object CMakeFiles/cmTC_bad39.dir/CMakeCXXCompilerABI.cpp.o
+[2/2] Linking CXX executable cmTC_bad39
+Android clang version 3.8.275480  (based on LLVM 3.8.275480)
+Target: armv7-none-linux-android
 Thread model: posix
-InstalledDir: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin
-Found candidate GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x
-Selected GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x
-Candidate multilib: thumb;@mthumb
-Candidate multilib: armv7-a;@march=armv7-a
-Candidate multilib: armv7-a/thumb;@march=armv7-a@mthumb
+InstalledDir: /super/NDK-r14b/toolchains/llvm/prebuilt/linux-x86_64/bin
+Found candidate GCC installation: /super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x
+Selected GCC installation: /super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x
+Candidate multilib: thumb;@thumb
+Candidate multilib: armv7-a;@armv7
+Candidate multilib: armv7-a/thumb;@armv7@thumb
 Candidate multilib: .;
-Selected multilib: armv7-a/thumb;@march=armv7-a@mthumb
- "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --warn-shared-textrel -z now -z relro -X --hash-style=both --enable-new-dtags --eh-frame-hdr -m armelf_linux_eabi -dynamic-linker /system/bin/linker -o cmTC_e7855 /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/../lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/../../lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --exclude-libs libunwind.a --no-undefined --gc-sections CMakeFiles/cmTC_e7855.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lm -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtend_android.o
+Selected multilib: armv7-a/thumb;@armv7@thumb
+ "/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld" --sysroot=/super/NDK-r14b/platforms/android-21/arch-arm -pie -X --eh-frame-hdr -m armelf_linux_eabi -dynamic-linker /system/bin/linker -o cmTC_bad39 /super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtbegin_dynamic.o -L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a -L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb -L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb -L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib --build-id --warn-shared-textrel --fatal-warnings --fix-cortex-a8 --exclude-libs libunwind.a --no-undefined -z noexecstack -z relro -z now --gc-sections -z nocopyreloc --build-id --warn-shared-textrel --fatal-warnings --fix-cortex-a8 --exclude-libs libunwind.a --no-undefined -z noexecstack -z relro -z now --gc-sections -z nocopyreloc CMakeFiles/cmTC_bad39.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc -lgcc -ldl -lc -lgcc -lgcc -ldl /super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtend_android.o
 
 
 Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(arm-linux-androideabi-ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
-  ignore line: [Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp]
+  ignore line: [Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_e7855"]
-  ignore line: [[1/2] Building CXX object CMakeFiles/cmTC_e7855.dir/CMakeCXXCompilerABI.cpp.o]
-  ignore line: [[2/2] Linking CXX executable cmTC_e7855]
-  ignore line: [Android (6317467 based on r365631c1) clang version 9.0.8 (https://android.googlesource.com/toolchain/llvm-project e0caee08e5f09b374a27a676d04978c81fcb1928) (based on LLVM 9.0.8svn)]
-  ignore line: [Target: armv7-none-linux-android21]
+  ignore line: [Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_bad39"]
+  ignore line: [[1/2] Building CXX object CMakeFiles/cmTC_bad39.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [[2/2] Linking CXX executable cmTC_bad39]
+  ignore line: [Android clang version 3.8.275480  (based on LLVM 3.8.275480)]
+  ignore line: [Target: armv7-none-linux-android]
   ignore line: [Thread model: posix]
-  ignore line: [InstalledDir: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin]
-  ignore line: [Found candidate GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x]
-  ignore line: [Selected GCC installation: /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x]
+  ignore line: [InstalledDir: /super/NDK-r14b/toolchains/llvm/prebuilt/linux-x86_64/bin]
+  ignore line: [Found candidate GCC installation: /super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x]
+  ignore line: [Selected GCC installation: /super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x]
   ignore line: [Candidate multilib: thumb]
-  ignore line: [@mthumb]
+  ignore line: [@thumb]
   ignore line: [Candidate multilib: armv7-a]
-  ignore line: [@march=armv7-a]
+  ignore line: [@armv7]
   ignore line: [Candidate multilib: armv7-a/thumb]
-  ignore line: [@march=armv7-a@mthumb]
+  ignore line: [@armv7@thumb]
   ignore line: [Candidate multilib: .]
   ignore line: []
   ignore line: [Selected multilib: armv7-a/thumb]
-  ignore line: [@march=armv7-a@mthumb]
-  link line: [ "/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld" --sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot -pie -z noexecstack -EL --warn-shared-textrel -z now -z relro -X --hash-style=both --enable-new-dtags --eh-frame-hdr -m armelf_linux_eabi -dynamic-linker /system/bin/linker -o cmTC_e7855 /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtbegin_dynamic.o -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21 -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/../lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/../../lib -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb -L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib --exclude-libs libgcc.a --exclude-libs libgcc_real.a --exclude-libs libatomic.a --build-id --fatal-warnings --exclude-libs libunwind.a --no-undefined --gc-sections CMakeFiles/cmTC_e7855.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lm -lgcc -ldl -lc -lgcc -ldl /home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtend_android.o]
-    arg [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld] ==> ignore
-    arg [--sysroot=/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot] ==> ignore
+  ignore line: [@armv7@thumb]
+  link line: [ "/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld" --sysroot=/super/NDK-r14b/platforms/android-21/arch-arm -pie -X --eh-frame-hdr -m armelf_linux_eabi -dynamic-linker /system/bin/linker -o cmTC_bad39 /super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtbegin_dynamic.o -L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a -L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb -L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib -L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb -L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib --build-id --warn-shared-textrel --fatal-warnings --fix-cortex-a8 --exclude-libs libunwind.a --no-undefined -z noexecstack -z relro -z now --gc-sections -z nocopyreloc --build-id --warn-shared-textrel --fatal-warnings --fix-cortex-a8 --exclude-libs libunwind.a --no-undefined -z noexecstack -z relro -z now --gc-sections -z nocopyreloc CMakeFiles/cmTC_bad39.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc -lgcc -ldl -lc -lgcc -lgcc -ldl /super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtend_android.o]
+    arg [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/bin/ld] ==> ignore
+    arg [--sysroot=/super/NDK-r14b/platforms/android-21/arch-arm] ==> ignore
     arg [-pie] ==> ignore
-    arg [-znoexecstack] ==> ignore
-    arg [-EL] ==> ignore
-    arg [--warn-shared-textrel] ==> ignore
-    arg [-znow] ==> ignore
-    arg [-zrelro] ==> ignore
     arg [-X] ==> ignore
-    arg [--hash-style=both] ==> ignore
-    arg [--enable-new-dtags] ==> ignore
     arg [--eh-frame-hdr] ==> ignore
     arg [-m] ==> ignore
     arg [armelf_linux_eabi] ==> ignore
     arg [-dynamic-linker] ==> ignore
     arg [/system/bin/linker] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_e7855] ==> ignore
-    arg [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtbegin_dynamic.o] ==> ignore
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/../lib] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/../lib]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/../../lib] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/../../lib]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb]
-    arg [-L/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib] ==> dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib]
-    arg [--exclude-libs] ==> ignore
-    arg [libgcc.a] ==> ignore
-    arg [--exclude-libs] ==> ignore
-    arg [libgcc_real.a] ==> ignore
-    arg [--exclude-libs] ==> ignore
-    arg [libatomic.a] ==> ignore
+    arg [cmTC_bad39] ==> ignore
+    arg [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtbegin_dynamic.o] ==> ignore
+    arg [-L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a] ==> dir [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a]
+    arg [-L/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a] ==> dir [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a]
+    arg [-L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb] ==> dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb]
+    arg [-L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb] ==> dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb]
+    arg [-L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib] ==> dir [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib]
+    arg [-L/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb] ==> dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb]
+    arg [-L/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib] ==> dir [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib]
     arg [--build-id] ==> ignore
+    arg [--warn-shared-textrel] ==> ignore
     arg [--fatal-warnings] ==> ignore
+    arg [--fix-cortex-a8] ==> ignore
     arg [--exclude-libs] ==> ignore
     arg [libunwind.a] ==> ignore
     arg [--no-undefined] ==> ignore
+    arg [-znoexecstack] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-znow] ==> ignore
     arg [--gc-sections] ==> ignore
-    arg [CMakeFiles/cmTC_e7855.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
-    arg [-lc++] ==> lib [c++]
+    arg [-znocopyreloc] ==> ignore
+    arg [--build-id] ==> ignore
+    arg [--warn-shared-textrel] ==> ignore
+    arg [--fatal-warnings] ==> ignore
+    arg [--fix-cortex-a8] ==> ignore
+    arg [--exclude-libs] ==> ignore
+    arg [libunwind.a] ==> ignore
+    arg [--no-undefined] ==> ignore
+    arg [-znoexecstack] ==> ignore
+    arg [-zrelro] ==> ignore
+    arg [-znow] ==> ignore
+    arg [--gc-sections] ==> ignore
+    arg [-znocopyreloc] ==> ignore
+    arg [CMakeFiles/cmTC_bad39.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [-lstdc++] ==> lib [stdc++]
     arg [-lm] ==> lib [m]
+    arg [-lgcc] ==> lib [gcc]
     arg [-lgcc] ==> lib [gcc]
     arg [-ldl] ==> lib [dl]
     arg [-lc] ==> lib [c]
     arg [-lgcc] ==> lib [gcc]
+    arg [-lgcc] ==> lib [gcc]
     arg [-ldl] ==> lib [dl]
-    arg [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21/crtend_android.o] ==> ignore
+    arg [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib/crtend_android.o] ==> ignore
   remove lib [gcc]
   remove lib [gcc]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/../lib] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/../../lib] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb]
-  collapse library dir [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib] ==> [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib]
-  implicit libs: [c++;m;dl;c;dl]
-  implicit dirs: [/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.8/lib/linux/arm;/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb;/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb;/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/21;/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi;/home/anubis/extend/SDK/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib]
+  remove lib [gcc]
+  remove lib [gcc]
+  collapse library dir [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a] ==> [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a]
+  collapse library dir [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a] ==> [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a]
+  collapse library dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb] ==> [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb]
+  collapse library dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/../lib/armv7-a/thumb] ==> [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb]
+  collapse library dir [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib/../lib] ==> [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib]
+  collapse library dir [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/../../../../arm-linux-androideabi/lib/armv7-a/thumb] ==> [/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb]
+  collapse library dir [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib] ==> [/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib]
+  implicit libs: [stdc++;m;dl;c;dl]
+  implicit dirs: [/super/NDK-r14b/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a;/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a/thumb;/super/NDK-r14b/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/arm-linux-androideabi/lib/armv7-a/thumb;/super/NDK-r14b/platforms/android-21/arch-arm/usr/lib]
   implicit fwks: []
 
 
 
 
 Detecting CXX [-std=c++14] compiler features compiled with the following output:
-Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
+Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_97c89"
-[1/2] Building CXX object CMakeFiles/cmTC_97c89.dir/feature_tests.cxx.o
-[2/2] Linking CXX executable cmTC_97c89
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_21ab6"
+[1/2] Building CXX object CMakeFiles/cmTC_21ab6.dir/feature_tests.cxx.o
+[2/2] Linking CXX executable cmTC_21ab6
 
 
     Feature record: CXX_FEATURE:1cxx_aggregate_default_initializers
@@ -344,11 +350,11 @@ Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_97
 
 
 Detecting CXX [-std=c++11] compiler features compiled with the following output:
-Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
+Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_6c908"
-[1/2] Building CXX object CMakeFiles/cmTC_6c908.dir/feature_tests.cxx.o
-[2/2] Linking CXX executable cmTC_6c908
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_daadb"
+[1/2] Building CXX object CMakeFiles/cmTC_daadb.dir/feature_tests.cxx.o
+[2/2] Linking CXX executable cmTC_daadb
 
 
     Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers
@@ -411,11 +417,11 @@ Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_6c
 
 
 Detecting CXX [-std=c++98] compiler features compiled with the following output:
-Change Dir: /super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
+Change Dir: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/CMakeTmp
 
-Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_3ed07"
-[1/2] Building CXX object CMakeFiles/cmTC_3ed07.dir/feature_tests.cxx.o
-[2/2] Linking CXX executable cmTC_3ed07
+Run Build Command:"/home/anubis/extend/SDK/cmake/3.6.4111459/bin/ninja" "cmTC_16ef5"
+[1/2] Building CXX object CMakeFiles/cmTC_16ef5.dir/feature_tests.cxx.o
+[2/2] Linking CXX executable cmTC_16ef5
 
 
     Feature record: CXX_FEATURE:0cxx_aggregate_default_initializers

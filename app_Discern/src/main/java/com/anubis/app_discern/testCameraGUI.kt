@@ -26,6 +26,7 @@ import androidx.annotation.RequiresApi
 import android.view.View
 import com.anubis.app_discern.Activity.DiscernActivity
 import com.anubis.kt_extends.eBitmap
+import com.anubis.kt_extends.eBitmap.Companion.eIBitmap
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eLogI
 import com.anubis.module_camera.Camera.customview.eOverlayView
@@ -172,7 +173,7 @@ class testCameraGUI : eCameraActivity(), OnImageAvailableListener, View.OnClickL
                     val results = eFaceSDK.eInit(this@testCameraGUI).eFaceDetect(bitmap!!)
                     results.size.eLogI("人脸检测数量")
                     iv_photo.post {
-                        iv_photo.imageBitmap = eBitmap.eInit.eBitmapRectPaint(bitmap, results, Color.RED)
+                        iv_photo.imageBitmap = eIBitmap.eBitmapRectPaint(bitmap, results, Color.RED)
                         results.forEach {
                             tv_hint.append("\n$it\n")
                         }

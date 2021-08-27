@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 import android.os.Environment
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eAssets.Companion.eIAssets
+import com.anubis.kt_extends.eBitmap.Companion.eIBitmap
 
 /**
  * Author  ： AnubisASN   on 20-4-28 上午10:49.
@@ -35,17 +37,17 @@ open class eFaceSDK internal  constructor(){
         eLog("FaceSDK准备初始化")
         val sdDir = Environment.getExternalStorageDirectory()//get model store dir
         val sdPath = "$sdDir/facesdk/"
-        eAssets.eInit.eAssetsToFile(mContext, "RFB-320.mnn", sdPath+"RFB-320.mnn")
-        eAssets.eInit.eAssetsToFile(mContext, "RFB-320-quant-ADMM-32.mnn",sdPath+"RFB-320-quant-ADMM-32.mnn")
-        eAssets.eInit.eAssetsToFile(mContext, "RFB-320-quant-KL-5792.mnn",sdPath+"RFB-320-quant-KL-5792.mnn")
-        eAssets.eInit.eAssetsToFile(mContext, "slim-320.mnn",sdPath+"slim-320.mnn")
-        eAssets.eInit.eAssetsToFile(mContext, "slim-320-quant-ADMM-50.mnn",sdPath+"slim-320-quant-ADMM-50.mnn")
+        eIAssets.eAssetsToFile(mContext, "RFB-320.mnn", sdPath+"RFB-320.mnn")
+        eIAssets.eAssetsToFile(mContext, "RFB-320-quant-ADMM-32.mnn",sdPath+"RFB-320-quant-ADMM-32.mnn")
+        eIAssets.eAssetsToFile(mContext, "RFB-320-quant-KL-5792.mnn",sdPath+"RFB-320-quant-KL-5792.mnn")
+        eIAssets.eAssetsToFile(mContext, "slim-320.mnn",sdPath+"slim-320.mnn")
+        eIAssets.eAssetsToFile(mContext, "slim-320-quant-ADMM-50.mnn",sdPath+"slim-320-quant-ADMM-50.mnn")
         eLog("文件复制完成")
         FaceSDKNative.eInit.FaceDetectionModelInit(sdPath).eLogI("faceSDK初始化")
     }
 
     open fun eFaceDetect(bitmap: Bitmap, imageChannel: Int = 4): ArrayList<Rect> {
-        return eFaceDetect(eBitmap.eInit.eBitmapToByteArray(bitmap), bitmap.width, bitmap.height, imageChannel)
+        return eFaceDetect(eIBitmap.eBitmapToByteArray(bitmap), bitmap.width, bitmap.height, imageChannel)
     }
 
     open fun eFaceDetect(byteArray: ByteArray, width: Int, height: Int, imageChannel: Int = 4): ArrayList<Rect> {

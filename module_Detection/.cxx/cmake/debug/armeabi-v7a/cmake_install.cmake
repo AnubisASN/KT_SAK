@@ -1,4 +1,4 @@
-# Install script for directory: /super/WorkSpace/KT_SAK/module_Detection
+# Install script for directory: /super/WorkSpace/AndroidProject0/KT_SAK/module_Detection
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/super/WorkSpace/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/super/WorkSpace/AndroidProject0/KT_SAK/module_Detection/.cxx/cmake/debug/armeabi-v7a/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

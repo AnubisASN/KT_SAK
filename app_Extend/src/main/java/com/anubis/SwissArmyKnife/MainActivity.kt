@@ -17,27 +17,34 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleOwner
 import com.alibaba.android.arouter.launcher.ARouter
 import com.android.xhapimanager.XHApiManager
 import com.anubis.SwissArmyKnife.APP.Companion.mAPP
-import com.anubis.SwissArmyKnife.GreenDao.Data
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleMsg
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleTTS
 import com.anubis.SwissArmyKnife.ParameHandleMSG.handleWeb
 import com.anubis.SwissArmyKnife.ParameHandleMSG.uHandler
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eApp.Companion.eIApp
+import com.anubis.kt_extends.eEvent.Companion.eIEvent
+import com.anubis.kt_extends.eFile.Companion.eIFile
+import com.anubis.kt_extends.ePermissions.Companion.eIPermissions
+import com.anubis.kt_extends.eShell.Companion.eIShell
+import com.anubis.kt_extends.eString.Companion.eIString
+import com.anubis.kt_extends.eTime.Companion.eITime
 import com.anubis.module_asrw.eASRW
 import com.anubis.module_cardotg.eCardOTG
 import com.anubis.module_dialog.View.eArrowDownloadButton
 import com.anubis.module_dialog.eDiaAlert
 import com.anubis.module_ewifi.eWiFi
+import com.anubis.module_ewifi.eWiFi.Companion.eIWiFi
 import com.anubis.module_ftp.FsService
 import com.anubis.module_ftp.GUI.eFTPUIs
 import com.anubis.module_greendao.eGreenDao
 import com.anubis.module_office.eOffice
 import com.anubis.module_portMSG.ePortMSG
 import com.anubis.module_qrcode.eQRCodeCreate
+import com.anubis.module_qrcode.eQRCodeCreate.Companion.eIQRCodeCreate
 import com.anubis.module_tcp.eTCP
 import com.anubis.module_tts.Bean.TTSMode
 import com.anubis.module_tts.Bean.VoiceModel
@@ -47,9 +54,8 @@ import com.anubis.module_usbdevice.eUDevice
 import com.anubis.module_videochat.eVideoChatUI
 import com.anubis.module_vncs.eVNC
 import com.anubis.module_websocket.eWebSocket
+import com.anubis.module_websocket.eWebSocket.Companion.eIWebSocket
 import com.anubis.utils.util.eToastUtils
-import com.biubiu.eventbus.EventBusInitializer
-import com.biubiu.eventbus.observe.observeEvent
 import com.google.gson.Gson
 import com.huashi.otg.sdk.HSIDCardInfo
 import com.lzy.okgo.OkGo
@@ -60,7 +66,6 @@ import kotlinx.android.synthetic.main.list_edit_item.*
 import kotlinx.android.synthetic.main.list_edit_item.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.custom.async
@@ -120,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         mainActivity = this@MainActivity
         mHandler = Handler()
         ParameHandleMSG.mainActivity = mainActivity
-        ePermissions.eInit.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
+        eIPermissions.eSetPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO))
         APP.mActivityList.add(this)
         datas = arrayOf( "sp_bt切换化发音调用_bt语音唤醒识别_bt语音识别", "et_bt语音合成_bt播放", "et_btSTRING_btInt_btBoolean", "et_btFloat_bt获取", "bt读取身份证_bt自动读取_bt停止读取", "et_btUSB设备数量_btUSB设备_bt文件读取", "bt加载弹窗_bteAlert弹窗_btButton弹窗", "bt导出Excel_bt导出ExcelS", "et_bt串口通信r_bt监听串口_bt关闭串口", "btHTTP测试_btHTTP循环测试", "btZIP压缩_btZIP解压_btZIP读取","bt后台启动_bt后台杀死_bt吐司改变", "et_bt二维码生成", "btLogCat", "btVNC二进制文件执行", "et_bt数据库插入_bt数据库查询_bt数据库删除", "btCPU架构", "et_btTCP连接C_bt数据发送_btTCP创建", "et_btTCP连接C关闭_btTCP连接S关闭_btTCP服务关闭", "et_btWeb连接_btWeb发送_btWeb关闭", "btAecFaceFT人脸跟踪模块_bt活体跟踪检测（路由转发跳转）", "bt开启常亮_bt关闭常亮_bt保持唤醒", "et_bt关闭唤醒_bt音视频通话", "et_bt跨APRTC初始化_bt跨AP连接_bt跨AP设置", "et_btGPIO读取", "bt开启FTP服务_bt关闭FTP服务", "bt系统设置权限检测_bt搜索WIFI", "bt创建WIFI热点0_bt创建WIFI热点_bt关闭WIFI热点", "btAPP重启", "et_btROOT权限检测_btShell执行_bt修改为系统APP", "et_bt正则匹配", "bt清除记录_bt清除缓存")
         init()
@@ -187,7 +192,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     getDigit("二维码") -> when (view?.id) {
                         R.id.bt_item1 -> {
-                            iv_Hint.setImageBitmap(eQRCodeCreate.eInit.eCreateQRCode(MSG
+                            iv_Hint.setImageBitmap(eIQRCodeCreate.eCreateQRCode(MSG
                                     ?: "请输入内容"))
                             iv_Hint.visibility = View.VISIBLE
                             Handler().postDelayed({ iv_Hint.visibility = View.GONE }, 5000)
@@ -200,13 +205,13 @@ class MainActivity : AppCompatActivity() {
                     getDigit("ZIP") -> when (view?.id) {
                         R.id.bt_item1 -> {
                             val file=File("/sdcard/zip_test.text")
-                            eFile.eInit.eCheckFile(file)
+                            eIFile.eCheckFile(file)
                             file.writeText("123546")
                             val zipFile=File("/sdcard/zip_test.zip")
-                            Hint("ZIP压缩：${eFile.eInit.eZipFile(file,zipFile)}")
+                            Hint("ZIP压缩：${eIFile.eZipFile(file,zipFile)}")
                         }
-                        R.id.bt_item2 -> Hint("ZIP解压：${eFile.eInit.eUZipFile("/sdcard/zip_test.zip","/sdcard/zip/")}")
-                        R.id.bt_item3 ->eFile.eInit.eGetFilesPath("/sdcard/zip_test.zip")?.forEach {
+                        R.id.bt_item2 -> Hint("ZIP解压：${eIFile.eUZipFile("/sdcard/zip_test.zip","/sdcard/zip/")}")
+                        R.id.bt_item3 ->eIFile.eGetFilesPath("/sdcard/zip_test.zip")?.forEach {
                             Hint("ZIP读取：$it")
                         }
                     }
@@ -233,7 +238,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     getDigit("LogCat") ->
                         async {
-                            eShell.eInit.eExecShell("logcat  *:e -v time   -s AndroidRuntime ${this@MainActivity.packageName}  ${android.os.Process.myPid()} -d > /mnt/sdcard/log.txt "
+                            eIShell.eExecShell("logcat  *:e -v time   -s AndroidRuntime ${this@MainActivity.packageName}  ${android.os.Process.myPid()} -d > /mnt/sdcard/log.txt "
                             )
                         }
                     getDigit("TCP创建") -> when (view?.id) {
@@ -266,10 +271,10 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     getDigit("Web") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("Web服务连接:${eWebSocket.eInit.eConnect(MSG
+                        R.id.bt_item1 -> Hint("Web服务连接:${eIWebSocket.eConnect(MSG
                                 ?: "ws://121.40.165.18:8800", handleWeb)}")
-                        R.id.bt_item2 -> Hint("Web服务发送:${eWebSocket.eInit.eSendMSG(MSG ?: "123")}")
-                        R.id.bt_item3 -> Hint("Web服务关闭 ：" + eWebSocket.eInit.eClose())
+                        R.id.bt_item2 -> Hint("Web服务发送:${eIWebSocket.eSendMSG(MSG ?: "123")}")
+                        R.id.bt_item3 -> Hint("Web服务关闭 ：" + eIWebSocket.eClose())
                     }
 
                     getDigit("GPIO") -> when (view?.id) {
@@ -332,13 +337,13 @@ class MainActivity : AppCompatActivity() {
                         R.id.bt_item1 -> Hint("VNC二进制文件执行:${if (eVNC.eInit(this@MainActivity).eStartVNCs()) "成功：5901" else "失败"}")
                     }
                     getDigit("开启常亮") -> when (view?.id) {
-                        R.id.bt_item1 ->   eApp.eInit.eLongScreen(this@MainActivity,true)
-                        R.id.bt_item2 ->   eApp.eInit.eLongScreen(this@MainActivity,false)
-                        R.id.bt_item3 ->   eApp.eInit.eCUPWakeLock(this@MainActivity,true)
+                        R.id.bt_item1 ->   eIApp.eLongScreen(this@MainActivity,true)
+                        R.id.bt_item2 ->   eIApp.eLongScreen(this@MainActivity,false)
+                        R.id.bt_item3 ->   eIApp.eCUPWakeLock(this@MainActivity,true)
                     }
                     getDigit("音视频") ->
                         when (view?.id) {
-                            R.id.bt_item1 -> eApp.eInit.eCUPWakeLock(this@MainActivity,false)
+                            R.id.bt_item1 -> eIApp.eCUPWakeLock(this@MainActivity,false)
                             R.id.bt_item2 -> {
                                 val intent = Intent(this@MainActivity, eVideoChatUI::class.java)
                                 intent.putExtra("appID", MSG?.split("||")?.get(0))
@@ -356,8 +361,8 @@ class MainActivity : AppCompatActivity() {
                             startActivity(intent)
                         }
                         R.id.bt_item2 -> {
-                            Hint("运行状态:${eApp.eInit.eIsAppRunning(this@MainActivity, "com.anubis.app_webrtc")}")
-                            Hint("安装状态:${eApp.eInit.eIsAppInstall(this@MainActivity, "com.anubis.app_webrtc")}")
+                            Hint("运行状态:${eIApp.eIsAppRunning(this@MainActivity, "com.anubis.app_webrtc")}")
+                            Hint("安装状态:${eIApp.eIsAppInstall(this@MainActivity, "com.anubis.app_webrtc")}")
                             val intent = Intent()
                             intent.data = Uri.parse("sak://com.anubis.app_webrtc?targetId=${MSG?.split("||")?.get(0)}&maxTime=${MSG?.split("||")?.get(1)}&cameraId=${MSG?.split("||")?.get(2)}&type=CALL")
                             startActivity(intent)
@@ -453,16 +458,16 @@ class MainActivity : AppCompatActivity() {
                     }
                     getDigit("后台杀死") -> when (view?.id) {
                         R.id.bt_item1 -> {
-                            Hint("后台服务状态：${eApp.eInit.eIsServiceRunning(this@MainActivity, MyService::class.java.name)}")
+                            Hint("后台服务状态：${eIApp.eIsServiceRunning(this@MainActivity, MyService::class.java.name)}")
                             Hint("后台启动状态：${startService(Intent(this@MainActivity, MyService::class.java))}")
                         }
-                        R.id.bt_item2 -> Hint("后台杀死状态：${eApp.eInit.eKillBackgroundProcesses(this@MainActivity, MyService::class.java.name)}")
+                        R.id.bt_item2 -> Hint("后台杀死状态：${eIApp.eKillBackgroundProcesses(this@MainActivity, MyService::class.java.name)}")
                         R.id.bt_item3 -> {
                             eToastUtils.setMsgColor(Color.GREEN)
                             eToastUtils.showShort("Toast测试")
                         }
                     }
-                    getDigit("APP重启") -> Hint("APP重启:${eApp.eInit.eAppRestart(mAPP, this@MainActivity)}")
+                    getDigit("APP重启") -> Hint("APP重启:${eIApp.eAppRestart(mAPP, this@MainActivity)}")
                     getDigit("串口通信") -> {
                         val msg = "A55501FB"
                         when (view?.id) {
@@ -472,7 +477,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     getDigit("数据库") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(data(eTime.eInit.eGetTime(), MSG
+                        R.id.bt_item1 -> Hint("数据库插入：${mGreenDao?.eInsertUser(data(eITime.eGetTime(), MSG
                                 ?: ""))}")
                         R.id.bt_item2 -> {
                             Hint("数据库查询:")
@@ -484,21 +489,21 @@ class MainActivity : AppCompatActivity() {
                     }
                     getDigit("系统设置权限检测") -> when (view?.id) {
                         R.id.bt_item1 -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            Hint("系统设置权限检测：${ePermissions.eInit.eSetSystemPermissions(this@MainActivity)}")
+                            Hint("系统设置权限检测：${eIPermissions.eSetSystemPermissions(this@MainActivity)}")
                         } else {
                             Hint("安卓版本低于6.0--${Build.VERSION.SDK_INT}")
                         }
                         R.id.bt_item2 -> {
                             Hint("搜索WIFI:")
-                            for (wifi in eWiFi.eInit.eGetScanWiFi(this@MainActivity)!!) {
+                            for (wifi in eIWiFi.eGetScanWiFi(this@MainActivity)!!) {
                                 Hint("SSID:${wifi.SSID}")
                             }
                         }
                     }
                     getDigit("热点") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("创建WIFI热点0:${eWiFi.eInit.eCreateWifiHotspot(this@MainActivity)}")
-                        R.id.bt_item2 -> Hint("创建WIFI热点:${eWiFi.eInit.eCreateWifiHotspot(this@MainActivity)}")
-                        R.id.bt_item3 -> Hint("关闭WIFI热点：${eWiFi.eInit.eCloseWifiHotspot(this@MainActivity)}")
+                        R.id.bt_item1 -> Hint("创建WIFI热点0:${eIWiFi.eCreateWifiHotspot(this@MainActivity)}")
+                        R.id.bt_item2 -> Hint("创建WIFI热点:${eIWiFi.eCreateWifiHotspot(this@MainActivity)}")
+                        R.id.bt_item3 -> Hint("关闭WIFI热点：${eIWiFi.eCloseWifiHotspot(this@MainActivity)}")
                     }
 //                    getDigit("自定义") ->startActivity(Intent(this@MainActivity,TestViewActivity::class.java))
                     getDigit("路由转发跳转") ->
@@ -508,31 +513,31 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     getDigit("Shell执行") -> when (view?.id) {
-                        R.id.bt_item1 -> Hint("ROOT权限检测:${eShell.eInit.eHaveRoot()}")
-                        R.id.bt_item2 -> Hint("Shell执行：${eShell.eInit.eExecShell(MSG ?: "setprop service.adb.tcp.port 5555 stop adbd start adbd")}")
+                        R.id.bt_item1 -> Hint("ROOT权限检测:${eIShell.eHaveRoot()}")
+                        R.id.bt_item2 -> Hint("Shell执行：${eIShell.eExecShell(MSG ?: "setprop service.adb.tcp.port 5555 stop adbd start adbd")}")
                         R.id.bt_item3 -> {
                             if (MSG?.isNotEmpty() == true) {
                                 val shell = "cp -r /datas/APP/$MSG* /system/priv*"
-                                Hint("自定义修改为系统APP:" + eShell.eInit.eExecShell(shell))
+                                Hint("自定义修改为系统APP:" + eIShell.eExecShell(shell))
                                 Hint("执行Shell:$shell")
                             } else {
                                 var shell = " cp -r /datas/APP/$packageName* /system/priv*"
-                                Hint("修改为系统APP:" + eShell.eInit.eExecShell(shell))
+                                Hint("修改为系统APP:" + eIShell.eExecShell(shell))
                                 Hint("执行Shell:$shell")
                                 if (File("/datas/APP-lib/$packageName-1").exists()) {
                                     shell = "mv /datas/APP-lib/$packageName*/ /system/lib/"
-                                    Hint("文件夹存在，修改lib数据:" + eShell.eInit.eExecShell(shell))
+                                    Hint("文件夹存在，修改lib数据:" + eIShell.eExecShell(shell))
                                     Hint("执行Shell:$shell")
                                 }
                             }
                             Handler().postDelayed({
                                 val shell = "chmod -R 755   /system/priv*/$MSG*"
-                                Hint("修改文件权限:" + eShell.eInit.eExecShell(shell))
+                                Hint("修改文件权限:" + eIShell.eExecShell(shell))
                                 Hint("执行Shell:$shell")
                             }, 2000)
                             Handler().postDelayed({
                                 val shell = " rm -rf /datas/APP/$MSG*"
-                                Hint("删除数据遗留:" + eShell.eInit.eExecShell(shell))
+                                Hint("删除数据遗留:" + eIShell.eExecShell(shell))
                                 Hint("执行Shell:$shell")
                                 eShowTip("请重启设备")
                             }, 3500)
@@ -548,7 +553,7 @@ class MainActivity : AppCompatActivity() {
                                 file!!.writeText("")
                                 eShowTip("记录已清除")
                             }
-                            R.id.bt_item2-> Hint("缓存清理：${eApp.eInit.eAppCleanData(this@MainActivity)}")
+                            R.id.bt_item2-> Hint("缓存清理：${eIApp.eAppCleanData(this@MainActivity)}")
                         }
                 }
             }
@@ -556,7 +561,7 @@ class MainActivity : AppCompatActivity() {
         val myAdapter = MyAdapter(this, datas!!, callback)
         rvList.adapter = myAdapter
         rvList.setItemViewCacheSize(datas!!.size)
-        eShell.eInit.eExecShell("mount -o remount,rw rootfs /system/")
+        eIShell.eExecShell("mount -o remount,rw rootfs /system/")
 
 
     }
@@ -600,7 +605,7 @@ class MainActivity : AppCompatActivity() {
         /*串口通信*/
         mPortMSG = ePortMSG.eInit(this, callback = object : ePortMSG.ICallBack {
             override fun IonLockerDataReceived(buffer: ByteArray, size: Int, path: String) {
-                Hint("串口数据接收:${eString.eInit.eGetByteArrToHexStr(buffer)}--$path")
+                Hint("串口数据接收:${eIString.eGetByteArrToHexStr(buffer)}--$path")
             }
         })
 
@@ -614,7 +619,7 @@ class MainActivity : AppCompatActivity() {
      */
     fun Hint(str: String) {
         tv_Hint.post {
-            val Str = "${eTime.eInit.eGetTime("MM-dd HH:mm:ss")}： $str\n\n\n"
+            val Str = "${eITime.eGetTime("MM-dd HH:mm:ss")}： $str\n\n\n"
             str.eLog()
             tv_Hint.append(Str)
             sv_Hint.fullScroll(ScrollView.FOCUS_DOWN)
@@ -699,15 +704,15 @@ class MainActivity : AppCompatActivity() {
                         when (btList.indexOf(str)) {
                             0 -> {
                                 itemView.bt_item1.visibility = View.VISIBLE
-                                itemView.bt_item1.text = eString.eInit.eGetNumberPeriod(str, 2, "MAX")
+                                itemView.bt_item1.text = eIString.eGetNumberPeriod(str, 2, "MAX")
                             }
                             1 -> {
                                 itemView.bt_item2.visibility = View.VISIBLE
-                                itemView.bt_item2.text = eString.eInit.eGetNumberPeriod(str, 2, "MAX")
+                                itemView.bt_item2.text = eIString.eGetNumberPeriod(str, 2, "MAX")
                             }
                             2 -> {
                                 itemView.bt_item3.visibility = View.VISIBLE
-                                itemView.bt_item3.text = eString.eInit.eGetNumberPeriod(str, 2, "MAX")
+                                itemView.bt_item3.text = eIString.eGetNumberPeriod(str, 2, "MAX")
                             }
                         }
 
@@ -715,7 +720,7 @@ class MainActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     if (datas.substring(0, 2) == "bt") {
                         itemView.bt_item1.visibility = View.VISIBLE
-                        itemView.bt_item1.text = eString.eInit.eGetNumberPeriod(datas, 2, "MAX")
+                        itemView.bt_item1.text = eIString.eGetNumberPeriod(datas, 2, "MAX")
                     }
                 }
             }
@@ -728,7 +733,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        ePermissions.eInit.eSetOnRequestPermissionsResult(this, requestCode, permissions, grantResults)
+        eIPermissions.eSetOnRequestPermissionsResult(this, requestCode, permissions, grantResults)
         if (requestCode != 1) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
@@ -738,7 +743,7 @@ class MainActivity : AppCompatActivity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         Hint("keyCode:$keyCode")
         eLog("size" + APP.mAPP.mActivityList?.size)
-        return eEvent.eInit.eSetKeyDownExit(this, keyCode, mAPP.mActivityList, false, exitHint = "完成退出")
+        return eIEvent.eSetKeyDownExit(this, keyCode, mAPP.mActivityList, false, exitHint = "完成退出")
     }
 
     override fun onDestroy() {

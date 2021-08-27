@@ -43,7 +43,7 @@ import java.lang.reflect.InvocationTargetException
  */
 open class eWiFi internal  constructor(){
     companion object{
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eWiFi() }
+        val eIWiFi by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eWiFi() }
     }
     private var mWifiManager: WifiManager? = null
     private var mWifiInfo: WifiInfo? = null

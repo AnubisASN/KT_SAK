@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.anubis.app_webrtc.APP.Companion.mAPP
 import com.anubis.kt_extends.*
+import com.anubis.kt_extends.eApp.Companion.eIApp
+import com.anubis.module_eventbus.post.ePostSpan
 import com.anubis.module_webRTC.demo.MLOC
 import com.anubis.module_webRTC.demo.MLOC.VOIP_SERVER_URL
 import com.anubis.module_webRTC.demo.MLOC.init
@@ -102,7 +104,7 @@ class WebRtcActivity : AppCompatActivity() {
     }
 
     fun initRRT() {
-        if (!eApp.eInit.eIsServiceRunning(this, KeepLiveService::class.java.name)) {
+        if (!eIApp.eIsServiceRunning(this, KeepLiveService::class.java.name)) {
             val intent = Intent(this, KeepLiveService::class.java)
             startService(intent)
         }
@@ -121,8 +123,8 @@ class WebRtcActivity : AppCompatActivity() {
         intent.putExtra("outTime", outTime)
         intent.putExtra("cameraId", cameraId)
         intent.putExtra(VoipActivity.ACTION, VoipActivity.CALLING)
-        this.finish()
         startActivity(intent)
+        this.finish()
     }
 
 }

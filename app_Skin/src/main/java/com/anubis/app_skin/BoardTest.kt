@@ -1,10 +1,5 @@
 package com.anubis.app_skin
 
-import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -36,7 +31,7 @@ class BoardTest : AppCompatActivity() {
                 eShowTip("继电器：关")
             }
         }
-        button3.onClick {
+        stop.onClick {
                 x.outWG("123")
             eShowTip("WG发送：123")
         }
@@ -73,7 +68,7 @@ class BoardTest : AppCompatActivity() {
             }
         }
 
-        button2.onClick {
+        start.onClick {
             it as View
             if (it.tag=="0"){
                 it.tag="1"

@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import color_picker.eColorPickerView
 import color_picker.builder.PaintBuilder
 import com.anubis.kt_extends.eColor
+import com.anubis.kt_extends.eColor.Companion.eIColor
 
 /**
  * @author tamsiree
@@ -45,7 +46,7 @@ class eLightnessSlider : AbsCustomSlider {
     }
 
     override fun drawHandle(canvas: Canvas, x: Float, y: Float) {
-        solid.color = eColor.eInit.eGetColorAtLightness(color, value)
+        solid.color = eIColor.eGetColorAtLightness(color, value)
         canvas.drawCircle(x, y, handleRadius.toFloat(), clearingStroke)
         canvas.drawCircle(x, y, handleRadius * 0.75f, solid)
     }
@@ -56,7 +57,7 @@ class eLightnessSlider : AbsCustomSlider {
 
     fun setColor(color: Int) {
         this.color = color
-        value = eColor.eInit.eGetLightnessOfColor(color)
+        value = eIColor.eGetLightnessOfColor(color)
         if (bar != null) {
             updateBar()
             invalidate()

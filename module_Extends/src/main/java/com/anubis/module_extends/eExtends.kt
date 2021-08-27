@@ -43,11 +43,15 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.anubis.kt_extends.eApp.Companion.eIApp
+import com.anubis.kt_extends.eFile.Companion.eIFile
+import com.anubis.kt_extends.eMatrix.Companion.eIMatrix
+import com.anubis.kt_extends.eShell.Companion.eIShell
+import com.anubis.kt_extends.eTime.Companion.eITime
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.tencent.bugly.crashreport.CrashReport
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import net.lingala.zip4j.core.ZipFile
@@ -59,10 +63,7 @@ import org.jetbrains.anko.runOnUiThread
 import org.json.JSONObject
 import java.io.*
 import java.lang.Process
-import java.net.Inet6Address
-import java.net.InetAddress
-import java.net.NetworkInterface
-import java.net.SocketException
+import java.net.*
 import java.nio.ByteBuffer
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
@@ -189,26 +190,26 @@ fun eErrorOut(e: Any?): String? {
     return os.toString()
 }
 
-fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "${eTime.eInit.eGetTime("yyyy-MM-dd")}.log", parame: String = "-v long AndroidRuntime:E *:S TAG:E TAG:I *E") = async {
+fun Context.eLogCat(savePath: String = "/mnt/sdcard/Logs/", fileName: String = "${eITime.eGetTime("yyyy-MM-dd")}.log", parame: String = "-v long AndroidRuntime:E *:S TAG:E TAG:I *E") = async {
     if (!File(savePath).exists()) {
         File(savePath).mkdirs()
     }
     GlobalScope.launch {
-        val psResult = eShell.eInit.eExecShell("ps logcat")
+        val psResult = eIShell.eExecShell("ps logcat")
         psResult.split("\n").forEach {
             if (!it.contains("shell"))
                 coroutineScope {
                     it.split(" ").forEach {
                         try {
                             val pid = it.replace(" ", "").toInt()
-                            eShell.eInit.eExecShell("kill $pid")
+                            eIShell.eExecShell("kill $pid")
                             return@coroutineScope
                         } catch (e: Exception) {
                         }
                     }
                 }
         }
-        eShell.eInit.eExecShell("logcat $parame -d >> $savePath$fileName")
+        eIShell.eExecShell("logcat $parame -d >> $savePath$fileName")
     }
 }
 
@@ -218,7 +219,7 @@ fun Application.eCrash(saveFile: File = File("${Environment.getExternalStorageDi
     Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
         //获取崩溃时的UNIX时间戳
         //将时间戳转换成人类能看懂的格式，建立一个String拼接器
-        val stringBuilder = StringBuilder(eTime.eInit.eGetTime("yyyy/MM/dd HH:mm:ss"))
+        val stringBuilder = StringBuilder(eITime.eGetTime("yyyy/MM/dd HH:mm:ss"))
         stringBuilder.append(":\n")
         //获取错误信息退票手续费
         stringBuilder.append(throwable.message)
@@ -410,9 +411,12 @@ fun ePlayVoice(
                 else
                     eMediaPlayer?.prepare()
             }
-            is AssetFileDescriptor -> {
+            is AssetFileDescriptor,is Uri -> {
                 eMediaPlayer = MediaPlayer()
+                if (music is AssetFileDescriptor)
                 eMediaPlayer?.setDataSource(music)
+                if (music is Uri)
+                    eMediaPlayer?.setDataSource(context,music)
                 if (isAsync)
                     eMediaPlayer?.prepareAsync()
                 else
@@ -427,7 +431,7 @@ fun ePlayVoice(
         return false
     }
 }
-
+//停止播放
 fun MediaPlayer.eClean() {
     stop()
     release()
@@ -471,7 +475,7 @@ fun ePlayPCM(path: String, sampleRateInHz: Int = 16000, channelConfig: Int = Aud
 val REQUEST_CODE_CAMERA_TAKE = 103
 fun Activity.eSysTemCameraTake(fileDir: String = Environment.getExternalStorageDirectory().path + "/Pictures", fileName: String = "IMG_" + System.currentTimeMillis() + ".jpg", requestCode: Int = REQUEST_CODE_CAMERA_TAKE, authority: String = "com.anubis.module_extends", resultBlock: ((Intent, String) -> Unit)? = null) {
     //拍照存放路径
-    if (!eFile.eInit.eCheckFile(fileDir))
+    if (!eIFile.eCheckFile(fileDir))
         return eShowTip("File Create Error")
     val mFilePath = "$fileDir/${if (fileName.contains(".")) fileName else "$fileName.jpg"}"
     val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -501,14 +505,14 @@ fun Activity.eSystemSelectImg(requestCode: Int = REQUEST_CODE_PHOTO_SELECT) {
  */
 class eJson private constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eJson() }
+        val eIJson by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eJson() }
     }
 
     //实例类解析
     fun <T> eGetJsonFrom(jsonStr: String, clazz: Class<T>) = Gson().fromJson<T>(jsonStr, clazz)
 
     //实例类生成Json
-    fun eGetToJson(any: Any) = GsonBuilder().disableHtmlEscaping().create().toJson(any).trim()
+    fun eGetToJson(any: Any) = GsonBuilder().disableHtmlEscaping().create().toJson(any)
 
     //Object Json解析扩展
     fun <T> eGetJson(json: String, resultKey: String, default: T): T {
@@ -537,7 +541,7 @@ class eJson private constructor() {
  */
 class eBReceiver private constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eBReceiver() }
+        val eIBReceiver by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eBReceiver() }
     }
 
     //开机启动
@@ -616,7 +620,7 @@ class eBReceiver private constructor() {
  */
 class eUri private constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eUri() }
+        val eIUri by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eUri() }
     }
 
     fun eIsExternalStorageDocument(uri: Uri) = "com.android.externalstorage.documents" == uri.authority
@@ -697,7 +701,7 @@ class eUri private constructor() {
 class eApp private constructor() {
     companion object {
         private var wakeLock: PowerManager.WakeLock? = null
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eApp() }
+        val eIApp by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eApp() }
     }
 
     /**
@@ -713,6 +717,7 @@ class eApp private constructor() {
     }
 
     // CPU唤醒
+    @SuppressLint("InvalidWakeLockTag")
     fun eCUPWakeLock(context: Context, isLongWake: Boolean = true, timeOut: Long? = null) {
         val pm = context.getSystemService(POWER_SERVICE) as PowerManager
         if (wakeLock == null)
@@ -1016,7 +1021,7 @@ class eApp private constructor() {
  */
 open class eRegex internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eRegex() }
+        val eIRegex by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eRegex() }
     }
 
     //自定义正则
@@ -1090,13 +1095,12 @@ open class eRegex internal constructor() {
     }
 }
 
-
 /**
  * KeyDownExit事件监听扩展类---------------------------------------------------------------------------
  */
 open class eEvent internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eEvent() }
+        val eIEvent by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eEvent() }
     }
 
     /*返回连按退出*/
@@ -1133,7 +1137,7 @@ open class eEvent internal constructor() {
             if (ev.action == MotionEvent.ACTION_DOWN) {
                 val v = currentFocus
                 if (eIsShouldHideInput(v, ev)) {
-                    eApp.eInit.eInputHide(activity, v as EditText)
+                    eIApp.eInputHide(activity, v as EditText)
                 }
                 return activity.dispatchTouchEvent(ev)
             }
@@ -1164,7 +1168,7 @@ open class eEvent internal constructor() {
  */
 open class eEncryption internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eEncryption() }
+        val eIEncryption by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eEncryption() }
     }
     /*AES加密*/
     fun eEncrypt(sSrc: String, sKey: String,transformation:String="AES/ECB/nopadding",isHex:Boolean=true): String? {
@@ -1189,7 +1193,7 @@ open class eEncryption internal constructor() {
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec)
         val encrypted = cipher.doFinal(re.toByteArray(charset("utf-8"))) //
         if (!isHex)
-            return  eString.eInit.eBase64Encode(encrypted)
+            return  eIEncryption.eBase64Encode(encrypted)
         var strHex = ""
         val sb = StringBuilder("")
         for (n in encrypted.indices) {
@@ -1200,10 +1204,7 @@ open class eEncryption internal constructor() {
     }
 
     /*MD5构建*/
-    fun eMD5Build(
-            map: Map<String, Any?>,
-            key: String
-    ): String {
+    fun eMD5Build(map: Map<String, Any?>, key: String): String {
         val list = ArrayList<String>()
         for ((key1, value) in map) {
             if ("" != value && null != value) {
@@ -1226,7 +1227,7 @@ open class eEncryption internal constructor() {
         }
     }
 
-    /*MD5加密*/
+    /*MD5校验*/
     fun eMD5Sign(content: String): String {
         val hash = MessageDigest.getInstance("MD5").digest(content.toByteArray())
         val hex = StringBuilder(hash.size * 2)
@@ -1239,6 +1240,561 @@ open class eEncryption internal constructor() {
         }
         return hex.toString()
     }
+    private var crc16_tab_h = byteArrayOf(
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x00.toByte(),
+        0xC1.toByte(),
+        0x81.toByte(),
+        0x40.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(),
+        0x01.toByte(),
+        0xC0.toByte(),
+        0x80.toByte(),
+        0x41.toByte(), 0x00.toByte(), 0xC1.toByte(), 0x81.toByte(), 0x40.toByte()
+    )
+    private var crc16_tab_l = byteArrayOf(
+        0x00.toByte(),
+        0xC0.toByte(),
+        0xC1.toByte(),
+        0x01.toByte(),
+        0xC3.toByte(),
+        0x03.toByte(),
+        0x02.toByte(),
+        0xC2.toByte(),
+        0xC6.toByte(),
+        0x06.toByte(),
+        0x07.toByte(),
+        0xC7.toByte(),
+        0x05.toByte(),
+        0xC5.toByte(),
+        0xC4.toByte(),
+        0x04.toByte(),
+        0xCC.toByte(),
+        0x0C.toByte(),
+        0x0D.toByte(),
+        0xCD.toByte(),
+        0x0F.toByte(),
+        0xCF.toByte(),
+        0xCE.toByte(),
+        0x0E.toByte(),
+        0x0A.toByte(),
+        0xCA.toByte(),
+        0xCB.toByte(),
+        0x0B.toByte(),
+        0xC9.toByte(),
+        0x09.toByte(),
+        0x08.toByte(),
+        0xC8.toByte(),
+        0xD8.toByte(),
+        0x18.toByte(),
+        0x19.toByte(),
+        0xD9.toByte(),
+        0x1B.toByte(),
+        0xDB.toByte(),
+        0xDA.toByte(),
+        0x1A.toByte(),
+        0x1E.toByte(),
+        0xDE.toByte(),
+        0xDF.toByte(),
+        0x1F.toByte(),
+        0xDD.toByte(),
+        0x1D.toByte(),
+        0x1C.toByte(),
+        0xDC.toByte(),
+        0x14.toByte(),
+        0xD4.toByte(),
+        0xD5.toByte(),
+        0x15.toByte(),
+        0xD7.toByte(),
+        0x17.toByte(),
+        0x16.toByte(),
+        0xD6.toByte(),
+        0xD2.toByte(),
+        0x12.toByte(),
+        0x13.toByte(),
+        0xD3.toByte(),
+        0x11.toByte(),
+        0xD1.toByte(),
+        0xD0.toByte(),
+        0x10.toByte(),
+        0xF0.toByte(),
+        0x30.toByte(),
+        0x31.toByte(),
+        0xF1.toByte(),
+        0x33.toByte(),
+        0xF3.toByte(),
+        0xF2.toByte(),
+        0x32.toByte(),
+        0x36.toByte(),
+        0xF6.toByte(),
+        0xF7.toByte(),
+        0x37.toByte(),
+        0xF5.toByte(),
+        0x35.toByte(),
+        0x34.toByte(),
+        0xF4.toByte(),
+        0x3C.toByte(),
+        0xFC.toByte(),
+        0xFD.toByte(),
+        0x3D.toByte(),
+        0xFF.toByte(),
+        0x3F.toByte(),
+        0x3E.toByte(),
+        0xFE.toByte(),
+        0xFA.toByte(),
+        0x3A.toByte(),
+        0x3B.toByte(),
+        0xFB.toByte(),
+        0x39.toByte(),
+        0xF9.toByte(),
+        0xF8.toByte(),
+        0x38.toByte(),
+        0x28.toByte(),
+        0xE8.toByte(),
+        0xE9.toByte(),
+        0x29.toByte(),
+        0xEB.toByte(),
+        0x2B.toByte(),
+        0x2A.toByte(),
+        0xEA.toByte(),
+        0xEE.toByte(),
+        0x2E.toByte(),
+        0x2F.toByte(),
+        0xEF.toByte(),
+        0x2D.toByte(),
+        0xED.toByte(),
+        0xEC.toByte(),
+        0x2C.toByte(),
+        0xE4.toByte(),
+        0x24.toByte(),
+        0x25.toByte(),
+        0xE5.toByte(),
+        0x27.toByte(),
+        0xE7.toByte(),
+        0xE6.toByte(),
+        0x26.toByte(),
+        0x22.toByte(),
+        0xE2.toByte(),
+        0xE3.toByte(),
+        0x23.toByte(),
+        0xE1.toByte(),
+        0x21.toByte(),
+        0x20.toByte(),
+        0xE0.toByte(),
+        0xA0.toByte(),
+        0x60.toByte(),
+        0x61.toByte(),
+        0xA1.toByte(),
+        0x63.toByte(),
+        0xA3.toByte(),
+        0xA2.toByte(),
+        0x62.toByte(),
+        0x66.toByte(),
+        0xA6.toByte(),
+        0xA7.toByte(),
+        0x67.toByte(),
+        0xA5.toByte(),
+        0x65.toByte(),
+        0x64.toByte(),
+        0xA4.toByte(),
+        0x6C.toByte(),
+        0xAC.toByte(),
+        0xAD.toByte(),
+        0x6D.toByte(),
+        0xAF.toByte(),
+        0x6F.toByte(),
+        0x6E.toByte(),
+        0xAE.toByte(),
+        0xAA.toByte(),
+        0x6A.toByte(),
+        0x6B.toByte(),
+        0xAB.toByte(),
+        0x69.toByte(),
+        0xA9.toByte(),
+        0xA8.toByte(),
+        0x68.toByte(),
+        0x78.toByte(),
+        0xB8.toByte(),
+        0xB9.toByte(),
+        0x79.toByte(),
+        0xBB.toByte(),
+        0x7B.toByte(),
+        0x7A.toByte(),
+        0xBA.toByte(),
+        0xBE.toByte(),
+        0x7E.toByte(),
+        0x7F.toByte(),
+        0xBF.toByte(),
+        0x7D.toByte(),
+        0xBD.toByte(),
+        0xBC.toByte(),
+        0x7C.toByte(),
+        0xB4.toByte(),
+        0x74.toByte(),
+        0x75.toByte(),
+        0xB5.toByte(),
+        0x77.toByte(),
+        0xB7.toByte(),
+        0xB6.toByte(),
+        0x76.toByte(),
+        0x72.toByte(),
+        0xB2.toByte(),
+        0xB3.toByte(),
+        0x73.toByte(),
+        0xB1.toByte(),
+        0x71.toByte(),
+        0x70.toByte(),
+        0xB0.toByte(),
+        0x50.toByte(),
+        0x90.toByte(),
+        0x91.toByte(),
+        0x51.toByte(),
+        0x93.toByte(),
+        0x53.toByte(),
+        0x52.toByte(),
+        0x92.toByte(),
+        0x96.toByte(),
+        0x56.toByte(),
+        0x57.toByte(),
+        0x97.toByte(),
+        0x55.toByte(),
+        0x95.toByte(),
+        0x94.toByte(),
+        0x54.toByte(),
+        0x9C.toByte(),
+        0x5C.toByte(),
+        0x5D.toByte(),
+        0x9D.toByte(),
+        0x5F.toByte(),
+        0x9F.toByte(),
+        0x9E.toByte(),
+        0x5E.toByte(),
+        0x5A.toByte(),
+        0x9A.toByte(),
+        0x9B.toByte(),
+        0x5B.toByte(),
+        0x99.toByte(),
+        0x59.toByte(),
+        0x58.toByte(),
+        0x98.toByte(),
+        0x88.toByte(),
+        0x48.toByte(),
+        0x49.toByte(),
+        0x89.toByte(),
+        0x4B.toByte(),
+        0x8B.toByte(),
+        0x8A.toByte(),
+        0x4A.toByte(),
+        0x4E.toByte(),
+        0x8E.toByte(),
+        0x8F.toByte(),
+        0x4F.toByte(),
+        0x8D.toByte(),
+        0x4D.toByte(),
+        0x4C.toByte(),
+        0x8C.toByte(),
+        0x44.toByte(),
+        0x84.toByte(),
+        0x85.toByte(),
+        0x45.toByte(),
+        0x87.toByte(),
+        0x47.toByte(),
+        0x46.toByte(),
+        0x86.toByte(),
+        0x82.toByte(),
+        0x42.toByte(),
+        0x43.toByte(),
+        0x83.toByte(), 0x41.toByte(), 0x81.toByte(), 0x80.toByte(), 0x40.toByte()
+    )
+    /*字节数组CRC16 Modbus加密*/
+    fun eGetCrc16Modbus(data: ByteArray): String {
+        var ucCRCHi = 0xffff and 0xff00 shr 8
+        var ucCRCLo = 0xffff and 0x00ff
+        var iIndex: Int
+        for (i in data.indices) {
+            iIndex = ucCRCLo xor data[0 + i].toInt() and 0x00ff
+            ucCRCLo = ucCRCHi xor crc16_tab_h[iIndex].toInt()
+            ucCRCHi = crc16_tab_l[iIndex].toInt()
+        }
+        return String.format("0x%04x", ucCRCHi and 0x00ff shl 8 or (ucCRCLo and 0x00ff) and 0xffff)
+    }
+
+    //MD5加密
+    open fun eGetEncodeMD5(str: String, digits: Int = 32,algorithm:String="MD5" ): String? {
+        try {
+            //获取md5加密对象
+            val instance: MessageDigest = MessageDigest.getInstance(algorithm)
+            //对字符串加密，返回字节数组
+            val digest: ByteArray = instance.digest(str.toByteArray())
+            val sb: StringBuffer = StringBuffer()
+            for (b in digest) {
+                //获取低八位有效值
+                var i: Int = b.toInt() and 0xff
+                //将整数转化为16进制
+                var hexString = Integer.toHexString(i)
+                if (hexString.length < 2) {
+                    //如果是一位的话，补0
+                    hexString = "0" + hexString
+                }
+                sb.append(hexString)
+            }
+            return if (digits == 32) sb.toString() else sb.toString().substring(8, 24)
+
+        } catch (e: NoSuchAlgorithmException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    //base64加密
+    open fun eBase64Encode(str: String, charset: Charset = Charsets.UTF_8, flags: Int = Base64.DEFAULT) = eBase64Encode(str.toByteArray(charset), flags)
+    open fun eBase64Encode(bytes: ByteArray, flags: Int = Base64.DEFAULT) = Base64.encodeToString(bytes, flags)
+
+    //base64解密
+    open fun eBase64Decode(strBase64: String, charset: Charset = Charsets.UTF_8, flags: Int = Base64.DEFAULT) = eBase64Decode(strBase64.toByteArray(charset), flags)
+    open fun eBase64Decode(bytes: ByteArray, flags: Int = Base64.DEFAULT) = String(Base64.decode(bytes, flags))
 }
 
 /**
@@ -1246,7 +1802,7 @@ open class eEncryption internal constructor() {
  */
 open class eTime internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eTime() }
+        val eITime by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eTime() }
     }
 
     /**
@@ -1343,7 +1899,7 @@ open class eTime internal constructor() {
  */
 open class eNetWork internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eNetWork() }
+        val eINetWork by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eNetWork() }
     }
 
     // 判断是否有网
@@ -1408,7 +1964,7 @@ open class eNetWork internal constructor() {
  */
 open class eDevice internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eDevice() }
+        val eIDevice by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eDevice() }
     }
 
     // 获取屏幕密度，宽高
@@ -1488,7 +2044,7 @@ open class eDevice internal constructor() {
  */
 open class eBluetooth internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eBluetooth() }
+        val eIBluetooth by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eBluetooth() }
     }
 
     // 打开蓝牙
@@ -1541,7 +2097,7 @@ open class eBluetooth internal constructor() {
  */
 open class eAssets internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eAssets() }
+        val eIAssets by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eAssets() }
     }
 
     //获取attr
@@ -1555,7 +2111,7 @@ open class eAssets internal constructor() {
     //assets文件复制 文件夹路径
     open fun eAssetsToFile(context: Context, assetsFilePath: String, copyFilePath: String): Boolean {
         try {
-            if (!File(copyFilePath).exists() && eFile.eInit.eCheckFile(copyFilePath)) {
+            if (!File(copyFilePath).exists() && eIFile.eCheckFile(copyFilePath)) {
                 val inputStream = context.resources.assets.open(assetsFilePath)// assets文件夹下的文件
                 var fileOutputStream = FileOutputStream(copyFilePath)// 保存到本地的文件夹下的文件
                 val buffer = ByteArray(1024)
@@ -1605,7 +2161,7 @@ open class eAssets internal constructor() {
  */
 open class eMatrix internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eMatrix() }
+        val eIMatrix by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eMatrix() }
     }
 
     /*RectF 转 Rect*/
@@ -1652,7 +2208,7 @@ open class eMatrix internal constructor() {
  */
 open class eBitmap internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eBitmap() }
+        val eIBitmap by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eBitmap() }
     }
 
     //Bitmap释放
@@ -1804,7 +2360,7 @@ open class eBitmap internal constructor() {
 
     //图像处理
     fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f, isFlipX: Boolean = false) = eBitmapRotateFlipRect(bitmap, rotate, isFlipX, array = null)
-    fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f, isFlipX: Boolean = false, isFlipY: Boolean = false, rect: Rect? = null, scaleX: Int = 1, scaleY: Int = 1) = eBitmapRotateFlipRect(bitmap, rotate, isFlipX, isFlipY, eMatrix.eInit.eRectToXYWH(rect), scaleX, scaleY)
+    fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f, isFlipX: Boolean = false, isFlipY: Boolean = false, rect: Rect? = null, scaleX: Int = 1, scaleY: Int = 1) =eBitmapRotateFlipRect(bitmap, rotate, isFlipX,isFlipY, eIMatrix.eRectToXYWH(rect),scaleX,scaleY)
     fun eBitmapRotateFlipRect(bitmap: Bitmap?, rotate: Float = 0f, isFlipX: Boolean = false, isFlipY: Boolean = false, array: IntArray? = null, scaleX: Int = 1, scaleY: Int = 1): Bitmap? {
         if (bitmap == null) {
             return null.eLogE("bitmap==null")
@@ -1833,7 +2389,6 @@ open class eBitmap internal constructor() {
         bitmap.recycle()
         return newBM
     }
-
 
     //bitmap 宽高压缩
     open fun eBitmapToZoom(bitmap: Bitmap, zoomFactor: Int = 1, filter: Boolean = true) = eBitmapToZoom(bitmap, bitmap.width / zoomFactor, bitmap.height / zoomFactor, filter)
@@ -1877,7 +2432,7 @@ open class eBitmap internal constructor() {
         } else {
             var fos: FileOutputStream? = null
             try {
-                if (!eFile.eInit.eCheckFile(file))
+                if (!eIFile.eCheckFile(file))
                     return false.apply { eLogE(file.path + "-不存在") }
                 fos = FileOutputStream(file)
                 val status = bitmap.compress(Bitmap.CompressFormat.PNG, quality, fos)
@@ -2028,7 +2583,7 @@ open class eBitmap internal constructor() {
  */
 open class eColor internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eColor() }
+        val eIColor by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eColor() }
     }
 
     /*获取Alpha百分比*/
@@ -2084,7 +2639,7 @@ open class eColor internal constructor() {
  */
 open class eImage internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eImage() }
+        val eIImage by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eImage() }
     }
 
     //Image获取YuvBytes
@@ -2170,7 +2725,7 @@ open class eImage internal constructor() {
 
     /* Image 转文件*/
     open fun eImageToFile(image: Image, file: File): String? {
-        eFile.eInit.eCheckFile(file)
+        eIFile.eCheckFile(file)
         val buffer: ByteBuffer = image.planes[0].buffer
         val bytes = ByteArray(buffer.remaining())
         buffer.get(bytes)
@@ -2360,7 +2915,7 @@ open class eImage internal constructor() {
  */
 open class eFile internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eFile() }
+        val eIFile by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eFile() }
     }
     /*压缩文件--------------*/
     /**
@@ -2703,7 +3258,7 @@ open class eFile internal constructor() {
  */
 open class eString internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eString() }
+        val eIString by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eString() }
     }
 
     fun eSpannableTextView(tv: TextView, str: String, startAndEndIndexArray: Array<Pair<Int, Int>>? = arrayOf(Pair(0, 0)), colorArray: Array<Int>? = arrayOf(Color.RED), clickBlockArray: Array<() -> Unit>? = null) {
@@ -2860,42 +3415,56 @@ open class eString internal constructor() {
             or (src[offset + 8].toInt() and 0x30 shl 53)
             or (src[offset + 9].toInt() and 0xff shl 61)
             or (src[offset + 10].toInt() and 0x03 shl 64))
-
-    //MD5加密
-    open fun eGetEncodeMD5(str: String, digits: Int = 32,algorithm:String="MD5" ): String? {
-        try {
-            //获取md5加密对象
-            val instance: MessageDigest = MessageDigest.getInstance(algorithm)
-            //对字符串加密，返回字节数组
-            val digest: ByteArray = instance.digest(str.toByteArray())
-            val sb: StringBuffer = StringBuffer()
-            for (b in digest) {
-                //获取低八位有效值
-                var i: Int = b.toInt() and 0xff
-                //将整数转化为16进制
-                var hexString = Integer.toHexString(i)
-                if (hexString.length < 2) {
-                    //如果是一位的话，补0
-                    hexString = "0" + hexString
-                }
-                sb.append(hexString)
-            }
-            return if (digits == 32) sb.toString() else sb.toString().substring(8, 24)
-
-        } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
+    /*10字节串转16进制字节组*/
+    fun eStrToHexBytes(string: String): ByteArray = string.chunked(2)
+        .map {
+            it.toByte(16)
         }
-        return null
+        .toByteArray()
+    /*10字节串转16进制字符串*/
+    fun eStrToHexString(str:String): String =str.chunked(2).map {
+        String.format("%02d", it.toInt().toString(16).toInt())
+    }.joinToString("")
+
+    /*16进制字符串转浮点*/
+    fun eHexStringToFloat(str0: String): Float {
+        val binaryString = java.lang.Long.toBinaryString(str0.toLong(16))
+// float是32位，将这个binaryString左边补0补足32位，如果是Double补足64位。
+        val repeat = 32 - binaryString.length
+        val stringValue: String = if (repeat <= 0) {
+            binaryString
+        } else {
+            val buf = CharArray(repeat)
+            for (i in buf.indices) {
+                buf[i] = '0'
+            }
+            String(buf) + binaryString
+        }
+        // 首位是符号部分，占1位。
+// 如果符号位是0则代表正数，1代表负数
+        val sign = if (stringValue[0] == '0') 1 else -1
+        // 第2到9位是指数部分，float占8位，double占11位。
+        val exponentStr = stringValue.substring(1, 9)
+        // 将这个二进制字符串转成整数，由于指数部分加了偏移量（float偏移量是127，double是1023）
+// 所以实际值要减去127
+        val exponent = exponentStr.toInt(2) - 127
+        // 最后的23位是尾数部分，由于规格化数，小数点左边隐含一个1，现在加上
+        val mantissaStr = "1" + stringValue.substring(9, 32)
+        // 这里用double，尽量保持精度，最好用BigDecimal，这里只是方便计算所以用double
+        var mantissa = 0.0
+        for (i in 0 until mantissaStr.length) {
+            val intValue = Character.getNumericValue(mantissaStr[i])
+            // 计算小数部分，具体请查阅二进制小数转10进制数相关资料
+            mantissa += intValue * Math.pow(2.0, -i.toDouble())
+        }
+        // 根据IEEE 754 标准计算：符号位 * 2的指数次方 * 尾数部分
+        return (sign * Math.pow(2.0, exponent.toDouble()) * mantissa).toFloat()
     }
 
-    //base64加密
-    open fun eBase64Encode(str: String, charset: Charset = Charsets.UTF_8, flags: Int = Base64.DEFAULT) = eBase64Encode(str.toByteArray(charset), flags)
-    open fun eBase64Encode(bytes: ByteArray, flags: Int = Base64.DEFAULT) = Base64.encodeToString(bytes, flags)
-
-    //base64解密
-    open fun eBase64Decode(strBase64: String, charset: Charset = Charsets.UTF_8, flags: Int = Base64.DEFAULT) = eBase64Decode(strBase64.toByteArray(charset), flags)
-    open fun eBase64Decode(bytes: ByteArray, flags: Int = Base64.DEFAULT) = String(Base64.decode(bytes, flags))
-
+    /*字符串转GBK内码*/
+    private fun eStrToGBKHex(str:String) =str.map {
+        URLEncoder.encode(it.toString(), "GBK").replace("%","")
+    }.joinToString("")
     //字符串截取
     open fun eInterception(str: String, lenght: Int = 1024, symbol: String = ","): String {
         var j = 0
@@ -2919,7 +3488,7 @@ open class eString internal constructor() {
  */
 open class ePermissions internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { ePermissions() }
+        val eIPermissions by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { ePermissions() }
     }
 
     //系统安装权限
@@ -3053,9 +3622,8 @@ open class eShell internal constructor() {
         val remount = "mount -o remount,rw rootfs "
         val install = "pm install -r "
         val kill = "am force-stop "
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eShell() }
+        val eIShell by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eShell() }
     }
-
 
     //判断是否有Root权限
     open fun eHaveRoot(): Boolean {
@@ -3066,7 +3634,6 @@ open class eShell internal constructor() {
         }
         return true
     }
-
 
     //执行命令并且输出结果
     open fun eExecShell(shell: String): String {
@@ -3191,6 +3758,10 @@ open class eShell internal constructor() {
     open fun eAppReboot(application: Application, clazz: Class<*>) {
         eExecShell("am force-stop ${application.packageName} && am start -n ${application.packageName}/${clazz.name}")
     }
+//Shell APP关闭
+    open fun eAppClose(application: Application) {
+        eExecShell("am force-stop ${application.packageName}")
+    }
 }
 
 /**
@@ -3198,9 +3769,8 @@ open class eShell internal constructor() {
  */
 open class eReflection internal constructor() {
     companion object {
-        val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eReflection() }
+        val eIReflection by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eReflection() }
     }
-
 
     ////获取 加载类
     open fun eGetClass(className: String) = Class.forName(className)

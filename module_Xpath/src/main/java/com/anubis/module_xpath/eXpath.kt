@@ -32,7 +32,7 @@ import javax.xml.xpath.*
  */
 open class eXpath  internal constructor(){
      companion object {
-        val eInit by lazy (LazyThreadSafetyMode.SYNCHRONIZED){ eXpath() }
+        val eIXpath by lazy (LazyThreadSafetyMode.SYNCHRONIZED){ eXpath() }
         var xpath: XPath = XPathFactory.newInstance().newXPath()
         var filePath: String? = "$eGetExternalStorageDirectory/html.html"
         var httpUrl: String? = null

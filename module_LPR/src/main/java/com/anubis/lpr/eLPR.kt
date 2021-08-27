@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.os.Message
 import android.util.Log
 import com.anubis.kt_extends.eBitmap
+import com.anubis.kt_extends.eBitmap.Companion.eIBitmap
 import com.anubis.kt_extends.eLogE
 import com.anubis.lpr.scanner.Scanner
 import com.anubis.lpr.utils.DeepAssetUtil
@@ -36,7 +37,7 @@ import java.io.File
  *Layout Id :  'LoayoutName'_'Widget'_'FunctionName'
  *Class Id :  'LoayoutName'_'Widget'+'FunctionName'
  *Router :  /'Module'/'Function'
- *说明：
+ *说明：车牌号识别
  */
 open class eLPR internal constructor() {
 
@@ -90,7 +91,7 @@ open class eLPR internal constructor() {
             } ?: eLogE("识别器初始化错误")
             mContext.onUiThread { resultBlock(plateResult) }
             if (isCleanBitmap)
-                eBitmap.eInit.eGcBitmap(bitmap)
+                eIBitmap.eGcBitmap(bitmap)
         }
 
 

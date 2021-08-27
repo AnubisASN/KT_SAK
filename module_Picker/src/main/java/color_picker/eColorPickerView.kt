@@ -21,6 +21,7 @@ import color_picker.renderer.ColorWheelRenderer
 import color_picker.slider.eAlphaSlider
 import color_picker.slider.eLightnessSlider
 import com.anubis.kt_extends.eColor
+import com.anubis.kt_extends.eColor.Companion.eIColor
 import com.anubis.module_picker.R
 import java.util.*
 import kotlin.math.max
@@ -295,9 +296,9 @@ class eColorPickerView : View {
         get() {
             var color = 0
             if (currentColorCircle != null) {
-                color = eColor.eInit.eGetColorAtLightness(currentColorCircle!!.color, lightness)
+                color = eIColor.eGetColorAtLightness(currentColorCircle!!.color, lightness)
             }
-            return eColor.eInit.eGetAdjustAlpha(alphaS, color)
+            return eIColor.eGetAdjustAlpha(alphaS, color)
         }
         set(previewNumber) {
             if (allColors == null || allColors!!.size < previewNumber) {
@@ -322,7 +323,7 @@ class eColorPickerView : View {
     fun setInitialColor(color: Int, updateText: Boolean) {
         val hsv = FloatArray(3)
         Color.colorToHSV(color, hsv)
-        alphaS = eColor.eInit.eGetAlphaPercent(color)
+        alphaS = eIColor.eGetAlphaPercent(color)
         lightness = hsv[2]
         allColors!![colorSelection] = color
         initialColor = color
@@ -337,9 +338,9 @@ class eColorPickerView : View {
     fun setLightness(lightness: Float) {
         val lastSelectedColor = selectedColor
         this.lightness = lightness
-        initialColor = Color.HSVToColor(eColor.eInit.eGetAlphaValueAsInt(alphaS), currentColorCircle?.getHsvWithLightness(lightness))
+        initialColor = Color.HSVToColor(eIColor.eGetAlphaValueAsInt(alphaS), currentColorCircle?.getHsvWithLightness(lightness))
         if (colorEdit != null) {
-            colorEdit!!.setText(eColor.eInit.eGetColorToHexString(initialColor!!, alphaSlider != null))
+            colorEdit!!.setText(eIColor.eGetColorToHexString(initialColor!!, alphaSlider != null))
         }
         if (alphaSlider != null && initialColor != null) {
             alphaSlider?.setColor(initialColor!!)
@@ -358,9 +359,9 @@ class eColorPickerView : View {
     fun setAlphaValue(alpha: Float) {
         val lastSelectedColor = selectedColor
         this.alphaS = alpha
-        initialColor = Color.HSVToColor(eColor.eInit.eGetAlphaValueAsInt(this.alphaS), currentColorCircle!!.getHsvWithLightness(lightness))
+        initialColor = Color.HSVToColor(eIColor.eGetAlphaValueAsInt(this.alphaS), currentColorCircle!!.getHsvWithLightness(lightness))
         if (colorEdit != null) {
-            colorEdit?.setText(eColor.eInit.eGetColorToHexString(initialColor!!, alphaSlider != null))
+            colorEdit?.setText(eIColor.eGetColorToHexString(initialColor!!, alphaSlider != null))
         }
         if (lightnessSlider != null && initialColor != null) {
             lightnessSlider?.setColor(initialColor!!)
@@ -488,7 +489,7 @@ class eColorPickerView : View {
         if (colorEdit == null) {
             return
         }
-        colorEdit!!.setText(eColor.eInit.eGetColorToHexString(argb, alphaSlider != null))
+        colorEdit!!.setText(eIColor.eGetColorToHexString(argb, alphaSlider != null))
     }
 
     private fun setColorToSliders(selectedColor: Int) {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.anubis.module_voip">
+
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTI NGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STO RAGE" />
+    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAG E" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STA TE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+<!--    <application-->
+<!--        android:name=".testAPP"-->
+<!--        android:allowBackup="true"-->
+<!--        android:icon="@drawable/iphone"-->
+<!--        android:label="SAK-LPR"-->
+<!--        android:supportsRtl="true"-->
+<!--        android:theme="@style/Theme.AppCompat">-->
+    <application>
+<!--        <activity android:name=".TestMainActivity">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+        <activity android:name=".PhoneActivity" />
+
+        <receiver android:name="com.yzxtcp.tools.tcp.receiver.AlarmReceiver" />
+        <receiver android:name="com.yzxtcp.tools.tcp.receiver.MsgBackReceiver" />
+        <receiver android:name="com.yzx.tools.RtppReceiver" />
+    </application>
+
+</manifest>
