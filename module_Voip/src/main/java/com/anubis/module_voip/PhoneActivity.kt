@@ -10,11 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eShell.Companion.eIShell
-import com.anubis.module_eventbus.eEventBus
-import com.anubis.module_eventbus.observe.eObserveEvent
-import com.anubis.module_eventbus.post.ePostSpan
-import com.anubis.module_eventbus.post.eRemoveStickyEvent
-import com.anubis.module_voip.testAPP.Companion.mAPP
 import com.anubis.module_voip.testAPP.Companion.mVoip
 import com.yzx.api.UCSCall
 import com.yzx.api.UCSCameraType
@@ -35,9 +30,9 @@ open class PhoneActivity : AppCompatActivity() {
             mVoip.eConnect(token?.ifBlank { "null" }.eLog("token")){
                 if (it){
                     eLog("登录成功:$token")
-                    eObserveEvent<String>(isSticky = true) {
-                        mVoip?.eCall(it)
-                    }
+//                    eObserveEvent<String>(isSticky = true) {
+//                        mVoip?.eCall(it)
+//                    }
                 }else{
                     tvHint.post { tvHint.text= "登录失败-Token错误"}
                     tvHint.postDelayed( { ibtHang.callOnClick() },1500)
@@ -105,7 +100,7 @@ open class PhoneActivity : AppCompatActivity() {
                 if (p0 == 11) {
                     val tIntent = Intent()
                     tIntent.putExtra("msg", "电话开门成功")
-                    ePostSpan("IPHONE_OPEN", tIntent)
+//                    ePostSpan("IPHONE_OPEN", tIntent)
                 }
             }
 
@@ -193,8 +188,8 @@ open class PhoneActivity : AppCompatActivity() {
 
     override fun onDestroy() {
       mVoip.eDestroy()
-        eRemoveStickyEvent("")
-        ePostSpan("IPHONE_CLOSE")
+//        eRemoveStickyEvent("")
+//        ePostSpan("IPHONE_CLOSE")
         eIShell.eAppClose(application)
         super.onDestroy()
     }

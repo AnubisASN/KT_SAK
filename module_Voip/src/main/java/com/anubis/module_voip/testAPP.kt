@@ -1,7 +1,5 @@
 package com.anubis.module_voip
 import android.app.Application
-import com.anubis.module_eventbus.eEventBus
-import kotlin.system.exitProcess
 
 /**
  * Author  ： AnubisASN   on 19-6-29 下午3:14.
@@ -29,6 +27,6 @@ open class testAPP : Application() {
         mAPP = this
         super.onCreate()
         mVoip= eVoip.eInit(this)
-        eEventBus.eInit(this)
+//        eEventBus.eInit(this)
     }
 }

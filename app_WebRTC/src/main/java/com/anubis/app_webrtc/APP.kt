@@ -10,9 +10,6 @@ import com.anubis.kt_extends.eLogE
 import com.anubis.kt_extends.eRegex
 import com.anubis.kt_extends.eRegex.Companion.eIRegex
 import com.anubis.kt_extends.eShowTip
-import com.anubis.module_eventbus.eEventBus
-import com.anubis.module_eventbus.observe.eObserveEvent
-import com.anubis.module_eventbus.post.ePostEvent
 import com.anubis.module_voip.PhoneActivity
 import com.anubis.module_voip.testAPP
 import java.io.File
@@ -48,21 +45,21 @@ class APP : testAPP() {
     override fun onCreate() {
         super.onCreate()
         mInit = this
-        eEventBus.eInit(this)
-       eObserveEvent(this,"", IntentFilter("CALL")){ it, intent->
-           if (eIRegex.eGetNumber(it).toString().length==it.length){
-               ePostEvent(it,timeMillis = 2000)
-               with(Intent(this, PhoneActivity::class.java)){
-                   flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                   try {
-                       putExtra("TOKEN",File("/sdcard/img/info/token").readText())
-                   }catch (e:Exception){e.eLogE("readTextToken")}
-                  android.os.Handler().postDelayed({ startActivity(this)},1000)
-               }
-           }
-           else
-               eShowTip( "非手机号")
-       }
+//        eEventBus.eInit(this)
+//       eObserveEvent(this,"", IntentFilter("CALL")){ it, intent->
+//           if (eIRegex.eGetNumber(it).toString().length==it.length){
+//               ePostEvent(it,timeMillis = 2000)
+//               with(Intent(this, PhoneActivity::class.java)){
+//                   flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                   try {
+//                       putExtra("TOKEN",File("/sdcard/img/info/token").readText())
+//                   }catch (e:Exception){e.eLogE("readTextToken")}
+//                  android.os.Handler().postDelayed({ startActivity(this)},1000)
+//               }
+//           }
+//           else
+//               eShowTip( "非手机号")
+//       }
     }
 
 
