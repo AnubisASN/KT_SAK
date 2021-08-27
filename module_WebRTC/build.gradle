@@ -40,5 +40,5 @@ android {
 dependencies {
     api files('libs/star_rtc_sdk.jar')
     api project(':module_Extends')
-    api project (':module_EventBus')
+//    api project (':module_EventBus')
 }

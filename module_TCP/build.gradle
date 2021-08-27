@@ -27,6 +27,9 @@ android {
         rename('classes.jar', 'TCP.2.0.3.jar') //自定义jar包的名字
     }
     makeJar.dependsOn(build)
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {

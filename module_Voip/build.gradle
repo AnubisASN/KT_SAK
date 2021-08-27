@@ -29,9 +29,13 @@ android {
     packagingOptions {
         exclude 'META-INF/proguard/coroutines.pro'
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
-    api project(':module_EventBus')
+//    api project(':module_EventBus')
+    api project(':module_Extends')
 }

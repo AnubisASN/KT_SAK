@@ -7,7 +7,6 @@ import com.anubis.kt_extends.eApp.Companion.eIApp
 import com.anubis.kt_extends.eLog
 import com.anubis.kt_extends.eSetSystemSharedPreferences
 import com.anubis.kt_extends.eShowTip
-import com.anubis.module_eventbus.post.ePostSpan
 import com.anubis.module_webRTC.demo.MLOC
 import com.anubis.module_webRTC.demo.MLOC.saveMaxTima
 import com.anubis.module_webRTC.demo.MLOC.saveServerUrl

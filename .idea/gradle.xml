@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../Gradle/gradle-4.6" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app_Coroutine" />
             <option value="$PROJECT_DIR$/app_Discern" />
+            <option value="$PROJECT_DIR$/app_Extend" />
             <option value="$PROJECT_DIR$/app_FloatBall" />
             <option value="$PROJECT_DIR$/app_HServer" />
             <option value="$PROJECT_DIR$/app_Map" />
@@ -26,6 +27,7 @@
             <option value="$PROJECT_DIR$/module_CardOTG" />
             <option value="$PROJECT_DIR$/module_Detection" />
             <option value="$PROJECT_DIR$/module_Dialog" />
+            <option value="$PROJECT_DIR$/module_EventBus" />
             <option value="$PROJECT_DIR$/module_Extends" />
             <option value="$PROJECT_DIR$/module_FTP" />
             <option value="$PROJECT_DIR$/module_FaceLandmark" />
@@ -34,7 +36,6 @@
             <option value="$PROJECT_DIR$/module_HWLive" />
             <option value="$PROJECT_DIR$/module_HttpServer" />
             <option value="$PROJECT_DIR$/module_LPR" />
-            <option value="$PROJECT_DIR$/module_Map" />
             <option value="$PROJECT_DIR$/module_Navigate" />
             <option value="$PROJECT_DIR$/module_Office" />
             <option value="$PROJECT_DIR$/module_OpenCV" />
@@ -45,6 +46,7 @@
             <option value="$PROJECT_DIR$/module_TCP" />
             <option value="$PROJECT_DIR$/module_TTS" />
             <option value="$PROJECT_DIR$/module_TTSE" />
+            <option value="$PROJECT_DIR$/module_Talkback" />
             <option value="$PROJECT_DIR$/module_TensorFlow" />
             <option value="$PROJECT_DIR$/module_TextRecognition" />
             <option value="$PROJECT_DIR$/module_UDevice" />
@@ -52,6 +54,7 @@
             <option value="$PROJECT_DIR$/module_VNC" />
             <option value="$PROJECT_DIR$/module_VideoChat" />
             <option value="$PROJECT_DIR$/module_View" />
+            <option value="$PROJECT_DIR$/module_Voip" />
             <option value="$PROJECT_DIR$/module_WebRTC" />
             <option value="$PROJECT_DIR$/module_WebSocket" />
             <option value="$PROJECT_DIR$/module_WiFi" />
@@ -59,7 +62,6 @@
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
-        <option name="testRunner" value="PLATFORM" />
       </GradleProjectSettings>
     </option>
   </component>
