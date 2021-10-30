@@ -7,10 +7,15 @@ import android.graphics.Bitmap
 import android.hardware.Camera
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.anubis.kt_extends.eDevice
+import com.anubis.kt_extends.eDevice.Companion.eIDevice
 import com.anubis.module_qrcode.R
 import com.anubis.module_qrcode.eQRCodeScan
 import com.anubis.module_qrcode.eQRCodeScan.AnalyzeCallback
+import org.jetbrains.anko.onClick
 
 /**
  * Initial the camera
@@ -22,7 +27,8 @@ open class eDefaultCaptureActivity : AppCompatActivity() {
     protected var eLayoutId: Int?=null
     protected  var eLayoutFragmentID: Int?=null
     protected var eFragmentId: Int?=null
-
+    protected var eFlashId:  View?=null
+    protected var flashStatus: Boolean = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(eLayoutId?: R.layout.camera)
@@ -41,6 +47,15 @@ open class eDefaultCaptureActivity : AppCompatActivity() {
             } else {
                 Log.e("TAG", "callBack: ", e)
             }
+        }
+
+        (eFlashId?:findViewById(R.id.camera_ivFlash)).onClick {
+            eCodeUtils.isLightEnable(flashStatus)
+            if (flashStatus)
+                it?.setBackgroundResource(R.drawable.flash1)
+            else
+                it?.setBackgroundResource(R.drawable.flash0)
+            flashStatus=!flashStatus
         }
         eExtend()
     }

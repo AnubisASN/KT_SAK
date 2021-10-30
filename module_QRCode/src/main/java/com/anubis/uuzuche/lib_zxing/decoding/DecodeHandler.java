@@ -85,6 +85,8 @@ final class DecodeHandler extends Handler {
             rawResult = multiFormatReader.decodeWithState(bitmap);
         } catch (ReaderException re) {
             // continue
+        }catch (IllegalArgumentException e){
+            Log.e("TAG","请在application 中加入 name=ZApplication");
         } finally {
             multiFormatReader.reset();
         }

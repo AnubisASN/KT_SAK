@@ -27,6 +27,7 @@ import com.anubis.kt_extends.eLog
  *Router :  /'Module'/'Function'
  *说明：
  */
+@SuppressLint("StaticFieldLeak")
 object eFloatWindow {
     private var mRootView: View? = null
     private var eParams: WindowManager.LayoutParams? = null
@@ -60,7 +61,7 @@ object eFloatWindow {
         touchViewId?.let {
             (mRootView!!.findViewById(it) as View).setOnTouchListener { v, event ->
                 eParams!!.x = event.rawX.toInt()
-                eParams!!.y = event.rawY.toInt() - v.height
+                eParams!!.y = event.rawY.toInt() - v.height*3/2
                 eXY = Pair(eParams!!.x, eParams!!.y)
                 eUpdateView()
                 false

@@ -57,11 +57,11 @@ private class Demo {
                 eLogI("TCP接收-address:$address  code:$code  msg:$msg")
                 when (code) {
                     //连接成功
-                    mTCP.HANDLER_CONNECT_CODE -> {
+                    eTCP.HANDLER_CONNECT_CODE -> {
 
                     }
                     //接收到消息
-                    mTCP.HANDLER_MSG_CODE -> eLog("$msg-$address-$hashMap")
+                    eTCP.HANDLER_MSG_CODE -> eLog("$msg-$address-$hashMap")
                     else -> {
                     } // heartbeatJob?.cancel()  关闭心跳
                 }

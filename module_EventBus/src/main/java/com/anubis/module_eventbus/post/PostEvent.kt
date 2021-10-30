@@ -41,7 +41,7 @@ inline fun <reified T> ePostEvent(event: T, scope: Any? = null, timeMillis: Long
 /**跨进程发送
  * @param  value: Any，消息内容
 * */
-fun  ePostSpan( value: Any,tIntent:Intent?=null,intent:Intent=Intent("eEventBus")) {
+  fun  ePostSpan( value: Any,tIntent:Intent?=null,intent:Intent=Intent("eEventBus")) {
     tIntent?.let { intent.putExtras(it) }
     when (value) {
         is String -> intent.putExtra("eEventBus", value)

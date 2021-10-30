@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/ivHome"
-        android:layout_width="@dimen/dp_15"
-        android:layout_height="@dimen/dp_15"
+        android:layout_width="@dimen/dp_25"
+        android:layout_height="@dimen/dp_25"
         android:src="@drawable/logo"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"

@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.anubis.kt_extends.EExtendsKt;
-import com.anubis.module_eventbus.post.PostEventKt;
 import com.anubis.module_webRTC.R;
 import com.anubis.module_webRTC.database.CoreDB;
 import com.anubis.module_webRTC.database.HistoryBean;

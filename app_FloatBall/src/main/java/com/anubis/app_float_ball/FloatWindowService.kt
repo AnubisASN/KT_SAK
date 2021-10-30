@@ -2,6 +2,7 @@ package com.anubis.app_float_ball
 
 import android.app.Service
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
@@ -9,11 +10,13 @@ import android.os.IBinder
 import android.provider.MediaStore
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import com.anubis.kt_extends.*
 import com.anubis.kt_extends.eBReceiver.Companion.eIBReceiver
+import com.anubis.kt_extends.eBitmap.Companion.eIBitmap
 import com.anubis.kt_extends.eFile.Companion.eIFile
 import com.anubis.kt_extends.eJson.Companion.eIJson
 import com.anubis.kt_extends.eTime.Companion.eITime
@@ -22,8 +25,6 @@ import com.anubis.module_dialog.eForegroundService
 import com.anubis.module_extends.eRvAdapter
 import com.bumptech.glide.Glide
 import com.lzy.okgo.OkGo
-import com.lzy.okgo.callback.FileCallback
-import com.lzy.okgo.model.Response
 import kotlinx.android.synthetic.main.item.view.*
 import kotlinx.android.synthetic.main.layout_float_window.view.*
 import kotlinx.coroutines.GlobalScope
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.runOnUiThread
 import java.io.*
+import java.lang.ref.SoftReference
 import java.net.*
 
 
@@ -67,23 +69,30 @@ class FloatWindowService : eForegroundService() {
                 }, layoutManagerBlock = {
                     GridLayoutManager(it, 3)
                 }) { view: View, resultDataItem: resultDataItem, i: Int ->
-                    OkGo.get<File>("https://image.dbbqb.com/${resultDataItem.path}")
-                            .execute(object : FileCallback(imgPath, eITime.eGetCuoTime() + ".jpg") {
-                                override fun onSuccess(response: Response<File>?) {
-                                    response?.let {
-                                        eIBReceiver.eSendPhotoBroad(context,it.body())
-                                        eShowTip("下载完成")
-                                        etInput.setText("")
-                                        cl.visibility = View.GONE
-                                        eFloatWindow.eSetFlaView(false)
-                                    }
-                                }
-
-                                override fun onError(response: Response<File>?) {
-                                    super.onError(response)
-                                    eShowTip("网络异常，稍后再试")
-                                }
-                            })
+val softBitmap=SoftReference(eIBitmap.eDrawableToBitmap(view.iv.drawable))
+                    eIBitmap.eBitmapToFile(softBitmap.get(),imgPath+eITime.eGetCuoTime() + ".jpg")
+                    eIBReceiver.eSendPhotoBroad(context,File(imgPath+eITime.eGetCuoTime() + ".jpg"))
+                    eShowTip("成功，可发送")
+                    etInput.setText("")
+                    cl.visibility = View.GONE
+                    eFloatWindow.eSetFlaView(false)
+//                    OkGo.get<File>("https://image.dbbqb.com/${resultDataItem.path}")
+//                            .execute(object : FileCallback(imgPath, eITime.eGetCuoTime() + ".jpg") {
+//                                override fun onSuccess(response: Response<File>?) {
+//                                    response?.let {
+//                                        eIBReceiver.eSendPhotoBroad(context,it.body())
+//                                        eShowTip("下载完成")
+//                                        etInput.setText("")
+//                                        cl.visibility = View.GONE
+//                                        eFloatWindow.eSetFlaView(false)
+//                                    }
+//                                }
+//
+//                                override fun onError(response: Response<File>?) {
+//                                    super.onError(response)
+//                                    eShowTip("网络异常，稍后再试")
+//                                }
+//                            })
                 }
                 ivSearch.onClick {
                     rv.visibility=View.VISIBLE

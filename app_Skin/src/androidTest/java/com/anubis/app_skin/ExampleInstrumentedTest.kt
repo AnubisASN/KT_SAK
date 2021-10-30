@@ -1,7 +1,7 @@
 package com.anubis.app_skin
 
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.anubis.kt_extends.eEncryption.Companion.eIEncryption
+import com.anubis.kt_extends.eIsBaseType
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,8 +17,6 @@ import org.junit.Assert.*
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.anubis.app_skin.test", appContext.packageName)
+
     }
 }

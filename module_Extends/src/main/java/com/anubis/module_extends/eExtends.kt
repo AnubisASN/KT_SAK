@@ -16,6 +16,7 @@ import android.content.res.AssetManager
 import android.database.Cursor
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.hardware.Camera
 import android.media.*
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -509,7 +510,7 @@ class eJson private constructor() {
     }
 
     //实例类解析
-    fun <T> eGetJsonFrom(jsonStr: String, clazz: Class<T>) = Gson().fromJson<T>(jsonStr, clazz)
+    fun <T> eGetJsonFrom(jsonStr: String, clazz: Class<T>) = Gson().fromJson(jsonStr, clazz)
 
     //实例类生成Json
     fun eGetToJson(any: Any) = GsonBuilder().disableHtmlEscaping().create().toJson(any)
@@ -2025,17 +2026,55 @@ open class eDevice internal constructor() {
      * @param patter;patter[0]表示静止的时间，patter[1]代表的是震动的时间 类推
      * @param repeat;0循环 -1不循环
      */
-    fun Context.eVibrator(
+    fun eVibrator(
+        context: Context,
             isRepeat: Boolean = false,
             patter: LongArray = longArrayOf(0, 1000)
     ): Vibrator {
-        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         vibrator.vibrate(patter, if (isRepeat) 0 else -1)
         return vibrator
     }
 
-    fun Vibrator.eClean() {
-        cancel()
+    fun eClean(vibrator:Vibrator) {
+        vibrator.cancel()
+    }
+    /*闪光灯*/
+    fun eFlash(
+        isStatus: Boolean = true,
+        camera: Any? = Camera.open(),
+        statusBlock: ((Boolean, Boolean) -> Unit)? = null
+    ) {
+        when (camera) {
+//            is androidx.camera.core.Camera -> try {
+//                val cameraInfo = camera.cameraInfo
+//                val cameraControl = camera.cameraControl
+//                cameraControl.enableTorch(isStatus)
+//                statusBlock?.invoke(
+//                    true,
+//                    cameraInfo.torchState.value.eLog("torchState") == TorchState.ON
+//                )
+//            } catch (e: Exception) {
+//                statusBlock?.invoke(false, false)
+//                e.eLogE("openFlash")
+//            }
+            is Camera ->
+                try {
+                    val mPara = camera.parameters
+                    mPara.flashMode =
+                        if (isStatus) Camera.Parameters.FLASH_MODE_TORCH else Camera.Parameters.FLASH_MODE_OFF
+                    camera.parameters = mPara
+                    statusBlock?.invoke(
+                        true,
+                        camera.parameters.flashMode == Camera.Parameters.FLASH_MODE_TORCH
+                    )
+                } catch (e: Exception) {
+                    statusBlock?.invoke(false, false)
+                    e.eLogE("openFlash")
+                }
+            else->statusBlock?.invoke(false, false)
+        }
+
     }
 }
 
@@ -3577,7 +3616,7 @@ open class ePermissions internal constructor() {
     }
 
     //显示授权设置
-    open fun eSetOnRequestPermissionsResult(
+      open fun eSetOnRequestPermissionsResult(
             activity: Activity,
             requestCode: Int,
             permissions: Array<String>,

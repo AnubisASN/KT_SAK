@@ -1,8 +1,13 @@
 package com.anubis.SwissArmyKnife
 
+import android.app.Activity
+import android.util.Base64
 import com.anubis.kt_extends.eEncryption
 import com.anubis.kt_extends.eEncryption.Companion.eIEncryption
+import com.anubis.kt_extends.eJson
 import com.anubis.kt_extends.eString
+import com.google.gson.Gson
+import com.tencent.bugly.crashreport.common.info.b.t
 import org.junit.Test
 import java.security.interfaces.RSAPublicKey
 import java.util.*
@@ -36,8 +41,10 @@ public class Test {
 
     @Test
     fun testMSG() {
-
-      print(  eIEncryption.eEncrypt("111","1234567891234567"))
+        val ss=   Base64.encodeToString("sss123S".toByteArray(Charsets.UTF_8), Base64.DEFAULT)
+//       eIEncryption.eBase64Decode("SSS123")
+        println("加密："+ss)
+//        println("解密："+eIEncryption.eBase64Decode(ss))
     }
 
     @Test
@@ -51,5 +58,6 @@ public class Test {
         val serverSocket=ServerSocket(3335)
         println("ip:${serverSocket.inetAddress.hostAddress}")
     }
+
 }
 

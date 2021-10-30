@@ -1,3 +1,4 @@
+
 package com.anubis.module_tcp
 
 import android.os.Handler
@@ -30,6 +31,24 @@ import java.util.HashMap
 open class eTCP internal constructor() {
 
     companion object {
+        /*客户端*/
+        val HANDLER_FAILURE_CODE = -1  //连接失败
+        val HANDLER_ERROR_CODE = -2   //连接错误
+        val HANDLER_CLOSE_CODE = 0     //连接关闭
+        val HANDLER_CONNECT_CODE = 1  //连接成功
+        val HANDLER_MSG_CODE = 2    //接收消息
+        val HANDLER_RECEIV_SUCC_CODE = 4    //接收线程启动成功
+        val HANDLER_RECEIV_ERROR_CODE = -4    //接收线程启动失败
+        /*服务端*/
+        val SHANDLER_FAILURE_CODE = -11  //创建失败
+        val SHANDLER_ERROR_CODE = -22   //连接失败
+        val SHANDLER_CLOSE_CODE = -33     //连接关闭
+        val SHANDLER_CREATE_CLOSE_CODE = -44  //服务关闭
+        val SHANDLER_SUCCEED_CODE = 33     //创建成功
+        val SHANDLER_CONNECT_CODE = 11  //连接成功
+        val SHANDLER_MSG_CODE = 22    //接收消息
+        val SHANDLER_RECEIV_SUCC_CODE = 44    //接收线程启动成功
+        val SHANDLER_RECEIV_ERROR_CODE = -44    //接收线程启动失败
         private lateinit var mHandler: Handler
         private val eInit by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { eTCP() }
         fun eInit(handler: Handler): eTCP {
@@ -39,15 +58,8 @@ open class eTCP internal constructor() {
     }
 
     /**
-     *        TCP客户端-----------------------------------------------------------
+     *TCP客户端-----------------------------------------------------------
      */
-    val HANDLER_FAILURE_CODE = -1  //连接失败
-    val HANDLER_ERROR_CODE = -2   //连接错误
-    val HANDLER_CLOSE_CODE = 0     //连接关闭
-    val HANDLER_CONNECT_CODE = 1  //连接成功
-    val HANDLER_MSG_CODE = 2    //接收消息
-    val HANDLER_RECEIV_SUCC_CODE = 4    //接收线程启动成功
-    val HANDLER_RECEIV_ERROR_CODE = -4    //接收线程启动失败
     //客户端多线程管理器
     /*H<K,V>  K=null，V=null  ：H.containsKey ==false 完全抛弃，无任务
     * H<K,V>  K，V=null  ：H.containsKey ==true 重连
@@ -131,15 +143,6 @@ open class eTCP internal constructor() {
     /**
      *  TCP服务端----------------------------------------------------------------------------------------------------------
      */
-    val SHANDLER_FAILURE_CODE = -11  //创建失败
-    val SHANDLER_ERROR_CODE = -22   //连接失败
-    val SHANDLER_CLOSE_CODE = -33     //连接关闭
-    val SHANDLER_CREATE_CLOSE_CODE = -44  //服务关闭
-    val SHANDLER_SUCCEED_CODE = 33     //创建成功
-    val SHANDLER_CONNECT_CODE = 11  //连接成功
-    val SHANDLER_MSG_CODE = 22    //接收消息
-    val SHANDLER_RECEIV_SUCC_CODE = 44    //接收线程启动成功
-    val SHANDLER_RECEIV_ERROR_CODE = -44    //接收线程启动失败
 
     //   服务端多线程管理器
 //服务端多线程管理器
@@ -264,7 +267,7 @@ open class eTCP internal constructor() {
      * @param msgBlock: Unit；消息回调
      * @return:Boolean
      */
-    open fun eSocketReceive(
+     open fun eSocketReceive(
             ip: String,
             socket: Socket,
             hashMap: HashMap<String, Socket?>,
@@ -274,12 +277,12 @@ open class eTCP internal constructor() {
             reconnectionBlock: (() -> Unit)? = null,
             msgBlock: (address: String, code: Int, msg: String, HashMap<String, Socket?>) -> Unit
     ): Boolean {
-        var port:Int=0
+        var port=0
         return try {
             eLog("启动接收协程")
             val `in` = socket.getInputStream()
             val buffer = ByteArray(bufferSize)
-              port = socket.port
+            port = socket.port
             eLogI("Socket Port :$port")
             hashMap["$ip:$port"] = socket
             async {
