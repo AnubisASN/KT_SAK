@@ -3358,7 +3358,7 @@ open class eString internal constructor() {
         val Str = str.trim()
         val Start: Int = when (start) {
             is Int -> start
-            is String -> str.indexOf(start) + 1
+            is String -> str.indexOf(start) + start.length
             else -> {
                 0
             }
