@@ -1,0 +1,11 @@
+include ':app_Picker'
+
+
+include':module_Extends'
+project(':module_Extends').projectDir = new File(rootProject.projectDir, 'modules/module_Extends')
+
+include':module_Picker'
+project(':module_Picker').projectDir = new File(rootProject.projectDir, 'modules/module_Picker')
+
+include':module_Dialog'
+project(':module_Dialog').projectDir = new File(rootProject.projectDir, 'modules/module_Dialog')

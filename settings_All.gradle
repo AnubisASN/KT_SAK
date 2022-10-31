@@ -1,0 +1,121 @@
+include ':app_Extend', ':app_WebRTC', ':app_Picker', ':app_Map', ':app_FloatBall', ':app_Coroutine', ':app_HServer',':app_Skin',  ':app_Discern'
+
+include':module_Extends'
+project(':module_Extends').projectDir = new File(rootProject.projectDir, 'modules/module_Extends')
+
+include':module_Talkback'
+project(':module_Talkback').projectDir = new File(rootProject.projectDir, 'modules/module_Talkback')
+
+include':module_PortMSG'
+project(':module_PortMSG').projectDir = new File(rootProject.projectDir, 'modules/module_PortMSG')
+
+include':module_TTS'
+project(':module_TTS').projectDir = new File(rootProject.projectDir, 'modules/module_TTS')
+
+include':module_ArcFaceFT'
+project(':module_ArcFaceFT').projectDir = new File(rootProject.projectDir, 'modules/module_ArcFaceFT')
+
+include':module_ArcFace'
+project(':module_ArcFace').projectDir = new File(rootProject.projectDir, 'modules/module_ArcFace')
+
+include':module_Office'
+project(':module_Office').projectDir = new File(rootProject.projectDir, 'modules/module_Office')
+
+include':module_GreenDao'
+project(':module_GreenDao').projectDir = new File(rootProject.projectDir, 'modules/module_GreenDao')
+
+include':module_WiFi'
+project(':module_WiFi').projectDir = new File(rootProject.projectDir, 'modules/module_WiFi')
+
+include':module_VNC'
+project(':module_VNC').projectDir = new File(rootProject.projectDir, 'modules/module_VNC')
+
+include':module_Utils'
+project(':module_Utils').projectDir = new File(rootProject.projectDir, 'modules/module_Utils')
+
+include':module_ASRW'
+project(':module_ASRW').projectDir = new File(rootProject.projectDir, 'modules/module_ASRW')
+
+include':module_VideoChat'
+project(':module_VideoChat').projectDir = new File(rootProject.projectDir, 'modules/module_VideoChat')
+
+include':module_QRCode'
+project(':module_QRCode').projectDir = new File(rootProject.projectDir, 'modules/module_QRCode')
+
+include':module_FTP'
+project(':module_FTP').projectDir = new File(rootProject.projectDir, 'modules/module_FTP')
+
+include':module_CardOTG'
+project(':module_CardOTG').projectDir = new File(rootProject.projectDir, 'modules/module_CardOTG')
+
+include':module_Picker'
+project(':module_Picker').projectDir = new File(rootProject.projectDir, 'modules/module_Picker')
+
+include':module_HttpServer'
+project(':module_HttpServer').projectDir = new File(rootProject.projectDir, 'modules/module_HttpServer')
+
+include':module_Navigate'
+project(':module_Navigate').projectDir = new File(rootProject.projectDir, 'modules/module_Navigate')
+
+include':module_UDevice'
+project(':module_UDevice').projectDir = new File(rootProject.projectDir, 'modules/module_UDevice')
+
+include':module_TCP'
+project(':module_TCP').projectDir = new File(rootProject.projectDir, 'modules/module_TCP')
+
+include':module_TextRecognition'
+project(':module_TextRecognition').projectDir = new File(rootProject.projectDir, 'modules/module_TextRecognition')
+
+include':module_Camera'
+project(':module_Camera').projectDir = new File(rootProject.projectDir, 'modules/module_Camera')
+
+include':module_WebRTC'
+project(':module_WebRTC').projectDir = new File(rootProject.projectDir, 'modules/module_WebRTC')
+
+include':module_TensorFlow'
+project(':module_TensorFlow').projectDir = new File(rootProject.projectDir, 'modules/module_TensorFlow')
+
+include':module_WebSocket'
+project(':module_WebSocket').projectDir = new File(rootProject.projectDir, 'modules/module_WebSocket')
+
+include':module_FaceLandmark'
+project(':module_FaceLandmark').projectDir = new File(rootProject.projectDir, 'modules/module_FaceLandmark')
+
+include':module_Xpath'
+project(':module_Xpath').projectDir = new File(rootProject.projectDir, 'modules/module_Xpath')
+
+include':module_Dialog'
+project(':module_Dialog').projectDir = new File(rootProject.projectDir, 'modules/module_Dialog')
+
+include':module_HWLive'
+project(':module_HWLive').projectDir = new File(rootProject.projectDir, 'modules/module_HWLive')
+
+include':module_TTSE'
+project(':module_TTSE').projectDir = new File(rootProject.projectDir, 'modules/module_TTSE')
+
+include':module_Skin'
+project(':module_Skin').projectDir = new File(rootProject.projectDir, 'modules/module_Skin')
+
+include':module_OpenCV'
+project(':module_OpenCV').projectDir = new File(rootProject.projectDir, 'modules/module_OpenCV')
+
+include':module_View'
+project(':module_View').projectDir = new File(rootProject.projectDir, 'modules/module_View')
+
+include':module_AccessibilityS'
+project(':module_AccessibilityS').projectDir = new File(rootProject.projectDir, 'modules/module_AccessibilityS')
+
+include':module_FaceR'
+project(':module_FaceR').projectDir = new File(rootProject.projectDir, 'modules/module_FaceR')
+
+include':module_EventBus'
+project(':module_EventBus').projectDir = new File(rootProject.projectDir, 'modules/module_EventBus')
+
+include':module_Voip'
+project(':module_Voip').projectDir = new File(rootProject.projectDir, 'modules/module_Voip')
+
+include':module_LPR'
+project(':module_LPR').projectDir = new File(rootProject.projectDir, 'modules/module_LPR')
+
+include':module_Detection'
+project(':module_Detection').projectDir = new File(rootProject.projectDir, 'modules/module_Detection')

@@ -1,0 +1,64 @@
+include ':app_Extend'
+
+include':module_Extends'
+project(':module_Extends').projectDir = new File(rootProject.projectDir, 'modules/module_Extends')
+
+include':module_TTS'
+project(':module_TTS').projectDir = new File(rootProject.projectDir, 'modules/module_TTS')
+
+include':module_PortMSG'
+project(':module_PortMSG').projectDir = new File(rootProject.projectDir, 'modules/module_PortMSG')
+
+include':module_Office'
+project(':module_Office').projectDir = new File(rootProject.projectDir, 'modules/module_Office')
+
+include':module_Picker'
+project(':module_Picker').projectDir = new File(rootProject.projectDir, 'modules/module_Picker')
+
+include':module_GreenDao'
+project(':module_GreenDao').projectDir = new File(rootProject.projectDir, 'modules/module_GreenDao')
+
+include':module_WiFi'
+project(':module_WiFi').projectDir = new File(rootProject.projectDir, 'modules/module_WiFi')
+
+include':module_VNC'
+project(':module_VNC').projectDir = new File(rootProject.projectDir, 'modules/module_VNC')
+
+include':module_Utils'
+project(':module_Utils').projectDir = new File(rootProject.projectDir, 'modules/module_Utils')
+
+include':module_ASRW'
+project(':module_ASRW').projectDir = new File(rootProject.projectDir, 'modules/module_ASRW')
+
+include':module_FTP'
+project(':module_FTP').projectDir = new File(rootProject.projectDir, 'modules/module_FTP')
+
+include':module_ArcFace'
+project(':module_ArcFace').projectDir = new File(rootProject.projectDir, 'modules/module_ArcFace')
+
+include':module_CardOTG'
+project(':module_CardOTG').projectDir = new File(rootProject.projectDir, 'modules/module_CardOTG')
+
+include':module_UDevice'
+project(':module_UDevice').projectDir = new File(rootProject.projectDir, 'modules/module_UDevice')
+
+include':module_QRCode'
+project(':module_QRCode').projectDir = new File(rootProject.projectDir, 'modules/module_QRCode')
+
+include':module_ArcFaceFT'
+project(':module_ArcFaceFT').projectDir = new File(rootProject.projectDir, 'modules/module_ArcFaceFT')
+
+include':module_TCP'
+project(':module_TCP').projectDir = new File(rootProject.projectDir, 'modules/module_TCP')
+
+include':module_VideoChat'
+project(':module_VideoChat').projectDir = new File(rootProject.projectDir, 'modules/module_VideoChat')
+
+include':module_Detection'
+project(':module_Detection').projectDir = new File(rootProject.projectDir, 'modules/module_Detection')
+
+include':module_WebSocket'
+project(':module_WebSocket').projectDir = new File(rootProject.projectDir, 'modules/module_WebSocket')
+
+include':module_Dialog'
+project(':module_Dialog').projectDir = new File(rootProject.projectDir, 'modules/module_Dialog')

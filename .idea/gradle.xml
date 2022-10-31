@@ -4,9 +4,10 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="testRunner" value="PLATFORM" />
+        <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="1.8" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -19,49 +20,48 @@
             <option value="$PROJECT_DIR$/app_Picker" />
             <option value="$PROJECT_DIR$/app_Skin" />
             <option value="$PROJECT_DIR$/app_WebRTC" />
-            <option value="$PROJECT_DIR$/module_ASRW" />
-            <option value="$PROJECT_DIR$/module_AccessibilityS" />
-            <option value="$PROJECT_DIR$/module_ArcFace" />
-            <option value="$PROJECT_DIR$/module_ArcFaceFT" />
-            <option value="$PROJECT_DIR$/module_Camera" />
-            <option value="$PROJECT_DIR$/module_CardOTG" />
-            <option value="$PROJECT_DIR$/module_Detection" />
-            <option value="$PROJECT_DIR$/module_Dialog" />
-            <option value="$PROJECT_DIR$/module_EventBus" />
-            <option value="$PROJECT_DIR$/module_Extends" />
-            <option value="$PROJECT_DIR$/module_FTP" />
-            <option value="$PROJECT_DIR$/module_FaceLandmark" />
-            <option value="$PROJECT_DIR$/module_FaceR" />
-            <option value="$PROJECT_DIR$/module_GreenDao" />
-            <option value="$PROJECT_DIR$/module_HWLive" />
-            <option value="$PROJECT_DIR$/module_HttpServer" />
-            <option value="$PROJECT_DIR$/module_LPR" />
-            <option value="$PROJECT_DIR$/module_Navigate" />
-            <option value="$PROJECT_DIR$/module_Office" />
-            <option value="$PROJECT_DIR$/module_OpenCV" />
-            <option value="$PROJECT_DIR$/module_Picker" />
-            <option value="$PROJECT_DIR$/module_PortMSG" />
-            <option value="$PROJECT_DIR$/module_QRCode" />
-            <option value="$PROJECT_DIR$/module_Skin" />
-            <option value="$PROJECT_DIR$/module_TCP" />
-            <option value="$PROJECT_DIR$/module_TTS" />
-            <option value="$PROJECT_DIR$/module_TTSE" />
-            <option value="$PROJECT_DIR$/module_Talkback" />
-            <option value="$PROJECT_DIR$/module_TensorFlow" />
-            <option value="$PROJECT_DIR$/module_TextRecognition" />
-            <option value="$PROJECT_DIR$/module_UDevice" />
-            <option value="$PROJECT_DIR$/module_Utils" />
-            <option value="$PROJECT_DIR$/module_VNC" />
-            <option value="$PROJECT_DIR$/module_VideoChat" />
-            <option value="$PROJECT_DIR$/module_View" />
-            <option value="$PROJECT_DIR$/module_Voip" />
-            <option value="$PROJECT_DIR$/module_WebRTC" />
-            <option value="$PROJECT_DIR$/module_WebSocket" />
-            <option value="$PROJECT_DIR$/module_WiFi" />
-            <option value="$PROJECT_DIR$/module_Xpath" />
+            <option value="$PROJECT_DIR$/../modules/module_ASRW" />
+            <option value="$PROJECT_DIR$/../modules/module_AccessibilityS" />
+            <option value="$PROJECT_DIR$/../modules/module_ArcFace" />
+            <option value="$PROJECT_DIR$/../modules/module_ArcFaceFT" />
+            <option value="$PROJECT_DIR$/../modules/module_Camera" />
+            <option value="$PROJECT_DIR$/../modules/module_CardOTG" />
+            <option value="$PROJECT_DIR$/../modules/module_Detection" />
+            <option value="$PROJECT_DIR$/../modules/module_Dialog" />
+            <option value="$PROJECT_DIR$/../modules/module_EventBus" />
+            <option value="$PROJECT_DIR$/../modules/module_Extends" />
+            <option value="$PROJECT_DIR$/../modules/module_FTP" />
+            <option value="$PROJECT_DIR$/../modules/module_FaceLandmark" />
+            <option value="$PROJECT_DIR$/../modules/module_FaceR" />
+            <option value="$PROJECT_DIR$/../modules/module_GreenDao" />
+            <option value="$PROJECT_DIR$/../modules/module_HWLive" />
+            <option value="$PROJECT_DIR$/../modules/module_HttpServer" />
+            <option value="$PROJECT_DIR$/../modules/module_LPR" />
+            <option value="$PROJECT_DIR$/../modules/module_Navigate" />
+            <option value="$PROJECT_DIR$/../modules/module_Office" />
+            <option value="$PROJECT_DIR$/../modules/module_OpenCV" />
+            <option value="$PROJECT_DIR$/../modules/module_Picker" />
+            <option value="$PROJECT_DIR$/../modules/module_PortMSG" />
+            <option value="$PROJECT_DIR$/../modules/module_QRCode" />
+            <option value="$PROJECT_DIR$/../modules/module_Skin" />
+            <option value="$PROJECT_DIR$/../modules/module_TCP" />
+            <option value="$PROJECT_DIR$/../modules/module_TTS" />
+            <option value="$PROJECT_DIR$/../modules/module_TTSE" />
+            <option value="$PROJECT_DIR$/../modules/module_Talkback" />
+            <option value="$PROJECT_DIR$/../modules/module_TensorFlow" />
+            <option value="$PROJECT_DIR$/../modules/module_TextRecognition" />
+            <option value="$PROJECT_DIR$/../modules/module_UDevice" />
+            <option value="$PROJECT_DIR$/../modules/module_Utils" />
+            <option value="$PROJECT_DIR$/../modules/module_VNC" />
+            <option value="$PROJECT_DIR$/../modules/module_VideoChat" />
+            <option value="$PROJECT_DIR$/../modules/module_View" />
+            <option value="$PROJECT_DIR$/../modules/module_Voip" />
+            <option value="$PROJECT_DIR$/../modules/module_WebRTC" />
+            <option value="$PROJECT_DIR$/../modules/module_WebSocket" />
+            <option value="$PROJECT_DIR$/../modules/module_WiFi" />
+            <option value="$PROJECT_DIR$/../modules/module_Xpath" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

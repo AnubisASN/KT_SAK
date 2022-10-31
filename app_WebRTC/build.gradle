@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
@@ -30,5 +30,5 @@ dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     api project(':module_Extends')
     api project(':module_WebRTC')
-    api project(path: ':module_Voip')
+    api project(':module_Voip')
 }

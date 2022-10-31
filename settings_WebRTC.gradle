@@ -1,0 +1,12 @@
+include ':app_WebRTC'
+
+
+
+include':module_Extends'
+project(':module_Extends').projectDir = new File(rootProject.projectDir, 'modules/module_Extends')
+
+include':module_WebRTC'
+project(':module_WebRTC').projectDir = new File(rootProject.projectDir, 'modules/module_WebRTC')
+
+include':module_Voip'
+project(':module_Voip').projectDir = new File(rootProject.projectDir, 'modules/module_Voip')

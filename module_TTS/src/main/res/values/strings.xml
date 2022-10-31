@@ -1,7 +1,0 @@
-<resources>
-
-    <string name="module_name">Module_TTS</string>
-    <string name="wifiOn">wifi on</string>
-    <string name="wifiOff">wifi off</string>
-
-</resources>

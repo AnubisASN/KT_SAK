@@ -1,0 +1,7 @@
+include ':app_Coroutine'
+
+include':module_EventBus'
+project(':module_EventBus').projectDir = new File(rootProject.projectDir, 'modules/module_EventBus')
+
+include':module_Extends'
+project(':module_Extends').projectDir = new File(rootProject.projectDir, 'modules/module_Extends')

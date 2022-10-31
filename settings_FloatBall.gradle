@@ -1,0 +1,12 @@
+include ':app_FloatBall'
+
+
+
+include':module_Extends'
+project(':module_Extends').projectDir = new File(rootProject.projectDir, 'modules/module_Extends')
+
+include':module_Dialog'
+project(':module_Dialog').projectDir = new File(rootProject.projectDir, 'modules/module_Dialog')
+
+include':module_Xpath'
+project(':module_Xpath').projectDir = new File(rootProject.projectDir, 'modules/module_Xpath')

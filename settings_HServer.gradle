@@ -1,0 +1,21 @@
+include ':app_Map'
+
+
+
+include':module_Extends'
+project(':module_Extends').projectDir = new File(rootProject.projectDir, 'modules/module_Extends')
+
+include':module_HttpServer'
+project(':module_HttpServer').projectDir = new File(rootProject.projectDir, 'modules/module_HttpServer')
+
+include':module_Dialog'
+project(':module_Dialog').projectDir = new File(rootProject.projectDir, 'modules/module_Dialog')
+
+include':module_Camera'
+project(':module_Camera').projectDir = new File(rootProject.projectDir, 'modules/module_Camera')
+
+include':module_TTS'
+project(':module_TTS').projectDir = new File(rootProject.projectDir, 'modules/module_TTS')
+
+include':module_Picker'
+project(':module_Picker').projectDir = new File(rootProject.projectDir, 'modules/module_Picker')

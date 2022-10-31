@@ -1,12 +1,49 @@
-include ':app_Extend', ':app_WebRTC', ':app_Picker', ':app_Map', ':app_FloatBall', ':app_Coroutine', ':app_HServer',':app_Skin',  ':app_Discern'
+rootProject.name='app'
 
-include ':module_Talkback', ':module_Extends', ':module_PortMSG', ':module_TTS', ':module_ArcFaceFT', ':module_ArcFace', ':module_Office', ':module_GreenDao', ':module_WiFi', ':module_VNC', ':module_Utils', ':module_ASRW', ':module_VideoChat', ':module_QRCode', ':module_FTP', ':module_CardOTG', ':module_Picker', ':module_HttpServer', ':module_Navigate', ':module_UDevice', ':module_TCP', ':module_TextRecognition', ':module_Camera', ':module_WebRTC', ':module_Detection', ':module_TensorFlow', ':module_WebSocket', ':module_FaceLandmark', ':module_Xpath', ':module_Dialog', ':module_HWLive', ':module_TTSE', ':module_Skin', ':module_LPR', ':module_OpenCV', ':module_View', ':module_AccessibilityS',':module_FaceR',':module_EventBus',':module_Voip'
+def ALL ="${ALL}"
+def EXTENDS="${EXTENDS}"
+def PICKER="${PICKER}"
+def COROUTINE="${COROUTINE}"
+def DISCERN="${DISCERN}"
+def FLOAT_BALL="${FLOAT_BALL}"
+def HSERVER="${HSERVER}"
+def MAP="${MAP}"
+def SKIN="${SKIN}"
+def WEBRTC="${WEBRTC}"
+def VERSION = "${VERSION}"
 
-////新增的代码
-//setBinding(new Binding([gradle: this]))
-//evaluate(new File(
-//        settingsDir.parentFile,
-//        //flutter模块路径地标.
-//        '/flutter_module/.android/include_flutter.groovy'
-//))
+print("VERSION:$VERSION")
+switch (VERSION){
+    case ALL:
+        apply from: 'settings_All.gradle'
+        break
+    case EXTENDS:
+        apply from: 'settings_Extends.gradle'
+        break;
+    case PICKER:
+        apply from: 'settings_Picker.gradle'
+        break
+    case COROUTINE:
+        apply from: 'settings_Coroutine.gradle'
+        break
+    case DISCERN:
+        apply from: 'settings_Discern.gradle'
+        break;
+    case FLOAT_BALL:
+        apply from: 'settings_FloatBall.gradle'
+        break
+    case HSERVER:
+        apply from: 'settings_HServer.gradle'
+        break
+    case MAP:
+        apply from: 'settings_Map.gradle'
+        break;
+    case SKIN:
+        apply from: 'settings_Skin.gradle'
+        break
+    case WEBRTC:
+        apply from: 'settings_WebRTC.gradle'
+        break
+}
+
 
