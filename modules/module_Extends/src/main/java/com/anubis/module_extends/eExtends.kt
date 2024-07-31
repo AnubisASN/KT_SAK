@@ -179,6 +179,7 @@ fun eLogE(hint: Any? = "", e: Any? = null, TAG: String = "TAGe") {
 }
 
 
+
 fun setProperty(key: String?, value: Any): Boolean {
     try {
         val c = Class.forName("android.os.SystemProperties")
@@ -191,18 +192,25 @@ fun setProperty(key: String?, value: Any): Boolean {
     }
 }
 
-fun  getProperty(key: String, def:String?=null): String? {
+fun  <T>getProperty(key: String, def:T?=null): T? {
     try {
         val c = Class.forName("android.os.SystemProperties")
         val getMethod = c.getMethod("get", String::class.java)
         val value = getMethod.invoke(c, key).toString()
         if (value.isNullOrEmpty())
             return def
-        return value
+        return when{
+            def is Int->value.toInt() as T
+            def is Float->value.toFloat() as T
+            def is Double->value.toDouble() as T
+            def is Boolean->value.toBoolean() as T
+            def is Long->value.toLong() as T
+            else->value as T
+        }
     } catch (t: Throwable) {
-        t.eLogE("csssssss")
+        t.eLogE()
     }
-    return null
+    return def
 }
 
 
