@@ -178,6 +178,34 @@ fun eLogE(hint: Any? = "", e: Any? = null, TAG: String = "TAGe") {
     e.eLogE(hint, TAG)
 }
 
+
+fun setProperty(key: String?, value: Any): Boolean {
+    try {
+        val c = Class.forName("android.os.SystemProperties")
+        val setMethod = c.getMethod("set", String::class.java, String::class.java)
+        setMethod.invoke(c, key, value.toString())
+        return true
+    } catch (e: java.lang.Exception) {
+        e.printStackTrace()
+        return false
+    }
+}
+
+fun  getProperty(key: String, def:String?=null): String? {
+    try {
+        val c = Class.forName("android.os.SystemProperties")
+        val getMethod = c.getMethod("get", String::class.java)
+        val value = getMethod.invoke(c, key).toString()
+        if (value.isNullOrEmpty())
+            return def
+        return value
+    } catch (t: Throwable) {
+        t.eLogE("csssssss")
+    }
+    return null
+}
+
+
 /**
  * if替换------------------------------------------------------------------------------------
  */
