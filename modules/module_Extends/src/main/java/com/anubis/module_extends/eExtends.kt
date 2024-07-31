@@ -152,8 +152,14 @@ fun Context.eShowTip(str: Any, i: Int = Toast.LENGTH_SHORT) {
 /**
  * Log i e扩展函数------------------------------------------------------------------------------------
  */
-var eIsTagD: Boolean = true
-var eIsTagI: Boolean = true
+var eIsTagD: Boolean  get() = getProperty("persist.asn.is_tagd",false)!!
+    set(v) {
+        setProperty("persist.asn.is_tagd",v)
+    }
+var eIsTagI: Boolean = getProperty("persist.asn.is_tagi",false)!!
+    set(v) {
+        setProperty("persist.asn.is_tagi",v)
+    }
 
 fun Any?.eIsBaseType() = this is String || this is Int || this is Int || this is Log || this is Double || this is Float || this is Char || this is Short || this is Boolean || this is Byte
 
